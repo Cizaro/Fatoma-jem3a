@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHP Arcade</title>
+<style>
+  :root{
+    --bg:#f3f5fb; --panel:#ffffff; --ink:#151a2e; --muted:#6b7490;
+    --line:#e2e7f4; --accent:#3b5bdb; --accent-soft:#e8edff;
+    --good:#2f9e44; --good-soft:#e7f6ec; --bad:#e03131; --bad-soft:#fdeaea;
+    --code:#1b2138; --code-ink:#e9ecf8; --gold:#f08c00;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#111527; --panel:#1a2038; --ink:#eef1fa; --muted:#98a2c0;
+      --line:#2a3252; --accent:#748ffc; --accent-soft:#232c4d;
+      --good:#69db7c; --good-soft:#1c3226; --bad:#ff8787; --bad-soft:#3a2026;
+      --code:#0d1122; --code-ink:#e9ecf8;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#111527; --panel:#1a2038; --ink:#eef1fa; --muted:#98a2c0;
+    --line:#2a3252; --accent:#748ffc; --accent-soft:#232c4d;
+    --good:#69db7c; --good-soft:#1c3226; --bad:#ff8787; --bad-soft:#3a2026;
+    --code:#0d1122; --code-ink:#e9ecf8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink); line-height:1.6;
+    font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+    padding:0 16px 60px;
+  }
+  .wrap{max-width:760px;margin:0 auto}
+  header{padding:28px 0 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  h1{font-size:26px;letter-spacing:-.4px}
+  h1 span{color:var(--accent)}
+  .tagline{color:var(--muted);font-size:14px}
+  .theme-btn{background:none;border:1px solid var(--line);color:var(--muted);
+    border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;font-family:inherit}
+
+  /* ---- menu ---- */
+  .menu{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+  .game-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:20px;cursor:pointer;text-align:left;font-family:inherit;color:inherit;
+    transition:transform .12s ease, border-color .12s ease;
+  }
+  .game-card:hover{transform:translateY(-3px);border-color:var(--accent)}
+  .game-card .icon{font-size:26px}
+  .game-card h3{font-size:17px;margin:8px 0 4px}
+  .game-card p{font-size:14px;color:var(--muted)}
+  .best{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;
+    color:var(--gold);letter-spacing:.3px}
+
+  /* ---- hud ---- */
+  .hud{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+  .pill{background:var(--panel);border:1px solid var(--line);border-radius:20px;
+    padding:5px 14px;font-size:13px;font-weight:600}
+  .pill.lives{color:var(--bad)}
+  .pill.streak{color:var(--gold)}
+  .bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:20px}
+  .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+
+  /* ---- panel ---- */
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .qtext{font-size:17px;font-weight:600;margin-bottom:14px}
+  .hint{font-size:13px;color:var(--muted);margin-bottom:14px}
+  pre{background:var(--code);color:var(--code-ink);padding:16px;border-radius:10px;
+    overflow-x:auto;font-size:14px;line-height:1.7;margin-bottom:18px;
+    font-family:ui-monospace,Consolas,"Courier New",monospace}
+  pre .ln{color:#6b7490;user-select:none}
+  .opts{display:grid;gap:10px}
+  .opt{
+    background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 16px;
+    cursor:pointer;text-align:left;font-family:ui-monospace,Consolas,monospace;font-size:14.5px;
+    color:inherit;transition:border-color .1s, background .1s;
+  }
+  .opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
+  .opt.correct{background:var(--good-soft);border-color:var(--good);font-weight:700}
+  .opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+  .opt:disabled{cursor:default}
+  input.blank{
+    width:100%;padding:12px 16px;border:1px solid var(--line);border-radius:10px;
+    background:var(--bg);color:inherit;font-family:ui-monospace,Consolas,monospace;font-size:15px;
+  }
+  input.blank:focus{outline:2px solid var(--accent);outline-offset:1px}
+  .feedback{margin-top:16px;padding:14px 16px;border-radius:10px;font-size:14.5px;display:none}
+  .feedback.show{display:block}
+  .feedback.ok{background:var(--good-soft);border-left:4px solid var(--good)}
+  .feedback.no{background:var(--bad-soft);border-left:4px solid var(--bad)}
+  .feedback b{display:block;margin-bottom:3px}
+  .row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:11px 22px;
+    font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+  .btn:hover{filter:brightness(1.08)}
+  .btn.ghost{background:none;border:1px solid var(--line);color:var(--muted)}
+
+  /* ---- match game ---- */
+  .match{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .match .col{display:grid;gap:8px;align-content:start}
+  .tile{background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:11px 12px;
+    cursor:pointer;font-size:14px;text-align:left;color:inherit;font-family:inherit;line-height:1.35}
+  .tile.code{font-family:ui-monospace,Consolas,monospace;font-weight:600}
+  .tile.picked{border-color:var(--accent);background:var(--accent-soft)}
+  .tile.done{opacity:.35;pointer-events:none;border-style:dashed}
+  .tile.shake{animation:shake .3s}
+  @keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+  /* ---- end screen ---- */
+  .end{text-align:center;padding:30px 20px}
+  .end .big{font-size:52px;font-weight:800;color:var(--accent);line-height:1.1}
+  .end h2{margin:8px 0 6px;font-size:22px}
+  .end p{color:var(--muted)}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <h1>PHP <span>Arcade</span></h1>
+    <p class="tagline">Four games. No server needed. Beat your best score.</p>
+  </div>
+  <button class="theme-btn" id="themeBtn">theme</button>
+</header>
+
+<div id="app"></div>
+
+<footer>Made for Fatima &middot; close and reopen any time, your best scores are saved</footer>
+</div>
+
+<script>
+/* ============================================================
+   THE QUESTIONS
+   Add your own! Just copy the shape of the objects below.
+   ============================================================ */
+
+const OUTPUT_Q = [
+  { code:'$x = 5;\n$y = "5";\nvar_dump($x == $y);',
+    opts:['bool(true)','bool(false)','int(5)','error'], a:0,
+    why:'== compares the VALUE only, so 5 and "5" are equal. Use === to also compare the type.' },
+  { code:'$name = "Fatima";\necho \'Hello $name\';',
+    opts:['Hello Fatima','Hello $name','Hello','error'], a:1,
+    why:"Single quotes are literal. Only DOUBLE quotes read variables." },
+  { code:'echo 10 % 3;',
+    opts:['3.33','3','1','0'], a:2,
+    why:'% gives the REMAINDER. 10 divided by 3 is 3 with 1 left over.' },
+  { code:'$a = [1, 2, 3];\necho count($a);',
+    opts:['2','3','4','1,2,3'], a:1,
+    why:'count() gives how many items. The last INDEX is 2, but the count is 3.' },
+  { code:'$a = ["x","y","z"];\necho $a[1];',
+    opts:['x','y','z','1'], a:1,
+    why:'Arrays start at index 0, so [0]=x, [1]=y, [2]=z.' },
+  { code:'for ($i = 0; $i < 3; $i++) {\n    echo $i;\n}',
+    opts:['0123','012','123','0 1 2 3'], a:1,
+    why:'It starts at 0 and stops when i reaches 3, so 0, 1, 2. Three rounds.' },
+  { code:'$x = 5;\necho $x++;\necho $x;',
+    opts:['56','55','66','65'], a:0,
+    why:'$x++ prints the value FIRST (5), then adds 1. So the second echo gives 6.' },
+  { code:'echo "5" + 5;',
+    opts:['55','10','error','5 5'], a:1,
+    why:'+ is for numbers, so PHP turns "5" into 5. To join text you need the dot: "5" . 5 gives 55.' },
+  { code:'echo strlen("PHP rocks");',
+    opts:['8','9','2','10'], a:1,
+    why:'strlen counts every character, and the space counts too. 9.' },
+  { code:'$grade = 10;\nif ($grade > 10) {\n    echo "pass";\n} else {\n    echo "fail";\n}',
+    opts:['pass','fail','nothing','error'], a:1,
+    why:'10 is not GREATER than 10. You wanted >= for "10 or more".' },
+  { code:'$i = 1;\nwhile ($i <= 3) {\n    echo $i;\n}',
+    opts:['123','111...forever','1','nothing'], a:1,
+    why:'Nothing changes $i, so the condition stays true forever. Classic infinite loop.' },
+  { code:'function f($n) {\n    return $n * 2;\n    echo "hi";\n}\necho f(4);',
+    opts:['8hi','hi8','8','hi'], a:2,
+    why:'return ends the function immediately. The echo after it never runs.' },
+  { code:'$a = ["b" => 2];\necho $a["b"] + 3;',
+    opts:['5','b3','23','error'], a:0,
+    why:'$a["b"] is 2, and 2 + 3 is 5.' },
+  { code:'echo ucfirst(strtolower("HELLO"));',
+    opts:['HELLO','hello','Hello','hELLO'], a:2,
+    why:'Inside out: strtolower makes "hello", then ucfirst capitalises the first letter.' },
+  { code:'$x = 7;\necho ($x % 2 == 0) ? "even" : "odd";',
+    opts:['even','odd','1','true'], a:1,
+    why:'7 % 2 is 1, not 0, so the condition is false and the ternary gives the second value.' },
+  { code:'$a = [3, 1, 2];\nsort($a);\necho implode("-", $a);',
+    opts:['3-1-2','1-2-3','3-2-1','123'], a:1,
+    why:'sort() puts them in order, implode glues them with the separator you chose.' },
+  { code:'echo 2 + 3 * 4;',
+    opts:['20','14','24','9'], a:1,
+    why:'Multiplication happens before addition, exactly like in maths class. 3*4=12, +2 = 14.' },
+  { code:'$s = "abc";\necho $s[0];',
+    opts:['a','abc','0','error'], a:0,
+    why:'A string can be read like an array of letters, starting at 0.' }
+];
+
+const BUG_Q = [
+  { code:['<?php','$name = "Fatima"','echo $name;'], a:1,
+    why:'Line 2 is missing the semicolon at the end. Every statement needs one.' },
+  { code:['<?php','$age = 20;','if ($age = 18) {','    echo "adult";','}'], a:2,
+    why:'Line 3 uses = (put into) instead of == (compare). It changes $age and is always true.' },
+  { code:['<?php','$colors = ["red","blue"];','echo $colors[2];'], a:2,
+    why:'There is no index 2. Two items means index 0 and 1 only.' },
+  { code:['<?php','for ($i = 0; $i < 5; $i++)','    echo $i;','}'], a:1,
+    why:'Line 2 never opened the curly bracket { , but line 4 closes one.' },
+  { code:['<?php','function add($a, $b) {','    $a + $b;','}','echo add(2, 3);'], a:2,
+    why:'Line 3 calculates but never returns. Nothing comes back, so nothing prints. Add return.' },
+  { code:['<?php','$x = 10;','if ($x > 5); {','    echo "big";','}'], a:2,
+    why:'The semicolon right after the if() ends it. The block then always runs.' },
+  { code:['<?php','name = "Sara";','echo $name;'], a:1,
+    why:'Variables always start with $. It should be $name = "Sara";' },
+  { code:['<?php','$n = 1;','while ($n < 4) {','    echo $n;','}'], a:3,
+    why:'Nothing increases $n inside the loop, so it runs forever. It needs $n++ in the body.' },
+  { code:['<?php','switch ($day) {','    case "Mon":','        echo "Monday";','    case "Tue":','        echo "Tuesday";','}'], a:3,
+    why:'There is no break; after line 4, so PHP falls through and prints Tuesday too.' },
+  { code:['<?php','$user = ["name" => "Lina"];','echo $user[name];'], a:2,
+    why:'The key needs quotes: $user["name"]. Without them PHP looks for a constant.' },
+  { code:['<?php','$total = 0;','$prices = [10, 20];','foreach ($prices as $p) {','    $total = $p;','}','echo $total;'], a:4,
+    why:'Line 5 REPLACES the total each round instead of adding. It should be $total += $p;' }
+];
+
+const MATCH_SETS = [
+  { title:'Basics', pairs:[
+    ['echo','prints something on the page'],
+    ['$name','a variable called name'],
+    ['//','a one-line comment'],
+    ['.','glues two strings together'],
+    [';','ends a statement'],
+    ['<?php','opens a block of PHP code']
+  ]},
+  { title:'Functions you know', pairs:[
+    ['strlen()','how many characters in a string'],
+    ['count()','how many items in an array'],
+    ['strtoupper()','makes text UPPERCASE'],
+    ['array_sum()','adds all the numbers in an array'],
+    ['implode()','turns an array into a string'],
+    ['round()','rounds a decimal number']
+  ]},
+  { title:'Control and loops', pairs:[
+    ['if','runs code only when something is true'],
+    ['else','runs when the if was false'],
+    ['for','repeats a known number of times'],
+    ['while','repeats as long as a condition is true'],
+    ['foreach','walks through every item of an array'],
+    ['break','leaves the loop immediately']
+  ]},
+  { title:'Web and database', pairs:[
+    ['$_POST','data sent by a form, hidden'],
+    ['$_GET','data sent in the URL'],
+    ['htmlspecialchars()','makes user text safe to print'],
+    ['SELECT','reads rows from a table'],
+    ['INSERT','adds a new row'],
+    ['prepared statement','stops SQL injection']
+  ]}
+];
+
+const BLANK_Q = [
+  { code:'____ "Hello world";', a:['echo'], why:'echo is how PHP prints.' },
+  { code:'$total = 0;\nfor ($i = 1; $i ____ 10; $i++) { $total += $i; }', a:['<=','&lt;='],
+    why:'<= includes 10. With < you would stop at 9.' },
+  { code:'$names = ["a","b"];\n____ ($names as $n) { echo $n; }', a:['foreach'],
+    why:'foreach is the loop made for arrays.' },
+  { code:'____ add($a, $b) {\n    return $a + $b;\n}', a:['function'],
+    why:'Every function you make starts with the word function.' },
+  { code:'function double($n) {\n    ____ $n * 2;\n}', a:['return'],
+    why:'return sends the value back to whoever called the function.' },
+  { code:'$a = [5, 2, 9];\necho ____($a);   // prints 3', a:['count','sizeof'],
+    why:'count() gives the number of items.' },
+  { code:'$user = $____["name"];  // came from a form with method="post"', a:['_POST','POST'],
+    why:'$_POST holds everything a POST form sent.' },
+  { code:'if ($x ____ 10) { echo "x is exactly ten"; }', a:['==','===' ],
+    why:'== compares. A single = would assign instead.' },
+  { code:'$grades = [10, 20];\necho array_____($grades);  // prints 30', a:['sum'],
+    why:'array_sum() totals the numbers in an array.' },
+  { code:'echo ____($userInput);  // make it safe before printing', a:['htmlspecialchars'],
+    why:'htmlspecialchars() turns < into &lt; so injected scripts cannot run.' },
+  { code:'$conn = mysqli_connect("localhost", "root", "", "school");\n$result = mysqli_____($conn, "SELECT * FROM students");', a:['query'],
+    why:'mysqli_query() sends the SQL to the database.' },
+  { code:'SELECT * FROM students ____ grade >= 10;', a:['WHERE','where'],
+    why:'WHERE filters which rows come back.' }
+];
+
+/* ============================================================
+   ENGINE
+   ============================================================ */
+const app = document.getElementById('app');
+const GAMES = {
+  output:{ icon:'🔮', name:'Guess the Output', desc:'Read the code. What does it print?', len:10 },
+  bug:   { icon:'🐞', name:'Fix the Bug',      desc:'Find the line that is wrong.',      len:8  },
+  match: { icon:'🔗', name:'Match the Words',  desc:'Pair each word with its meaning.',  len:4  },
+  blank: { icon:'✍️', name:'Fill the Blank',   desc:'Type the missing piece of code.',   len:10 }
+};
+
+let state = {};
+
+function store(k, v){
+  try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }
+  catch(e){ return null; }
+}
+function best(g){ return parseInt(store('phparcade_' + g) || '0', 10) || 0; }
+function saveBest(g, s){ if (s > best(g)) store('phparcade_' + g, s); }
+
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ const c = a.slice(); for (let i = c.length - 1; i > 0; i--){
+  const j = Math.floor(Math.random() * (i + 1)); [c[i], c[j]] = [c[j], c[i]]; } return c; }
+
+/* ---------- menu ---------- */
+function menu(){
+  app.innerHTML = '<div class="menu">' + Object.keys(GAMES).map(k => {
+    const g = GAMES[k], b = best(k);
+    return `<button class="game-card" data-game="${k}">
+      <div class="icon">${g.icon}</div>
+      <h3>${g.name}</h3>
+      <p>${g.desc}</p>
+      ${b ? `<span class="best">★ best: ${b}</span>` : ''}
+    </button>`;
+  }).join('') + '</div>';
+  app.querySelectorAll('[data-game]').forEach(b =>
+    b.onclick = () => start(b.dataset.game));
+}
+
+function start(game){
+  state = { game, score:0, lives:3, streak:0, i:0, answered:false };
+  if (game === 'output') state.qs = shuffle(OUTPUT_Q).slice(0, GAMES.output.len);
+  if (game === 'bug')    state.qs = shuffle(BUG_Q).slice(0, GAMES.bug.len);
+  if (game === 'blank')  state.qs = shuffle(BLANK_Q).slice(0, GAMES.blank.len);
+  if (game === 'match')  state.qs = shuffle(MATCH_SETS).slice(0, GAMES.match.len);
+  render();
+}
+
+function hud(){
+  const total = state.qs.length;
+  return `<div class="hud">
+      <span class="pill">${GAMES[state.game].icon} ${state.i + 1} / ${total}</span>
+      <span class="pill">score ${state.score}</span>
+      <span class="pill lives">${'♥'.repeat(state.lives)}${'♡'.repeat(3 - state.lives)}</span>
+      ${state.streak > 1 ? `<span class="pill streak">🔥 ${state.streak} in a row</span>` : ''}
+      <span style="flex:1"></span>
+      <button class="btn ghost" id="quit">menu</button>
+    </div>
+    <div class="bar"><i style="width:${(state.i / total) * 100}%"></i></div>`;
+}
+
+function wireCommon(){
+  const q = document.getElementById('quit');
+  if (q) q.onclick = menu;
+}
+
+function render(){
+  if (state.lives <= 0 || state.i >= state.qs.length) return end();
+  if (state.game === 'match') return renderMatch();
+  if (state.game === 'blank') return renderBlank();
+  if (state.game === 'bug')   return renderBug();
+  renderOutput();
+}
+
+/* ---------- guess the output ---------- */
+function renderOutput(){
+  const q = state.qs[state.i];
+  const order = shuffle(q.opts.map((o, i) => ({ o, i })));
+  app.innerHTML = hud() + `<div class="panel">
+    <p class="qtext">What does this print?</p>
+    <pre>${esc(q.code)}</pre>
+    <div class="opts">${order.map(x =>
+      `<button class="opt" data-i="${x.i}">${esc(x.o)}</button>`).join('')}</div>
+    <div class="feedback" id="fb"></div>
+    <div class="row" id="nextRow" style="display:none"><button class="btn" id="next">next →</button></div>
+  </div>`;
+  wireCommon();
+  app.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    const ok = +b.dataset.i === q.a;
+    app.querySelectorAll('.opt').forEach(x => {
+      x.disabled = true;
+      if (+x.dataset.i === q.a) x.classList.add('correct');
+    });
+    if (!ok) b.classList.add('wrong');
+    judge(ok, q.why);
+  });
+}
+
+/* ---------- fix the bug ---------- */
+function renderBug(){
+  const q = state.qs[state.i];
+  app.innerHTML = hud() + `<div class="panel">
+    <p class="qtext">Which line has the bug?</p>
+    <p class="hint">Click the broken line.</p>
+    <div class="opts">${q.code.map((line, i) =>
+      `<button class="opt" data-i="${i}"><span class="ln">${i + 1}</span>&nbsp;&nbsp;${esc(line)}</button>`
+    ).join('')}</div>
+    <div class="feedback" id="fb"></div>
+    <div class="row" id="nextRow" style="display:none"><button class="btn" id="next">next →</button></div>
+  </div>`;
+  wireCommon();
+  app.querySelectorAll('.opt').forEach(b => b.onclick = () => {
+    const ok = +b.dataset.i === q.a;
+    app.querySelectorAll('.opt').forEach(x => {
+      x.disabled = true;
+      if (+x.dataset.i === q.a) x.classList.add('correct');
+    });
+    if (!ok) b.classList.add('wrong');
+    judge(ok, q.why);
+  });
+}
+
+/* ---------- fill the blank ---------- */
+function renderBlank(){
+  const q = state.qs[state.i];
+  app.innerHTML = hud() + `<div class="panel">
+    <p class="qtext">Type what belongs in the blank</p>
+    <pre>${esc(q.code)}</pre>
+    <input class="blank" id="inp" placeholder="your answer..." autocomplete="off" spellcheck="false">
+    <div class="row"><button class="btn" id="check">check</button></div>
+    <div class="feedback" id="fb"></div>
+    <div class="row" id="nextRow" style="display:none"><button class="btn" id="next">next →</button></div>
+  </div>`;
+  wireCommon();
+  const inp = document.getElementById('inp');
+  inp.focus();
+  const go = () => {
+    if (state.answered) return;
+    const val = inp.value.trim().replace(/[();$]/g, '').toLowerCase();
+    const ok = q.a.some(a => a.toLowerCase().replace(/[();$]/g, '') === val);
+    inp.disabled = true;
+    document.getElementById('check').disabled = true;
+    judge(ok, q.why + (ok ? '' : `  The answer was: ${q.a[0]}`));
+  };
+  document.getElementById('check').onclick = go;
+  inp.onkeydown = e => { if (e.key === 'Enter') go(); };
+}
+
+/* ---------- match ---------- */
+function renderMatch(){
+  const set = state.qs[state.i];
+  const left  = shuffle(set.pairs.map((p, i) => ({ t:p[0], i })));
+  const right = shuffle(set.pairs.map((p, i) => ({ t:p[1], i })));
+  app.innerHTML = hud() + `<div class="panel">
+    <p class="qtext">${set.title}</p>
+    <p class="hint">Click a word on the left, then its meaning on the right.</p>
+    <div class="match">
+      <div class="col">${left.map(x =>
+        `<button class="tile code" data-side="L" data-i="${x.i}">${esc(x.t)}</button>`).join('')}</div>
+      <div class="col">${right.map(x =>
+        `<button class="tile" data-side="R" data-i="${x.i}">${esc(x.t)}</button>`).join('')}</div>
+    </div>
+    <div class="feedback" id="fb"></div>
+    <div class="row" id="nextRow" style="display:none"><button class="btn" id="next">next →</button></div>
+  </div>`;
+  wireCommon();
+
+  let picked = null, left_ = set.pairs.length, mistakes = 0;
+  app.querySelectorAll('.tile').forEach(t => t.onclick = () => {
+    if (!picked){
+      app.querySelectorAll('.tile').forEach(x => x.classList.remove('picked'));
+      picked = t; t.classList.add('picked'); return;
+    }
+    if (picked === t){ t.classList.remove('picked'); picked = null; return; }
+    if (picked.dataset.side === t.dataset.side){
+      app.querySelectorAll('.tile').forEach(x => x.classList.remove('picked'));
+      picked = t; t.classList.add('picked'); return;
+    }
+    if (picked.dataset.i === t.dataset.i){
+      picked.classList.add('done'); t.classList.add('done');
+      picked.classList.remove('picked'); picked = null;
+      state.score += 5;
+      refreshHud();
+      left_--;
+      if (left_ === 0){
+        state.streak++;
+        if (mistakes === 0) state.score += 10;
+        show(true, mistakes === 0
+          ? 'Perfect set! +10 bonus.'
+          : `Set complete with ${mistakes} wrong tr${mistakes === 1 ? 'y' : 'ies'}.`);
+        state.answered = true;
+        document.getElementById('nextRow').style.display = 'flex';
+        document.getElementById('next').onclick = () => { state.i++; state.answered = false; render(); };
+      } else {
+        document.getElementById('fb').className = 'feedback';
+      }
+    } else {
+      mistakes++;
+      t.classList.add('shake'); picked.classList.add('shake');
+      const a = picked, b = t;
+      setTimeout(() => { a.classList.remove('shake','picked'); b.classList.remove('shake'); }, 320);
+      picked = null;
+      if (mistakes % 3 === 0){ state.lives--; }
+      show(false, 'Not a pair. Three wrong tries costs a life.');
+      refreshHud();
+      if (state.lives <= 0) setTimeout(end, 600);
+    }
+  });
+}
+
+/* ---------- shared judging ---------- */
+function show(ok, msg){
+  const fb = document.getElementById('fb');
+  fb.className = 'feedback show ' + (ok ? 'ok' : 'no');
+  fb.innerHTML = `<b>${ok ? '✅ Correct!' : '❌ Not quite'}</b>${esc(msg)}`;
+}
+
+function refreshHud(){
+  const pills = document.querySelectorAll('.hud .pill');
+  if (pills[1]) pills[1].textContent = 'score ' + state.score;
+  const lv = Math.max(0, state.lives);
+  if (pills[2]) pills[2].textContent = '♥'.repeat(lv) + '♡'.repeat(3 - lv);
+}
+
+function judge(ok, why){
+  state.answered = true;
+  if (ok){
+    state.streak++;
+    state.score += 10 + (state.streak > 2 ? 5 : 0);
+  } else {
+    state.streak = 0;
+    state.lives--;
+  }
+  refreshHud();
+  show(ok, why);
+  const row = document.getElementById('nextRow');
+  row.style.display = 'flex';
+  document.getElementById('next').onclick = () => { state.i++; state.answered = false; render(); };
+  document.getElementById('next').focus();
+}
+
+/* ---------- end ---------- */
+function end(){
+  const g = state.game;
+  const wasBest = state.score > best(g);
+  saveBest(g, state.score);
+  const done = Math.min(state.i, state.qs.length);
+  let msg;
+  if (state.lives <= 0)              msg = 'Out of lives! Read the lesson again and come back.';
+  else if (state.score >= state.qs.length * 12) msg = 'Excellent. You really know this.';
+  else if (state.score >= state.qs.length * 7)  msg = 'Good work. A few more rounds and you own it.';
+  else                                msg = 'Keep going. Re-read the lesson, then replay.';
+
+  app.innerHTML = `<div class="panel end">
+    <div class="big">${state.score}</div>
+    <h2>${wasBest ? '🏆 New best score!' : GAMES[g].name}</h2>
+    <p>${msg}</p>
+    <p style="margin-top:8px;font-size:14px">
+      ${done} of ${state.qs.length} rounds &middot; best ever: ${best(g)}</p>
+    <div class="row" style="justify-content:center">
+      <button class="btn" id="again">play again</button>
+      <button class="btn ghost" id="back">all games</button>
+    </div>
+  </div>`;
+  document.getElementById('again').onclick = () => start(g);
+  document.getElementById('back').onclick = menu;
+}
+
+/* ---------- theme ---------- */
+document.getElementById('themeBtn').onclick = () => {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const next = cur ? (cur === 'dark' ? 'light' : 'dark') : (dark ? 'light' : 'dark');
+  document.documentElement.setAttribute('data-theme', next);
+  store('phparcade_theme', next);
+};
+const savedTheme = store('phparcade_theme');
+if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
+
+menu();
+</script>
+</body>
+</html>

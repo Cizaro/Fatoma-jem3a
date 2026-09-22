@@ -1,0 +1,99 @@
+# PHP from Zero — Fatima's Course
+
+Welcome! This folder is your full PHP course. You don't need to know anything before starting.
+
+It follows your textbook — **Web Development Full Stack** (Cengage) — so the work you do here
+is the work your exam will ask about:
+
+| Your textbook | This folder |
+|---|---|
+| Ch. 8–9 — CMS & WordPress | background reading, see `resources/youtube.md` |
+| **Ch. 10 — Dynamic Webpages with PHP** | **lessons 0–8** |
+| **Ch. 11 — Database Basics with MySQL** | **lesson 9** |
+| **Ch. 12 — Dynamic Webpage with a MySQL Database** | **lesson 10 + project 3** |
+
+---
+
+## How to use this folder
+
+Every lesson folder has three things:
+
+| File | What it is |
+|---|---|
+| `lesson.md` | Read this first. Explanation in simple words. |
+| `examples.php` | Code you **run** to see the idea working. |
+| `exercises.php` | Code **you** write. It has TODOs waiting for you. |
+
+**The rule:** read → run the example → do the exercise → play the game → take the quiz.
+
+---
+
+## The road
+
+| # | Folder | What you learn | Time |
+|---|---|---|---|
+| 0 | `00-setup/` | Run your first PHP file | 20 min |
+| 1 | `01-basics/` | `echo`, variables, comments | 45 min |
+| 2 | `02-datatypes/` | string, int, float, bool, string functions | 45 min |
+| 3 | `03-operators/` | maths, comparison, AND / OR | 45 min |
+| 4 | `04-conditions/` | `if`, `else`, `switch` | 1 h |
+| 5 | `05-loops/` | `for`, `while`, `foreach` | 1 h |
+| 6 | `06-arrays/` | lists and key→value data | 1 h |
+| 7 | `07-functions/` | making your own commands | 1 h |
+| 8 | `08-forms/` | HTML form → PHP (the real web part) | 1 h |
+| 9 | `09-mysql/` | databases, SQL, connecting PHP to MySQL | 1.5 h |
+| 10 | `10-dynamic-page/` | a complete database-driven website | 1.5 h |
+
+Then `projects/` — three real mini apps you build yourself.
+
+---
+
+## Fun stuff (do these — they're not optional 🙂)
+
+- **`games/php-arcade.html`** — just double-click it. Four games: guess the output, fix the bug,
+  match the words, fill the blank. It saves your best score.
+- **`games/guess-number.php`** — a real PHP game. Teaches sessions.
+- **`games/hangman.php`** — hangman with programming words, written in PHP.
+- **`quizzes/`** — a quiz after every unit. Print them or answer on screen.
+
+---
+
+## Extra
+
+- `resources/cheatsheet.md` — every bit of syntax on one page. **Print this.**
+- `resources/common-errors.md` — when PHP shouts at you, look here first.
+- `resources/youtube.md` — a video for every lesson, in English and in Arabic.
+
+---
+
+## How to run your code
+
+**For lessons 1–7** (terminal — the fast way):
+
+```bash
+php 01-basics/examples.php
+```
+
+**For lessons 8–10 and the games** (you need a server). From inside this `Php` folder:
+
+```bash
+php -S localhost:8000
+```
+
+Then open `http://localhost:8000/08-forms/form.php` in your browser.
+Keep the terminal open while you work; `Ctrl + C` stops the server.
+
+> Using XAMPP instead (like at uni)? Same thing — put this folder in `xampp/htdocs/`,
+> press Start on Apache and MySQL, then open `http://localhost/Php/`.
+> Full instructions in `00-setup/SETUP.md`.
+
+---
+
+### Before you start
+
+You *will* get errors. Everyone does — one missing `;` breaks the whole page, and that is
+normal, not a sign you're bad at this. Read the line number, go to that line, fix it, run again.
+That loop **is** programming. Nobody types it perfectly the first time, not even people who've
+done it for twenty years.
+
+One lesson at a time. Don't rush. 💪

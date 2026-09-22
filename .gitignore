@@ -1,0 +1,24 @@
+# Windows / macOS junk
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editors
+.vscode/
+.idea/
+*.code-workspace
+
+# PHP
+vendor/
+composer.lock
+*.log
+.env
+
+# Local database dumps she makes herself (the course .sql files are tracked)
+backup-*.sql
+dump-*.sql
+
+# Temporary
+*.tmp
+*.bak
+*~

@@ -1,0 +1,205 @@
+# PROGRESS — read this first
+
+**Last updated:** 2026-09-22
+**Update this file at the end of every session.** It is the handoff between machines and
+between agent sessions. If it is stale, the next session wastes an hour re-deriving context.
+
+---
+
+## 1. The situation
+
+I (the repo owner) am teaching my girlfriend **Fatima** her university web-development
+material over **Zoom**. I explain, she shares her screen and writes the code herself.
+
+- Her textbook: **Web Development Full Stack** (Cengage)
+- Relevant chapters: 8 CMS overview · 9 WordPress security/themes/plug-ins ·
+  **10 Dynamic Webpages with PHP** · **11 Database Basics with MySQL** ·
+  **12 Dynamic Webpage with a MySQL Database**
+- She is a **complete beginner**. No prior programming.
+- Her uni lab uses **XAMPP** (Apache + MySQL + phpMyAdmin).
+
+**Everything built here is aimed at her chapters**, so the practice matches her exam.
+
+---
+
+## 2. Current status
+
+| | |
+|---|---|
+| **Phase** | PHP course material is fully built. Teaching has not started yet. |
+| **Next action** | Run Zoom **Session 1** (setup + lesson 1) |
+| **Blocked on** | nothing |
+
+### Sessions delivered
+
+*(add a row after every Zoom call — this is the single most useful thing for the next session)*
+
+| # | Date | Covered | How it went | Homework given |
+|---|---|---|---|---|
+| — | — | *not started* | — | — |
+
+---
+
+## 3. What is already done ✅
+
+The whole `Php/` folder — 63 files, every `.php` file passes `php -l`, examples verified by
+actually running them.
+
+```
+Php/
+├── README.md                 her entry point: the road, how to run things
+├── INSTRUCTOR-GUIDE.md       MY guide: 10-session Zoom plan, teaching notes, the walls she'll hit
+├── 00-setup/                 SETUP.md + hello.php
+├── 01-basics/                echo, variables, comments
+├── 02-datatypes/             string/int/float/bool, string functions
+├── 03-operators/             maths, comparison, && ||, ternary
+├── 04-conditions/            if / elseif / else / switch, truthiness
+├── 05-loops/                 for, while, do-while, foreach, break/continue, nested
+├── 06-arrays/                indexed, associative, multidimensional, array functions
+├── 07-functions/             params, return, defaults, scope, type hints
+├── 08-forms/                 $_POST/$_GET, validation, htmlspecialchars, register.php
+├── 09-mysql/                 SQL, mysqli, prepared statements, school.sql, full CRUD page
+├── 10-dynamic-page/          complete mini site: includes/, search, detail.php, admin.php
+├── games/                    php-arcade.html (4 games) + guess-number.php + hangman.php
+├── projects/                 3 projects with starter files and checklists
+├── quizzes/                  4 quizzes + answers/ANSWERS.md (with a marking guide)
+└── resources/                cheatsheet.md, common-errors.md, youtube.md
+```
+
+**Structure convention** — every lesson folder has exactly three files:
+
+- `lesson.md` — the explanation, simple English, a "Watch out" table at the end
+- `examples.php` — runnable, heavily commented, built for *"predict the output, then run"*
+- `exercises.php` — numbered `TODO` comments, easy → challenge, nothing solved for her
+
+**The arcade is also published as a private Claude Artifact** so she can play on her phone:
+https://claude.ai/artifact/JYBuyUAnizeyXzAT9tXMu2
+(It has to be shared from the page's Share menu before she can open it.)
+
+---
+
+## 4. What's next 🎯
+
+### Immediate — run the course
+
+Follow the session map in `Php/INSTRUCTOR-GUIDE.md`. 10 sessions, ~60–75 min each.
+Quizzes land after sessions 2, 4, 7 and 10. Projects after sessions 7, 8 and 10.
+
+**Do not advance past a failed loops (L5) or arrays (L6) quiz.** Everything afterwards depends
+on them, and pushing on makes lessons 8–10 collapse.
+
+### Asked for but not built yet
+
+- [ ] **Exam simulator** — one HTML page, mixed PHP + SQL questions, timed, scored, with a
+      review-your-wrong-answers screen at the end. For revision week. *(I offered it, he
+      hasn't said yes yet — ask before building.)*
+
+### Ideas worth proposing when the time is right
+
+- [ ] A one-page **visual diagram**: browser → request → server → PHP → MySQL → HTML → browser.
+      She'll need this mental model for the exam, and it explains why `.php` files can't be
+      double-clicked.
+- [ ] **Flashcards** (spaced repetition) for the function names and SQL keywords.
+- [ ] A **past-paper style mock exam** once we know the real exam format — ask her to send a
+      past paper or the exam outline.
+
+---
+
+## 5. Advanced roadmap 🚀
+
+Only after lesson 10 and project 3 are genuinely finished. Each phase is roughly 2–4 sessions.
+**Do not start these early** — they are the reward for finishing the fundamentals, not a substitute.
+
+### Phase A — make it a real application *(highest value, do this first)*
+
+| Topic | Why it matters | Build |
+|---|---|---|
+| **Login system** | `password_hash()` / `password_verify()`, sessions, "who is logged in" | put a login in front of project 3's admin |
+| **PDO** | the modern alternative to mysqli; her teacher may want it | port `09-mysql/` to a `pdo/` variant, side by side |
+| **Table relationships** | `students` + `courses` + `enrollments`, `JOIN`, foreign keys | extend `school.sql` to 3 tables |
+| **File uploads** | `$_FILES`, validating type and size, where to store | student photos in project 3 |
+| **Pagination + sorting** | `LIMIT`/`OFFSET`, clickable column headers | project 3's list page |
+
+### Phase B — write better code
+
+| Topic | Build |
+|---|---|
+| **OOP**: classes, properties, methods, constructors, `$this` | rewrite the student CRUD as a `Student` class |
+| **Separating concerns** | move all queries into `StudentRepository`, keep the pages dumb |
+| **Exceptions**, `try/catch`, real error handling | replace every `die()` with something sane |
+| **Composer + autoloading** | one small package, e.g. a dotenv loader |
+| **Security pass** | CSRF tokens, session fixation, safe headers — audit project 3 together |
+
+### Phase C — connect to the front end
+
+| Topic | Build |
+|---|---|
+| **JSON API**: `json_encode`, proper status codes | `api/students.php` returning JSON |
+| **fetch() from JavaScript** — no page reload | live search box on the list page |
+| **A tiny JS layer** | delete a row without reloading |
+
+### Phase D — ship it
+
+| Topic | Build |
+|---|---|
+| **Git**, properly | she gets her own repo, commits her own project |
+| **Deployment** | free host (InfinityFree / 000webhost) — her project live on a real URL |
+| **Environment config** | `.env`, never commit credentials |
+
+### The ordering rule
+
+Every phase must produce **something she can click**. She learns from a working page, not from
+a concept. If a topic can't be attached to a visible feature in project 3, push it back.
+
+---
+
+## 6. How to work in this repo (for the next agent)
+
+**Read before editing:** `Php/README.md` (her view) and `Php/INSTRUCTOR-GUIDE.md` (his view).
+Match the existing tone — simple English, short sentences, no jargon without explaining it,
+a "Watch out" table of real beginner mistakes at the end of each lesson.
+
+**House rules for the material:**
+
+1. **Never solve the exercises.** `exercises.php` files contain TODOs only. If a solutions file
+   is ever added, it goes in a separate folder that isn't linked from her README.
+2. **Everything must actually run.** Run `php -l` on every PHP file you touch, and execute the
+   examples before claiming they work.
+3. **Modern PHP 8 only.** `mysqli_`/PDO, never `mysql_`. Prepared statements everywhere a user
+   value touches SQL. `htmlspecialchars()` on every printed user value. These are taught as
+   non-negotiable rules, so the material must never break them, not even in a quick demo.
+4. **Comments explain *why*, not *what*.** She reads the comments as part of the lesson.
+5. **Deliberate bugs are a teaching tool** — several examples contain intentional mistakes
+   (wrong `elseif` order, infinite loop, `=` vs `==`). They are labelled as such. Don't "fix" them.
+6. **Games and quizzes are part of the course**, not decoration. New topics should get a few
+   arcade questions added to `games/php-arcade.html` (the question arrays are at the top of the
+   `<script>`, with a comment showing the shape).
+
+**Useful commands:**
+
+```bash
+php -l path/to/file.php                    # syntax check
+php Php/01-basics/examples.php             # run a lesson
+cd Php && php -S localhost:8000            # server for lessons 8-10 + games
+find Php -name "*.php" -exec php -l {} \;  # lint everything
+```
+
+**Environment:** Windows 11, PHP 8.2.12 CLI on PATH, Git Bash available, XAMPP for MySQL work.
+No `gh` CLI installed — use plain `git` for pushes.
+
+---
+
+## 7. Session log
+
+*(newest first — one short entry per working session, so the next agent knows what changed and why)*
+
+### 2026-09-22 — Course built from scratch
+- Created the whole `Php/` folder: 10 lessons, 3 games, 4 quizzes + answer key, 3 projects,
+  3 resource docs, instructor guide.
+- Originally planned 8 lessons; **extended to 10** after seeing a photo of her lecture slide
+  showing the textbook's chapter list — MySQL (Ch. 11) and dynamic pages with a database
+  (Ch. 12) are examinable, so lessons 9 and 10 were added to cover them.
+- Verified: every PHP file lints, every example was executed, the arcade was tested in a browser
+  (all four game modes), both PHP games tested over `php -S`.
+- Published the arcade as a private Claude Artifact.
+- Set up this git repo and pushed to GitHub for two-machine sync.
