@@ -65,3 +65,22 @@ $result = _________________________________
 
 ---
 ✅ 7–8 → lesson 4 · 5–6 → redo exercise 3 (predict then run) · under 5 → the `=` vs `==` page again
+
+---
+
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+
+<br>
+
+1. `=` puts a value into a variable. `==` asks whether two things are equal.
+2. `13` · `20` · `1` · `8`
+3. `30` — 20 − 5 = 15, then × 2.
+4. `true` · `false` · `true`
+   (`5 == "5"` is true because `==` ignores the type; `===` would be false.)
+5. It adds 1, so `$i` becomes 8.
+6. `$age >= 18 && $hasPassport`
+7. `$day == "Saturday" || $day == "Sunday"`
+8. `$result = ($mark >= 10) ? "Pass" : "Fail";`
+
+</details>

@@ -67,3 +67,34 @@ Answer: ______________________________________
 
 ---
 ✅ 7–8 → lesson 8 · 5–6 → redo exercise 5 (`biggest`) · under 5 → practise `return` vs `echo` only
+
+---
+
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+
+<br>
+
+1. ```php
+   function hello() {
+       echo "Hi";
+   }
+   ```
+2. Because you never **called** it. Writing a function does nothing on its own —
+   you need `hello();` on a line of its own.
+3. Parameters. (The values you pass in when calling are the *arguments*.)
+4. `echo` prints it and hands back nothing. `return` gives the value back, so you can
+   store it, do maths with it, or pass it somewhere else.
+5. `6`. `return` ends the function immediately, so the `echo "done"` never runs.
+6. **Scope** — a function cannot see variables from outside itself.
+   Fix: pass it in. `function show($x) { echo $x; }` then `show(10);`
+7. ```php
+   function half($n) {
+       return $n / 2;
+   }
+   echo half(50);      // 25
+   ```
+8. It's a **default value**: used when the caller doesn't give that argument.
+   `discount(100)` uses 10. `discount(100, 30)` uses 30.
+
+</details>

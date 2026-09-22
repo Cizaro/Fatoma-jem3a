@@ -104,3 +104,30 @@ ________________________________________
 
 > There are no wrong answers in that last part. Whatever you wrote, we work around it.
 > Everybody starts here, and the people who look fast now were exactly this slow at the start.
+
+---
+
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+
+<br>
+
+1. **b** — on the server.
+2. **b** — the HTML that your PHP produced. The visitor never sees your PHP.
+3. HTML = **skeleton** · CSS = **clothes** · PHP = **brain**
+4. **c** — `.php`
+5. True: login · saving to a database · a different price per customer.
+   False: button colour (that's CSS) · scroll animation (that's JavaScript).
+6. `<?php` and `?>`
+7. A semicolon `;`
+8. **False** — `$name` and `$Name` are two different variables. PHP is case sensitive.
+9. "Put the value 20 into a box called age."
+   Try not to read `=` as "equals" — it's the habit behind a bug you'll meet in lesson 4.
+10. `php hello.php`
+11. Because nothing ran the PHP. Double-clicking opens the file itself, so the browser just
+    shows you the text. It needs a server — `php -S` or XAMPP.
+12. **b** — `php -S localhost:8000`
+
+The last two questions have no right answer. Whatever you wrote, tell your instructor.
+
+</details>

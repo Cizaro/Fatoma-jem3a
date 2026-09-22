@@ -200,3 +200,102 @@ _________________________________
 | under 20 | Don't panic. Find which *section* you lost marks in and redo that lesson only. |
 
 **Write down which question numbers you got wrong.** That list, not the score, is your revision plan.
+
+---
+
+<details>
+<summary><b>✅ Check your answers</b> — after your instructor has marked it</summary>
+
+<br>
+
+**Mark it with your instructor the first time.** Open this only for your second run,
+during revision week.
+
+**Section A** — 1-b · 2-c · 3-b · 4-b · 5-c · 6-c · 7-b · 8-c · 9-b · 10-b
+
+Questions 9 and 10 sit together on purpose: `htmlspecialchars()` protects what you
+**print** (XSS). Prepared statements protect what goes **into a query** (SQL injection).
+If you swapped them, re-read lesson 8 and lesson 9.
+
+**Section B**
+- **11** — `same ` only. `4 === "4"` is false, so the second `if` never fires.
+- **12** — `246`. `continue` skips the odd numbers.
+- **13** — `3-36-18`
+- **14** — `bigsmall`. The `echo "never"` after `return` can never run.
+
+**Section C**
+- **15** — missing `;` after `"Rana"`, and `$Name` should be `$name` (case sensitive).
+- **16** — nothing changes `$i`, so `$i < 5` stays true forever: an infinite loop.
+  Add `$i++;` inside the braces.
+- **17** — the `$_GET` value goes straight into the SQL: **SQL injection**.
+  ```php
+  $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE id = ?");
+  mysqli_stmt_bind_param($stmt, "i", $id);
+  mysqli_stmt_execute($stmt);
+  ```
+
+**Section D**
+- **18**
+  ```php
+  function letterGrade($mark) {
+      if ($mark >= 18) return "A";
+      if ($mark >= 16) return "B";
+      if ($mark >= 14) return "C";
+      if ($mark >= 10) return "D";
+      return "F";
+  }
+  ```
+  The order is part of the answer. Reversed, every mark comes back as `D`.
+- **19**
+  ```php
+  foreach ($class as $student) {
+      $result = $student["grade"] >= 10 ? "Pass" : "Fail";
+      echo $student["name"] . " - " . $student["grade"] . " - " . $result . "\n";
+  }
+  ```
+- **20** — four things had to be there: a form whose input has a `name`, the
+  `REQUEST_METHOD` check, an empty check, and `htmlspecialchars()` on the output.
+  ```php
+  <?php
+  $name = ""; $error = "";
+  if ($_SERVER["REQUEST_METHOD"] === "POST") {
+      $name = trim($_POST["name"] ?? "");
+      if ($name === "") $error = "Name is required";
+  }
+  ?>
+  <form method="post">
+      <input type="text" name="name">
+      <button type="submit">Send</button>
+  </form>
+  <?php
+  if ($error) echo $error;
+  elseif ($name) echo "Welcome " . htmlspecialchars($name);
+  ```
+  Any working shape counts. The marks are for the four ideas, not for matching this layout.
+
+**Section E**
+- **21**
+  ```sql
+  CREATE TABLE books (
+      id     INT AUTO_INCREMENT PRIMARY KEY,
+      title  VARCHAR(120) NOT NULL,
+      author VARCHAR(100),
+      year   INT
+  );
+  ```
+- **22** — `SELECT * FROM books WHERE year > 2020 ORDER BY year DESC;`
+- **23**
+  ```php
+  $conn = mysqli_connect("localhost", "root", "", "library");
+  $result = mysqli_query($conn, "SELECT title FROM books");
+  while ($row = mysqli_fetch_assoc($result)) {
+      echo $row["title"] . "<br>";
+  }
+  ```
+
+---
+
+**Now do the part that matters:** write down the numbers you got wrong, and look at which
+**section** they came from. That list is your revision plan — much more useful than the score.
+
+</details>

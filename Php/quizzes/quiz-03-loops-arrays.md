@@ -138,3 +138,42 @@ function show() {
 }
 show();
 ```
+
+---
+
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+
+<br>
+
+**Part A** — 1-c · 2-b · 3-b · 4-b · 5-c · 6-b · 7-b · 8-c
+
+**Part B**
+- **9** — `1245` (3 is skipped by `continue`)
+- **10** — `4.6666666666667` — or `4.67` if you rounded it.
+- **11** — `6`. The `echo` after `return` never runs.
+- **12** — `abc`
+
+**Part C**
+- **13**
+  ```php
+  for ($i = 1; $i <= 5; $i++) { echo $i . " "; }
+  ```
+- **14**
+  ```php
+  function triple($n) { return $n * 3; }
+  echo triple(7);     // 21
+  ```
+  If you wrote `echo $n * 3;` **inside** the function, that's the wrong answer — it prints
+  but returns nothing, so you can't use the result anywhere else.
+- **15**
+  ```php
+  foreach ($class as $student) {
+      echo $student["name"] . " : " . $student["grade"] . "\n";
+  }
+  ```
+
+**Bonus** — **scope**. A function can't see variables from outside itself.
+Fix: `function show($x) { echo $x; }` then `show(10);`
+
+</details>

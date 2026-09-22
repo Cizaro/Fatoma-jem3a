@@ -131,3 +131,42 @@ if (_________________________________) {
 
 **Bonus (+1):** Put these in the right order for a grade check and explain why:
 `>= 10`, `>= 16`, `>= 14`
+
+---
+
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+
+<br>
+
+**Part A** — 1-b · 2-b · 3-b · 4-c · 5-c · 6-c · 7-c · 8-b
+
+- **7** — `"0"` is one of PHP's falsy values. `"false"` is a non-empty string, so it's **true**.
+
+**Part B**
+- **9** — prints `Pass`. The problem: 15 deserves "Very good", but `>= 10` is checked first
+  and PHP stops at the first true branch. The conditions are in the wrong order.
+- **10** — `adult`
+- **11** — `bool(false)` then `bool(true)`
+- **12** — prints `big`. `$x = 100` **assigns** instead of comparing, and 100 is truthy,
+  so the `if` always wins. This is the `=` vs `==` bug.
+
+**Part C**
+- **13**
+  ```php
+  if ($n % 2 == 0) { echo "Even"; } else { echo "Odd"; }
+  ```
+- **14**
+  ```php
+  switch ($color) {
+      case "red":  echo "Red";  break;
+      case "blue": echo "Blue"; break;
+      default:     echo "Other";
+  }
+  ```
+- **15** — `if ($grade >= 10 && $attendance >= 75)`
+
+**Bonus** — `>= 16`, then `>= 14`, then `>= 10`. Biggest first, because PHP takes the first
+branch that is true and never looks at the rest.
+
+</details>

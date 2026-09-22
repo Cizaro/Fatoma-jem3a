@@ -57,3 +57,22 @@ Answer: ______  *(careful!)*
 
 ---
 ✅ 7–8 → lesson 3 · 5–6 → redo the string functions · under 5 → re-run `examples.php` line by line
+
+---
+
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+
+<br>
+
+1. `"Rana"` string · `19` int · `14.5` float · `true` bool · `"19"` **string** —
+   it's in quotes, so it's text, even though it looks like a number.
+2. **c** — `var_dump`
+3. `6`
+4. Nothing at all. `echo false;` prints an empty string — that's why we use `var_dump()`.
+5. `2` · `7` · `34` · `3`
+6. `echo strtoupper($word);`
+7. `echo $price - ($price * 25 / 100);`  (or `$price * 0.75`)
+8. `2` — counting starts at **0**, so F=0, a=1, t=2.
+
+</details>

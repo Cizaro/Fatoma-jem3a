@@ -64,3 +64,22 @@ _________________________________
 
 ---
 ✅ 7–8 → straight to lesson 2 · 5–6 → redo exercises 3 and 4 · under 5 → we go through it again together
+
+---
+
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+
+<br>
+
+1. It prints / outputs something.
+2. Valid: `$name`, `$my_age`, `$myAge`.
+   Invalid: `age` (no `$`), `$2fast` (starts with a digit), `$my age` (has a space).
+3. `I love Tyre`
+4. `I love $city` — single quotes are literal, they don't read variables.
+5. `8`. A variable only keeps the **last** thing you put in it; the 3 is gone.
+6. `echo $a . " " . $b;`  (or `echo "$a $b";`) — the space matters.
+7. Missing `;` at the end of line 1, and `$nmae` is a typo for `$name`.
+8. `// this is my first program`  (`#` or `/* */` also correct)
+
+</details>

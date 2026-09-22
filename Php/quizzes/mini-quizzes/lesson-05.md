@@ -71,3 +71,27 @@ Answer: ______________________
 
 ---
 ✅ 7–8 → lesson 6 · 5–6 → redo the pyramid exercise · under 5 → trace a 3-round loop out loud together
+
+---
+
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+
+<br>
+
+1. Start (`$i = 0`) — runs **once**, at the beginning.
+   Condition (`$i < 4`) — runs **before every round**; if false, the loop stops.
+   Step (`$i++`) — runs **after every round**.
+2. `4` times — 0, 1, 2, 3.
+3. `321`
+4. Nothing inside changes `$n`, so the condition never becomes false: an **infinite loop**.
+   The terminal or page freezes. `Ctrl + C` stops it.
+5. `break` leaves the loop completely. `continue` skips only the current round and carries on.
+6. `123` — it stops before printing 4.
+7. ```php
+   for ($i = 2; $i <= 10; $i += 2) { echo $i . " "; }
+   ```
+   (checking `if ($i % 2 == 0)` inside a normal loop is equally correct)
+8. The **inner** one. It finishes completely for every single round of the outer loop.
+
+</details>

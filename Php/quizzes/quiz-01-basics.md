@@ -124,3 +124,38 @@ _________________________________
 ---
 
 **Bonus (+1):** Why do we use `var_dump()` instead of `echo` when checking a boolean?
+
+---
+
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+
+<br>
+
+**Part A** — 1-b · 2-c · 3-b · 4-c · 5-c · 6-c · 7-c · 8-c
+
+- **5** — `17 % 5`: 5 goes into 17 three times (15), and **2** is left over.
+- **7** — `echo false;` prints nothing at all, not the word "false".
+- **8** — `"PHP is fun"` is 10 characters; the spaces count too.
+
+**Part B**
+- **9** — `12`. The 5 was overwritten and is gone.
+- **10** — `HELLO-5`
+- **11** — `bool(true)`. `==` compares the value only. With `===` it would be `false`.
+- **12** — `Prog`
+
+**Part C**
+- **13** — `$age = 20;`
+- **14** — `echo "Hello $name!";` (or `echo "Hello " . $name . "!";`)
+- **15** — three mistakes: no `$` on `name`, no `;` at the end of line 2, and single quotes
+  don't read variables.
+  ```php
+  <?php
+  $name = "Sara";
+  echo "Welcome $name";
+  ```
+
+**Bonus** — `echo true` prints `1` and `echo false` prints nothing, so you can't tell a
+`false` from a mistake. `var_dump()` shows `bool(false)` clearly.
+
+</details>

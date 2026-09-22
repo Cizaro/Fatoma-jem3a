@@ -30,8 +30,23 @@ what each weak section means and what to do about it.
 
 ---
 
+## Marking yourself
+
+**Every quiz now ends with a collapsed "Check your answers" section.** It stays closed until
+you click it, so you can't see the answers while you're working — but you can mark yourself
+straight afterwards without waiting for a call.
+
+It works on GitHub and in VS Code's markdown preview. In a plain text editor you'll just see
+the answers underneath, so open the file in one of those two if you want it hidden.
+
+The rule: **write every answer down before you open it.** Reading an answer you never
+committed to feels like learning and isn't.
+
+---
+
 ## Answers
-`answers/` — instructor only.
+`answers/` — instructor only. These go further than the in-quiz answers: marking guides,
+where to deduct marks, and what a weak section actually means about what to teach next.
 
 - `MINI-ANSWERS.md` — quiz 0 + all ten mini-quizzes
 - `ANSWERS.md` — the four unit quizzes, with a marking guide

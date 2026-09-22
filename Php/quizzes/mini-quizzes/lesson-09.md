@@ -62,3 +62,34 @@ Answer: ______________________________________
 
 ---
 ✅ 7–8 → lesson 10 · 5–6 → redo `03-insert.php` from memory · under 5 → practise SQL in phpMyAdmin first, no PHP
+
+---
+
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+
+<br>
+
+1. table = sheet · row = a row / one record · column = a column / one field
+2. MySQL gives every new row the next unused number automatically, and that number is what
+   identifies the row. You never set it yourself.
+3. `SELECT * FROM students;`
+   `SELECT * FROM students WHERE grade >= 10;`
+   `SELECT * FROM students ORDER BY grade DESC;`
+4. `INSERT INTO students (name, grade) VALUES ('Rana', 16);`
+5. There is no `WHERE`, so it deletes **every row in the table**. There is no undo.
+6. ```php
+   while ($row = mysqli_fetch_assoc($result)) {
+       echo $row["name"] . "<br>";
+   }
+   ```
+7. The value from the URL is glued straight into the SQL — that's **SQL injection**.
+   Someone visiting `?id=1 OR 1=1` gets every row. Replace it with a prepared statement:
+   ```php
+   $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE id = ?");
+   mysqli_stmt_bind_param($stmt, "i", $id);
+   ```
+8. `s` = string, `i` = integer. The **number** of letters must match the number of `?`,
+   and their **order** must match the order of the variables after them.
+
+</details>

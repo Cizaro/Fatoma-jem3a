@@ -114,3 +114,54 @@ _________________________________
 ---
 
 **Bonus (+1):** Name three things you must always do on a dynamic page that takes user input.
+
+---
+
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+
+<br>
+
+**Part A** — 1-c · 2-b · 3-b · 4-b · 5-b · 6-c · 7-b · 8-b
+
+- **4 vs 8** are on purpose: `htmlspecialchars()` protects what you **print** (XSS);
+  prepared statements protect what goes **into a query** (SQL injection).
+
+**Part B**
+- **9** — `SELECT * FROM students WHERE grade >= 10;`
+- **10** — `INSERT INTO students (name, grade) VALUES ('Sara', 14);`
+- **11** — the URL value is glued straight into the SQL, so it's open to SQL injection
+  (`?id=1 OR 1=1` returns everything). Use a prepared statement:
+  ```php
+  $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE id = ?");
+  mysqli_stmt_bind_param($stmt, "i", $id);
+  mysqli_stmt_execute($stmt);
+  ```
+- **12** — `header()` only *asks* the browser to move; without `exit` the rest of your script
+  keeps running. It also stops a refresh re-submitting the form.
+
+**Part C**
+- **13**
+  ```html
+  <form method="post" action="save.php">
+      <input type="text" name="email">
+      <button type="submit">Send</button>
+  </form>
+  ```
+- **14**
+  ```php
+  $email = $_POST["email"] ?? "";
+  echo htmlspecialchars($email);
+  ```
+- **15**
+  ```php
+  while ($row = mysqli_fetch_assoc($result)) {
+      echo $row["name"] . "<br>";
+  }
+  ```
+
+**Bonus** — any three of: prepared statements for every user value · `htmlspecialchars()`
+on every printed value · `(int)` on ids from a URL · validate on the server, never trust
+the browser · redirect after saving · handle the empty-result case.
+
+</details>
