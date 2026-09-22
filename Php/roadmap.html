@@ -1,0 +1,569 @@
+<meta charset="utf-8">
+<title>PHP A to Z</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#FAF9FC;
+  --surface:#FFFFFF;
+  --surface-2:#F3F1F9;
+  --ink:#14162B;
+  --ink-2:#5A5A75;
+  --ink-3:#8B8AA3;
+  --line:#E2DFEC;
+  --accent:#5C62A8;
+  --accent-soft:#EAE9F7;
+  --marker:#B4690E;
+  --marker-soft:#FBF0DF;
+  --done:#2F7A4F;
+  --done-soft:#E6F2EA;
+  --shadow:0 1px 2px rgba(20,22,43,.05), 0 8px 24px -12px rgba(20,22,43,.18);
+  --display:"Familjen Grotesk", "Segoe UI", system-ui, sans-serif;
+  --body:"Public Sans", system-ui, -apple-system, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111119;
+    --surface:#1A1A27;
+    --surface-2:#22222F;
+    --ink:#ECEAF6;
+    --ink-2:#A6A4BE;
+    --ink-3:#7A7891;
+    --line:#2D2D40;
+    --accent:#9A9FE0;
+    --accent-soft:#242440;
+    --marker:#E0A155;
+    --marker-soft:#2E2417;
+    --done:#6FC08F;
+    --done-soft:#1B2E23;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111119;
+  --surface:#1A1A27;
+  --surface-2:#22222F;
+  --ink:#ECEAF6;
+  --ink-2:#A6A4BE;
+  --ink-3:#7A7891;
+  --line:#2D2D40;
+  --accent:#9A9FE0;
+  --accent-soft:#242440;
+  --marker:#E0A155;
+  --marker-soft:#2E2417;
+  --done:#6FC08F;
+  --done-soft:#1B2E23;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--body); font-size:15px; line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:780px; margin:0 auto; padding-inline:16px; padding-block:0 64px}
+
+/* ---------- header ---------- */
+header{padding-block:40px 24px}
+.eyebrow{
+  font-family:var(--mono); font-size:11px; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3);
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+h1{
+  font-family:var(--display); font-weight:700; font-size:clamp(34px,8vw,52px);
+  line-height:1.02; letter-spacing:-.02em; margin:10px 0 6px; text-wrap:balance;
+}
+h1 em{font-style:normal; color:var(--accent)}
+.lede{color:var(--ink-2); max-width:56ch; margin:0}
+
+.theme-btn{
+  margin-left:auto; font-family:var(--mono); font-size:11px; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase;
+  background:none; border:1px solid var(--line); color:var(--ink-3);
+  border-radius:999px; padding:5px 12px; cursor:pointer;
+}
+.theme-btn:hover{color:var(--ink); border-color:var(--accent)}
+
+/* ---------- progress ---------- */
+.status{
+  background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:18px 20px; margin-block:26px 34px; box-shadow:var(--shadow);
+  display:grid; gap:14px;
+}
+.status-top{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap}
+.count{font-family:var(--display); font-weight:700; font-size:26px; letter-spacing:-.01em}
+.count span{color:var(--ink-3); font-weight:500; font-size:16px}
+.next{
+  margin-left:auto; font-family:var(--mono); font-size:12px; font-weight:600;
+  background:var(--marker-soft); color:var(--marker);
+  border-radius:999px; padding:5px 13px; white-space:nowrap;
+}
+.meter{height:7px; background:var(--surface-2); border-radius:99px; overflow:hidden}
+.meter i{
+  display:block; height:100%; width:0; border-radius:99px;
+  background:linear-gradient(90deg,var(--accent),var(--marker));
+  transition:width .45s cubic-bezier(.4,0,.2,1);
+}
+.status-foot{
+  display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  font-size:12.5px; color:var(--ink-3);
+}
+.reset{
+  background:none; border:0; color:var(--ink-3); font-family:var(--body);
+  font-size:12.5px; cursor:pointer; text-decoration:underline; padding:0;
+}
+.reset:hover{color:var(--marker)}
+
+/* ---------- the gutter list ---------- */
+.zone-label{
+  display:grid; grid-template-columns:46px 1fr; align-items:center;
+}
+.zone-label .gutter{position:relative; height:100%}
+.zone-label .txt{
+  font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--ink-3); padding:26px 0 10px;
+}
+.zone-label .txt b{color:var(--accent); font-weight:600}
+
+.node{display:grid; grid-template-columns:46px 1fr}
+.gutter{position:relative}
+.gutter::before{
+  content:""; position:absolute; left:21px; top:0; bottom:0; width:2px;
+  background:var(--line);
+}
+.node.is-done .gutter::before{background:var(--accent)}
+.badge{
+  position:absolute; left:8px; top:14px; width:28px; height:28px; z-index:1;
+  display:grid; place-items:center; border-radius:50%;
+  font-family:var(--mono); font-size:12px; font-weight:700;
+  background:var(--surface); color:var(--ink-3);
+  border:2px solid var(--line);
+}
+.node.is-done .badge{background:var(--accent); border-color:var(--accent); color:#fff}
+.node.is-next .badge{border-color:var(--marker); color:var(--marker); background:var(--marker-soft)}
+
+.card{
+  background:var(--surface); border:1px solid var(--line); border-radius:12px;
+  margin:8px 0 8px 6px; overflow:hidden;
+}
+.node.is-next .card{border-color:var(--marker); box-shadow:var(--shadow)}
+.node.is-done .card{background:transparent; border-color:transparent}
+
+.head{
+  width:100%; display:flex; align-items:flex-start; gap:12px; text-align:left;
+  background:none; border:0; padding:13px 15px; cursor:pointer;
+  font-family:var(--body); color:inherit; font-size:15px;
+}
+.head:hover .title{color:var(--accent)}
+.head:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+.titles{flex:1; min-width:0}
+.title{font-family:var(--display); font-weight:600; font-size:17px; letter-spacing:-.01em}
+.titles .sum{display:block}
+.node.is-done .title{color:var(--ink-3); text-decoration:line-through; text-decoration-thickness:1px}
+.sum{color:var(--ink-2); font-size:13.5px; margin-top:1px}
+.node.is-done .sum{color:var(--ink-3)}
+.chev{color:var(--ink-3); font-size:12px; margin-top:5px; transition:transform .2s}
+.node.is-open .chev{transform:rotate(90deg)}
+
+.tag{
+  display:inline-block; font-family:var(--mono); font-size:10px; font-weight:700;
+  letter-spacing:.09em; text-transform:uppercase; padding:2px 7px; border-radius:4px;
+  vertical-align:2px; margin-left:7px;
+}
+.tag.project{background:var(--done-soft); color:var(--done)}
+.tag.hard{background:var(--marker-soft); color:var(--marker)}
+.tag.extra{background:var(--accent-soft); color:var(--accent)}
+
+.body{padding:0 15px 15px 15px; border-top:1px solid var(--line); margin-top:2px; padding-top:13px}
+.body h4{
+  font-family:var(--mono); font-size:10.5px; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-3); margin:0 0 7px;
+}
+.body ul{margin:0 0 15px; padding-left:18px; color:var(--ink-2); font-size:14px}
+.body li{margin-bottom:3px}
+.body li::marker{color:var(--accent)}
+.path{
+  font-family:var(--mono); font-size:12.5px; background:var(--surface-2);
+  color:var(--ink-2); padding:3px 8px; border-radius:5px;
+  display:inline-block; margin:0 5px 5px 0; word-break:break-all;
+}
+.warn{
+  background:var(--marker-soft); color:var(--marker); border-radius:8px;
+  padding:10px 13px; font-size:13.5px; margin-bottom:14px;
+}
+.warn b{font-weight:600}
+.tick{
+  display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+  font-size:13.5px; color:var(--ink-2); font-weight:500; user-select:none;
+}
+.tick input{width:17px; height:17px; accent-color:var(--accent); cursor:pointer; margin:0}
+
+/* ---------- finish ---------- */
+.finish{
+  display:grid; grid-template-columns:46px 1fr; margin-top:4px;
+}
+.finish .gutter::before{bottom:auto; height:22px}
+.finish .flag{
+  margin:6px 0 0 6px; padding:20px 22px; border-radius:12px;
+  background:var(--accent-soft); border:1px solid var(--accent);
+}
+.finish h3{font-family:var(--display); font-size:20px; margin:0 0 4px; letter-spacing:-.01em}
+.finish p{margin:0; color:var(--ink-2); font-size:14px}
+
+footer{
+  margin-top:40px; padding-top:20px; border-top:1px solid var(--line);
+  font-size:12.5px; color:var(--ink-3); text-align:center;
+}
+
+@media (max-width:460px){
+  .node, .zone-label, .finish{grid-template-columns:38px 1fr}
+  .gutter::before{left:17px}
+  .badge{left:4px; width:26px; height:26px; font-size:11px}
+  .card{margin-left:2px}
+  .next{margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important}
+}
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">
+    <span>Fatima's course</span><span>·</span><span>26 steps</span>
+    <button class="theme-btn" id="themeBtn" type="button">theme</button>
+  </div>
+  <h1>PHP, <em>A</em> to <em>Z</em></h1>
+  <p class="lede">
+    A is installing PHP. Z is your own website live on the internet. Every letter in between
+    is one thing you can do that you couldn't do before. Tick them off as you go.
+  </p>
+</header>
+
+<section class="status" aria-label="Your progress">
+  <div class="status-top">
+    <div class="count"><span id="doneCount">0</span> <span>of 26 done</span></div>
+    <div class="next" id="nextUp">Next: A — Setup</div>
+  </div>
+  <div class="meter"><i id="meterFill"></i></div>
+  <div class="status-foot">
+    <span id="zoneNote">Start at the top. One letter at a time.</span>
+    <button class="reset" id="resetBtn" type="button">reset progress</button>
+  </div>
+</section>
+
+<main id="list"></main>
+
+<footer>Your ticks are saved in this browser only — they don't follow you to another computer.</footer>
+
+</div>
+
+<script>
+const NODES = [
+  { z:"Zone 0", zt:"Getting ready", l:"A", t:"Setup", s:"Run your first PHP file",
+    learn:["What a server is, and why PHP runs there and not in the browser",
+           "Running a file with <code>php file.php</code>",
+           "Starting a local server with <code>php -S localhost:8000</code>",
+           "Why double-clicking a .php file shows you code instead of a page"],
+    files:["00-setup/SETUP.md","00-setup/hello.php"] },
+
+  { z:"Zone 1", zt:"The language · textbook ch. 10", l:"B", t:"echo & variables", s:"Print things and store values",
+    learn:["<code>echo</code> — how PHP talks","Variables: a box with a name",
+           "Single vs double quotes (this one catches everybody once)","Comments"],
+    files:["01-basics/"] },
+
+  { z:"Zone 1", l:"C", t:"Data types & strings", s:"Know what a value actually is",
+    learn:["string, int, float, bool — and why <code>\"20\"</code> is not <code>20</code>",
+           "<code>var_dump()</code>, your debugging best friend",
+           "Cutting, joining, upper-casing and searching text",
+           "The <code>%</code> trick for testing whether a number is even"],
+    files:["02-datatypes/"] },
+
+  { z:"Zone 1", l:"D", t:"Operators", s:"Maths, comparison, and AND/OR",
+    learn:["<code>+ - * / % **</code> and the shortcuts <code>+=</code> <code>++</code>",
+           "<code>==</code> vs <code>===</code> — value, or value and type",
+           "<code>&amp;&amp;</code> and <code>||</code> for combining conditions",
+           "The ternary: a whole if/else on one line"],
+    files:["03-operators/"] },
+
+  { z:"Zone 1", l:"E", t:"Conditions", s:"Make the code choose",
+    learn:["<code>if</code> / <code>elseif</code> / <code>else</code>",
+           "Why the order of your conditions decides the answer",
+           "<code>switch</code>, and what happens when you forget <code>break</code>",
+           "What PHP quietly calls false: <code>0</code>, <code>\"\"</code>, <code>\"0\"</code>, <code>[]</code>"],
+    warn:"<b>The #1 beginner bug lives here:</b> <code>=</code> puts a value in, <code>==</code> asks a question. <code>if ($x = 5)</code> is always true.",
+    files:["04-conditions/"] },
+
+  { z:"Zone 1", l:"F", t:"Loops", s:"Repeat without repeating yourself",
+    learn:["<code>for</code> when you know how many times",
+           "<code>while</code> when you don't — and how not to freeze your laptop",
+           "<code>break</code> and <code>continue</code>",
+           "Loops inside loops: tables, grids and pyramids"],
+    files:["05-loops/","games/guess-number.php"] },
+
+  { z:"Zone 1", l:"G", t:"Arrays", s:"Many values under one name", tag:"hard",
+    learn:["Indexed arrays, and why counting starts at 0",
+           "Associative arrays: <code>key =&gt; value</code>",
+           "<code>foreach</code> — the loop built for arrays",
+           "Arrays of arrays, which is exactly what a database table looks like"],
+    warn:"<b>This is the wall.</b> Everything after this is built on arrays. It's normal to spend two sessions here — that's the cost, not a failure.",
+    files:["06-arrays/"] },
+
+  { z:"Zone 1", l:"H", t:"Functions", s:"Write your own commands",
+    learn:["Parameters and arguments","<code>return</code> vs <code>echo</code> — the difference that matters",
+           "Default values","Scope: why a function can't see your other variables"],
+    files:["07-functions/","games/hangman.php"] },
+
+  { z:"Zone 1", l:"I", t:"Project 1 — Grade Calculator", s:"Build a full class report on your own", tag:"project",
+    learn:["Store a class of students in a multidimensional array",
+           "Write your own average and letter-grade functions",
+           "Print a lined-up table with statistics",
+           "Do it with the lesson files closed"],
+    files:["projects/project-1-grades/"] },
+
+  { z:"Zone 2", zt:"The web · textbook ch. 10", l:"J", t:"Forms & POST", s:"Take input from a real person",
+    learn:["<code>method</code>, <code>action</code>, and why <code>name</code> is the one that matters",
+           "<code>$_POST</code> and <code>$_GET</code>, and when to use each",
+           "The self-submitting page pattern",
+           "Keeping what the user typed after a failed submit"],
+    files:["08-forms/form.php"] },
+
+  { z:"Zone 2", l:"K", t:"Validation & security", s:"Never trust what arrives",
+    learn:["Checking every field server-side, not just in HTML",
+           "Collecting several errors and showing them together",
+           "<code>htmlspecialchars()</code> and what XSS actually is",
+           "Why <code>required</code> in HTML protects nobody"],
+    files:["08-forms/register.php"] },
+
+  { z:"Zone 2", l:"L", t:"Sessions", s:"Remember things between page loads",
+    learn:["<code>session_start()</code> and <code>$_SESSION</code>",
+           "Why a page forgets everything without it",
+           "Building something that keeps state across clicks"],
+    files:["games/guess-number.php","games/hangman.php"] },
+
+  { z:"Zone 2", l:"M", t:"Project 2 — To-Do List", s:"Add, tick off and delete tasks", tag:"project",
+    learn:["A form that adds items to a list","Done and delete actions through links",
+           "A live counter","Proving your escaping works by attacking your own page"],
+    files:["projects/project-2-todo/"] },
+
+  { z:"Zone 3", zt:"The database · textbook ch. 11", l:"N", t:"SQL & database thinking", s:"Design a table, read and write rows",
+    learn:["Database, table, row, column, primary key",
+           "<code>SELECT</code>, <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>",
+           "<code>WHERE</code>, <code>ORDER BY</code>, <code>LIKE</code>, <code>COUNT</code>, <code>AVG</code>",
+           "phpMyAdmin, and importing a .sql file"],
+    warn:"<b>Never run <code>UPDATE</code> or <code>DELETE</code> without a <code>WHERE</code>.</b> It hits every row, and there is no undo.",
+    files:["09-mysql/lesson.md","09-mysql/school.sql"] },
+
+  { z:"Zone 3", l:"O", t:"PHP talks to MySQL", s:"Real rows on a real page",
+    learn:["Connecting with <code>mysqli_connect()</code>",
+           "The <code>while (mysqli_fetch_assoc())</code> loop that powers every listing page",
+           "Turning rows into an HTML table",
+           "Reading statistics straight out of SQL"],
+    files:["09-mysql/01-connect.php","09-mysql/02-select.php"] },
+
+  { z:"Zone 3", l:"P", t:"Prepared statements", s:"Queries that can't be hacked",
+    learn:["What SQL injection is, shown with a real example",
+           "<code>?</code> placeholders and <code>bind_param</code>",
+           "The <code>s</code> / <code>i</code> / <code>d</code> type letters",
+           "A full insert form, done safely"],
+    files:["09-mysql/03-insert.php","09-mysql/04-crud.php"] },
+
+  { z:"Zone 4", zt:"The real thing · textbook ch. 12", l:"Q", t:"Includes & structure", s:"One header, every page",
+    learn:["<code>require</code> vs <code>include</code> vs <code>require_once</code>",
+           "Splitting a site into db / header / footer",
+           "Changing the menu in one place and watching every page update"],
+    files:["10-dynamic-page/includes/"] },
+
+  { z:"Zone 4", l:"R", t:"URL parameters", s:"Click an item, see its page",
+    learn:["Passing an id with <code>?id=3</code>",
+           "Forcing it with <code>(int)</code> so a broken URL can't break the page",
+           "Handling \"that item doesn't exist\" properly"],
+    files:["10-dynamic-page/detail.php"] },
+
+  { z:"Zone 4", l:"S", t:"Search & redirect", s:"A search box, and no double-submits",
+    learn:["<code>LIKE</code> searching with the <code>%</code> in the PHP variable",
+           "Showing a friendly message when nothing is found",
+           "Redirect-after-save, so refreshing doesn't save twice"],
+    files:["10-dynamic-page/index.php","10-dynamic-page/admin.php"] },
+
+  { z:"Zone 4", l:"T", t:"Project 3 — Student Manager", s:"A complete database-driven site", tag:"project",
+    learn:["List, add, edit, delete, search — all of it yours",
+           "Validation and error messages throughout",
+           "Statistics from SQL",
+           "Then break your own site on purpose and fix what falls over"],
+    warn:"<b>This is the finish line for the course.</b> Everything below it is extra — do it when you want more, not because you have to.",
+    files:["projects/project-3-students/"] },
+
+  { z:"Zone 5", zt:"Beyond the course", l:"U", t:"Login & password hashing", s:"Real accounts, stored safely", tag:"extra",
+    learn:["<code>password_hash()</code> and <code>password_verify()</code>",
+           "Why a password is never stored as text — not even once",
+           "Protecting a page behind a login"] },
+
+  { z:"Zone 5", l:"V", t:"PDO", s:"The other database API", tag:"extra",
+    learn:["The same ideas as mysqli, different syntax",
+           "Named placeholders","Why most jobs and frameworks use this one"] },
+
+  { z:"Zone 5", l:"W", t:"Relationships & JOINs", s:"Tables that know about each other", tag:"extra",
+    learn:["Foreign keys","One-to-many: students, courses, enrolments",
+           "<code>JOIN</code> — reading from two tables at once"] },
+
+  { z:"Zone 5", l:"X", t:"Uploads & pagination", s:"Pictures, and page 2 of 7", tag:"extra",
+    learn:["<code>$_FILES</code>, and checking type and size before trusting it",
+           "<code>LIMIT</code> and <code>OFFSET</code>","Sortable column headings"] },
+
+  { z:"Zone 5", l:"Y", t:"OOP, exceptions, Composer", s:"Structure it like a professional", tag:"extra",
+    learn:["Classes, properties, methods, <code>$this</code>",
+           "Keeping queries out of your pages",
+           "<code>try</code> / <code>catch</code> instead of <code>die()</code>",
+           "Composer and autoloading"] },
+
+  { z:"Zone 5", l:"Z", t:"API, fetch & deploy", s:"Live on the internet", tag:"extra",
+    learn:["Returning JSON from PHP",
+           "Calling it from JavaScript with <code>fetch()</code> — no page reload",
+           "Git for your own project",
+           "Putting it on a real host with a real URL"] }
+];
+
+const KEY = "php_roadmap_done_v1";
+let done = new Set();
+
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if (raw) done = new Set(JSON.parse(raw));
+  }catch(e){ done = new Set(); }
+}
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify([...done])); }catch(e){}
+}
+
+function esc(s){ return String(s).replace(/&(?!#?\w+;)/g,"&amp;").replace(/</g,"&lt;"); }
+
+function nextLetter(){
+  const n = NODES.find(x => !done.has(x.l));
+  return n ? n.l : null;
+}
+
+function render(){
+  const list = document.getElementById("list");
+  const next = nextLetter();
+  let html = "", zone = null;
+
+  NODES.forEach(n => {
+    if (n.z !== zone){
+      zone = n.z;
+      html += `<div class="zone-label"><div class="gutter"></div>
+        <div class="txt"><b>${n.z}</b>${n.zt ? " — " + n.zt : ""}</div></div>`;
+    }
+    const isDone = done.has(n.l);
+    const isNext = n.l === next;
+    const open = isNext && !isDone;
+
+    const tag = n.tag === "project" ? '<span class="tag project">project</span>'
+              : n.tag === "hard"    ? '<span class="tag hard">the hard one</span>'
+              : n.tag === "extra"   ? '<span class="tag extra">after the course</span>' : "";
+
+    html += `<article class="node${isDone ? " is-done" : ""}${isNext ? " is-next" : ""}${open ? " is-open" : ""}" data-l="${n.l}">
+      <div class="gutter"><div class="badge">${isDone ? "&#10003;" : n.l}</div></div>
+      <div class="card">
+        <button class="head" type="button" aria-expanded="${open}">
+          <span class="titles">
+            <span class="title">${n.t}</span>${tag}
+            <span class="sum">${n.s}</span>
+          </span>
+          <span class="chev">&#9656;</span>
+        </button>
+        <div class="body"${open ? "" : " hidden"}>
+          ${n.warn ? `<div class="warn">${n.warn}</div>` : ""}
+          <h4>What you can do after it</h4>
+          <ul>${n.learn.map(x => `<li>${x}</li>`).join("")}</ul>
+          ${n.files ? `<h4>Where</h4><div>${n.files.map(f => `<span class="path">${esc(f)}</span>`).join("")}</div>` : ""}
+          <label class="tick" style="margin-top:14px">
+            <input type="checkbox" id="chk-${n.l}"${isDone ? " checked" : ""}>
+            <span>${isDone ? "Done" : "Mark " + n.l + " as done"}</span>
+          </label>
+        </div>
+      </div>
+    </article>`;
+  });
+
+  html += `<div class="finish"><div class="gutter"></div>
+    <div class="flag">
+      <h3>${done.size === NODES.length ? "All 26 done. That's the whole road." : "Z is a live website with your name on it"}</h3>
+      <p>${done.size === NODES.length
+        ? "Nothing left on this map. Pick a real project and build it."
+        : "Everything between here and there is one letter at a time."}</p>
+    </div></div>`;
+
+  list.innerHTML = html;
+
+  list.querySelectorAll(".head").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const node = btn.closest(".node");
+      const body = node.querySelector(".body");
+      const open = body.hidden;
+      body.hidden = !open;
+      node.classList.toggle("is-open", open);
+      btn.setAttribute("aria-expanded", String(open));
+    });
+  });
+
+  list.querySelectorAll(".tick input").forEach(box => {
+    box.addEventListener("change", () => {
+      const l = box.id.replace("chk-", "");
+      box.checked ? done.add(l) : done.delete(l);
+      save();
+      render();
+      const el = document.querySelector(`[data-l="${l}"]`);
+      if (el) el.scrollIntoView({block:"center", behavior:"smooth"});
+    });
+  });
+
+  updateStatus();
+}
+
+function updateStatus(){
+  const n = done.size, total = NODES.length;
+  document.getElementById("doneCount").textContent = n;
+  document.getElementById("meterFill").style.width = (n / total * 100) + "%";
+
+  const next = nextLetter();
+  const nextNode = NODES.find(x => x.l === next);
+  const chip = document.getElementById("nextUp");
+  chip.textContent = nextNode ? `Next: ${nextNode.l} — ${nextNode.t}` : "Finished 🎉";
+
+  const note = document.getElementById("zoneNote");
+  if (n === 0)          note.textContent = "Start at the top. One letter at a time.";
+  else if (n < 9)       note.textContent = "Learning the language. Arrays (G) is the one to take slowly.";
+  else if (n < 13)      note.textContent = "You can take input from real people now.";
+  else if (n < 17)      note.textContent = "Your pages can remember things permanently.";
+  else if (n < 20)      note.textContent = "Nearly there — T is the finish line for the course.";
+  else if (n < total)   note.textContent = "Course finished. Everything left is extra.";
+  else                  note.textContent = "All 26. Go build something nobody asked you to build.";
+}
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if (!confirm("Untick all 26 steps?")) return;
+  done = new Set(); save(); render();
+  window.scrollTo({top:0, behavior:"smooth"});
+});
+
+document.getElementById("themeBtn").addEventListener("click", () => {
+  const cur = document.documentElement.getAttribute("data-theme");
+  const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const nextT = cur ? (cur === "dark" ? "light" : "dark") : (dark ? "light" : "dark");
+  document.documentElement.setAttribute("data-theme", nextT);
+  try{ localStorage.setItem("php_roadmap_theme", nextT); }catch(e){}
+});
+try{
+  const saved = localStorage.getItem("php_roadmap_theme");
+  if (saved) document.documentElement.setAttribute("data-theme", saved);
+}catch(e){}
+
+load();
+render();
+</script>

@@ -6,6 +6,9 @@ across my two machines and so any Claude Code session can pick up exactly where 
 **👉 If you are an AI agent starting a session here, read [`PROGRESS.md`](PROGRESS.md) first.**
 It holds the current state, what's done, what's next, and the long-term plan.
 
+**👉 If you are Fatima:** start with [`ROADMAP.md`](ROADMAP.md) — the whole path from A to Z
+on one page. There's a clickable version with tick-boxes at [`Php/roadmap.html`](Php/roadmap.html).
+
 ---
 
 ## What's in here

@@ -14,6 +14,14 @@ is the work your exam will ask about:
 
 ---
 
+## The map
+
+Open **[`roadmap.html`](roadmap.html)** in your browser — 26 steps from A to Z, with tick-boxes
+that remember how far you've got. There's also a version that renders on GitHub:
+[`../ROADMAP.md`](../ROADMAP.md).
+
+---
+
 ## How to use this folder
 
 Every lesson folder has three things:
@@ -54,7 +62,9 @@ Then `projects/` — three real mini apps you build yourself.
   match the words, fill the blank. It saves your best score.
 - **`games/guess-number.php`** — a real PHP game. Teaches sessions.
 - **`games/hangman.php`** — hangman with programming words, written in PHP.
-- **`quizzes/`** — a quiz after every unit. Print them or answer on screen.
+- **`quizzes/`** — three sizes: a 5-minute **mini-quiz after every lesson**, a bigger
+  **unit quiz** every few lessons, and a **final exam** for revision week.
+  Start with `quizzes/quiz-00-intro.md` — it has no code in it at all.
 
 ---
 

@@ -1,6 +1,6 @@
 # PROGRESS — read this first
 
-**Last updated:** 2026-09-22
+**Last updated:** 2026-09-22 (second session)
 **Update this file at the end of every session.** It is the handoff between machines and
 between agent sessions. If it is stale, the next session wastes an hour re-deriving context.
 
@@ -42,7 +42,7 @@ material over **Zoom**. I explain, she shares her screen and writes the code her
 
 ## 3. What is already done ✅
 
-The whole `Php/` folder — 63 files, every `.php` file passes `php -l`, examples verified by
+The whole `Php/` folder — 79 files, every `.php` file passes `php -l`, examples verified by
 actually running them.
 
 ```
@@ -62,7 +62,9 @@ Php/
 ├── 10-dynamic-page/          complete mini site: includes/, search, detail.php, admin.php
 ├── games/                    php-arcade.html (4 games) + guess-number.php + hangman.php
 ├── projects/                 3 projects with starter files and checklists
-├── quizzes/                  4 quizzes + answers/ANSWERS.md (with a marking guide)
+├── roadmap.html              interactive A-Z map, 26 steps, progress saved in localStorage
+├── quizzes/                  20 files: quiz-00 intro, 10 mini-quizzes, 4 unit quizzes,
+│                             final exam, README index, 3 answer keys
 └── resources/                cheatsheet.md, common-errors.md, youtube.md
 ```
 
@@ -72,9 +74,14 @@ Php/
 - `examples.php` — runnable, heavily commented, built for *"predict the output, then run"*
 - `exercises.php` — numbered `TODO` comments, easy → challenge, nothing solved for her
 
-**The arcade is also published as a private Claude Artifact** so she can play on her phone:
-https://claude.ai/artifact/JYBuyUAnizeyXzAT9tXMu2
-(It has to be shared from the page's Share menu before she can open it.)
+`ROADMAP.md` at the repo root is the same 26-step map as a Mermaid diagram, which GitHub
+renders inline.
+
+**Two pages are published as private Claude Artifacts** so she can play on her phone:
+- Arcade: https://claude.ai/artifact/JYBuyUAnizeyXzAT9tXMu2
+- Roadmap: https://claude.ai/artifact/EDpJwwwvaoGwGHnjeAXdPb
+
+(Both are private — they have to be shared from each page's Share menu before she can open them.)
 
 ---
 
@@ -83,16 +90,21 @@ https://claude.ai/artifact/JYBuyUAnizeyXzAT9tXMu2
 ### Immediate — run the course
 
 Follow the session map in `Php/INSTRUCTOR-GUIDE.md`. 10 sessions, ~60–75 min each.
-Quizzes land after sessions 2, 4, 7 and 10. Projects after sessions 7, 8 and 10.
+
+Quiz cadence: a **mini-quiz at the end of every single call** (5 min, `quizzes/mini-quizzes/`),
+a **unit quiz** after sessions 2, 4, 7 and 10, and the **final exam** during revision week.
+`quizzes/quiz-00-intro.md` is a no-code warm-up for session 1. Projects after sessions 7, 8 and 10.
+
+Each mini-quiz ends with a line saying whether to move on or redo something — follow it.
 
 **Do not advance past a failed loops (L5) or arrays (L6) quiz.** Everything afterwards depends
 on them, and pushing on makes lessons 8–10 collapse.
 
 ### Asked for but not built yet
 
-- [ ] **Exam simulator** — one HTML page, mixed PHP + SQL questions, timed, scored, with a
-      review-your-wrong-answers screen at the end. For revision week. *(I offered it, he
-      hasn't said yes yet — ask before building.)*
+- [ ] **Exam simulator** — an interactive, timed, self-scoring version of `final-exam.md`.
+      The paper version now exists, so this is only about making it clickable.
+      *(Offered, not yet approved — ask before building.)*
 
 ### Ideas worth proposing when the time is right
 
@@ -192,6 +204,17 @@ No `gh` CLI installed — use plain `git` for pushes.
 ## 7. Session log
 
 *(newest first — one short entry per working session, so the next agent knows what changed and why)*
+
+### 2026-09-22 (later) — Roadmap + a lot more quizzes
+- **Quizzes went from 5 files to 20.** Added `quiz-00-intro.md` (no code at all, for session 1),
+  ten 8-question **mini-quizzes** (one per lesson, 5-minute exit tickets), a 40-mark
+  **final exam**, a `quizzes/README.md` explaining which size to use when, and two new answer
+  keys (`MINI-ANSWERS.md`, `FINAL-EXAM-ANSWERS.md` with a per-section diagnosis table).
+- **Added the A-Z roadmap** in two forms: `ROADMAP.md` (Mermaid, renders on GitHub) and
+  `Php/roadmap.html` (interactive, 26 steps A-Z, tick-boxes saved in localStorage,
+  auto-highlights the next step). Published as an Artifact too.
+- Design note for whoever edits `roadmap.html`: the 26 steps are deliberately one per letter,
+  so **adding a step means merging or re-lettering** — don't just append a 27th.
 
 ### 2026-09-22 — Course built from scratch
 - Created the whole `Php/` folder: 10 lessons, 3 games, 4 quizzes + answer key, 3 projects,
