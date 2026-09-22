@@ -1,0 +1,524 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PHP Step by Step</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+/* Tokens are shared with flashcards.html, roadmap.html, php-arcade.html and
+   exam-simulator.html on purpose: five pages, one course, one visual system. */
+:root{
+  --paper:#F7F6F3; --surface:#FFFFFF; --surface-2:#EFEDE8;
+  --ink:#1A1D21; --ink-2:#5C6168; --ink-3:#8D939B;
+  --line:#E2DFD8; --accent:#0F7B6C; --accent-soft:#E3F1EE;
+  --warm:#B5541F; --warm-soft:#FBEDE4; --gold:#A57C1B;
+  --shadow:0 1px 2px rgba(26,29,33,.06), 0 10px 28px -14px rgba(26,29,33,.28);
+  --display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
+    --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
+    --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
+    --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
+  --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
+  --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
+  --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;
+  line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:16px}
+a{color:var(--accent)}
+
+/* ---------- top bar ---------- */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:14px;height:64px}
+.mark{font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:-.01em;white-space:nowrap}
+.mark i{font-style:normal;color:var(--accent)}
+.barbar{flex:1;height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;min-width:60px}
+.barbar i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .5s cubic-bezier(.16,1,.3,1)}
+.barpct{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbtn{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  background:none;border:1px solid var(--line);color:var(--ink-3);border-radius:99px;padding:6px 12px;cursor:pointer}
+.tbtn:hover{color:var(--ink);border-color:var(--accent)}
+.tbtn:focus-visible,a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:1.35fr .65fr;gap:38px;align-items:center;
+  padding-block:54px 40px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,6.4vw,58px);line-height:1.02;
+  letter-spacing:-.03em;margin:0;text-wrap:balance}
+h1 i{font-style:normal;color:var(--accent)}
+.sub{color:var(--ink-2);font-size:17px;max-width:46ch;margin:14px 0 0}
+.cta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:24px}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:13px 24px;font-size:15px;
+  font-weight:600;font-family:inherit;cursor:pointer;text-decoration:none;display:inline-block;white-space:nowrap;
+  transition:transform .12s,filter .12s}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(1px)}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink-2)}
+.next{font-size:13.5px;color:var(--ink-3)}
+.next b{color:var(--ink);font-weight:600}
+
+/* progress dial */
+.dial{display:grid;place-items:center;position:relative}
+.dial svg{transform:rotate(-90deg);width:186px;height:186px}
+.dial circle{fill:none;stroke-width:11}
+.dial .track{stroke:var(--surface-2)}
+.dial .fill{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .7s cubic-bezier(.16,1,.3,1)}
+.dialtxt{position:absolute;text-align:center}
+.dialtxt b{display:block;font-family:var(--display);font-size:38px;line-height:1;font-variant-numeric:tabular-nums}
+.dialtxt span{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
+
+/* ---------- the ladder ---------- */
+.ladder{padding-bottom:20px}
+.level{position:relative;padding-left:52px;padding-bottom:10px}
+/* the spine: one continuous line down the whole course */
+.level::before{content:"";position:absolute;left:19px;top:8px;bottom:-10px;width:2px;background:var(--line)}
+.level:last-of-type::before{bottom:auto;height:30px}
+.level.done::before{background:var(--accent)}
+.dot{position:absolute;left:8px;top:4px;width:24px;height:24px;border-radius:50%;background:var(--paper);
+  border:2px solid var(--line);display:grid;place-items:center;font-family:var(--mono);font-size:11px;
+  font-weight:700;color:var(--ink-3)}
+.level.done .dot{background:var(--accent);border-color:var(--accent);color:#fff}
+.level.now .dot{border-color:var(--accent);color:var(--accent)}
+.lvhead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:3px}
+.lvhead h2{font-family:var(--display);font-size:25px;margin:0;letter-spacing:-.02em}
+.lvhead .of{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.lvsub{color:var(--ink-2);font-size:14.5px;margin:0 0 16px;max-width:60ch}
+.lessons{display:grid;gap:10px;margin-bottom:30px}
+
+/* lesson card */
+details.lesson{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--shadow);overflow:hidden}
+details.lesson[open]{border-color:var(--accent)}
+details.lesson.done{border-left:3px solid var(--accent)}
+summary{list-style:none;cursor:pointer;padding:15px 18px;display:grid;
+  grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center}
+summary::-webkit-details-marker{display:none}
+.tick{width:26px;height:26px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;
+  font-size:13px;color:transparent;grid-row:span 2}
+.lesson.done .tick{background:var(--accent);border-color:var(--accent);color:#fff}
+.lesson.part .tick{border-color:var(--accent);color:var(--accent);font-size:10px}
+.ltitle{font-weight:600;font-size:16.5px;letter-spacing:-.01em}
+.lcan{color:var(--ink-2);font-size:13.5px;grid-column:2}
+.lmeta{font-family:var(--mono);font-size:11px;color:var(--ink-3);text-align:right;grid-row:span 2;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.body{padding:0 18px 18px 58px;border-top:1px solid var(--line);margin-top:2px;padding-top:15px}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.steps li label{display:flex;gap:11px;align-items:flex-start;padding:8px 10px;border-radius:9px;cursor:pointer;font-size:14.5px}
+.steps li label:hover{background:var(--surface-2)}
+.steps input{margin:4px 0 0;width:17px;height:17px;accent-color:var(--accent);flex:none}
+.steps .n{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);min-width:18px;padding-top:2px}
+.steps input:checked ~ .stxt{color:var(--ink-3);text-decoration:line-through}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.tool{font-size:13px;text-decoration:none;color:var(--ink-2);border:1px solid var(--line);
+  border-radius:99px;padding:6px 13px;background:var(--paper);transition:border-color .12s,color .12s}
+.tool:hover{border-color:var(--accent);color:var(--accent)}
+.tool.key{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
+.warnbox{background:var(--warm-soft);border-radius:11px;padding:13px 15px;margin-top:14px;font-size:14px;color:var(--ink-2)}
+.warnbox b{color:var(--warm);display:block;font-family:var(--mono);font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;margin-bottom:4px}
+
+/* milestone (projects + exam) */
+.stone{background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--r);padding:16px 18px;
+  display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:center}
+.stone .tick{border-color:var(--accent)}
+.stone.done .tick{background:var(--accent);color:#fff}
+.stone h3{margin:0;font-size:16.5px;font-family:var(--display);letter-spacing:-.01em}
+.stone p{margin:0;grid-column:2;color:var(--ink-2);font-size:13.5px}
+.stone a{grid-row:span 2;font-size:13px;text-decoration:none;font-weight:600;white-space:nowrap}
+
+/* ---------- practice ---------- */
+.practice{padding-block:12px 46px}
+.practice h2{font-family:var(--display);font-size:27px;margin:0 0 4px;letter-spacing:-.02em}
+.practice .lvsub{margin-bottom:20px}
+.pgrid{display:grid;grid-template-columns:1.25fr 1fr;gap:14px}
+.big{background:var(--ink);color:var(--paper);border-radius:var(--r);padding:26px;text-decoration:none;
+  display:flex;flex-direction:column;justify-content:space-between;gap:26px;min-height:200px;
+  transition:transform .14s}
+.big:hover{transform:translateY(-3px)}
+.big h3{font-family:var(--display);font-size:24px;margin:0;color:var(--paper);letter-spacing:-.02em}
+.big p{margin:6px 0 0;color:var(--ink-3);font-size:14px;max-width:34ch}
+.big .go{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.stack{display:grid;gap:14px}
+.small{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:17px 19px;
+  text-decoration:none;color:inherit;box-shadow:var(--shadow);transition:border-color .12s,transform .14s}
+.small:hover{border-color:var(--accent);transform:translateY(-2px)}
+.small h3{font-family:var(--display);font-size:17px;margin:0 0 2px;letter-spacing:-.01em}
+.small p{margin:0;color:var(--ink-2);font-size:13.5px}
+
+/* ---------- run strip ---------- */
+.run{border-top:1px solid var(--line);padding-block:34px 10px}
+.run h2{font-family:var(--display);font-size:20px;margin:0 0 14px;letter-spacing:-.01em}
+.runs{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
+.runs h4{margin:0 0 4px;font-size:14.5px}
+.runs p{margin:0 0 7px;color:var(--ink-2);font-size:13.5px}
+code{font-family:var(--mono);font-size:12.8px;background:var(--surface-2);padding:3px 7px;border-radius:6px;
+  display:inline-block;word-break:break-all}
+footer{padding-block:26px 46px;color:var(--ink-3);font-size:12.5px;display:flex;gap:16px;flex-wrap:wrap;
+  align-items:center;border-top:1px solid var(--line);margin-top:26px}
+footer a{text-decoration:none}
+.reset{margin-left:auto;background:none;border:0;color:var(--ink-3);font:inherit;font-size:12.5px;
+  cursor:pointer;text-decoration:underline}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;gap:26px;padding-block:34px 26px}
+  .dial{justify-self:start}
+  .dial svg{width:150px;height:150px}
+  .pgrid{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .level{padding-left:40px}
+  .level::before{left:13px}
+  .dot{left:2px}
+  .body{padding-left:18px}
+  summary{grid-template-columns:auto 1fr;gap:4px 12px}
+  .lmeta{grid-row:auto;grid-column:2;text-align:left}
+  .stone{grid-template-columns:auto 1fr}
+  .stone a{grid-row:auto;grid-column:2}
+  .bar .wrap{gap:10px}
+  .barbar{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="bar">
+  <div class="wrap">
+    <span class="mark">PHP <i>Step by Step</i></span>
+    <span class="barbar"><i id="barFill"></i></span>
+    <span class="barpct" id="barPct">0%</span>
+    <button class="tbtn" id="themeBtn">theme</button>
+  </div>
+</div>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <h1>Ten lessons.<br><span id="heroN">66</span> small <i>steps</i>.</h1>
+      <p class="sub">Every lesson is broken into steps you can finish in a few minutes.
+         Tick one, and the course remembers where you are.</p>
+      <div class="cta">
+        <a class="btn" id="continueBtn" href="#l1">Start the first step</a>
+        <span class="next" id="nextTxt"></span>
+      </div>
+    </div>
+    <div class="dial">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="track" cx="60" cy="60" r="52"></circle>
+        <circle class="fill" id="dialFill" cx="60" cy="60" r="52"
+                stroke-dasharray="326.7" stroke-dashoffset="326.7"></circle>
+      </svg>
+      <span class="dialtxt"><b id="dialNum">0</b><span id="dialLbl">of 60 steps</span></span>
+    </div>
+  </section>
+
+  <section class="ladder" id="ladder"></section>
+
+  <section class="practice">
+    <h2>When you have had enough of reading</h2>
+    <p class="lvsub">Four ways to practise the same material. Pick whichever one you can face today.</p>
+    <div class="pgrid">
+      <a class="big" data-path="games/php-arcade.html">
+        <div>
+          <h3>The arcade</h3>
+          <p>Six games over 133 questions, with levels and badges you keep. The one to open when
+             a lesson has gone badly.</p>
+        </div>
+        <span class="go">Play</span>
+      </a>
+      <div class="stack">
+        <a class="small" data-path="flashcards.html">
+          <h3>Flashcards</h3>
+          <p>102 cards. A card you miss comes back until you get it right twice.</p>
+        </a>
+        <a class="small" data-path="exam-simulator.html">
+          <h3>Exam simulator</h3>
+          <p>The real paper on a 90 minute clock, marked for you at the end.</p>
+        </a>
+        <a class="small" data-path="roadmap.html">
+          <h3>The A to Z map</h3>
+          <p>All 26 steps of the bigger picture, including what comes after this course.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="run">
+    <h2>Running the files</h2>
+    <div class="runs">
+      <div>
+        <h4>Lessons 1 to 7</h4>
+        <p>Nothing to start. Run the file.</p>
+        <code>php Php/01-basics/examples.php</code>
+      </div>
+      <div>
+        <h4>Lessons 8 to 10, games, projects</h4>
+        <p>These are web pages, so they need a server. Run this inside <code>Php/</code>, then open localhost:8000.</p>
+        <code>php -S localhost:8000</code>
+      </div>
+      <div>
+        <h4>Lessons 9 and 10</h4>
+        <p>Start MySQL in the XAMPP control panel, then import the .sql files through phpMyAdmin.</p>
+        <a data-path="00-setup/SETUP.md">Full setup</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <a data-path="README.md">Course README</a>
+    <a data-path="quizzes/README.md">Quizzes</a>
+    <a data-path="projects/README.md">Projects</a>
+    <a data-path="resources/cheatsheet.md">Cheat sheet</a>
+    <button class="reset" id="resetBtn">Clear my progress</button>
+  </footer>
+</main>
+
+<script>
+/* ---------------------------------------------------------------
+   The course, as data. Steps are the numbered sections of each
+   lesson.md, so this file and the lessons stay in step: if you add
+   a section to a lesson, add it here too.
+--------------------------------------------------------------- */
+const COURSE = [
+{lv:"Getting ready", sub:"One evening of setup, so nothing later fails for a boring reason.", lessons:[
+  {id:"0", dir:"00-setup", file:"SETUP.md", name:"Setup", can:"Run a PHP file, and know why you cannot just double-click one.",
+   steps:["What PHP actually is","The two ways to run it","The rules of a .php file","Write and run hello.php","Pick an editor"]}
+]},
+
+{lv:"The language", sub:"Seven lessons that make up chapter 10 of your textbook. This is the part everything else stands on.", lessons:[
+  {id:"1", dir:"01-basics", name:"echo, variables, comments", can:"Print things, and store a value to use again.",
+   steps:["echo, how PHP talks","Variables, boxes with names","Printing variables inside text","Comments, notes for humans","Changing a variable"],
+   arcade:"Match the Words", deck:"deck 1, Syntax and symbols"},
+  {id:"2", dir:"02-datatypes", name:"Data types and strings", can:"Know what a value is, and cut, join and change text.",
+   steps:["The four types you use daily","Strings, the ones you touch most","Numbers","Converting between types"],
+   arcade:"Guess the Output", deck:"deck 2, String functions"},
+  {id:"3", dir:"03-operators", name:"Operators", can:"Do maths, compare two things, and combine conditions.",
+   steps:["Arithmetic","Assignment","Comparison, which give true or false","Logical, combining conditions","Order, who goes first","The ternary, a tiny if"],
+   arcade:"Guess the Output", deck:"deck 1, Syntax and symbols"},
+  {id:"4", dir:"04-conditions", name:"Making decisions", can:"Make the code choose between paths.",
+   steps:["if","if and else","if, elseif, else","A nested if","switch","What counts as true"],
+   arcade:"Fix the Bug", deck:"deck 1, Syntax and symbols"},
+  {id:"5", dir:"05-loops", name:"Loops", can:"Repeat something ten or ten thousand times without writing it twice.",
+   steps:["for, when you know how many times","while, when you do not","do while, runs at least once","foreach, a first look","break and continue","A loop inside a loop"],
+   arcade:"Fill the Blank", deck:"deck 4, Loops and logic", extra:{name:"guess-number.php", path:"games/guess-number.php"}},
+  {id:"6", dir:"06-arrays", name:"Arrays", can:"Hold many values under one name. This is the big jump.",
+   steps:["Indexed arrays, a numbered list","Associative arrays, key and value","Looping with foreach","Arrays inside arrays","The array functions worth knowing"],
+   arcade:"Fill the Blank", deck:"deck 3, Array functions",
+   wall:"Nothing after this lesson works without arrays. Two sessions here is normal, not slow. Do not move on while it still feels strange."},
+  {id:"7", dir:"07-functions", name:"Functions", can:"Write your own commands and reuse them.",
+   steps:["Making and calling one","Parameters, giving it information","return, getting an answer back","Default values","Scope, the rule that confuses everyone","Type hints","Built in versus your own"],
+   arcade:"Fix the Bug", deck:"deck 5, Functions", extra:{name:"hangman.php", path:"games/hangman.php"}}
+],
+milestone:{name:"Project 1, Grade Calculator", path:"projects/project-1-grades/grades.php",
+  desc:"Your first program written from a blank page. Everything in it comes from lessons 1 to 7."}},
+
+{lv:"The web", sub:"Where PHP stops being an exercise and starts taking input from a real person.", lessons:[
+  {id:"8", dir:"08-forms", name:"Forms, HTML talks to PHP", can:"Take what somebody typed, check it, and answer safely.",
+   steps:["First, run a server","Mixing PHP into HTML","How a form sends data","Reading the data in PHP","The self submitting page","Checking the data is there","Validation, never trust the user","Escaping before you print"],
+   arcade:"Speed Round", deck:"deck 6, Forms and security"}
+],
+milestone:{name:"Project 2, To-Do List", path:"projects/project-2-todo/index.php",
+  desc:"A page that remembers what you typed. Forms and sessions, working together."}},
+
+{lv:"The database", sub:"Chapter 11. Where the data stops disappearing when you close the page.", lessons:[
+  {id:"9", dir:"09-mysql", name:"Database basics with MySQL", can:"Design a table, read and write rows, and write queries that cannot be hacked.",
+   steps:["The vocabulary","Getting MySQL running","Column types","SQL, the language of databases","Connecting from PHP","SQL injection, the one security rule","Always close"],
+   arcade:"Match the Words", deck:"deck 6, Forms and security"}
+]},
+
+{lv:"The real thing", sub:"Chapter 12. Ten lessons of pieces, assembled into an actual site.", lessons:[
+  {id:"10", dir:"10-dynamic-page", name:"A dynamic page with a database", can:"Build a site where clicking an item opens its own page.",
+   steps:["The shape of a real PHP site","include and require","Passing data through the URL","Search, with LIKE and a prepared statement","No results, never an empty page","Redirect after saving","The checklist of a good page"],
+   arcade:"Code Builder", deck:"deck 6, Forms and security"}
+],
+milestone:{name:"Project 3, Student Manager", path:"projects/project-3-students/START-HERE.md",
+  desc:"The finish line. A complete database driven site, built start to finish by you."}}
+];
+
+/* ---------------------------------------------------------------
+   The page runs from the repo folder and as a published Artifact,
+   so links resolve at runtime: relative locally, GitHub or the
+   sibling Artifacts anywhere else.
+--------------------------------------------------------------- */
+const LOCAL = location.protocol === "file:"
+  || ["localhost","127.0.0.1",""].indexOf(location.hostname) !== -1;
+const REPO = "https://github.com/Cizaro/Fatoma-jem3a/blob/main/Php/";
+const PUBLISHED = {
+  "flashcards.html":       "https://claude.ai/artifact/WDYShUSe2eV7Yu19XxYJZn",
+  "roadmap.html":          "https://claude.ai/artifact/EDpJwwwvaoGwGHnjeAXdPb",
+  "games/php-arcade.html": "https://claude.ai/artifact/JYBuyUAnizeyXzAT9tXMu2",
+  "exam-simulator.html":   "https://claude.ai/artifact/H3Ca9oVaXidqa51D5hesYc"
+};
+const link = p => LOCAL ? p : (PUBLISHED[p] || REPO + p);
+
+const KEY = "phpcourse_progress", THEME = "phpcourse_theme";
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+let done = {};
+try { done = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { done = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch(e) {} };
+
+/* ---------- theme ---------- */
+function setTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  try { localStorage.setItem(THEME, t); } catch(e) {}
+}
+try { const t = localStorage.getItem(THEME); if (t) setTheme(t); } catch(e) {}
+$("themeBtn").onclick = () => {
+  const now = document.documentElement.getAttribute("data-theme")
+    || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  setTheme(now === "dark" ? "light" : "dark");
+};
+
+/* ---------- build the ladder ---------- */
+const ALL = COURSE.flatMap(l => l.lessons);
+const TOTAL = ALL.reduce((a, l) => a + l.steps.length, 0);
+// the headline counts the steps rather than claiming a number, so adding
+// a step to a lesson can never leave the hero quietly lying
+$("heroN").textContent = TOTAL;
+const sid = (les, i) => les.id + "." + i;
+
+function toolRow(les){
+  const t = [];
+  t.push(`<a class="tool key" href="${link(les.dir + "/" + (les.file || "lesson.md"))}">Read the lesson</a>`);
+  if (!les.file){
+    t.push(`<a class="tool" href="${link(les.dir + "/examples.php")}">Examples</a>`);
+    t.push(`<a class="tool" href="${link(les.dir + "/exercises." + (les.id === "8" ? "md" : "php"))}">Exercises</a>`);
+    t.push(`<a class="tool" href="${link("quizzes/mini-quizzes/lesson-" + String(les.id).padStart(2,"0") + ".md")}">Mini quiz</a>`);
+  }
+  if (les.arcade) t.push(`<a class="tool" href="${link("games/php-arcade.html")}">Arcade, ${esc(les.arcade)}</a>`);
+  if (les.deck)   t.push(`<a class="tool" href="${link("flashcards.html")}">Cards, ${esc(les.deck)}</a>`);
+  if (les.extra)  t.push(`<a class="tool" href="${link(les.extra.path)}">${esc(les.extra.name)}</a>`);
+  return t.join("");
+}
+
+$("ladder").innerHTML = COURSE.map((lv, li) => `
+  <div class="level" id="lv${li}">
+    <span class="dot">${li === 0 ? "0" : li}</span>
+    <div class="lvhead">
+      <h2>${esc(lv.lv)}</h2>
+      <span class="of" id="lvof${li}"></span>
+    </div>
+    <p class="lvsub">${esc(lv.sub)}</p>
+    <div class="lessons">
+      ${lv.lessons.map(les => `
+        <details class="lesson" id="l${les.id}">
+          <summary>
+            <span class="tick" aria-hidden="true">&#10003;</span>
+            <span class="ltitle">${les.file ? "" : "Lesson " + les.id + ". "}${esc(les.name)}</span>
+            <span class="lmeta" id="m${les.id}"></span>
+            <span class="lcan">${esc(les.can)}</span>
+          </summary>
+          <div class="body">
+            <ul class="steps">
+              ${les.steps.map((s, i) => `
+                <li><label>
+                  <input type="checkbox" data-step="${sid(les, i)}">
+                  <span class="n">${i + 1}</span><span class="stxt">${esc(s)}</span>
+                </label></li>`).join("")}
+            </ul>
+            ${les.wall ? `<div class="warnbox"><b>Slow down here</b>${esc(les.wall)}</div>` : ""}
+            <div class="tools">${toolRow(les)}</div>
+          </div>
+        </details>`).join("")}
+      ${lv.milestone ? `
+        <div class="stone" id="stone${li}">
+          <span class="tick" aria-hidden="true">&#10003;</span>
+          <h3>${esc(lv.milestone.name)}</h3>
+          <a href="${link(lv.milestone.path)}">Open</a>
+          <p>${esc(lv.milestone.desc)}</p>
+        </div>` : ""}
+    </div>
+  </div>`).join("");
+
+/* ---------- progress ---------- */
+function paint(){
+  let total = 0;
+  COURSE.forEach((lv, li) => {
+    let lvDone = 0, lvAll = 0;
+    lv.lessons.forEach(les => {
+      const d = les.steps.filter((_, i) => done[sid(les, i)]).length;
+      lvDone += d; lvAll += les.steps.length; total += d;
+      const el = $("l" + les.id);
+      el.classList.toggle("done", d === les.steps.length);
+      el.classList.toggle("part", d > 0 && d < les.steps.length);
+      $("m" + les.id).textContent = d === les.steps.length
+        ? "done" : d ? d + " of " + les.steps.length : les.steps.length + " steps";
+    });
+    $("lvof" + li).textContent = lvDone + " of " + lvAll + " steps";
+    const lvl = $("lv" + li);
+    lvl.classList.toggle("done", lvDone === lvAll);
+    lvl.classList.toggle("now", lvDone > 0 && lvDone < lvAll);
+  });
+
+  const pct = Math.round(total / TOTAL * 100);
+  $("barFill").style.width = pct + "%";
+  $("barPct").textContent = pct + "%";
+  $("dialNum").textContent = total;
+  $("dialLbl").textContent = "of " + TOTAL + " steps";
+  $("dialFill").style.strokeDashoffset = 326.7 * (1 - total / TOTAL);
+
+  // where to go next: the first step nobody has ticked
+  let next = null;
+  for (const les of ALL){
+    const i = les.steps.findIndex((_, n) => !done[sid(les, n)]);
+    if (i !== -1){ next = {les, i}; break; }
+  }
+  const btn = $("continueBtn"), txt = $("nextTxt");
+  if (!next){
+    btn.textContent = "Sit the exam";
+    btn.href = link("exam-simulator.html");
+    txt.innerHTML = "Every step ticked. The exam is the last thing left.";
+  } else {
+    const started = total > 0;
+    btn.textContent = started ? "Continue" : "Start the first step";
+    btn.href = "#l" + next.les.id;
+    txt.innerHTML = (started ? "Next up: " : "Begins with: ")
+      + "<b>" + esc(next.les.file ? next.les.name : "Lesson " + next.les.id)
+      + ", step " + (next.i + 1) + "</b>. " + esc(next.les.steps[next.i]) + ".";
+  }
+  btn.onclick = () => {
+    if (!next) return;
+    const d = $("l" + next.les.id);
+    d.open = true;
+    setTimeout(() => d.scrollIntoView({behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth", block:"center"}), 30);
+  };
+}
+
+document.querySelectorAll('.steps input[type="checkbox"]').forEach(box => {
+  box.checked = !!done[box.dataset.step];
+  box.addEventListener("change", () => {
+    if (box.checked) done[box.dataset.step] = 1; else delete done[box.dataset.step];
+    save(); paint();
+  });
+});
+
+/* practice cards and footer links resolve the same way */
+document.querySelectorAll("[data-path]").forEach(a => {
+  a.href = link(a.dataset.path);
+  if (!LOCAL){ a.target = "_blank"; a.rel = "noopener"; }
+});
+
+$("resetBtn").onclick = () => {
+  if (!confirm("This unticks every step and starts the course from zero. Sure?")) return;
+  done = {}; save();
+  document.querySelectorAll('.steps input').forEach(b => b.checked = false);
+  paint();
+};
+
+paint();
+</script>

@@ -2,6 +2,12 @@
 
 Welcome! This folder is your full PHP course. You don't need to know anything before starting.
 
+> ## 👉 Start here: [`index.html`](index.html)
+>
+> Double-click it. It's the course home page: 5 levels, 10 lessons broken into **66 small steps**,
+> each one tickable, with a **Continue** button that always knows which step you're on. Everything
+> in this folder is reachable from it, so you never have to go looking for a file again.
+
 It follows your textbook — **Web Development Full Stack** (Cengage) — so the work you do here
 is the work your exam will ask about:
 

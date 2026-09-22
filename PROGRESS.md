@@ -1,6 +1,6 @@
 # PROGRESS — read this first
 
-**Last updated:** 2026-09-22 (fourth session)
+**Last updated:** 2026-09-22 (fifth session)
 **Update this file at the end of every session.** It is the handoff between machines and
 between agent sessions. If it is stale, the next session wastes an hour re-deriving context.
 
@@ -42,12 +42,13 @@ material over **Zoom**. I explain, she shares her screen and writes the code her
 
 ## 3. What is already done ✅
 
-The whole `Php/` folder — 83 files, every `.php` file passes `php -l`, examples verified by
+The whole `Php/` folder — 84 files, every `.php` file passes `php -l`, examples verified by
 actually running them.
 
 ```
 Php/
-├── README.md                 her entry point: the road, how to run things
+├── index.html                HER ENTRY POINT: course home, 5 levels, 66 tickable steps
+├── README.md                 the same in text, for GitHub
 ├── INSTRUCTOR-GUIDE.md       MY guide: 10-session Zoom plan, teaching notes, the walls she'll hit
 ├── 00-setup/                 SETUP.md + hello.php
 ├── 01-basics/                echo, variables, comments
@@ -81,7 +82,8 @@ Php/
 `ROADMAP.md` at the repo root is the same 26-step map as a Mermaid diagram, which GitHub
 renders inline.
 
-**Four pages are published as private Claude Artifacts** so she can use them on her phone:
+**Five pages are published as private Claude Artifacts** so she can use them on her phone:
+- Course home: https://claude.ai/artifact/GyRYKwKisjEBU5wkBanfAe
 - Arcade: https://claude.ai/artifact/JYBuyUAnizeyXzAT9tXMu2
 - Roadmap: https://claude.ai/artifact/EDpJwwwvaoGwGHnjeAXdPb
 - Flashcards: https://claude.ai/artifact/WDYShUSe2eV7Yu19XxYJZn
@@ -214,6 +216,23 @@ No `gh` CLI installed — use plain `git` for pushes.
 ## 7. Session log
 
 *(newest first — one short entry per working session, so the next agent knows what changed and why)*
+
+### 2026-09-22 (fifth) — The course got a front door
+- **New `Php/index.html`, now her entry point.** The material was always there; what was missing
+  was a way in that did not start with a folder listing. Five levels on one spine, ten lessons,
+  **66 tickable baby steps**, a progress dial, and a **Continue** button that jumps to the first
+  step nobody has ticked. Per lesson it also links the examples, exercises, mini-quiz, matching
+  arcade round and flashcard deck, so nothing has to be hunted for.
+- **The steps are the numbered sections of each `lesson.md`**, not invented. That means the two
+  files can drift: if you add a section to a lesson, add the step here too. Said so in the file.
+- The arrays lesson carries a visible "slow down here" panel, because that is the wall and the
+  roadmap already says so. It is the only warm-coloured thing on the page, on purpose.
+- Design notes for whoever edits it: same tokens as the other four pages (one course, one
+  system), but a stronger type scale and a ladder layout rather than a list of cards. The step
+  count in the headline is written by JS from the data, so the hero cannot quietly start lying
+  after you add a step. Checked at phone width; the spine and cards collapse to one column.
+- Published as a private Artifact (URL in section 3) and linked from the flashcards and exam
+  footers. `Php/README.md` now opens by pointing at it.
 
 ### 2026-09-22 (fourth) — Exam simulator + the second machine is set up
 - **New `Php/exam-simulator.html`** — `final-exam.md` as a real mock. 90-minute countdown that
