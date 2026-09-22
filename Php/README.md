@@ -67,11 +67,18 @@ Full details in [`games/README.md`](games/README.md).
 | 🎯 **[games/guess-number.php](games/guess-number.php)** | needs server | find the number in 7 guesses. Teaches sessions. |
 | 💀 **[games/hangman.php](games/hangman.php)** | needs server | programming words, written in PHP |
 | 🃏 **[flashcards.html](flashcards.html)** | double-click | 102 cards, 6 decks, the ones you miss come back |
+| ⏱ **[exam-simulator.html](exam-simulator.html)** | double-click | the final exam on a 90-minute clock, marked for you |
 
 **Quizzes** — `quizzes/` has three sizes: a 5-minute **mini-quiz after every lesson**, a bigger
 **unit quiz** every few lessons, and a **final exam** for revision week. Every one of them ends
 with a hidden *"Check your answers"* section you click open once you've finished.
 Start with `quizzes/quiz-00-intro.md` — it has no code in it at all.
+
+**[`exam-simulator.html`](exam-simulator.html)** is that final exam as a real mock: a clock that
+doesn't pause, sections A and B marked automatically, and C, D and E marked by you against the
+actual marking scheme, one criterion at a time. It ends with the list of questions you lost
+marks on and which lesson each one came from. Do the paper version with your instructor first —
+the simulator is for the second run, on your own, during revision week.
 
 Every `lesson.md` also ends with **💡 Did you know**, **🎮 Play with it** and a
 **🏆 Boss challenge** — the fun bits. Don't skip them; they're where it sticks.

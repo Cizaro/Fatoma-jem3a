@@ -28,6 +28,15 @@ Do this once you've finished lesson 10, and again a week before the real exam.
 The score matters less than **which section** loses the marks — the answer key explains
 what each weak section means and what to do about it.
 
+**Same exam, clickable:** [`../exam-simulator.html`](../exam-simulator.html) — a 90-minute
+countdown that doesn't pause, A and B marked for her automatically, C/D/E marked by her
+against the real scheme one criterion at a time, and a results page that names the weak
+section and lists exactly which questions to revise.
+
+Use the **paper** version for the first run, marked together on a call. Use the
+**simulator** for the second run, on her own in revision week. The questions are identical,
+so the two scores are comparable — that gap is the useful number.
+
 ---
 
 ## Marking yourself

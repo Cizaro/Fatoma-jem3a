@@ -1,0 +1,686 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PHP Exam Simulator</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F7F6F3; --surface:#FFFFFF; --surface-2:#EFEDE8;
+  --ink:#1A1D21; --ink-2:#5C6168; --ink-3:#8D939B;
+  --line:#E2DFD8; --accent:#0F7B6C; --accent-soft:#E3F1EE;
+  --warm:#B5541F; --warm-soft:#FBEDE4; --gold:#A57C1B;
+  --shadow:0 1px 2px rgba(26,29,33,.06), 0 10px 28px -14px rgba(26,29,33,.28);
+  --display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
+    --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
+    --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
+    --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
+  --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
+  --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
+  --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+     font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:0 70px}
+header{padding-block:32px 16px;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(27px,7vw,38px);
+   letter-spacing:-.02em;line-height:1.05;margin:0}
+h1 em{font-style:normal;color:var(--accent)}
+.lede{color:var(--ink-2);font-size:14.5px;margin:2px 0 0}
+.theme-btn{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid var(--line);
+  color:var(--ink-3);border-radius:999px;padding:5px 12px;cursor:pointer}
+.theme-btn:hover{color:var(--ink);border-color:var(--accent)}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:12px 24px;
+  font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink-2)}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:20px;box-shadow:var(--shadow)}
+pre{font-family:var(--mono);font-size:13.5px;line-height:1.55;background:var(--surface-2);
+  border-radius:9px;padding:13px 15px;overflow-x:auto;margin:11px 0}
+code{font-family:var(--mono);font-size:.92em}
+.hide{display:none!important}
+.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600}
+
+/* start screen */
+.rules{margin:18px 0 0;padding-left:20px;color:var(--ink-2);font-size:14.5px}
+.rules li{margin-bottom:6px}
+.rules b{color:var(--ink)}
+.breakdown{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px}
+.breakdown th,.breakdown td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+.breakdown th{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600}
+.breakdown td:last-child,.breakdown th:last-child{text-align:right;font-variant-numeric:tabular-nums}
+
+/* exam */
+.hud{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);
+  padding:11px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.clock{font-family:var(--mono);font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:5px 14px}
+.clock.low{color:var(--warm);border-color:var(--warm)}
+.clock.out{color:#fff;background:var(--warm);border-color:var(--warm)}
+.pill{background:var(--surface);border:1px solid var(--line);border-radius:20px;
+  padding:5px 13px;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.hud .btn{margin-left:auto;padding:9px 18px;font-size:14px}
+.sec-head{margin:34px 0 4px;padding-top:14px;border-top:2px solid var(--line)}
+.sec-head h2{font-family:var(--display);font-size:21px;margin:0;letter-spacing:-.01em}
+.sec-head p{margin:2px 0 0;color:var(--ink-3);font-size:13px;font-family:var(--mono)}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:13px;
+  padding:18px 19px;margin-top:14px;box-shadow:var(--shadow)}
+.q.answered{border-color:var(--accent)}
+.qn{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:11px;
+  font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.qtext{margin:7px 0 0;font-size:15.5px}
+.qtext code{background:var(--surface-2);padding:1px 5px;border-radius:5px}
+.opts{display:grid;gap:8px;margin-top:12px}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:9px;
+  padding:10px 13px;cursor:pointer;background:var(--paper);font-size:14.5px}
+.opt:hover{border-color:var(--accent)}
+.opt input{margin:4px 0 0;accent-color:var(--accent);flex:none}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt .letter{font-family:var(--mono);font-weight:700;color:var(--ink-3)}
+.opt.sel .letter{color:var(--accent)}
+input.short,textarea{width:100%;font-family:var(--mono);font-size:14px;color:inherit;
+  background:var(--paper);border:1px solid var(--line);border-radius:9px;padding:11px 13px;
+  margin-top:11px;line-height:1.55}
+input.short:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+textarea{resize:vertical;min-height:130px;white-space:pre;overflow-wrap:normal;overflow-x:auto}
+.hint{font-size:12.5px;color:var(--ink-3);margin:7px 0 0}
+
+/* marking */
+.given{background:var(--surface-2);border-radius:9px;padding:13px 15px;font-family:var(--mono);
+  font-size:13.5px;white-space:pre-wrap;word-break:break-word;margin-top:9px;min-height:22px}
+.given.empty{color:var(--ink-3);font-style:italic;font-family:var(--body)}
+.model{background:var(--accent-soft);border:1px solid var(--accent);border-radius:11px;
+  padding:14px 16px;margin-top:14px}
+.model b.lbl{color:var(--accent);display:block;margin-bottom:6px}
+.model pre{background:var(--surface);margin:9px 0 0}
+.crit{margin-top:15px;display:grid;gap:8px}
+.crit label{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--line);
+  border-radius:9px;padding:11px 13px;cursor:pointer;background:var(--surface);font-size:14.5px}
+.crit label:hover{border-color:var(--accent)}
+.crit label.on{border-color:var(--accent);background:var(--accent-soft)}
+.crit input{margin:4px 0 0;accent-color:var(--accent);width:17px;height:17px;flex:none}
+.crit .mk{margin-left:auto;font-family:var(--mono);font-size:11.5px;color:var(--ink-3);flex:none}
+.auto{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent);
+  border-radius:99px;padding:3px 10px;margin-top:11px}
+.auto.miss{background:var(--warm-soft);color:var(--warm)}
+.mark-nav{display:flex;gap:10px;align-items:center;margin-top:20px}
+.mark-nav .score{margin-left:auto;font-family:var(--mono);font-weight:700;font-size:15px}
+
+/* results */
+.big{font-family:var(--display);font-size:54px;font-weight:700;color:var(--accent);
+  line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-size:22px;color:var(--ink-3);font-weight:600}
+.band{font-family:var(--display);font-size:20px;margin:8px 0 3px}
+.secbar{display:block;height:7px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:5px}
+.secbar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.secbar i.weak{background:var(--warm)}
+.srow{display:grid;grid-template-columns:1fr auto;gap:3px 12px;align-items:baseline;margin-top:15px}
+.srow .name{font-weight:600}
+.srow .val{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums}
+.srow .bar{grid-column:1/-1}
+.diag{background:var(--warm-soft);border-radius:11px;padding:15px 17px;margin-top:16px}
+.diag b.lbl{color:var(--warm);display:block;margin-bottom:7px}
+.diag p{margin:0 0 9px}
+.diag p:last-child{margin-bottom:0}
+.revision ul{margin:0;padding-left:20px}
+.revision li{margin-bottom:7px;color:var(--ink-2)}
+.revision a{color:var(--accent);text-decoration:none}
+.hist div{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);
+  font-size:13.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.hist span:last-child{margin-left:auto;font-family:var(--mono);font-weight:700;color:var(--ink)}
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--ink-3);text-align:center}
+footer a{color:var(--accent);text-decoration:none;margin:0 7px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{.hud,.theme-btn,.btn,footer{display:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div>
+    <h1>PHP <em>Exam Simulator</em></h1>
+    <p class="lede">The real paper, on a clock, marked the way your instructor marks it.</p>
+  </div>
+  <button class="theme-btn" id="themeBtn">theme</button>
+</header>
+
+<!-- ================= START ================= -->
+<section id="start">
+  <div class="card">
+    <h2 style="font-family:var(--display);margin:0 0 4px;font-size:22px">Final Exam — PHP &amp; MySQL</h2>
+    <p style="margin:0;color:var(--ink-2)">40 marks · 90 minutes · closed book</p>
+    <table class="breakdown">
+      <tr><th>Section</th><th>What it asks</th><th>Marks</th></tr>
+      <tr><td><b>A</b></td><td>Multiple choice</td><td>10</td></tr>
+      <tr><td><b>B</b></td><td>What does it print?</td><td>8</td></tr>
+      <tr><td><b>C</b></td><td>Find and fix the errors</td><td>6</td></tr>
+      <tr><td><b>D</b></td><td>Write the code</td><td>10</td></tr>
+      <tr><td><b>E</b></td><td>Database</td><td>6</td></tr>
+    </table>
+    <ul class="rules">
+      <li><b>Close everything else.</b> No lesson files, no internet, no phone.</li>
+      <li>The clock starts when you press begin and <b>does not pause</b>. At 0:00 it marks what you have.</li>
+      <li>Sections A and B are marked for you. <b>C, D and E you mark yourself</b> against the
+          real marking scheme, one criterion at a time.</li>
+      <li>Be honest with the marking. A mark you gave yourself for an answer you didn't write buys
+          you nothing — what you want out of this is the revision list, not the number.</li>
+      <li>Your answers save as you type, so a closed tab is not a lost attempt.</li>
+    </ul>
+    <div class="row">
+      <button class="btn" id="beginBtn">Begin the exam</button>
+      <button class="btn ghost hide" id="resumeBtn">Resume saved attempt</button>
+    </div>
+  </div>
+  <div class="card hide" id="histCard" style="margin-top:16px">
+    <b class="lbl">Past attempts</b>
+    <div class="hist" id="histList"></div>
+  </div>
+</section>
+
+<!-- ================= EXAM ================= -->
+<section id="exam" class="hide">
+  <div class="hud">
+    <div class="clock" id="clock">90:00</div>
+    <div class="pill" id="prog">0 / 23 answered</div>
+    <button class="btn" id="submitBtn">Finish &amp; mark</button>
+  </div>
+  <div id="paper"></div>
+  <div class="row"><button class="btn" id="submitBtn2">Finish &amp; mark</button></div>
+</section>
+
+<!-- ================= MARKING ================= -->
+<section id="mark" class="hide">
+  <div class="sec-head" style="border:0;padding-top:0;margin-top:20px">
+    <h2>Marking</h2>
+    <p id="markProg"></p>
+  </div>
+  <div class="card" id="markCard"></div>
+  <div class="mark-nav">
+    <button class="btn ghost" id="prevMark">Back</button>
+    <button class="btn" id="nextMark">Next</button>
+    <span class="score" id="runScore">0 / 40</span>
+  </div>
+</section>
+
+<!-- ================= RESULTS ================= -->
+<section id="results" class="hide"></section>
+
+<footer>
+  <a href="quizzes/final-exam.md">paper version</a>·
+  <a href="flashcards.html">flashcards</a>·
+  <a href="games/php-arcade.html">arcade</a>·
+  <a href="roadmap.html">roadmap</a>
+</footer>
+</div>
+
+<script>
+/* ---------------------------------------------------------------
+   The question text here is identical to quizzes/final-exam.md.
+   If you change one, change the other — a paper and a simulator
+   that disagree teach her to trust neither.
+
+   type "mcq"  — auto-marked, all or nothing
+   type "text" — one-line output, auto-matched against accept[],
+                 then still shown at marking time so a partial
+                 mark is possible
+   type "long" — self-marked against criteria[], one mark each,
+                 taken straight out of FINAL-EXAM-ANSWERS.md
+--------------------------------------------------------------- */
+const EXAM = [
+{id:"A", title:"Section A — Multiple choice", note:"10 marks · 1 each", qs:[
+ {n:1,marks:1,type:"mcq",q:"PHP code is executed on:",opts:["the browser","the server","the database","the router"],ans:1,
+  lesson:"00-setup",label:"Setup"},
+ {n:2,marks:1,type:"mcq",q:"Which is <b>not</b> a valid variable name?",opts:["$_id","$myAge","$2nd","$total_price"],ans:2,
+  lesson:"01-basics",label:"Lesson 1 — Basics"},
+ {n:3,marks:1,type:"mcq",q:"<code>var_dump(5 === \"5\")</code> outputs:",opts:["bool(true)","bool(false)","int(5)","an error"],ans:1,
+  lesson:"02-datatypes",label:"Lesson 2 — Data types"},
+ {n:4,marks:1,type:"mcq",q:"<code>echo 15 % 4;</code> outputs:",opts:["3.75","3","4","60"],ans:1,
+  lesson:"03-operators",label:"Lesson 3 — Operators"},
+ {n:5,marks:1,type:"mcq",q:"Which loop is designed for arrays?",opts:["for","while","foreach","do...while"],ans:2,
+  lesson:"05-loops",label:"Lesson 5 — Loops"},
+ {n:6,marks:1,type:"mcq",q:"In <code>$a = [\"x\",\"y\",\"z\"]</code>, the value <code>\"z\"</code> is at index:",opts:["0","1","2","3"],ans:2,
+  lesson:"06-arrays",label:"Lesson 6 — Arrays"},
+ {n:7,marks:1,type:"mcq",q:"Which sends form data invisibly?",opts:["GET","POST","PUT","both the same"],ans:1,
+  lesson:"08-forms",label:"Lesson 8 — Forms"},
+ {n:8,marks:1,type:"mcq",q:"Which SQL command changes existing rows?",opts:["SELECT","INSERT","UPDATE","ALTER"],ans:2,
+  lesson:"09-mysql",label:"Lesson 9 — MySQL"},
+ {n:9,marks:1,type:"mcq",q:"<code>htmlspecialchars()</code> protects against:",opts:["SQL injection","XSS","slow queries","wrong passwords"],ans:1,
+  lesson:"08-forms",label:"Lesson 8 — Forms"},
+ {n:10,marks:1,type:"mcq",q:"A prepared statement protects against:",opts:["XSS","SQL injection","infinite loops","parse errors"],ans:1,
+  lesson:"09-mysql",label:"Lesson 9 — MySQL"}
+]},
+
+{id:"B", title:"Section B — What does it print?", note:"8 marks · 2 each", qs:[
+ {n:11,marks:2,type:"text",q:"Output:",
+  code:'$a = 4;\n$b = "4";\nif ($a == $b) echo "same ";\nif ($a === $b) echo "identical";',
+  accept:["same"],
+  model:'<code>same </code> — only the first <code>if</code> passes, because <code>4 === "4"</code> is false: <code>===</code> compares the type too.',
+  criteria:["Printed <code>same</code>","Did <b>not</b> also print <code>identical</code>"],
+  lesson:"03-operators",label:"Lesson 3 — Operators"},
+ {n:12,marks:2,type:"text",q:"Output:",
+  code:'for ($i = 1; $i <= 6; $i++) {\n    if ($i % 2 != 0) continue;\n    echo $i;\n}',
+  accept:["246"],
+  model:'<code>246</code> — <code>continue</code> jumps to the next turn of the loop, so the odd numbers are skipped.',
+  criteria:["Got the even numbers only","In order, with nothing extra printed"],
+  lesson:"05-loops",label:"Lesson 5 — Loops"},
+ {n:13,marks:2,type:"text",q:"Output:",
+  code:'$marks = [12, 18, 6];\necho count($marks) . "-" . array_sum($marks) . "-" . max($marks);',
+  accept:["3-36-18"],
+  model:'<code>3-36-18</code> — how many, then the total, then the biggest.',
+  criteria:["All three numbers right","Joined with the dashes, nothing extra"],
+  lesson:"06-arrays",label:"Lesson 6 — Arrays"},
+ {n:14,marks:2,type:"text",q:"Output:",
+  code:'function f($n) {\n    if ($n > 10) return "big";\n    return "small";\n    echo "never";\n}\necho f(11) . f(2);',
+  accept:["bigsmall"],
+  model:'<code>bigsmall</code> — and the <code>echo "never"</code> can never run, because <code>return</code> leaves the function immediately.',
+  criteria:["Got <code>bigsmall</code>","Nothing extra — knew the line after <code>return</code> is unreachable"],
+  lesson:"07-functions",label:"Lesson 7 — Functions"}
+]},
+
+{id:"C", title:"Section C — Find and fix the errors", note:"6 marks · 2 each", qs:[
+ {n:15,marks:2,type:"long",q:"<b>Two errors.</b> Write the corrected code.",
+  code:'$name = "Rana"\necho "Hello $Name";',
+  model:'Missing <code>;</code> after <code>"Rana"</code>, and <code>$Name</code> should be <code>$name</code> — variable names are case sensitive.<pre>$name = "Rana";\necho "Hello $name";</pre>',
+  criteria:["Spotted the missing semicolon","Spotted <code>$Name</code> vs <code>$name</code>"],
+  lesson:"01-basics",label:"Lesson 1 — Basics"},
+ {n:16,marks:2,type:"long",q:"One error, and the code runs forever. What and why?",
+  code:'$i = 0;\nwhile ($i < 5) {\n    echo $i;\n}',
+  model:'Nothing inside the loop changes <code>$i</code>, so <code>$i &lt; 5</code> stays true forever — an infinite loop. The fix is <code>$i++;</code> inside the braces.',
+  criteria:["Named it as an infinite loop","Explained <i>why</i> — nothing changes <code>$i</code> — or gave the <code>$i++</code> fix"],
+  lesson:"05-loops",label:"Lesson 5 — Loops"},
+ {n:17,marks:2,type:"long",q:"One security error. What is it, and what is the fix?",
+  code:'$id = $_GET["id"];\n$result = mysqli_query($conn, "SELECT * FROM users WHERE id = $id");',
+  model:'The <code>$_GET</code> value goes straight into the SQL — <b>SQL injection</b>. <code>?id=1 OR 1=1</code> hands back every row. The fix is a prepared statement:<pre>$stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE id = ?");\nmysqli_stmt_bind_param($stmt, "i", $id);\nmysqli_stmt_execute($stmt);</pre>',
+  criteria:["Named SQL injection","Gave the prepared-statement fix"],
+  lesson:"09-mysql",label:"Lesson 9 — MySQL"}
+]},
+
+{id:"D", title:"Section D — Write the code", note:"10 marks", qs:[
+ {n:18,marks:3,type:"long",
+  q:"<i>(3 marks)</i> Write a function <code>letterGrade($mark)</code> that returns <code>A</code> for 18+, <code>B</code> for 16+, <code>C</code> for 14+, <code>D</code> for 10+, and <code>F</code> otherwise.",
+  model:'<pre>function letterGrade($mark) {\n    if ($mark >= 18) return "A";\n    if ($mark >= 16) return "B";\n    if ($mark >= 14) return "C";\n    if ($mark >= 10) return "D";\n    return "F";\n}</pre>An <code>elseif</code> chain is just as correct. <b>The order is part of the answer</b> — turned around, every mark comes back as <code>D</code>.',
+  criteria:["Used <code>function</code> and <code>return</code> properly","All five grades and thresholds present","Highest test first — the order actually works"],
+  lesson:"07-functions",label:"Lesson 7 — Functions"},
+ {n:19,marks:3,type:"long",
+  q:"<i>(3 marks)</i> Given this array, write a <code>foreach</code> that prints each student's name, their grade, and <code>Pass</code> or <code>Fail</code> (pass = 10 or more).",
+  code:'$class = [\n    ["name" => "Rana", "grade" => 17],\n    ["name" => "Sara", "grade" => 8],\n];',
+  model:'<pre>foreach ($class as $student) {\n    $result = $student["grade"] >= 10 ? "Pass" : "Fail";\n    echo $student["name"] . " - " . $student["grade"] . " - " . $result . "\\n";\n}</pre>An <code>if/else</code> instead of the ternary is equally fine.',
+  criteria:["<code>foreach</code> written correctly","Used the right keys — <code>[\"name\"]</code> and <code>[\"grade\"]</code>","Pass/Fail right, including at exactly 10"],
+  lesson:"06-arrays",label:"Lesson 6 — Arrays"},
+ {n:20,marks:4,type:"long",
+  q:"<i>(4 marks)</i> Write a complete self-submitting form page that asks for a name, checks it is not empty, and prints <code>Welcome &lt;name&gt;</code> safely.",
+  model:'<pre>&lt;?php\n$name = ""; $error = "";\nif ($_SERVER["REQUEST_METHOD"] === "POST") {\n    $name = trim($_POST["name"] ?? "");\n    if ($name === "") $error = "Name is required";\n}\n?&gt;\n&lt;form method="post"&gt;\n    &lt;input type="text" name="name"&gt;\n    &lt;button type="submit"&gt;Send&lt;/button&gt;\n&lt;/form&gt;\n&lt;?php\nif ($error) echo $error;\nelseif ($name) echo "Welcome " . htmlspecialchars($name);</pre>Any working shape counts. The marks are for the four <i>ideas</i>, not for matching this layout.',
+  criteria:["A form whose input has a <code>name</code> attribute","The <code>REQUEST_METHOD</code> check","An empty check on the value","<code>htmlspecialchars()</code> on the printed name"],
+  lesson:"08-forms",label:"Lesson 8 — Forms"}
+]},
+
+{id:"E", title:"Section E — Database", note:"6 marks · 2 each", qs:[
+ {n:21,marks:2,type:"long",
+  q:"<i>(2 marks)</i> Write the SQL that creates a table <code>books</code> with: an auto id, a title (max 120 chars), an author, and a year.",
+  model:'<pre>CREATE TABLE books (\n    id     INT AUTO_INCREMENT PRIMARY KEY,\n    title  VARCHAR(120) NOT NULL,\n    author VARCHAR(100),\n    year   INT\n);</pre>',
+  criteria:["Auto id — <code>AUTO_INCREMENT PRIMARY KEY</code>","Sensible types — <code>VARCHAR(120)</code> title, <code>INT</code> year"],
+  lesson:"09-mysql",label:"Lesson 9 — MySQL"},
+ {n:22,marks:2,type:"long",
+  q:"<i>(2 marks)</i> Write the SQL that finds every book published after 2020, newest first.",
+  model:'<pre>SELECT * FROM books WHERE year > 2020 ORDER BY year DESC;</pre>',
+  criteria:["<code>WHERE year &gt; 2020</code>","<code>ORDER BY year DESC</code> — newest first"],
+  lesson:"09-mysql",label:"Lesson 9 — MySQL"},
+ {n:23,marks:2,type:"long",
+  q:"<i>(2 marks)</i> Write the PHP that connects to a database called <code>library</code> and prints every book title. A prepared statement is not required here.",
+  model:'<pre>$conn = mysqli_connect("localhost", "root", "", "library");\n$result = mysqli_query($conn, "SELECT title FROM books");\nwhile ($row = mysqli_fetch_assoc($result)) {\n    echo $row["title"] . "&lt;br&gt;";\n}</pre>',
+  criteria:["Connected to <code>library</code>","A fetch loop that echoes each title"],
+  lesson:"09-mysql",label:"Lesson 9 — MySQL"}
+]}];
+
+/* What a weak section actually means — from FINAL-EXAM-ANSWERS.md.
+   This is the part worth reading. The total is not. */
+const DIAGNOSIS = {
+ A:["The vocabulary hasn't settled yet.",
+    "Ten minutes of mini-quizzes at the start of each call, and no new material until they come back clean."],
+ B:["Tracing code in your head is the gap.",
+    "Back to the <code>examples.php</code> files, playing <i>predict the output, then run it</i> — out loud, every file."],
+ C:["Error messages aren't being read.",
+    "Break files on purpose and fix them together. Nothing else moves this one."],
+ D:["Producing code from a blank page is the gap.",
+    "This is a practice problem, not a knowledge problem. Write from blank more often — re-reading won't shift it."],
+ E:["The line between SQL and PHP is blurry.",
+    "Practise the SQL on its own in phpMyAdmin until it's boring, then put the PHP around it."]
+};
+
+const TOTAL = 40, DURATION = 90 * 60;
+const ALLQ = EXAM.flatMap(s => s.qs.map(q => ({...q, sec: s.id})));
+const TOMARK = ALLQ.filter(q => q.type !== "mcq");
+const SAVE = "phpexam_attempt", HIST = "phpexam_history", THEME = "phpexam_theme";
+
+let answers = {}, awarded = {}, crit = {}, left = DURATION, timer = null, markIdx = 0, ranOut = false;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const round = n => Math.round(n * 10) / 10;
+const fmt = s => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+const filled = n => { const v = answers[n]; return typeof v === "number" || String(v || "").trim() !== ""; };
+const show = id => {
+  ["start","exam","mark","results"].forEach(s => $(s).classList.toggle("hide", s !== id));
+  window.scrollTo(0, 0);
+};
+
+/* ---------- theme ---------- */
+function setTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  try { localStorage.setItem(THEME, t); } catch(e) {}
+}
+try { const t = localStorage.getItem(THEME); if (t) setTheme(t); } catch(e) {}
+$("themeBtn").onclick = () => {
+  const now = document.documentElement.getAttribute("data-theme")
+    || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  setTheme(now === "dark" ? "light" : "dark");
+};
+
+/* ---------- saving ----------
+   An exam you lose to a closed tab is worse than no exam, so the
+   answers and the clock go into localStorage as she types. */
+function save(){
+  try { localStorage.setItem(SAVE, JSON.stringify({answers, left})); } catch(e) {}
+}
+function loadSaved(){
+  try { return JSON.parse(localStorage.getItem(SAVE) || "null"); } catch(e) { return null; }
+}
+function getHistory(){
+  try { return JSON.parse(localStorage.getItem(HIST) || "[]"); } catch(e) { return []; }
+}
+function pushHistory(entry){
+  try {
+    const h = getHistory(); h.unshift(entry);
+    localStorage.setItem(HIST, JSON.stringify(h.slice(0, 12)));
+  } catch(e) {}
+}
+
+/* ---------- start screen ---------- */
+function paintStart(){
+  const s = loadSaved();
+  const resumable = s && Object.keys(s.answers || {}).length;
+  $("resumeBtn").classList.toggle("hide", !resumable);
+  if (resumable) $("resumeBtn").textContent = "Resume — " + fmt(Math.max(s.left || 0, 0)) + " left";
+
+  const h = getHistory();
+  $("histCard").classList.toggle("hide", !h.length);
+  $("histList").innerHTML = h.map(a => `<div>
+      <span>${a.date}</span>
+      <span>${a.weak.length ? "weakest: " + a.weak.join(", ") : "even across sections"}</span>
+      <span>${a.total} / 40</span>
+    </div>`).join("");
+}
+
+/* ---------- the paper ---------- */
+function paintPaper(){
+  $("paper").innerHTML = EXAM.map(sec => `
+    <div class="sec-head"><h2>${sec.title}</h2><p>${sec.note}</p></div>
+    ${sec.qs.map(q => `
+      <div class="q" id="q${q.n}">
+        <div class="qn"><span>Question ${q.n}</span><span>${q.marks} ${q.marks === 1 ? "mark" : "marks"}</span></div>
+        <p class="qtext">${q.q}</p>
+        ${q.code ? `<pre>${esc(q.code)}</pre>` : ""}
+        ${q.type === "mcq" ? `
+          <div class="opts">${q.opts.map((o, i) => `
+            <label class="opt" data-q="${q.n}" data-i="${i}">
+              <input type="radio" name="q${q.n}" value="${i}">
+              <span class="letter">${"abcd"[i]})</span><span>${esc(o)}</span>
+            </label>`).join("")}</div>`
+        : q.type === "text" ? `
+          <input class="short" data-q="${q.n}" autocomplete="off" spellcheck="false"
+                 placeholder="what it prints, exactly">
+          <p class="hint">Exactly what lands on the screen. Spaces count.</p>`
+        : `<textarea data-q="${q.n}" spellcheck="false" placeholder="your answer"></textarea>`}
+      </div>`).join("")}`).join("");
+
+  $("paper").querySelectorAll(".opt").forEach(el => el.addEventListener("click", () => {
+    const n = el.dataset.q;
+    answers[n] = +el.dataset.i;
+    el.parentElement.querySelectorAll(".opt").forEach(o => o.classList.remove("sel"));
+    el.classList.add("sel");
+    el.querySelector("input").checked = true;
+    touched(n);
+  }));
+  $("paper").querySelectorAll("input.short, textarea").forEach(el => el.addEventListener("input", () => {
+    answers[el.dataset.q] = el.value;
+    touched(el.dataset.q);
+  }));
+
+  restore();
+  progress();
+}
+function restore(){
+  Object.keys(answers).forEach(n => {
+    const q = ALLQ.find(x => String(x.n) === String(n));
+    if (!q) return;
+    if (q.type === "mcq"){
+      const el = document.querySelector('.opt[data-q="' + n + '"][data-i="' + answers[n] + '"]');
+      if (el){ el.classList.add("sel"); el.querySelector("input").checked = true; }
+    } else {
+      const el = document.querySelector('[data-q="' + n + '"]');
+      if (el) el.value = answers[n];
+    }
+    $("q" + n).classList.toggle("answered", filled(n));
+  });
+}
+function touched(n){
+  $("q" + n).classList.toggle("answered", filled(n));
+  progress();
+  save();
+}
+function progress(){
+  $("prog").textContent = ALLQ.filter(q => filled(q.n)).length + " / " + ALLQ.length + " answered";
+}
+
+/* ---------- the clock ----------
+   It does not pause. That is the whole point of a simulator. */
+function tick(){
+  left--;
+  $("clock").textContent = fmt(Math.max(left, 0));
+  $("clock").classList.toggle("low", left <= 600 && left > 120);
+  $("clock").classList.toggle("out", left <= 120);
+  if (left % 5 === 0) save();
+  if (left <= 0){ clearInterval(timer); timer = null; ranOut = true; toMarking(); }
+}
+function startClock(){
+  $("clock").textContent = fmt(left);
+  timer = setInterval(tick, 1000);
+}
+
+$("beginBtn").onclick = () => {
+  const s = loadSaved();
+  if (s && Object.keys(s.answers || {}).length &&
+      !confirm("This starts a fresh attempt and throws the saved one away. Sure?")) return;
+  answers = {}; left = DURATION; ranOut = false;
+  try { localStorage.removeItem(SAVE); } catch(e) {}
+  paintPaper(); show("exam"); startClock();
+};
+$("resumeBtn").onclick = () => {
+  const s = loadSaved();
+  answers = s.answers || {};
+  left = typeof s.left === "number" ? s.left : DURATION;
+  ranOut = false;
+  paintPaper(); show("exam"); startClock();
+};
+$("submitBtn").onclick = $("submitBtn2").onclick = () => {
+  const blank = ALLQ.length - ALLQ.filter(q => filled(q.n)).length;
+  if (blank && !confirm(blank + " question(s) are still blank. Finish anyway?")) return;
+  clearInterval(timer); timer = null;
+  toMarking();
+};
+
+/* ---------- marking ---------- */
+const norm = s => String(s || "").toLowerCase().replace(/\s+/g, "").replace(/^["'`]+|["'`.;]+$/g, "");
+
+function toMarking(){
+  awarded = {}; crit = {}; markIdx = 0;
+  ALLQ.filter(q => q.type === "mcq").forEach(q => { awarded[q.n] = answers[q.n] === q.ans ? 1 : 0; });
+  TOMARK.forEach(q => {
+    // an exact match on a one-line output question marks itself,
+    // but she can still uncheck it — nothing here is locked
+    const auto = q.type === "text" && q.accept.some(a => norm(a) === norm(answers[q.n])) && filled(q.n);
+    crit[q.n] = q.criteria.map(() => auto);
+    awarded[q.n] = auto ? q.marks : 0;
+  });
+  show("mark");
+  paintMark();
+}
+function paintMark(){
+  const q = TOMARK[markIdx];
+  const given = String(answers[q.n] || "");
+  const auto = q.type === "text" && q.accept.some(a => norm(a) === norm(answers[q.n])) && given.trim() !== "";
+  const per = q.marks / q.criteria.length;
+
+  $("markProg").textContent = "question " + (markIdx + 1) + " of " + TOMARK.length
+    + " · Q" + q.n + ", " + q.marks + " marks";
+  $("markCard").innerHTML = `
+    <div class="qn"><span>Question ${q.n}</span><span>${q.marks} marks</span></div>
+    <p class="qtext">${q.q}</p>
+    ${q.code ? `<pre>${esc(q.code)}</pre>` : ""}
+    <b class="lbl">What you wrote</b>
+    <div class="given ${given.trim() ? "" : "empty"}">${given.trim() ? esc(given) : "left blank"}</div>
+    ${q.type === "text" ? `<span class="auto ${auto ? "" : "miss"}">${
+        auto ? "auto-marked correct" : "not an exact match — mark it yourself"}</span>` : ""}
+    <div class="model"><b class="lbl">The marking scheme</b>${q.model}</div>
+    <div class="crit">${q.criteria.map((c, i) => `
+      <label class="${crit[q.n][i] ? "on" : ""}" data-i="${i}">
+        <input type="checkbox" ${crit[q.n][i] ? "checked" : ""}>
+        <span>${c}</span>
+        <span class="mk">${per === 1 ? "1 mark" : per + " marks"}</span>
+      </label>`).join("")}</div>`;
+
+  // listen on the checkbox, not the label: a click on the label text is
+  // already forwarded to the box by the browser, and toggling it here too
+  // would cancel itself out
+  $("markCard").querySelectorAll(".crit input").forEach(box => box.addEventListener("change", () => {
+    const el = box.closest("label");
+    crit[q.n][+el.dataset.i] = box.checked;
+    el.classList.toggle("on", box.checked);
+    awarded[q.n] = crit[q.n].filter(Boolean).length * per;
+    runScore();
+  }));
+
+  $("prevMark").disabled = markIdx === 0;
+  $("nextMark").textContent = markIdx === TOMARK.length - 1 ? "See the result" : "Next";
+  runScore();
+}
+function runScore(){
+  const t = Object.keys(awarded).reduce((a, k) => a + awarded[k], 0);
+  $("runScore").textContent = round(t) + " / " + TOTAL;
+}
+$("prevMark").onclick = () => { if (markIdx > 0){ markIdx--; paintMark(); } };
+$("nextMark").onclick = () => {
+  if (markIdx < TOMARK.length - 1){ markIdx++; paintMark(); }
+  else paintResults();
+};
+
+/* ---------- results ---------- */
+function band(t){
+  if (t >= 34) return ["Excellent — you're ready.",
+    "Do the paper version once more a week before the real thing and leave it there."];
+  if (t >= 27) return ["Good.",
+    "Revise only the sections that lost marks. Going back over what you got right is wasted time."];
+  if (t >= 20) return ["A pass, but shaky.",
+    "Redo the mini-quizzes for the weak lessons before you move on."];
+  return ["Don't panic.",
+    "Find which <i>section</i> lost the marks and redo that lesson only — not the whole course."];
+}
+function paintResults(){
+  const total = round(Object.keys(awarded).reduce((a, k) => a + awarded[k], 0));
+  const secs = EXAM.map(s => ({
+    id: s.id,
+    title: s.title.replace(/^Section . — /, ""),
+    got: round(s.qs.reduce((a, q) => a + (awarded[q.n] || 0), 0)),
+    out: s.qs.reduce((a, q) => a + q.marks, 0)
+  }));
+  const weak = secs.filter(s => s.got / s.out < 0.6);
+  const lost = ALLQ.filter(q => (awarded[q.n] || 0) < q.marks);
+  const head = band(total);
+
+  $("results").innerHTML = `
+    <div class="card" style="text-align:center">
+      <div class="big">${total}<small> / 40</small></div>
+      <p class="band">${head[0]}</p>
+      <p style="color:var(--ink-2);margin:0">${head[1]}</p>
+      ${ranOut ? `<p style="color:var(--warm);font-size:13.5px;margin:11px 0 0">
+        The clock ran out — this was marked on what you had at 0:00.</p>` : ""}
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <b class="lbl">By section</b>
+      ${secs.map(s => {
+        const pct = Math.round(s.got / s.out * 100);
+        return `<div class="srow">
+          <span class="name">${s.id} · ${s.title}</span>
+          <span class="val">${s.got} / ${s.out}</span>
+          <span class="bar"><span class="secbar"><i class="${pct < 60 ? "weak" : ""}" style="width:${pct}%"></i></span></span>
+        </div>`;
+      }).join("")}
+      <p style="color:var(--ink-3);font-size:13px;margin:17px 0 0">
+        Don't read the total first. <b style="color:var(--ink)">Read which section lost the marks.</b>
+        The total tells you how you feel; the section tells you what to do.</p>
+    </div>
+
+    ${weak.length ? weak.map(s => `
+      <div class="diag">
+        <b class="lbl">Section ${s.id} — ${s.title} · ${s.got} / ${s.out}</b>
+        <p>${DIAGNOSIS[s.id][0]}</p><p>${DIAGNOSIS[s.id][1]}</p>
+      </div>`).join("")
+    : `<div class="card" style="margin-top:16px;background:var(--accent-soft);border-color:var(--accent)">
+        <b style="color:var(--accent)">No weak section.</b> Every one is above 60%. Keep it there.
+      </div>`}
+
+    <div class="card revision" style="margin-top:16px">
+      <b class="lbl">Your revision plan</b>
+      ${lost.length ? `
+        <p style="color:var(--ink-2);margin:9px 0 11px">
+          The questions that lost marks. <b style="color:var(--ink)">This list is the plan</b> — not the score.</p>
+        <ul>${lost.map(q => `<li>
+          <b style="color:var(--ink);font-family:var(--mono)">Q${q.n}</b> — ${q.label}
+          <span style="color:var(--ink-3)">(${round(awarded[q.n] || 0)}/${q.marks})</span>
+          → <a href="${q.lesson}/lesson.md">${q.lesson}/</a></li>`).join("")}</ul>`
+      : `<p style="margin:9px 0 0;color:var(--accent);font-weight:600">
+          Full marks. Nothing to revise — go and do something else.</p>`}
+    </div>
+
+    <div class="row">
+      <button class="btn" onclick="location.reload()">Back to the start</button>
+      <button class="btn ghost" onclick="window.print()">Print this result</button>
+    </div>`;
+
+  pushHistory({
+    date: new Date().toLocaleDateString(undefined, {day:"numeric", month:"short", year:"numeric"}),
+    total: total,
+    weak: weak.map(s => s.id)
+  });
+  try { localStorage.removeItem(SAVE); } catch(e) {}
+  show("results");
+}
+
+/* closing the tab mid-exam should at least ask */
+addEventListener("beforeunload", e => {
+  if (timer){ e.preventDefault(); e.returnValue = ""; }
+});
+
+paintStart();
+</script>

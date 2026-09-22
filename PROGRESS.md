@@ -1,6 +1,6 @@
 # PROGRESS — read this first
 
-**Last updated:** 2026-09-22 (third session)
+**Last updated:** 2026-09-22 (fourth session)
 **Update this file at the end of every session.** It is the handoff between machines and
 between agent sessions. If it is stale, the next session wastes an hour re-deriving context.
 
@@ -42,7 +42,7 @@ material over **Zoom**. I explain, she shares her screen and writes the code her
 
 ## 3. What is already done ✅
 
-The whole `Php/` folder — 82 files, every `.php` file passes `php -l`, examples verified by
+The whole `Php/` folder — 83 files, every `.php` file passes `php -l`, examples verified by
 actually running them.
 
 ```
@@ -66,6 +66,7 @@ Php/
 │                             hangman.php, README.md hub
 ├── projects/                 3 projects with starter files and checklists
 ├── roadmap.html              interactive A-Z map, 26 steps, progress saved in localStorage
+├── exam-simulator.html       the final exam, timed and self-marking (see the session log)
 ├── quizzes/                  20 files: quiz-00 intro, 10 mini-quizzes, 4 unit quizzes,
 │                             final exam, README index, 3 answer keys
 └── resources/                cheatsheet.md, common-errors.md, youtube.md
@@ -106,9 +107,7 @@ on them, and pushing on makes lessons 8–10 collapse.
 
 ### Asked for but not built yet
 
-- [ ] **Exam simulator** — an interactive, timed, self-scoring version of `final-exam.md`.
-      The paper version now exists, so this is only about making it clickable.
-      *(Offered, not yet approved — ask before building.)*
+*(nothing outstanding — the exam simulator was the last open request and it's built)*
 
 ### Ideas worth proposing when the time is right
 
@@ -200,7 +199,9 @@ cd Php && php -S localhost:8000            # server for lessons 8-10 + games
 find Php -name "*.php" -exec php -l {} \;  # lint everything
 ```
 
-**Environment:** Windows 11, PHP 8.2.12 CLI on PATH, Git Bash available, XAMPP for MySQL work.
+**Environment:** Windows 11, Git Bash available. **Both machines run XAMPP 8.2** — PHP 8.2.12,
+MySQL and phpMyAdmin, the same stack as her uni lab. If `php` isn't on PATH on a machine it's at
+`C:\xampp\php\php.exe`; add `C:\xampp\php` to PATH to get the short command.
 No `gh` CLI installed — use plain `git` for pushes.
 
 ---
@@ -208,6 +209,35 @@ No `gh` CLI installed — use plain `git` for pushes.
 ## 7. Session log
 
 *(newest first — one short entry per working session, so the next agent knows what changed and why)*
+
+### 2026-09-22 (fourth) — Exam simulator + the second machine is set up
+- **New `Php/exam-simulator.html`** — `final-exam.md` as a real mock. 90-minute countdown that
+  does **not** pause and auto-marks whatever exists at 0:00; answers and the remaining time are
+  saved to localStorage as she types, so a closed tab isn't a lost attempt.
+  - Section **A** auto-marked. Section **B** auto-matched against an `accept[]` list, normalised
+    for case and whitespace (`" 2 4 6 "` → `246`), and **still shown at marking time** so a
+    partial mark is possible — nothing is locked.
+  - Sections **C/D/E** are self-marked one criterion at a time, the criteria lifted verbatim
+    from `FINAL-EXAM-ANSWERS.md` (e.g. Q20's four marks = form `name`, `REQUEST_METHOD`, empty
+    check, `htmlspecialchars`). Marking a whole answer "correct" in one click was deliberately
+    not offered — per-criterion is what makes the self-marking honest.
+  - Results: total, band, per-section bars, the weak-section **diagnosis** from the answer key,
+    and a revision list naming each lost question and its lesson folder. Past attempts kept
+    (last 12) so the two runs can be compared.
+- **The question text is duplicated** between `final-exam.md` and the simulator. There is no
+  build step — if you edit one, edit the other. Both files now say so at the top.
+- Linked from `Php/README.md`, `quizzes/README.md`, `final-exam.md`, the flashcards footer and
+  the roadmap footer. `INSTRUCTOR-GUIDE.md` has a new "The final exam, twice" section: paper
+  first with you, simulator solo in revision week, and **the gap between the two is the number
+  that matters** — a much lower simulator score is a timing problem, not a knowledge one.
+- Tested in a browser end to end: 23 questions render, MCQ scoring, B auto-match tolerance,
+  per-criterion marks, the 0:00 auto-submit, and the results/diagnosis maths.
+  Found and fixed a real bug on the way — clicking a criterion's *label text* toggled the
+  checkbox twice (my handler plus the browser's native label behaviour) and cancelled itself out.
+  It now listens on the checkbox's `change` event instead.
+- **Second machine (this one) is now set up**: repo cloned, XAMPP 8.2 installed (PHP 8.2.12 —
+  same version as the main machine, plus MySQL and phpMyAdmin). `.claude-flow/` is a local
+  tool folder and is now gitignored.
 
 ### 2026-09-22 (third) — Made it fun, and much deeper
 - **Arcade rebuilt**: 4 games -> 6 (added **Speed Round**, 45s true/false, and

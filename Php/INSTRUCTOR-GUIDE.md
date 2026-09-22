@@ -91,3 +91,21 @@ hardest jump in the course. Say that out loud to her; it helps more than you'd t
 each wrong answer is tempting. Keep it closed during the call.
 
 **Don't advance past a failed loops or arrays quiz.** Everything after depends on them.
+
+## The final exam, twice
+
+Run it **on paper first** (`quizzes/final-exam.md`), marked by you on a call. That first
+marking is where you see *how* she thinks, which a score never shows.
+
+Then point her at `exam-simulator.html` for a second, solo run in revision week. Same
+questions, 90-minute countdown that doesn't pause, A and B marked automatically, and C, D and E
+marked by her against the same scheme you used — one criterion at a time, so "I sort of got it"
+has nowhere to hide. It ends on the weak-section diagnosis and a list of which lesson each lost
+mark came from.
+
+**The gap between the two runs is the number worth looking at**, not either score on its own.
+If the simulator score is much lower, it's a timing problem, not a knowledge problem — and the
+fix is more writing from blank, under a clock.
+
+The simulator's questions are copied from `final-exam.md` by hand. **If you edit one, edit the
+other** — a paper and a simulator that disagree teach her to trust neither.

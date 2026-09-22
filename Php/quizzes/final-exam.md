@@ -4,6 +4,10 @@
 Do this under real exam conditions: no lesson files, no internet, no phone. Set a timer.
 Doing it "roughly" tells you nothing; doing it properly tells you exactly what to revise.
 
+> **Don't want to set a timer?** [`../exam-simulator.html`](../exam-simulator.html) is this
+> exact paper with a 90-minute countdown built in, and it marks itself. Do this one on paper
+> first with your instructor; use the simulator for your second run.
+
 Name: ______________  Time started: ______  Score: ____ / 40
 
 ---

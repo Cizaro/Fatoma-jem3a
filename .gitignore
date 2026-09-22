@@ -22,3 +22,9 @@ dump-*.sql
 *.tmp
 *.bak
 *~
+
+# Local agent tooling (not part of the course)
+.claude-flow/
+
+# Local agent tooling (not part of the course)
+.claude-flow/
