@@ -174,3 +174,53 @@ mysqli_close($conn);
 ---
 
 Next: `../10-dynamic-page/`
+
+---
+
+## 💡 Did you know — Little Bobby Tables
+
+There is a famous cartoon (xkcd #327) where a school calls a mother to say their student
+database has been wiped. Her son's registered name was:
+
+```
+Robert'); DROP TABLE Students;--
+```
+
+The school's code glued that name straight into its SQL, so the database read it as a command
+and deleted the table. The mother's reply: *"And I hope you've learned to sanitise your
+database inputs."*
+
+It's a joke, but it's an exact description of **SQL injection**, and versions of it have
+caused real breaches at real companies. A prepared statement is what makes the name just a
+name — even that one.
+
+Bonus fact: **MySQL is named after a person.** Co-founder Monty Widenius named it after his
+daughter, My.
+
+## 🎮 Play with it
+
+1. **Talk to the database directly.** In phpMyAdmin, open the SQL tab and run
+   `SELECT * FROM students WHERE name LIKE 'F%'`. Change the letter. Change it to `%a%`.
+   No PHP at all — just you and the data.
+2. **Sort things.** `ORDER BY grade DESC`, then `ASC`, then `ORDER BY name`.
+   Three words, three completely different pages.
+3. **Ask real questions.** `SELECT AVG(grade) FROM students;` then
+   `SELECT major, COUNT(*) FROM students GROUP BY major;`
+   That second one is a report a manager would pay for.
+4. **Break something safely.** `UPDATE students SET grade = 20;` — with no `WHERE`. Look at
+   what happened to every row. Then re-import `school.sql` to undo it. Do this *once*, on
+   purpose, in practice — so you never do it by accident on something that matters.
+
+## 🏆 Boss challenge
+
+Add a **`courses` table** to the `school` database with an id, a title and a teacher.
+Fill it with five rows using `INSERT`. Then write a PHP page that shows both tables,
+side by side, each in its own HTML table.
+
+You've now got two tables. Joining them is lesson W on the roadmap.
+
+## ▶ Practise this lesson
+
+`games/php-arcade.html` → **Match the Words** (SQL set) + **Code Builder** ·
+`games/php-quest.php` (door 6) · `flashcards.html` → deck 6 *SQL & MySQL* ·
+`quizzes/mini-quizzes/lesson-09.md`

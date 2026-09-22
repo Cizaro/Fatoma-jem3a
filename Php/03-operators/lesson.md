@@ -110,3 +110,40 @@ Read it as: *condition `?` value-if-true `:` value-if-false*. Handy, but don't o
 ---
 
 ➡️ `examples.php` → `exercises.php`
+
+---
+
+## 💡 Did you know
+
+PHP has an operator officially called the **spaceship**: `<=>`. It returns `-1`, `0` or `1`
+depending on whether the left side is smaller than, equal to, or bigger than the right.
+
+```php
+echo 1 <=> 2;   // -1
+echo 2 <=> 2;   //  0
+echo 3 <=> 2;   //  1
+```
+
+It exists because sorting functions need exactly those three answers. It arrived in PHP 7,
+and yes, that is its real name — because it looks like a little spaceship.
+
+## 🎮 Play with it
+
+1. **Dice.** `echo rand(1, 6);` — run it ten times. Then roll two dice and print the total.
+2. **The odd/even machine.** Print `$n % 2` for the numbers 1 to 10 in a row.
+   You get `1 0 1 0 1 0...` — that alternating pattern is the trick behind striped table
+   rows on real websites.
+3. **Clock maths.** It is 21:00. What time is it 7 hours later? `(21 + 7) % 24`.
+   The same `%` you use for even numbers, doing something completely different.
+
+## 🏆 Boss challenge
+
+**Seconds into a readable time.** From `$seconds = 9384;` print `2h 36m 24s`.
+
+You need `intdiv()` and `%` working together, and you have to think about what is left over
+after each step. This is the exact logic behind every video player's progress bar.
+
+## ▶ Practise this lesson
+
+`games/php-arcade.html` → **Speed Round** ·
+`flashcards.html` → deck 1 *Syntax & symbols* · `quizzes/mini-quizzes/lesson-03.md`

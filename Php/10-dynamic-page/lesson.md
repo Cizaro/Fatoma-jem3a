@@ -124,3 +124,53 @@ Run the server from the `Php` folder (`php -S localhost:8000`) or put the folder
 3. Sort by newest first.
 4. Add an "edit" button to `admin.php` (you did this in Lesson 9 — reuse it).
 5. Show *"Showing X courses"* above the list.
+
+---
+
+## 💡 Did you know
+
+**WordPress powers something like 43% of all websites on the internet** — and WordPress is
+PHP and MySQL. Exactly what you have just built.
+
+Every WordPress site is doing what your `index.php` does: read rows from a database, loop over
+them, print HTML. The theme decides what it looks like; the PHP decides what it *says*.
+
+That is the connection back to chapters 8 and 9 of your textbook. A CMS isn't magic — it's
+this lesson, with ten years of features bolted on. You now know what's underneath it.
+
+## 🎮 Play with it
+
+1. **Prove it's dynamic.** Open `index.php`, then change a course title directly in
+   phpMyAdmin, then refresh the page. You changed a website without touching a single line
+   of code. That's the whole idea.
+2. **Break the URL.** Try `detail.php?id=999`, then `?id=abc`, then `?id=-1`, then
+   `?id=<script>`. Your page handles all of them. Now delete the `(int)` and try again.
+   Put it back.
+3. **Change the header once.** Add a link to `includes/header.php` and watch it appear on
+   every single page at the same time. That is why we split the files up.
+4. **Watch the clock.** The footer prints the time the page was generated. Refresh it a few
+   times. That changing number is the difference between a static page and a dynamic one.
+
+## 🏆 Boss challenge
+
+Add a **"most popular course"** feature: a `views` column that goes up by 1 every time
+someone opens that course's detail page, and a badge on the list page next to whichever
+course has the most views.
+
+It needs an `UPDATE` on the detail page, an `ORDER BY views DESC LIMIT 1` on the list page,
+and a bit of thinking about where exactly the counter should increase.
+
+Every "trending" section on every website you use is this, at a much bigger scale.
+
+## 🎓 You've arrived
+
+If this page works and you understand every line of it, you have finished chapters 10, 11
+and 12 of your textbook. The rest of the roadmap — logins, JOINs, OOP, deployment — is all
+built on what you can already do.
+
+Go and look at `../roadmap.html` and tick off Q, R and S. You've earned them.
+
+## ▶ Practise this lesson
+
+`games/php-arcade.html` → **Code Builder** · `flashcards.html` → deck 5 + deck 6 ·
+`quizzes/mini-quizzes/lesson-10.md` · then `quizzes/final-exam.md`

@@ -9,21 +9,24 @@
     --bg:#f3f5fb; --panel:#ffffff; --ink:#151a2e; --muted:#6b7490;
     --line:#e2e7f4; --accent:#3b5bdb; --accent-soft:#e8edff;
     --good:#2f9e44; --good-soft:#e7f6ec; --bad:#e03131; --bad-soft:#fdeaea;
-    --code:#1b2138; --code-ink:#e9ecf8; --gold:#f08c00;
+    --code:#1b2138; --code-ink:#e9ecf8; --gold:#f08c00; --gold-soft:#fff4e0;
+    --purple:#7048e8; --purple-soft:#f0ebff;
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
       --bg:#111527; --panel:#1a2038; --ink:#eef1fa; --muted:#98a2c0;
       --line:#2a3252; --accent:#748ffc; --accent-soft:#232c4d;
       --good:#69db7c; --good-soft:#1c3226; --bad:#ff8787; --bad-soft:#3a2026;
-      --code:#0d1122; --code-ink:#e9ecf8;
+      --code:#0d1122; --code-ink:#e9ecf8; --gold:#ffc078; --gold-soft:#332616;
+      --purple:#b197fc; --purple-soft:#2a2148;
     }
   }
   :root[data-theme="dark"]{
     --bg:#111527; --panel:#1a2038; --ink:#eef1fa; --muted:#98a2c0;
     --line:#2a3252; --accent:#748ffc; --accent-soft:#232c4d;
     --good:#69db7c; --good-soft:#1c3226; --bad:#ff8787; --bad-soft:#3a2026;
-    --code:#0d1122; --code-ink:#e9ecf8;
+    --code:#0d1122; --code-ink:#e9ecf8; --gold:#ffc078; --gold-soft:#332616;
+    --purple:#b197fc; --purple-soft:#2a2148;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{
@@ -31,48 +34,83 @@
     font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
     padding:0 16px 60px;
   }
-  .wrap{max-width:760px;margin:0 auto}
-  header{padding:28px 0 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .wrap{max-width:780px;margin:0 auto}
+  header{padding:26px 0 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
   h1{font-size:26px;letter-spacing:-.4px}
   h1 span{color:var(--accent)}
   .tagline{color:var(--muted);font-size:14px}
   .theme-btn{background:none;border:1px solid var(--line);color:var(--muted);
     border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;font-family:inherit}
+  .theme-btn:hover{border-color:var(--accent);color:var(--ink)}
+
+  /* ---- player bar ---- */
+  .player{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  }
+  .lvl{
+    width:46px;height:46px;border-radius:12px;display:grid;place-items:center;
+    background:var(--accent);color:#fff;font-weight:800;font-size:19px;flex-shrink:0;
+  }
+  .who{flex:1;min-width:130px}
+  .who b{font-size:16px}
+  .who .xp{color:var(--muted);font-size:13px}
+  .xpbar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:5px}
+  .xpbar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));width:0;transition:width .5s}
 
   /* ---- menu ---- */
-  .menu{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+  .menu{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(225px,1fr))}
   .game-card{
     background:var(--panel);border:1px solid var(--line);border-radius:14px;
-    padding:20px;cursor:pointer;text-align:left;font-family:inherit;color:inherit;
-    transition:transform .12s ease, border-color .12s ease;
+    padding:18px;cursor:pointer;text-align:left;font-family:inherit;color:inherit;
+    transition:transform .12s ease, border-color .12s ease;position:relative;
   }
   .game-card:hover{transform:translateY(-3px);border-color:var(--accent)}
-  .game-card .icon{font-size:26px}
-  .game-card h3{font-size:17px;margin:8px 0 4px}
-  .game-card p{font-size:14px;color:var(--muted)}
-  .best{display:inline-block;margin-top:10px;font-size:12px;font-weight:700;
+  .game-card .icon{font-size:24px}
+  .game-card h3{font-size:16px;margin:7px 0 3px}
+  .game-card p{font-size:13.5px;color:var(--muted);line-height:1.45}
+  .best{display:inline-block;margin-top:9px;font-size:12px;font-weight:700;
     color:var(--gold);letter-spacing:.3px}
+  .qty{position:absolute;top:14px;right:14px;font-size:11px;color:var(--muted);
+    background:var(--bg);border-radius:20px;padding:2px 9px}
+
+  /* ---- achievements ---- */
+  .ach-wrap{margin-top:24px}
+  .ach-wrap h2{font-size:14px;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--muted);margin-bottom:10px}
+  .badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:9px}
+  .badge{
+    background:var(--panel);border:1px solid var(--line);border-radius:11px;
+    padding:11px 9px;text-align:center;opacity:.42;
+  }
+  .badge.got{opacity:1;border-color:var(--gold);background:var(--gold-soft)}
+  .badge .bi{font-size:21px}
+  .badge .bn{font-size:11.5px;font-weight:700;margin-top:3px;line-height:1.25}
+  .badge .bd{font-size:10.5px;color:var(--muted);line-height:1.3;margin-top:2px}
 
   /* ---- hud ---- */
-  .hud{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+  .hud{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
   .pill{background:var(--panel);border:1px solid var(--line);border-radius:20px;
     padding:5px 14px;font-size:13px;font-weight:600}
   .pill.lives{color:var(--bad)}
   .pill.streak{color:var(--gold)}
-  .bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:20px}
+  .pill.timer{color:var(--purple);font-variant-numeric:tabular-nums}
+  .pill.timer.low{color:var(--bad);animation:pulse .6s infinite}
+  @keyframes pulse{50%{opacity:.45}}
+  .bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:18px}
   .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
 
   /* ---- panel ---- */
-  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
-  .qtext{font-size:17px;font-weight:600;margin-bottom:14px}
-  .hint{font-size:13px;color:var(--muted);margin-bottom:14px}
-  pre{background:var(--code);color:var(--code-ink);padding:16px;border-radius:10px;
-    overflow-x:auto;font-size:14px;line-height:1.7;margin-bottom:18px;
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .qtext{font-size:17px;font-weight:600;margin-bottom:12px}
+  .hint{font-size:13px;color:var(--muted);margin-bottom:13px}
+  pre{background:var(--code);color:var(--code-ink);padding:15px;border-radius:10px;
+    overflow-x:auto;font-size:14px;line-height:1.7;margin-bottom:16px;
     font-family:ui-monospace,Consolas,"Courier New",monospace}
   pre .ln{color:#6b7490;user-select:none}
-  .opts{display:grid;gap:10px}
+  .opts{display:grid;gap:9px}
   .opt{
-    background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 16px;
+    background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 15px;
     cursor:pointer;text-align:left;font-family:ui-monospace,Consolas,monospace;font-size:14.5px;
     color:inherit;transition:border-color .1s, background .1s;
   }
@@ -80,39 +118,69 @@
   .opt.correct{background:var(--good-soft);border-color:var(--good);font-weight:700}
   .opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
   .opt:disabled{cursor:default}
+  .tf{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .tf button{
+    padding:20px;border-radius:12px;border:2px solid var(--line);background:var(--bg);
+    font-size:18px;font-weight:800;cursor:pointer;color:inherit;font-family:inherit;
+  }
+  .tf .yes:hover{border-color:var(--good);background:var(--good-soft);color:var(--good)}
+  .tf .no:hover{border-color:var(--bad);background:var(--bad-soft);color:var(--bad)}
+  .statement{font-size:17px;font-weight:600;text-align:center;padding:22px 10px;
+    background:var(--bg);border-radius:10px;margin-bottom:16px;min-height:96px;
+    display:grid;place-items:center}
+  .statement code{font-family:ui-monospace,Consolas,monospace;background:var(--code);
+    color:var(--code-ink);padding:2px 6px;border-radius:4px;font-size:15px}
   input.blank{
     width:100%;padding:12px 16px;border:1px solid var(--line);border-radius:10px;
     background:var(--bg);color:inherit;font-family:ui-monospace,Consolas,monospace;font-size:15px;
   }
   input.blank:focus{outline:2px solid var(--accent);outline-offset:1px}
-  .feedback{margin-top:16px;padding:14px 16px;border-radius:10px;font-size:14.5px;display:none}
+  .feedback{margin-top:15px;padding:13px 16px;border-radius:10px;font-size:14.5px;display:none}
   .feedback.show{display:block}
   .feedback.ok{background:var(--good-soft);border-left:4px solid var(--good)}
   .feedback.no{background:var(--bad-soft);border-left:4px solid var(--bad)}
   .feedback b{display:block;margin-bottom:3px}
-  .row{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
   .btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:11px 22px;
     font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
   .btn:hover{filter:brightness(1.08)}
   .btn.ghost{background:none;border:1px solid var(--line);color:var(--muted)}
 
-  /* ---- match game ---- */
-  .match{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  /* ---- match ---- */
+  .match{display:grid;grid-template-columns:1fr 1fr;gap:9px}
   .match .col{display:grid;gap:8px;align-content:start}
   .tile{background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:11px 12px;
-    cursor:pointer;font-size:14px;text-align:left;color:inherit;font-family:inherit;line-height:1.35}
+    cursor:pointer;font-size:13.5px;text-align:left;color:inherit;font-family:inherit;line-height:1.35}
   .tile.code{font-family:ui-monospace,Consolas,monospace;font-weight:600}
   .tile.picked{border-color:var(--accent);background:var(--accent-soft)}
-  .tile.done{opacity:.35;pointer-events:none;border-style:dashed}
+  .tile.done{opacity:.3;pointer-events:none;border-style:dashed}
   .tile.shake{animation:shake .3s}
   @keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 
-  /* ---- end screen ---- */
-  .end{text-align:center;padding:30px 20px}
-  .end .big{font-size:52px;font-weight:800;color:var(--accent);line-height:1.1}
-  .end h2{margin:8px 0 6px;font-size:22px}
+  /* ---- order ---- */
+  .pool{display:grid;gap:7px;margin-bottom:14px}
+  .slot{background:var(--code);color:var(--code-ink);border-radius:9px;padding:11px 14px;
+    font-family:ui-monospace,Consolas,monospace;font-size:13.5px;min-height:44px;
+    display:flex;align-items:center;gap:10px;cursor:pointer;border:2px solid transparent;
+    white-space:pre;overflow-x:auto}
+  .slot.empty{background:var(--bg);border:2px dashed var(--line);color:var(--muted);
+    font-family:inherit;font-size:13px;justify-content:center;cursor:default}
+  .slot .num{color:#6b7490;font-size:12px;flex-shrink:0}
+  .slot:hover:not(.empty){border-color:var(--accent)}
+  .built{margin-bottom:14px}
+  .built .slot{background:var(--accent-soft);color:var(--ink)}
+
+  /* ---- end ---- */
+  .end{text-align:center;padding:26px 18px}
+  .end .big{font-size:50px;font-weight:800;color:var(--accent);line-height:1.1}
+  .end h2{margin:6px 0 5px;font-size:21px}
   .end p{color:var(--muted)}
-  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:30px}
+  .unlocked{background:var(--gold-soft);border:1px solid var(--gold);border-radius:11px;
+    padding:12px;margin-top:16px}
+  .unlocked b{color:var(--gold);display:block;margin-bottom:5px;font-size:13px;
+    text-transform:uppercase;letter-spacing:.06em}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:26px}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -121,82 +189,94 @@
 <header>
   <div>
     <h1>PHP <span>Arcade</span></h1>
-    <p class="tagline">Four games. No server needed. Beat your best score.</p>
+    <p class="tagline">Six games. No internet needed. Earn XP, collect badges, beat your best.</p>
   </div>
   <button class="theme-btn" id="themeBtn">theme</button>
 </header>
 
 <div id="app"></div>
 
-<footer>Made for Fatima &middot; close and reopen any time, your best scores are saved</footer>
+<footer>Made for Fatima &middot; your XP and badges are saved in this browser</footer>
 </div>
 
 <script>
 /* ============================================================
-   THE QUESTIONS
-   Add your own! Just copy the shape of the objects below.
+   QUESTION BANKS
+   Want to add your own? Copy the shape of any object below.
    ============================================================ */
 
 const OUTPUT_Q = [
-  { code:'$x = 5;\n$y = "5";\nvar_dump($x == $y);',
-    opts:['bool(true)','bool(false)','int(5)','error'], a:0,
-    why:'== compares the VALUE only, so 5 and "5" are equal. Use === to also compare the type.' },
-  { code:'$name = "Fatima";\necho \'Hello $name\';',
-    opts:['Hello Fatima','Hello $name','Hello','error'], a:1,
-    why:"Single quotes are literal. Only DOUBLE quotes read variables." },
-  { code:'echo 10 % 3;',
-    opts:['3.33','3','1','0'], a:2,
-    why:'% gives the REMAINDER. 10 divided by 3 is 3 with 1 left over.' },
-  { code:'$a = [1, 2, 3];\necho count($a);',
-    opts:['2','3','4','1,2,3'], a:1,
-    why:'count() gives how many items. The last INDEX is 2, but the count is 3.' },
-  { code:'$a = ["x","y","z"];\necho $a[1];',
-    opts:['x','y','z','1'], a:1,
+  { code:'$x = 5;\n$y = "5";\nvar_dump($x == $y);', opts:['bool(true)','bool(false)','int(5)','error'], a:0,
+    why:'== compares the VALUE only, so 5 and "5" are equal. Use === to compare the type too.' },
+  { code:'$name = "Fatima";\necho \'Hello $name\';', opts:['Hello Fatima','Hello $name','Hello','error'], a:1,
+    why:'Single quotes are literal. Only DOUBLE quotes read variables.' },
+  { code:'echo 10 % 3;', opts:['3.33','3','1','0'], a:2,
+    why:'% gives the REMAINDER. 3 goes into 10 three times, leaving 1.' },
+  { code:'$a = [1, 2, 3];\necho count($a);', opts:['2','3','4','1,2,3'], a:1,
+    why:'count() is how many items. The last INDEX is 2, but the count is 3.' },
+  { code:'$a = ["x","y","z"];\necho $a[1];', opts:['x','y','z','1'], a:1,
     why:'Arrays start at index 0, so [0]=x, [1]=y, [2]=z.' },
-  { code:'for ($i = 0; $i < 3; $i++) {\n    echo $i;\n}',
-    opts:['0123','012','123','0 1 2 3'], a:1,
-    why:'It starts at 0 and stops when i reaches 3, so 0, 1, 2. Three rounds.' },
-  { code:'$x = 5;\necho $x++;\necho $x;',
-    opts:['56','55','66','65'], a:0,
+  { code:'for ($i = 0; $i < 3; $i++) {\n    echo $i;\n}', opts:['0123','012','123','0 1 2 3'], a:1,
+    why:'Starts at 0, stops when i reaches 3. So 0, 1, 2 - three rounds.' },
+  { code:'$x = 5;\necho $x++;\necho $x;', opts:['56','55','66','65'], a:0,
     why:'$x++ prints the value FIRST (5), then adds 1. So the second echo gives 6.' },
-  { code:'echo "5" + 5;',
-    opts:['55','10','error','5 5'], a:1,
-    why:'+ is for numbers, so PHP turns "5" into 5. To join text you need the dot: "5" . 5 gives 55.' },
-  { code:'echo strlen("PHP rocks");',
-    opts:['8','9','2','10'], a:1,
+  { code:'echo "5" + 5;', opts:['55','10','error','5 5'], a:1,
+    why:'+ is for numbers, so PHP converts "5" to 5. To join text you need the dot.' },
+  { code:'echo strlen("PHP rocks");', opts:['8','9','2','10'], a:1,
     why:'strlen counts every character, and the space counts too. 9.' },
   { code:'$grade = 10;\nif ($grade > 10) {\n    echo "pass";\n} else {\n    echo "fail";\n}',
     opts:['pass','fail','nothing','error'], a:1,
     why:'10 is not GREATER than 10. You wanted >= for "10 or more".' },
-  { code:'$i = 1;\nwhile ($i <= 3) {\n    echo $i;\n}',
-    opts:['123','111...forever','1','nothing'], a:1,
+  { code:'$i = 1;\nwhile ($i <= 3) {\n    echo $i;\n}', opts:['123','111...forever','1','nothing'], a:1,
     why:'Nothing changes $i, so the condition stays true forever. Classic infinite loop.' },
-  { code:'function f($n) {\n    return $n * 2;\n    echo "hi";\n}\necho f(4);',
-    opts:['8hi','hi8','8','hi'], a:2,
+  { code:'function f($n) {\n    return $n * 2;\n    echo "hi";\n}\necho f(4);', opts:['8hi','hi8','8','hi'], a:2,
     why:'return ends the function immediately. The echo after it never runs.' },
-  { code:'$a = ["b" => 2];\necho $a["b"] + 3;',
-    opts:['5','b3','23','error'], a:0,
+  { code:'$a = ["b" => 2];\necho $a["b"] + 3;', opts:['5','b3','23','error'], a:0,
     why:'$a["b"] is 2, and 2 + 3 is 5.' },
-  { code:'echo ucfirst(strtolower("HELLO"));',
-    opts:['HELLO','hello','Hello','hELLO'], a:2,
+  { code:'echo ucfirst(strtolower("HELLO"));', opts:['HELLO','hello','Hello','hELLO'], a:2,
     why:'Inside out: strtolower makes "hello", then ucfirst capitalises the first letter.' },
-  { code:'$x = 7;\necho ($x % 2 == 0) ? "even" : "odd";',
-    opts:['even','odd','1','true'], a:1,
+  { code:'$x = 7;\necho ($x % 2 == 0) ? "even" : "odd";', opts:['even','odd','1','true'], a:1,
     why:'7 % 2 is 1, not 0, so the condition is false and the ternary gives the second value.' },
-  { code:'$a = [3, 1, 2];\nsort($a);\necho implode("-", $a);',
-    opts:['3-1-2','1-2-3','3-2-1','123'], a:1,
-    why:'sort() puts them in order, implode glues them with the separator you chose.' },
-  { code:'echo 2 + 3 * 4;',
-    opts:['20','14','24','9'], a:1,
-    why:'Multiplication happens before addition, exactly like in maths class. 3*4=12, +2 = 14.' },
-  { code:'$s = "abc";\necho $s[0];',
-    opts:['a','abc','0','error'], a:0,
-    why:'A string can be read like an array of letters, starting at 0.' }
+  { code:'$a = [3, 1, 2];\nsort($a);\necho implode("-", $a);', opts:['3-1-2','1-2-3','3-2-1','123'], a:1,
+    why:'sort() puts them in order, implode glues them with your separator.' },
+  { code:'echo 2 + 3 * 4;', opts:['20','14','24','9'], a:1,
+    why:'Multiplication before addition, same as maths class. 3*4=12, +2 = 14.' },
+  { code:'$s = "abc";\necho $s[0];', opts:['a','abc','0','error'], a:0,
+    why:'A string can be read like an array of letters, starting at 0.' },
+  { code:'$a = [10, 20, 30];\nforeach ($a as $v) {\n    $v = $v * 2;\n}\necho $a[0];', opts:['20','10','0','error'], a:1,
+    why:'$v is a COPY. Changing it does not touch the array. You would need &$v or $a[$k].' },
+  { code:'echo round(2.5) . "," . round(3.5);', opts:['2,3','3,4','2,4','3,3'], a:1,
+    why:'PHP rounds .5 away from zero, so 2.5 becomes 3 and 3.5 becomes 4.' },
+  { code:'$a = "10";\n$b = 10;\nvar_dump($a === $b);', opts:['bool(true)','bool(false)','int(10)','error'], a:1,
+    why:'=== checks the type too. One is a string, the other an int.' },
+  { code:'echo str_repeat("ab", 3);', opts:['ababab','ab3','aaabbb','abababab'], a:0,
+    why:'str_repeat glues the whole string together that many times.' },
+  { code:'$n = [5, 10, 15];\necho array_sum($n) / count($n);', opts:['30','10','15','3'], a:1,
+    why:'Sum is 30, count is 3, so the average is 10.' },
+  { code:'echo substr("Programming", 3, 4);', opts:['gram','ogra','Prog','ram'], a:0,
+    why:'Start at index 3 (the g, because P=0 r=1 o=2 g=3) and take 4 characters.' },
+  { code:'$x = "0";\nif ($x) {\n    echo "yes";\n} else {\n    echo "no";\n}', opts:['yes','no','0','error'], a:1,
+    why:'The string "0" is one of PHP\'s falsy values. "0.0" or "false" would be true.' },
+  { code:'for ($i = 1; $i <= 3; $i++) {\n    for ($j = 1; $j <= 2; $j++) {\n        echo $i;\n    }\n}',
+    opts:['123','112233','111222','123123'], a:1,
+    why:'The inner loop runs twice for every round of the outer one, so each number prints twice.' },
+  { code:'echo max(3, 7) + min(3, 7);', opts:['10','4','14','21'], a:0,
+    why:'max is 7, min is 3, and 7 + 3 = 10.' },
+  { code:'$a = ["one","two"];\n$a[] = "three";\necho count($a);', opts:['2','3','4','error'], a:1,
+    why:'$a[] = adds to the end without you giving an index. Now there are 3.' },
+  { code:'echo intdiv(17, 5) . "-" . (17 % 5);', opts:['3-2','3.4-2','2-3','5-3'], a:0,
+    why:'intdiv is whole division (3), % is what is left over (2).' },
+  { code:'$s = "a,b,c";\n$p = explode(",", $s);\necho $p[2];', opts:['a','b','c',',' ], a:2,
+    why:'explode splits into ["a","b","c"], and index 2 is the third one.' },
+  { code:'function add($a, $b = 10) {\n    return $a + $b;\n}\necho add(5);', opts:['5','10','15','error'], a:2,
+    why:'$b was not given, so its default of 10 is used. 5 + 10 = 15.' },
+  { code:'echo trim("  hi  ") . "|";', opts:['  hi  |','hi|',' hi |','hi  |'], a:1,
+    why:'trim removes the spaces at both edges - the | shows you exactly where the text ends.' }
 ];
 
 const BUG_Q = [
   { code:['<?php','$name = "Fatima"','echo $name;'], a:1,
-    why:'Line 2 is missing the semicolon at the end. Every statement needs one.' },
+    why:'Line 2 is missing the semicolon. Every statement needs one.' },
   { code:['<?php','$age = 20;','if ($age = 18) {','    echo "adult";','}'], a:2,
     why:'Line 3 uses = (put into) instead of == (compare). It changes $age and is always true.' },
   { code:['<?php','$colors = ["red","blue"];','echo $colors[2];'], a:2,
@@ -204,7 +284,7 @@ const BUG_Q = [
   { code:['<?php','for ($i = 0; $i < 5; $i++)','    echo $i;','}'], a:1,
     why:'Line 2 never opened the curly bracket { , but line 4 closes one.' },
   { code:['<?php','function add($a, $b) {','    $a + $b;','}','echo add(2, 3);'], a:2,
-    why:'Line 3 calculates but never returns. Nothing comes back, so nothing prints. Add return.' },
+    why:'Line 3 calculates but never returns. Nothing comes back. Add return.' },
   { code:['<?php','$x = 10;','if ($x > 5); {','    echo "big";','}'], a:2,
     why:'The semicolon right after the if() ends it. The block then always runs.' },
   { code:['<?php','name = "Sara";','echo $name;'], a:1,
@@ -216,11 +296,29 @@ const BUG_Q = [
   { code:['<?php','$user = ["name" => "Lina"];','echo $user[name];'], a:2,
     why:'The key needs quotes: $user["name"]. Without them PHP looks for a constant.' },
   { code:['<?php','$total = 0;','$prices = [10, 20];','foreach ($prices as $p) {','    $total = $p;','}','echo $total;'], a:4,
-    why:'Line 5 REPLACES the total each round instead of adding. It should be $total += $p;' }
+    why:'Line 5 REPLACES the total each round instead of adding. It should be $total += $p;' },
+  { code:['<?php','$mark = 19;','if ($mark >= 10) {','    echo "Pass";','} elseif ($mark >= 18) {','    echo "Excellent";','}'], a:2,
+    why:'Line 3 is too loose and catches 19 first, so "Excellent" can never be reached. Strictest condition first.' },
+  { code:['<?php','$email = $_POST["email"];','echo $email;'], a:2,
+    why:'Line 3 prints user input without htmlspecialchars() - that is an XSS hole.' },
+  { code:['<?php','$id = $_GET["id"];','$sql = "SELECT * FROM users WHERE id = $id";','mysqli_query($conn, $sql);'], a:2,
+    why:'Line 3 glues user input straight into SQL. That is SQL injection. Use a prepared statement.' },
+  { code:['<?php','echo "Saving...";','header("Location: index.php");'], a:1,
+    why:'Line 2 already sent output, so header() on line 3 fails with "headers already sent".' },
+  { code:['<?php','$a = [1,2,3];','echo $a;'], a:2,
+    why:'You cannot echo a whole array - you get "Array to string conversion". Use print_r or a loop.' },
+  { code:['<?php','function greet() {','    echo "Hi $name";','}','$name = "Sara";','greet();'], a:2,
+    why:'Scope: the function cannot see $name from outside. Pass it in as a parameter.' },
+  { code:['<?php','$stmt = mysqli_prepare($conn, "SELECT * FROM t WHERE a = ? AND b = ?");','mysqli_stmt_bind_param($stmt, "s", $a, $b);'], a:2,
+    why:'Two ? placeholders but only one type letter. It must be "ss" - one letter per placeholder.' },
+  { code:['<?php','session_start();','echo $_SESSION["user"];'], a:2,
+    why:'If nobody is logged in that key does not exist. Guard it with isset() or ?? "".' },
+  { code:['<?php','$q = "SELECT * FROM students";','$r = mysqli_query($conn, $q);','while ($row = mysqli_fetch_assoc($r)) {','    echo $row[name];','}'], a:4,
+    why:'Line 5: the array key needs quotes - $row["name"].' }
 ];
 
 const MATCH_SETS = [
-  { title:'Basics', pairs:[
+  { title:'The very basics', pairs:[
     ['echo','prints something on the page'],
     ['$name','a variable called name'],
     ['//','a one-line comment'],
@@ -251,6 +349,30 @@ const MATCH_SETS = [
     ['SELECT','reads rows from a table'],
     ['INSERT','adds a new row'],
     ['prepared statement','stops SQL injection']
+  ]},
+  { title:'Types and values', pairs:[
+    ['string','text between quotes'],
+    ['int','a whole number'],
+    ['float','a number with a decimal point'],
+    ['bool','only true or false'],
+    ['array','many values under one name'],
+    ['null','nothing at all']
+  ]},
+  { title:'SQL words', pairs:[
+    ['WHERE','picks which rows come back'],
+    ['ORDER BY','decides the order of the rows'],
+    ['UPDATE','changes rows that already exist'],
+    ['DELETE','removes rows'],
+    ['LIKE','searches for part of some text'],
+    ['AUTO_INCREMENT','gives each new row the next id']
+  ]},
+  { title:'Symbols', pairs:[
+    ['==','equal in value'],
+    ['===','equal in value AND type'],
+    ['&&','both must be true'],
+    ['||','at least one must be true'],
+    ['%','the remainder after dividing'],
+    ['=>','points a key at its value']
   ]}
 ];
 
@@ -268,7 +390,7 @@ const BLANK_Q = [
     why:'count() gives the number of items.' },
   { code:'$user = $____["name"];  // came from a form with method="post"', a:['_POST','POST'],
     why:'$_POST holds everything a POST form sent.' },
-  { code:'if ($x ____ 10) { echo "x is exactly ten"; }', a:['==','===' ],
+  { code:'if ($x ____ 10) { echo "x is exactly ten"; }', a:['==','==='],
     why:'== compares. A single = would assign instead.' },
   { code:'$grades = [10, 20];\necho array_____($grades);  // prints 30', a:['sum'],
     why:'array_sum() totals the numbers in an array.' },
@@ -277,63 +399,235 @@ const BLANK_Q = [
   { code:'$conn = mysqli_connect("localhost", "root", "", "school");\n$result = mysqli_____($conn, "SELECT * FROM students");', a:['query'],
     why:'mysqli_query() sends the SQL to the database.' },
   { code:'SELECT * FROM students ____ grade >= 10;', a:['WHERE','where'],
-    why:'WHERE filters which rows come back.' }
+    why:'WHERE filters which rows come back.' },
+  { code:'$x = 10;\n$x ____ 5;   // x is now 15', a:['+=','+ ='],
+    why:'+= adds to what is already there. Same as $x = $x + 5.' },
+  { code:'echo ____(3.7);   // prints 4', a:['round','ceil'],
+    why:'round(3.7) gives 4. ceil() would also work here.' },
+  { code:'for ($i = 1; $i <= 10; $i++) {\n    if ($i == 5) ____;   // leave the loop now\n}', a:['break'],
+    why:'break leaves the loop completely. continue would only skip one round.' },
+  { code:'$row = mysqli_fetch_____($result);   // one row as name => value', a:['assoc'],
+    why:'mysqli_fetch_assoc() gives one row as an associative array.' },
+  { code:'header("Location: index.php");\n____;   // stop the script here', a:['exit','die'],
+    why:'Without exit the rest of the script keeps running after the redirect.' },
+  { code:'$name = $_POST["name"] ____ "";   // or empty if missing', a:['??'],
+    why:'?? is the null coalescing operator: use this, or that if it is missing.' },
+  { code:'____ "includes/db.php";   // stop the page if this file is missing', a:['require','require_once'],
+    why:'require stops everything if the file is missing. include would only warn.' },
+  { code:'$a = ["x","y"];\n$a____ = "z";   // add to the end', a:['[]'],
+    why:'$a[] = adds to the end without you choosing an index.' },
+  { code:'INSERT ____ students (name) VALUES ("Sara");', a:['INTO','into'],
+    why:'INSERT INTO is the full command.' },
+  { code:'$stmt = mysqli_prepare($conn, "SELECT * FROM t WHERE id = ____");', a:['?'],
+    why:'The ? is the placeholder. The real value is bound separately, which is what keeps it safe.' },
+  { code:'if (____($_POST["email"])) { echo "not filled in"; }', a:['empty'],
+    why:'empty() is true for "", 0, null and missing keys.' },
+  { code:'$id = ____$_GET["id"];   // force it to be a number', a:['(int)','(integer)'],
+    why:'(int) casts it, so ?id=abc becomes a harmless 0.' }
 ];
+
+const SPEED_Q = [
+  ['PHP runs on the server, not in the browser.', true],
+  ['Every PHP statement ends with a semicolon.', true],
+  ['<code>$name</code> and <code>$Name</code> are the same variable.', false],
+  ['Array indexes start at 1.', false],
+  ['<code>==</code> compares value, <code>===</code> compares value and type.', true],
+  ['Single quotes read variables inside them.', false],
+  ['<code>echo false;</code> prints the word "false".', false],
+  ['<code>%</code> gives the remainder after dividing.', true],
+  ['A function runs as soon as you write it.', false],
+  ['<code>return</code> ends the function immediately.', true],
+  ['<code>foreach</code> works on arrays.', true],
+  ['<code>break</code> skips one round of a loop.', false],
+  ['<code>continue</code> skips one round of a loop.', true],
+  ['A while loop with nothing changing inside runs forever.', true],
+  ['<code>count()</code> gives the last index of an array.', false],
+  ['POST sends data in the URL.', false],
+  ['GET sends data in the URL.', true],
+  ['You should send a password with GET.', false],
+  ['<code>htmlspecialchars()</code> stops SQL injection.', false],
+  ['Prepared statements stop SQL injection.', true],
+  ['HTML <code>required</code> is enough validation on its own.', false],
+  ['<code>DELETE FROM students;</code> deletes every row.', true],
+  ['<code>SELECT</code> changes rows in a table.', false],
+  ['<code>AUTO_INCREMENT</code> numbers new rows for you.', true],
+  ['<code>$_SESSION</code> needs <code>session_start()</code> first.', true],
+  ['<code>require</code> stops the page if the file is missing.', true],
+  ['<code>include</code> stops the page if the file is missing.', false],
+  ['The string <code>"0"</code> is false in PHP.', true],
+  ['The string <code>"false"</code> is false in PHP.', false],
+  ['<code>-5</code> is true in PHP.', true],
+  ['A .php file works if you double-click it.', false],
+  ['<code>.</code> joins two strings together.', true],
+  ['<code>+</code> joins two strings together.', false],
+  ['A function can see variables from outside it.', false],
+  ['<code>exit</code> should follow a <code>header()</code> redirect.', true],
+  ['<code>$a[] = "x"</code> adds to the end of an array.', true],
+  ['<code>sort()</code> is safe to use on an associative array.', false],
+  ['<code>strpos()</code> can return 0, which is falsy.', true],
+  ['<code>var_dump()</code> shows the type as well as the value.', true],
+  ['You can have two functions with the same name.', false]
+];
+
+const ORDER_Q = [
+  { goal:'A function that returns double a number, then prints it',
+    lines:['function double($n) {','    return $n * 2;','}','echo double(5);'],
+    why:'Define the function first, close it, then call it.' },
+  { goal:'A loop that prints 1 to 5',
+    lines:['for ($i = 1; $i <= 5; $i++) {','    echo $i;','}'],
+    why:'The for line, then the body, then the closing brace.' },
+  { goal:'Read a form field safely and print it',
+    lines:['$name = $_POST["name"] ?? "";','if ($name !== "") {','    echo htmlspecialchars($name);','}'],
+    why:'Collect it, check it, then print it escaped. Always in that order.' },
+  { goal:'Connect to MySQL and print every student name',
+    lines:['$conn = mysqli_connect("localhost", "root", "", "school");',
+           '$result = mysqli_query($conn, "SELECT * FROM students");',
+           'while ($row = mysqli_fetch_assoc($result)) {',
+           '    echo $row["name"];','}'],
+    why:'Connect, query, then loop the rows. You cannot query before connecting.' },
+  { goal:'A safe query using a prepared statement',
+    lines:['$stmt = mysqli_prepare($conn, "SELECT * FROM t WHERE id = ?");',
+           'mysqli_stmt_bind_param($stmt, "i", $id);',
+           'mysqli_stmt_execute($stmt);',
+           '$result = mysqli_stmt_get_result($stmt);'],
+    why:'Prepare, bind, execute, then get the result. Always these four, in this order.' },
+  { goal:'Grade a mark correctly',
+    lines:['if ($mark >= 18) {','    echo "A";','} elseif ($mark >= 10) {','    echo "D";','} else {','    echo "F";','}'],
+    why:'Strictest condition first, then looser, then else. Reverse it and everything gets a D.' },
+  { goal:'Add up an array',
+    lines:['$total = 0;','foreach ($prices as $p) {','    $total += $p;','}','echo $total;'],
+    why:'Start the total at 0 BEFORE the loop, add inside, print after.' },
+  { goal:'Save a form and redirect',
+    lines:['if ($_SERVER["REQUEST_METHOD"] === "POST") {',
+           '    mysqli_query($conn, "INSERT INTO t (a) VALUES (1)");',
+           '    header("Location: index.php");','    exit;','}'],
+    why:'Check the method, save, redirect, exit. The exit must come after the header.' },
+  { goal:'A page that uses a shared header',
+    lines:['<?php','require "includes/db.php";','require "includes/header.php";','?>','<h1>Students</h1>'],
+    why:'The database first, then the header, then your own HTML.' },
+  { goal:'Count to 3 with a while loop',
+    lines:['$i = 1;','while ($i <= 3) {','    echo $i;','    $i++;','}'],
+    why:'Set the counter before, and change it INSIDE, or the loop never ends.' }
+];
+
+/* ============================================================
+   ACHIEVEMENTS
+   ============================================================ */
+const ACHIEVEMENTS = [
+  { id:"first",   icon:"⭐", name:"First Blood",  desc:"Get one right" },
+  { id:"streak5", icon:"🔥", name:"On Fire",     desc:"5 in a row" },
+  { id:"perfect", icon:"💎", name:"Flawless",   desc:"A round with no mistakes" },
+  { id:"nolife",  icon:"🛡️", name:"Untouchable", desc:"Finish with 3 lives" },
+  { id:"explorer",icon:"🧭", name:"Explorer",   desc:"Play all 6 games" },
+  { id:"speed",   icon:"⚡", name:"Speed Demon", desc:"15 right in a speed round" },
+  { id:"century", icon:"🏅", name:"Century",    desc:"Earn 100 XP" },
+  { id:"veteran", icon:"👑", name:"PHP Royalty", desc:"Earn 1000 XP" }
+];
+
+const LEVELS = ["Newborn","Beginner","Learner","Coder","Builder","Developer","Wizard","Legend"];
 
 /* ============================================================
    ENGINE
    ============================================================ */
 const app = document.getElementById('app');
 const GAMES = {
-  output:{ icon:'🔮', name:'Guess the Output', desc:'Read the code. What does it print?', len:10 },
-  bug:   { icon:'🐞', name:'Fix the Bug',      desc:'Find the line that is wrong.',      len:8  },
-  match: { icon:'🔗', name:'Match the Words',  desc:'Pair each word with its meaning.',  len:4  },
-  blank: { icon:'✍️', name:'Fill the Blank',   desc:'Type the missing piece of code.',   len:10 }
+  output:{ icon:'🔮', name:'Guess the Output', desc:'Read the code. What does it print?', len:10, bank:()=>OUTPUT_Q.length },
+  bug:   { icon:'🐞', name:'Fix the Bug',      desc:'Find the line that is wrong.',      len:8,  bank:()=>BUG_Q.length },
+  match: { icon:'🔗', name:'Match the Words',  desc:'Pair each word with its meaning.',  len:4,  bank:()=>MATCH_SETS.length },
+  blank: { icon:'✍️', name:'Fill the Blank',   desc:'Type the missing piece of code.',   len:10, bank:()=>BLANK_Q.length },
+  speed: { icon:'⚡', name:'Speed Round',     desc:'True or false, against the clock.', len:0,  bank:()=>SPEED_Q.length },
+  order: { icon:'🧩', name:'Code Builder',     desc:'Put the lines in the right order.', len:5,  bank:()=>ORDER_Q.length }
 };
 
 let state = {};
+let save_ = {};
 
 function store(k, v){
   try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); }
   catch(e){ return null; }
 }
-function best(g){ return parseInt(store('phparcade_' + g) || '0', 10) || 0; }
-function saveBest(g, s){ if (s > best(g)) store('phparcade_' + g, s); }
+function loadSave(){
+  let s = { xp:0, best:{}, ach:[], played:[] };
+  try{
+    const raw = store('phparcade_save');
+    if (raw) s = Object.assign(s, JSON.parse(raw));
+  }catch(e){}
+  save_ = s;
+}
+function commit(){ try{ store('phparcade_save', JSON.stringify(save_)); }catch(e){} }
 
-function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function shuffle(a){ const c = a.slice(); for (let i = c.length - 1; i > 0; i--){
-  const j = Math.floor(Math.random() * (i + 1)); [c[i], c[j]] = [c[j], c[i]]; } return c; }
+function grant(id){
+  if (save_.ach.includes(id)) return null;
+  save_.ach.push(id); commit();
+  return ACHIEVEMENTS.find(a => a.id === id);
+}
+function levelOf(xp){ return Math.min(LEVELS.length - 1, Math.floor(xp / 150)); }
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){ const c=a.slice(); for(let i=c.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[c[i],c[j]]=[c[j],c[i]];} return c; }
 
 /* ---------- menu ---------- */
 function menu(){
-  app.innerHTML = '<div class="menu">' + Object.keys(GAMES).map(k => {
-    const g = GAMES[k], b = best(k);
+  const lv = levelOf(save_.xp);
+  const inLv = save_.xp % 150;
+  app.innerHTML = `
+  <div class="player">
+    <div class="lvl">${lv + 1}</div>
+    <div class="who">
+      <b>${LEVELS[lv]}</b>
+      <div class="xp">${save_.xp} XP${lv < LEVELS.length-1 ? ` &middot; ${150-inLv} to ${LEVELS[lv+1]}` : ' &middot; max level'}</div>
+      <div class="xpbar"><i style="width:${lv < LEVELS.length-1 ? (inLv/150*100) : 100}%"></i></div>
+    </div>
+  </div>
+  <div class="menu">` + Object.keys(GAMES).map(k => {
+    const g = GAMES[k], b = save_.best[k] || 0;
     return `<button class="game-card" data-game="${k}">
+      <span class="qty">${g.bank()} in the bank</span>
       <div class="icon">${g.icon}</div>
       <h3>${g.name}</h3>
       <p>${g.desc}</p>
       ${b ? `<span class="best">★ best: ${b}</span>` : ''}
     </button>`;
-  }).join('') + '</div>';
-  app.querySelectorAll('[data-game]').forEach(b =>
-    b.onclick = () => start(b.dataset.game));
+  }).join('') + `</div>
+  <div class="ach-wrap">
+    <h2>Badges &middot; ${save_.ach.length} of ${ACHIEVEMENTS.length}</h2>
+    <div class="badges">${ACHIEVEMENTS.map(a => `
+      <div class="badge${save_.ach.includes(a.id) ? ' got' : ''}">
+        <div class="bi">${save_.ach.includes(a.id) ? a.icon : '🔒'}</div>
+        <div class="bn">${a.name}</div>
+        <div class="bd">${a.desc}</div>
+      </div>`).join('')}</div>
+  </div>`;
+  app.querySelectorAll('[data-game]').forEach(b => b.onclick = () => start(b.dataset.game));
 }
 
 function start(game){
-  state = { game, score:0, lives:3, streak:0, i:0, answered:false };
+  state = { game, score:0, lives:3, streak:0, i:0, answered:false, mistakes:0, xp:0, correct:0 };
+  if (!save_.played.includes(game)){ save_.played.push(game); commit(); }
   if (game === 'output') state.qs = shuffle(OUTPUT_Q).slice(0, GAMES.output.len);
   if (game === 'bug')    state.qs = shuffle(BUG_Q).slice(0, GAMES.bug.len);
   if (game === 'blank')  state.qs = shuffle(BLANK_Q).slice(0, GAMES.blank.len);
   if (game === 'match')  state.qs = shuffle(MATCH_SETS).slice(0, GAMES.match.len);
+  if (game === 'order')  state.qs = shuffle(ORDER_Q).slice(0, GAMES.order.len);
+  if (game === 'speed'){ state.qs = shuffle(SPEED_Q); state.timeLeft = 45; }
   render();
 }
 
 function hud(){
   const total = state.qs.length;
+  if (state.game === 'speed'){
+    return `<div class="hud">
+      <span class="pill timer${state.timeLeft <= 10 ? ' low' : ''}" id="timer">${state.timeLeft}s</span>
+      <span class="pill">score ${state.score}</span>
+      ${state.streak > 1 ? `<span class="pill streak">🔥 ${state.streak}</span>` : ''}
+      <span style="flex:1"></span>
+      <button class="btn ghost" id="quit">menu</button>
+    </div><div class="bar"><i style="width:${state.timeLeft/45*100}%"></i></div>`;
+  }
   return `<div class="hud">
       <span class="pill">${GAMES[state.game].icon} ${state.i + 1} / ${total}</span>
       <span class="pill">score ${state.score}</span>
-      <span class="pill lives">${'♥'.repeat(state.lives)}${'♡'.repeat(3 - state.lives)}</span>
+      <span class="pill lives">${'♥'.repeat(Math.max(0,state.lives))}${'♡'.repeat(3-Math.max(0,state.lives))}</span>
       ${state.streak > 1 ? `<span class="pill streak">🔥 ${state.streak} in a row</span>` : ''}
       <span style="flex:1"></span>
       <button class="btn ghost" id="quit">menu</button>
@@ -343,12 +637,22 @@ function hud(){
 
 function wireCommon(){
   const q = document.getElementById('quit');
-  if (q) q.onclick = menu;
+  if (q) q.onclick = () => { if (state.timer) clearInterval(state.timer); menu(); };
+}
+
+function refreshHud(){
+  const pills = document.querySelectorAll('.hud .pill');
+  if (state.game === 'speed'){ if (pills[1]) pills[1].textContent = 'score ' + state.score; return; }
+  if (pills[1]) pills[1].textContent = 'score ' + state.score;
+  const lv = Math.max(0, state.lives);
+  if (pills[2]) pills[2].textContent = '♥'.repeat(lv) + '♡'.repeat(3 - lv);
 }
 
 function render(){
+  if (state.game === 'speed') return renderSpeed();
   if (state.lives <= 0 || state.i >= state.qs.length) return end();
   if (state.game === 'match') return renderMatch();
+  if (state.game === 'order') return renderOrder();
   if (state.game === 'blank') return renderBlank();
   if (state.game === 'bug')   return renderBug();
   renderOutput();
@@ -361,18 +665,14 @@ function renderOutput(){
   app.innerHTML = hud() + `<div class="panel">
     <p class="qtext">What does this print?</p>
     <pre>${esc(q.code)}</pre>
-    <div class="opts">${order.map(x =>
-      `<button class="opt" data-i="${x.i}">${esc(x.o)}</button>`).join('')}</div>
+    <div class="opts">${order.map(x => `<button class="opt" data-i="${x.i}">${esc(x.o)}</button>`).join('')}</div>
     <div class="feedback" id="fb"></div>
-    <div class="row" id="nextRow" style="display:none"><button class="btn" id="next">next →</button></div>
+    <div class="row" id="nextRow" style="display:none"><button class="btn" id="next">next &rarr;</button></div>
   </div>`;
   wireCommon();
   app.querySelectorAll('.opt').forEach(b => b.onclick = () => {
     const ok = +b.dataset.i === q.a;
-    app.querySelectorAll('.opt').forEach(x => {
-      x.disabled = true;
-      if (+x.dataset.i === q.a) x.classList.add('correct');
-    });
+    app.querySelectorAll('.opt').forEach(x => { x.disabled = true; if (+x.dataset.i === q.a) x.classList.add('correct'); });
     if (!ok) b.classList.add('wrong');
     judge(ok, q.why);
   });
@@ -385,18 +685,14 @@ function renderBug(){
     <p class="qtext">Which line has the bug?</p>
     <p class="hint">Click the broken line.</p>
     <div class="opts">${q.code.map((line, i) =>
-      `<button class="opt" data-i="${i}"><span class="ln">${i + 1}</span>&nbsp;&nbsp;${esc(line)}</button>`
-    ).join('')}</div>
+      `<button class="opt" data-i="${i}"><span class="ln">${i + 1}</span>&nbsp;&nbsp;${esc(line)}</button>`).join('')}</div>
     <div class="feedback" id="fb"></div>
-    <div class="row" id="nextRow" style="display:none"><button class="btn" id="next">next →</button></div>
+    <div class="row" id="nextRow" style="display:none"><button class="btn" id="next">next &rarr;</button></div>
   </div>`;
   wireCommon();
   app.querySelectorAll('.opt').forEach(b => b.onclick = () => {
     const ok = +b.dataset.i === q.a;
-    app.querySelectorAll('.opt').forEach(x => {
-      x.disabled = true;
-      if (+x.dataset.i === q.a) x.classList.add('correct');
-    });
+    app.querySelectorAll('.opt').forEach(x => { x.disabled = true; if (+x.dataset.i === q.a) x.classList.add('correct'); });
     if (!ok) b.classList.add('wrong');
     judge(ok, q.why);
   });
@@ -411,15 +707,15 @@ function renderBlank(){
     <input class="blank" id="inp" placeholder="your answer..." autocomplete="off" spellcheck="false">
     <div class="row"><button class="btn" id="check">check</button></div>
     <div class="feedback" id="fb"></div>
-    <div class="row" id="nextRow" style="display:none"><button class="btn" id="next">next →</button></div>
+    <div class="row" id="nextRow" style="display:none"><button class="btn" id="next">next &rarr;</button></div>
   </div>`;
   wireCommon();
   const inp = document.getElementById('inp');
   inp.focus();
   const go = () => {
     if (state.answered) return;
-    const val = inp.value.trim().replace(/[();$]/g, '').toLowerCase();
-    const ok = q.a.some(a => a.toLowerCase().replace(/[();$]/g, '') === val);
+    const val = inp.value.trim().replace(/[();$\s]/g, '').toLowerCase();
+    const ok = q.a.some(a => a.toLowerCase().replace(/[();$\s]/g, '') === val);
     inp.disabled = true;
     document.getElementById('check').disabled = true;
     judge(ok, q.why + (ok ? '' : `  The answer was: ${q.a[0]}`));
@@ -437,100 +733,186 @@ function renderMatch(){
     <p class="qtext">${set.title}</p>
     <p class="hint">Click a word on the left, then its meaning on the right.</p>
     <div class="match">
-      <div class="col">${left.map(x =>
-        `<button class="tile code" data-side="L" data-i="${x.i}">${esc(x.t)}</button>`).join('')}</div>
-      <div class="col">${right.map(x =>
-        `<button class="tile" data-side="R" data-i="${x.i}">${esc(x.t)}</button>`).join('')}</div>
+      <div class="col">${left.map(x => `<button class="tile code" data-side="L" data-i="${x.i}">${esc(x.t)}</button>`).join('')}</div>
+      <div class="col">${right.map(x => `<button class="tile" data-side="R" data-i="${x.i}">${esc(x.t)}</button>`).join('')}</div>
     </div>
     <div class="feedback" id="fb"></div>
-    <div class="row" id="nextRow" style="display:none"><button class="btn" id="next">next →</button></div>
+    <div class="row" id="nextRow" style="display:none"><button class="btn" id="next">next &rarr;</button></div>
   </div>`;
   wireCommon();
 
-  let picked = null, left_ = set.pairs.length, mistakes = 0;
+  let picked = null, remaining = set.pairs.length, wrongHere = 0;
   app.querySelectorAll('.tile').forEach(t => t.onclick = () => {
-    if (!picked){
-      app.querySelectorAll('.tile').forEach(x => x.classList.remove('picked'));
-      picked = t; t.classList.add('picked'); return;
-    }
-    if (picked === t){ t.classList.remove('picked'); picked = null; return; }
-    if (picked.dataset.side === t.dataset.side){
+    if (!picked || picked === t || picked.dataset.side === t.dataset.side){
+      if (picked === t){ t.classList.remove('picked'); picked = null; return; }
       app.querySelectorAll('.tile').forEach(x => x.classList.remove('picked'));
       picked = t; t.classList.add('picked'); return;
     }
     if (picked.dataset.i === t.dataset.i){
       picked.classList.add('done'); t.classList.add('done');
       picked.classList.remove('picked'); picked = null;
-      state.score += 5;
-      refreshHud();
-      left_--;
-      if (left_ === 0){
-        state.streak++;
-        if (mistakes === 0) state.score += 10;
-        show(true, mistakes === 0
-          ? 'Perfect set! +10 bonus.'
-          : `Set complete with ${mistakes} wrong tr${mistakes === 1 ? 'y' : 'ies'}.`);
+      state.score += 5; state.xp += 3; refreshHud();
+      remaining--;
+      if (remaining === 0){
+        state.streak++; state.correct++;
+        if (wrongHere === 0){ state.score += 10; state.xp += 5; }
+        else state.mistakes++;
+        show(true, wrongHere === 0 ? 'Perfect set! +10 bonus.'
+          : `Set complete with ${wrongHere} wrong tr${wrongHere === 1 ? 'y' : 'ies'}.`);
         state.answered = true;
+        checkStreakBadge();
         document.getElementById('nextRow').style.display = 'flex';
         document.getElementById('next').onclick = () => { state.i++; state.answered = false; render(); };
       } else {
         document.getElementById('fb').className = 'feedback';
       }
     } else {
-      mistakes++;
+      wrongHere++;
       t.classList.add('shake'); picked.classList.add('shake');
       const a = picked, b = t;
       setTimeout(() => { a.classList.remove('shake','picked'); b.classList.remove('shake'); }, 320);
       picked = null;
-      if (mistakes % 3 === 0){ state.lives--; }
-      show(false, 'Not a pair. Three wrong tries costs a life.');
+      if (wrongHere % 3 === 0) state.lives--;
+      show(false, 'Not a pair. Every third wrong try costs a life.');
       refreshHud();
-      if (state.lives <= 0) setTimeout(end, 600);
+      if (state.lives <= 0) setTimeout(end, 700);
     }
   });
 }
 
-/* ---------- shared judging ---------- */
+/* ---------- code builder (order the lines) ---------- */
+function renderOrder(){
+  const q = state.qs[state.i];
+  const pool = shuffle(q.lines.map((l, i) => ({ l, i })));
+  let built = [];
+
+  app.innerHTML = hud() + `<div class="panel">
+    <p class="qtext">${esc(q.goal)}</p>
+    <p class="hint">Click the lines in the order they should run. Click a built line to take it back.</p>
+    <div class="built" id="built"></div>
+    <div class="pool" id="pool"></div>
+    <div class="feedback" id="fb"></div>
+    <div class="row" id="nextRow" style="display:none"><button class="btn" id="next">next &rarr;</button></div>
+  </div>`;
+  wireCommon();
+
+  function draw(){
+    const bEl = document.getElementById('built'), pEl = document.getElementById('pool');
+    bEl.innerHTML = built.length
+      ? built.map((x, n) => `<div class="slot" data-b="${n}"><span class="num">${n+1}</span>${esc(x.l)}</div>`).join('')
+      : `<div class="slot empty">your code appears here</div>`;
+    pEl.innerHTML = pool.filter(x => !built.includes(x))
+      .map(x => `<div class="slot" data-p="${x.i}">${esc(x.l)}</div>`).join('');
+
+    bEl.querySelectorAll('[data-b]').forEach(el => el.onclick = () => {
+      if (state.answered) return;
+      built.splice(+el.dataset.b, 1); draw();
+    });
+    pEl.querySelectorAll('[data-p]').forEach(el => el.onclick = () => {
+      if (state.answered) return;
+      built.push(pool.find(x => x.i === +el.dataset.p)); draw();
+      if (built.length === q.lines.length) finish();
+    });
+  }
+  function finish(){
+    const ok = built.every((x, n) => x.i === n);
+    state.answered = true;
+    document.getElementById('built').innerHTML = q.lines
+      .map((l, n) => `<div class="slot"><span class="num">${n+1}</span>${esc(l)}</div>`).join('');
+    judge(ok, q.why + (ok ? '' : ' The correct order is shown above.'));
+  }
+  draw();
+}
+
+/* ---------- speed round ---------- */
+function renderSpeed(){
+  if (state.i >= state.qs.length) state.i = 0;
+  const [text, ans] = state.qs[state.i];
+  app.innerHTML = hud() + `<div class="panel">
+    <div class="statement">${text}</div>
+    <div class="tf">
+      <button class="yes" data-v="1">TRUE</button>
+      <button class="no"  data-v="0">FALSE</button>
+    </div>
+    <div class="feedback" id="fb"></div>
+  </div>`;
+  wireCommon();
+
+  if (!state.timer){
+    state.timer = setInterval(() => {
+      state.timeLeft--;
+      const t = document.getElementById('timer');
+      const bar = document.querySelector('.bar i');
+      if (t){ t.textContent = state.timeLeft + 's'; t.classList.toggle('low', state.timeLeft <= 10); }
+      if (bar) bar.style.width = (state.timeLeft / 45 * 100) + '%';
+      if (state.timeLeft <= 0){ clearInterval(state.timer); state.timer = null; end(); }
+    }, 1000);
+  }
+
+  app.querySelectorAll('.tf button').forEach(b => b.onclick = () => {
+    const ok = (b.dataset.v === '1') === ans;
+    if (ok){ state.score += 2; state.xp += 2; state.correct++; state.streak++; }
+    else { state.score = Math.max(0, state.score - 1); state.streak = 0; state.mistakes++; }
+    const fb = document.getElementById('fb');
+    fb.className = 'feedback show ' + (ok ? 'ok' : 'no');
+    fb.innerHTML = ok ? '✅ Yes' : '❌ No — it is ' + (ans ? 'TRUE' : 'FALSE');
+    state.i++;
+    setTimeout(() => { if (state.timer) renderSpeed(); }, ok ? 260 : 900);
+  });
+}
+
+/* ---------- shared ---------- */
 function show(ok, msg){
   const fb = document.getElementById('fb');
   fb.className = 'feedback show ' + (ok ? 'ok' : 'no');
   fb.innerHTML = `<b>${ok ? '✅ Correct!' : '❌ Not quite'}</b>${esc(msg)}`;
 }
-
-function refreshHud(){
-  const pills = document.querySelectorAll('.hud .pill');
-  if (pills[1]) pills[1].textContent = 'score ' + state.score;
-  const lv = Math.max(0, state.lives);
-  if (pills[2]) pills[2].textContent = '♥'.repeat(lv) + '♡'.repeat(3 - lv);
+function checkStreakBadge(){
+  if (state.streak >= 5) state.pendingStreak = true;
 }
-
 function judge(ok, why){
   state.answered = true;
   if (ok){
-    state.streak++;
-    state.score += 10 + (state.streak > 2 ? 5 : 0);
+    state.streak++; state.correct++;
+    const bonus = state.streak > 2 ? 5 : 0;
+    state.score += 10 + bonus; state.xp += 10 + bonus;
+    checkStreakBadge();
   } else {
-    state.streak = 0;
-    state.lives--;
+    state.streak = 0; state.lives--; state.mistakes++;
   }
   refreshHud();
   show(ok, why);
   const row = document.getElementById('nextRow');
   row.style.display = 'flex';
-  document.getElementById('next').onclick = () => { state.i++; state.answered = false; render(); };
-  document.getElementById('next').focus();
+  const nb = document.getElementById('next');
+  nb.onclick = () => { state.i++; state.answered = false; render(); };
+  nb.focus();
 }
 
 /* ---------- end ---------- */
 function end(){
+  if (state.timer){ clearInterval(state.timer); state.timer = null; }
   const g = state.game;
-  const wasBest = state.score > best(g);
-  saveBest(g, state.score);
-  const done = Math.min(state.i, state.qs.length);
+  const wasBest = state.score > (save_.best[g] || 0);
+  if (wasBest) save_.best[g] = state.score;
+  save_.xp += state.xp;
+
+  const got = [];
+  if (state.correct > 0) { const a = grant('first'); if (a) got.push(a); }
+  if (state.pendingStreak) { const a = grant('streak5'); if (a) got.push(a); }
+  if (state.mistakes === 0 && state.correct > 0) { const a = grant('perfect'); if (a) got.push(a); }
+  if (state.lives === 3 && g !== 'speed' && state.i >= state.qs.length) { const a = grant('nolife'); if (a) got.push(a); }
+  if (g === 'speed' && state.correct >= 15) { const a = grant('speed'); if (a) got.push(a); }
+  if (save_.played.length >= 6) { const a = grant('explorer'); if (a) got.push(a); }
+  if (save_.xp >= 100) { const a = grant('century'); if (a) got.push(a); }
+  if (save_.xp >= 1000) { const a = grant('veteran'); if (a) got.push(a); }
+  commit();
+
   let msg;
-  if (state.lives <= 0)              msg = 'Out of lives! Read the lesson again and come back.';
-  else if (state.score >= state.qs.length * 12) msg = 'Excellent. You really know this.';
-  else if (state.score >= state.qs.length * 7)  msg = 'Good work. A few more rounds and you own it.';
+  if (g === 'speed')                  msg = `${state.correct} right in 45 seconds.`;
+  else if (state.lives <= 0)          msg = 'Out of lives! Re-read the lesson and come back.';
+  else if (state.mistakes === 0)      msg = 'Not a single mistake. You actually know this.';
+  else if (state.mistakes <= 2)       msg = 'Good work. A couple more rounds and you own it.';
   else                                msg = 'Keep going. Re-read the lesson, then replay.';
 
   app.innerHTML = `<div class="panel end">
@@ -538,7 +920,9 @@ function end(){
     <h2>${wasBest ? '🏆 New best score!' : GAMES[g].name}</h2>
     <p>${msg}</p>
     <p style="margin-top:8px;font-size:14px">
-      ${done} of ${state.qs.length} rounds &middot; best ever: ${best(g)}</p>
+      +${state.xp} XP earned &middot; ${save_.xp} XP total &middot; best ever: ${save_.best[g] || 0}</p>
+    ${got.length ? `<div class="unlocked"><b>Badge unlocked</b>${got.map(a =>
+      `<div style="font-size:15px">${a.icon} <b style="display:inline;color:inherit;font-size:15px;text-transform:none;letter-spacing:0">${a.name}</b> &mdash; ${a.desc}</div>`).join('')}</div>` : ''}
     <div class="row" style="justify-content:center">
       <button class="btn" id="again">play again</button>
       <button class="btn ghost" id="back">all games</button>
@@ -559,6 +943,7 @@ document.getElementById('themeBtn').onclick = () => {
 const savedTheme = store('phparcade_theme');
 if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
 
+loadSave();
 menu();
 </script>
 </body>

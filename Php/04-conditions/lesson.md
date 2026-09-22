@@ -126,3 +126,44 @@ if (-3)     // true
 ---
 
 ➡️ `examples.php` → `exercises.php` → quiz-02 → play "Fix the bug" in the arcade
+
+---
+
+## 💡 Did you know
+
+The `=` vs `==` mistake is so common that programmers invented a defensive trick for it called
+**Yoda conditions** — writing the constant first:
+
+```php
+if (5 == $x)      // "five, x is" — hence the name
+```
+
+Why bother? Because if you slip and type one `=`, then `if (5 = $x)` is *impossible* — PHP
+refuses to run and tells you straight away. Whereas `if ($x = 5)` is perfectly legal, and
+silently always true.
+
+You don't have to write this way. But now you know why some code looks backwards.
+
+## 🎮 Play with it
+
+1. **The mood ring.** Set `$temperature` and print a different sentence for freezing, cold,
+   nice, hot, and "stay inside". Run it five times with five different numbers.
+2. **Rock, paper, scissors** against the computer:
+   `$you = "rock";` and `$pc = ["rock","paper","scissors"][rand(0,2)];`
+   then work out who won. It takes more branches than you'd expect — that's the point.
+3. **The truthiness quiz.** Loop over `[0, 1, "", "0", "a", -1, null, []]` and print whether
+   PHP thinks each one is true. At least two of the answers will annoy you.
+
+## 🏆 Boss challenge
+
+Write a **triangle checker**. Given three side lengths, print whether they make:
+an equilateral triangle (all equal), isosceles (exactly two equal), scalene (all different),
+or **no triangle at all** — which happens when one side is longer than the other two combined.
+
+That last case is the one everybody forgets, and it's exactly why the order of your
+conditions matters.
+
+## ▶ Practise this lesson
+
+`games/php-arcade.html` → **Fix the Bug** · `games/php-quest.php` (door 5 is this very bug) ·
+`flashcards.html` → deck 4 *Loops & conditions* · `quizzes/mini-quizzes/lesson-04.md`

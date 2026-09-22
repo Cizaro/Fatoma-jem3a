@@ -150,3 +150,47 @@ It turns `<` into `&lt;` so the browser shows the text instead of running it.
 ---
 
 Next: the files in this folder, then `../projects/`
+
+---
+
+## 💡 Did you know — the one-million-friend worm
+
+In October 2005 a 19-year-old called Samy Kamkar found that MySpace didn't properly escape what
+users typed into their profile. He put a small script in his own profile page. Anyone who
+**viewed** his profile silently ran it — which added him as a friend, and copied the script onto
+*their* profile too.
+
+In under 20 hours he had over a million friends and MySpace had to shut the site down.
+
+That is XSS. That is the attack `htmlspecialchars()` prevents. It is one function call,
+and leaving it out is how that happened.
+
+## 🎮 Play with it
+
+1. **Attack your own page.** In `form.php`, type `<b>hello</b>` as your name. It shows as
+   text, because of `htmlspecialchars()`. Now temporarily delete that function, reload, and
+   try again — it goes bold. Put it straight back. You just performed the attack you're
+   defending against.
+2. **Watch GET work.** Submit `form-separate.php` with GET and watch the URL change.
+   Then edit the URL by hand and press enter. The page believes you. That's why passwords
+   never go through GET.
+3. **Empty everything.** Submit `register.php` completely blank. Six errors at once, no crash.
+   That's what good validation looks like.
+4. **The compliment generator.** A form with a name box that replies with a random compliment
+   from an array. Pointless, fun, and it's the whole request-response cycle in one file.
+
+## 🏆 Boss challenge
+
+Build a **pizza order form**: name, size (a `<select>`), toppings (checkboxes), and notes
+(a `<textarea>`). On submit, print a tidy order summary with a calculated price —
+base price by size, plus 1.50 per topping.
+
+Validate everything: the name is required, at least one topping must be chosen.
+Everything printed goes through `htmlspecialchars()`.
+
+This is genuinely the shape of a real e-commerce checkout, minus the payment.
+
+## ▶ Practise this lesson
+
+`games/php-arcade.html` → **Speed Round** · `games/php-quest.php` (the last door) ·
+`flashcards.html` → deck 5 *Forms & security* · `quizzes/mini-quizzes/lesson-08.md`

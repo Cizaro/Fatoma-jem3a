@@ -1,0 +1,420 @@
+<meta charset="utf-8">
+<title>PHP Flashcards</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F7F6F3; --surface:#FFFFFF; --surface-2:#EFEDE8;
+  --ink:#1A1D21; --ink-2:#5C6168; --ink-3:#8D939B;
+  --line:#E2DFD8; --accent:#0F7B6C; --accent-soft:#E3F1EE;
+  --warm:#B5541F; --warm-soft:#FBEDE4; --gold:#A57C1B;
+  --shadow:0 1px 2px rgba(26,29,33,.06), 0 10px 28px -14px rgba(26,29,33,.28);
+  --display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
+    --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
+    --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
+    --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
+  --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
+  --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
+  --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+     font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding-inline:16px;padding-block:0 60px}
+header{padding-block:34px 18px;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,7vw,40px);
+   letter-spacing:-.02em;line-height:1.05}
+h1 em{font-style:normal;color:var(--accent)}
+.lede{color:var(--ink-2);font-size:14.5px;margin-top:2px}
+.theme-btn{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid var(--line);
+  color:var(--ink-3);border-radius:999px;padding:5px 12px;cursor:pointer}
+.theme-btn:hover{color:var(--ink);border-color:var(--accent)}
+
+/* deck picker */
+.decks{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.deck{background:var(--surface);border:1px solid var(--line);border-radius:13px;
+  padding:17px;text-align:left;font-family:inherit;color:inherit;cursor:pointer;
+  box-shadow:var(--shadow);transition:transform .12s,border-color .12s}
+.deck:hover{transform:translateY(-3px);border-color:var(--accent)}
+.deck .n{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+.deck h3{font-family:var(--display);font-size:18px;margin:6px 0 3px;letter-spacing:-.01em}
+.deck p{font-size:13px;color:var(--ink-2);line-height:1.45}
+.deckbar{height:5px;background:var(--surface-2);border-radius:99px;margin-top:11px;overflow:hidden}
+.deckbar i{display:block;height:100%;background:var(--accent);width:0;transition:width .4s}
+.deck .pct{font-size:11.5px;color:var(--ink-3);margin-top:5px;font-family:var(--mono)}
+
+.allbtn{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:11px 22px;
+  font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink-2)}
+.btn.warm{background:var(--warm)}
+
+/* study view */
+.hud{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.pill{background:var(--surface);border:1px solid var(--line);border-radius:20px;
+  padding:5px 14px;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+.pill.left{color:var(--warm)}
+.pill.got{color:var(--accent)}
+.bar{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-bottom:22px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .35s}
+
+.card{perspective:1400px;margin-bottom:18px}
+.inner{position:relative;width:100%;min-height:230px;transition:transform .5s cubic-bezier(.4,0,.2,1);
+  transform-style:preserve-3d;cursor:pointer}
+.card.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  box-shadow:var(--shadow);padding:28px 24px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;gap:10px}
+.face.back{transform:rotateY(180deg);background:var(--accent-soft);border-color:var(--accent)}
+.tagline{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3)}
+.term{font-family:var(--mono);font-size:clamp(20px,5.5vw,28px);font-weight:700;
+  word-break:break-word;line-height:1.3}
+.mean{font-size:17px;line-height:1.5;max-width:42ch}
+.extra{font-family:var(--mono);font-size:13px;color:var(--ink-2);background:var(--surface);
+  border-radius:8px;padding:8px 12px;max-width:100%;overflow-x:auto;white-space:pre}
+.flip-hint{font-size:12.5px;color:var(--ink-3);text-align:center;margin-bottom:16px}
+.judge{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.judge button{padding:15px;border-radius:11px;border:2px solid var(--line);background:var(--surface);
+  font-size:15px;font-weight:700;cursor:pointer;color:inherit;font-family:inherit}
+.judge .no:hover{border-color:var(--warm);background:var(--warm-soft);color:var(--warm)}
+.judge .yes:hover{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.judge button small{display:block;font-weight:400;font-size:11.5px;color:var(--ink-3);margin-top:2px}
+
+.done{background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  padding:34px 24px;text-align:center;box-shadow:var(--shadow)}
+.done .big{font-family:var(--display);font-size:46px;font-weight:700;color:var(--accent);line-height:1.1}
+.done h2{font-family:var(--display);font-size:21px;margin:6px 0 5px}
+.done p{color:var(--ink-2)}
+.missed{text-align:left;margin-top:18px;background:var(--warm-soft);border-radius:11px;padding:14px 16px}
+.missed b{color:var(--warm);font-size:12px;text-transform:uppercase;letter-spacing:.08em;
+  display:block;margin-bottom:6px}
+.missed ul{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2)}
+.missed code{font-family:var(--mono);color:var(--ink)}
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--ink-3);text-align:center}
+footer a{color:var(--accent);text-decoration:none;margin:0 7px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div>
+    <h1>PHP <em>Flashcards</em></h1>
+    <p class="lede">Cards you get wrong come back until you get them right twice.</p>
+  </div>
+  <button class="theme-btn" id="themeBtn" type="button">theme</button>
+</header>
+
+<div id="app"></div>
+
+<footer>
+  <a href="README.md">course</a><a href="roadmap.html">roadmap</a><a href="games/php-arcade.html">arcade</a>
+  <br><br>Progress is saved in this browser only.
+</footer>
+</div>
+
+<script>
+const DECKS = [
+  { id:"syntax", name:"Syntax & symbols", note:"The punctuation that breaks everything", cards:[
+    ["<?php ... ?>","Opens and closes a block of PHP code"],
+    [";","Ends a statement. Forgetting it kills the whole page."],
+    ["$name","A variable. Always starts with a dollar sign."],
+    ["//","A comment on one line. PHP ignores it."],
+    ["/* ... */","A comment over several lines"],
+    ["echo","Prints something out"],
+    [".","Glues two strings together", '"Good" . " day"  ->  Good day'],
+    [".=","Adds to the end of a string you already have"],
+    ["=","Puts a value INTO a variable. Not a comparison."],
+    ["==","Is equal in value", '5 == "5"  ->  true'],
+    ["===","Is equal in value AND type", '5 === "5"  ->  false'],
+    ["!=","Is not equal"],
+    ["&&","AND - both sides must be true"],
+    ["||","OR - at least one side must be true"],
+    ["!","NOT - flips true and false"],
+    ["%","The remainder after dividing", '10 % 3  ->  1'],
+    ["=>","Points a key at its value, inside an array"],
+    ["??","Use this, or that if it is missing", '$_POST["a"] ?? ""'],
+    ["?:","The ternary - a whole if/else on one line", '$x >= 10 ? "Pass" : "Fail"'],
+    ["++","Adds 1 to a number"]
+  ]},
+  { id:"strings", name:"String functions", note:"Working with text", cards:[
+    ["strlen()","How many characters are in a string", 'strlen("Beirut")  ->  6'],
+    ["strtoupper()","Makes the text UPPERCASE"],
+    ["strtolower()","Makes the text lowercase"],
+    ["ucfirst()","Capitalises the first letter"],
+    ["trim()","Removes the spaces at both edges"],
+    ["strrev()","Reverses the string", 'strrev("abc")  ->  cba'],
+    ["substr()","Cuts a piece out of a string", 'substr("Fatima", 0, 3)  ->  Fat'],
+    ["strpos()","Finds where something is. Careful: can return 0."],
+    ["str_replace()","Swaps one piece of text for another"],
+    ["str_repeat()","Repeats a string N times", 'str_repeat("-", 5)  ->  -----'],
+    ["str_split()","Turns a string into an array of letters"],
+    ["nl2br()","Turns line breaks into <br> for HTML"],
+    ["number_format()","Formats a number with commas and decimals"],
+    ["htmlspecialchars()","Makes user text SAFE to print. Stops XSS."]
+  ]},
+  { id:"arrays", name:"Array functions", note:"The lesson everything else sits on", cards:[
+    ["count()","How many items are in an array"],
+    ["$a[] = \"x\"","Adds an item to the end, no index needed"],
+    ["in_array()","Is this value inside the array? true / false"],
+    ["array_search()","Where is this value? Gives the index."],
+    ["sort()","Puts an array in order, small to big / A to Z"],
+    ["rsort()","Sorts in reverse"],
+    ["array_sum()","Adds up all the numbers in an array"],
+    ["array_keys()","Gives you all the keys"],
+    ["array_values()","Gives you all the values"],
+    ["array_pop()","Removes the LAST item and gives it to you"],
+    ["array_shift()","Removes the FIRST item"],
+    ["array_reverse()","Flips the order"],
+    ["array_unique()","Removes duplicates"],
+    ["implode()","Array -> string", 'implode(", ", $a)  ->  "a, b, c"'],
+    ["explode()","String -> array", 'explode(",", "a,b,c")'],
+    ["print_r()","Prints an array so you can actually read it"],
+    ["foreach","The loop made for arrays", 'foreach ($a as $key => $value)'],
+    ["First index of an array","0 - always. Never 1."]
+  ]},
+  { id:"control", name:"Loops & conditions", note:"Making code decide and repeat", cards:[
+    ["if","Runs the block only when the condition is true"],
+    ["elseif","Another condition to try if the one above was false"],
+    ["else","Runs when everything above was false"],
+    ["switch","Compares ONE variable against several exact values"],
+    ["break (in switch)","Stops the switch. Forget it and the next cases run too."],
+    ["for","Repeats a known number of times", 'for ($i = 0; $i < 5; $i++)'],
+    ["while","Repeats as long as the condition stays true"],
+    ["do...while","Like while, but always runs at least once"],
+    ["break (in a loop)","Leaves the loop completely"],
+    ["continue","Skips just this round and carries on"],
+    ["An infinite loop","When nothing inside the loop changes the condition"],
+    ["Falsy values in PHP",'false, 0, 0.0, "", "0", [], null - everything else is true'],
+    ["Order of elseif","Strictest condition first, or the loose one catches everything"],
+    ["round() / floor() / ceil()","Round normally / always down / always up"]
+  ]},
+  { id:"web", name:"Forms & security", note:"Where PHP meets real people", cards:[
+    ["$_POST","Data a form sent with method=\"post\". Not visible in the URL."],
+    ["$_GET","Data sent in the URL, after the ?"],
+    ["name=\"...\"","The input attribute that becomes the key in $_POST"],
+    ["action=\"...\"","Which file receives the form data"],
+    ["isset()","Does this exist? Guards against undefined key warnings."],
+    ["empty()","Is it missing, \"\", 0 or null?"],
+    ["filter_var(... FILTER_VALIDATE_EMAIL)","Checks an email is really an email"],
+    ["is_numeric()","Is this value a number?"],
+    ["htmlspecialchars()","Escape before printing anything a user typed. Stops XSS."],
+    ["XSS","When a user's typed <script> actually runs on your page"],
+    ["$_SESSION","Remembers things between page loads. Needs session_start() first."],
+    ["session_start()","Must be the very first thing, before any HTML"],
+    ["header(\"Location: ...\")","Sends the browser to another page. Follow it with exit;"],
+    ["Why exit after header()","The script keeps running otherwise - and refresh saves twice"],
+    ["$_SERVER[\"REQUEST_METHOD\"]","Tells you whether the page was opened or submitted"],
+    ["require vs include","require stops the page if missing; include only warns"]
+  ]},
+  { id:"sql", name:"SQL & MySQL", note:"Textbook chapters 11 and 12", cards:[
+    ["SELECT","Reads rows from a table", "SELECT * FROM students;"],
+    ["INSERT INTO","Adds a new row", "INSERT INTO t (name) VALUES ('Sara');"],
+    ["UPDATE","Changes rows that already exist. Never without WHERE."],
+    ["DELETE","Removes rows. Never without WHERE."],
+    ["WHERE","Decides which rows are affected"],
+    ["ORDER BY ... DESC","Sorts the rows, biggest first"],
+    ["LIKE","Searches for part of some text", "WHERE name LIKE 'F%'"],
+    ["LIMIT","Only return this many rows"],
+    ["COUNT() / AVG() / MAX()","How many / average / biggest"],
+    ["AUTO_INCREMENT","MySQL numbers each new row for you"],
+    ["PRIMARY KEY","The column that uniquely identifies a row"],
+    ["VARCHAR(100)","Short text, up to 100 characters"],
+    ["mysqli_connect()","Opens the connection to the database"],
+    ["mysqli_query()","Sends SQL to the database"],
+    ["mysqli_fetch_assoc()","Gives you ONE row as an associative array"],
+    ["The fetch loop","while ($row = mysqli_fetch_assoc($result)) { ... }"],
+    ["SQL injection","When user input is glued into SQL and changes what it does"],
+    ["Prepared statement","prepare -> bind_param -> execute. The only safe way."],
+    ["The ? in a query","A placeholder. The real value is sent separately."],
+    ["\"s\" / \"i\" / \"d\"","bind_param types: string, integer, decimal"]
+  ]}
+];
+
+const KEY = "php_flash_v1";
+let mastered = {};        // {deckId: {cardIndex: timesRight}}
+let S = null;
+
+function load(){ try{ const r=localStorage.getItem(KEY); if(r) mastered=JSON.parse(r); }catch(e){ mastered={}; } }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(mastered)); }catch(e){} }
+function deckScore(d){
+  const m = mastered[d.id] || {};
+  let n = 0;
+  for (let i = 0; i < d.cards.length; i++) if ((m[i]||0) >= 2) n++;
+  return n;
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function shuffle(a){const c=a.slice();for(let i=c.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[c[i],c[j]]=[c[j],c[i]];}return c;}
+
+const app = document.getElementById("app");
+
+function menu(){
+  const totalCards = DECKS.reduce((s,d)=>s+d.cards.length,0);
+  const totalGot = DECKS.reduce((s,d)=>s+deckScore(d),0);
+  app.innerHTML = `<div class="decks">` + DECKS.map((d,i)=>{
+    const got = deckScore(d), pct = Math.round(got/d.cards.length*100);
+    return `<button class="deck" data-d="${d.id}">
+      <div class="n">Deck ${i+1} &middot; ${d.cards.length} cards</div>
+      <h3>${d.name}</h3>
+      <p>${d.note}</p>
+      <div class="deckbar"><i style="width:${pct}%"></i></div>
+      <div class="pct">${got}/${d.cards.length} known</div>
+    </button>`;
+  }).join("") + `</div>
+  <div class="allbtn">
+    <button class="btn" data-all="1">Study everything (${totalCards} cards)</button>
+    <button class="btn ghost" data-weak="1">Only the ones I keep missing</button>
+    <span style="flex:1"></span>
+    <button class="btn ghost" id="reset">reset progress</button>
+  </div>
+  <p style="margin-top:14px;color:var(--ink-3);font-size:13px">
+    ${totalGot} of ${totalCards} cards known across all decks.
+    A card counts as known once you have got it right <b>twice</b>.</p>`;
+
+  app.querySelectorAll("[data-d]").forEach(b => b.onclick = () => {
+    const d = DECKS.find(x=>x.id===b.dataset.d);
+    startSession(d.cards.map((c,i)=>({c, deck:d.id, idx:i})), d.name);
+  });
+  app.querySelector("[data-all]").onclick = () => {
+    let all=[]; DECKS.forEach(d=>d.cards.forEach((c,i)=>all.push({c,deck:d.id,idx:i})));
+    startSession(all, "Everything");
+  };
+  app.querySelector("[data-weak]").onclick = () => {
+    let weak=[];
+    DECKS.forEach(d=>d.cards.forEach((c,i)=>{ if(((mastered[d.id]||{})[i]||0) < 2) weak.push({c,deck:d.id,idx:i}); }));
+    if (!weak.length){ alert("Nothing left - you know every card. Pick a deck to revise anyway."); return; }
+    startSession(weak, "Weak cards");
+  };
+  document.getElementById("reset").onclick = () => {
+    if (!confirm("Forget every card you have marked as known?")) return;
+    mastered = {}; save(); menu();
+  };
+}
+
+function startSession(cards, title){
+  S = { queue: shuffle(cards), title, total: cards.length, done: 0, missed: [], flipped:false };
+  drawCard();
+}
+
+function drawCard(){
+  if (!S.queue.length) return finish();
+  const item = S.queue[0];
+  const [term, mean, extra] = item.c;
+  app.innerHTML = `
+    <div class="hud">
+      <span class="pill">${S.title}</span>
+      <span class="pill left">${S.queue.length} left</span>
+      <span class="pill got">${S.done} done</span>
+      <span style="flex:1"></span>
+      <button class="btn ghost" id="quit">decks</button>
+    </div>
+    <div class="bar"><i style="width:${S.total ? (S.done/(S.done+S.queue.length))*100 : 0}%"></i></div>
+
+    <div class="card" id="card">
+      <div class="inner">
+        <div class="face front">
+          <div class="tagline">what is this?</div>
+          <div class="term">${esc(term)}</div>
+        </div>
+        <div class="face back">
+          <div class="tagline">${esc(term)}</div>
+          <div class="mean">${esc(mean)}</div>
+          ${extra ? `<div class="extra">${esc(extra)}</div>` : ""}
+        </div>
+      </div>
+    </div>
+    <p class="flip-hint" id="hint">click the card to turn it over &middot; or press space</p>
+    <div class="judge" id="judge" hidden>
+      <button class="no"  data-k="0">Didn't know it<small>comes back later</small></button>
+      <button class="yes" data-k="1">Knew it<small>twice and it's done</small></button>
+    </div>`;
+
+  document.getElementById("quit").onclick = menu;
+  const card = document.getElementById("card");
+  const flip = () => {
+    card.classList.add("flipped");
+    document.getElementById("judge").hidden = false;
+    document.getElementById("hint").textContent = "so - did you actually know it?";
+  };
+  card.onclick = flip;
+  document.onkeydown = e => {
+    if (e.code === "Space"){ e.preventDefault(); flip(); }
+    if (card.classList.contains("flipped")){
+      if (e.key === "1") grade(0);
+      if (e.key === "2") grade(1);
+    }
+  };
+  app.querySelectorAll("#judge button").forEach(b => b.onclick = () => grade(+b.dataset.k));
+}
+
+function grade(knew){
+  const item = S.queue.shift();
+  const m = mastered[item.deck] || (mastered[item.deck] = {});
+  if (knew){
+    m[item.idx] = (m[item.idx] || 0) + 1;
+    S.done++;
+  } else {
+    m[item.idx] = 0;
+    if (!S.missed.some(x => x.deck===item.deck && x.idx===item.idx)) S.missed.push(item);
+    // put it back, a few cards later
+    const at = Math.min(S.queue.length, 3);
+    S.queue.splice(at, 0, item);
+  }
+  save();
+  drawCard();
+}
+
+function finish(){
+  document.onkeydown = null;
+  const missedList = S.missed.slice(0, 8);
+  app.innerHTML = `<div class="done">
+    <div class="big">${S.done}</div>
+    <h2>${S.title} finished</h2>
+    <p>${S.missed.length === 0
+      ? "Straight through with nothing missed. That is genuinely rare."
+      : `You had to see ${S.missed.length} card${S.missed.length===1?"":"s"} more than once — those are the ones worth writing down.`}</p>
+    ${missedList.length ? `<div class="missed"><b>Look at these again</b><ul>${
+      missedList.map(x => `<li><code>${esc(x.c[0])}</code> — ${esc(x.c[1])}</li>`).join("")
+    }</ul></div>` : ""}
+    <div class="allbtn" style="justify-content:center;margin-top:20px">
+      <button class="btn" id="again">go again</button>
+      <button class="btn ghost" id="back">all decks</button>
+    </div>
+  </div>`;
+  document.getElementById("again").onclick = () => startSession(S.queue.length ? S.queue : shuffleAll(S.title), S.title);
+  document.getElementById("back").onclick = menu;
+}
+function shuffleAll(title){
+  let all=[]; DECKS.forEach(d=>d.cards.forEach((c,i)=>all.push({c,deck:d.id,idx:i})));
+  return shuffle(all);
+}
+
+document.getElementById("themeBtn").onclick = () => {
+  const cur = document.documentElement.getAttribute("data-theme");
+  const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+  const next = cur ? (cur === "dark" ? "light" : "dark") : (dark ? "light" : "dark");
+  document.documentElement.setAttribute("data-theme", next);
+  try{ localStorage.setItem("php_flash_theme", next); }catch(e){}
+};
+try{ const t = localStorage.getItem("php_flash_theme"); if (t) document.documentElement.setAttribute("data-theme", t); }catch(e){}
+
+load();
+menu();
+</script>

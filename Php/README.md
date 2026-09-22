@@ -58,15 +58,23 @@ Then `projects/` — three real mini apps you build yourself.
 
 ## Fun stuff (do these — they're not optional 🙂)
 
-- **`games/php-arcade.html`** — just double-click it. Four games: guess the output, fix the bug,
-  match the words, fill the blank. It saves your best score.
-- **`games/guess-number.php`** — a real PHP game. Teaches sessions.
-- **`games/hangman.php`** — hangman with programming words, written in PHP.
-- **`quizzes/`** — three sizes: a 5-minute **mini-quiz after every lesson**, a bigger
-  **unit quiz** every few lessons, and a **final exam** for revision week.
-  Start with `quizzes/quiz-00-intro.md` — it has no code in it at all.
+Full details in [`games/README.md`](games/README.md).
 
----
+| | | |
+|---|---|---|
+| 🕹 **[games/php-arcade.html](games/php-arcade.html)** | double-click | 6 games, 133 questions, XP, levels and 8 badges |
+| 🗝 **[games/php-quest.php](games/php-quest.php)** | needs server | escape room — 7 doors, 7 puzzles, keys to collect |
+| 🎯 **[games/guess-number.php](games/guess-number.php)** | needs server | find the number in 7 guesses. Teaches sessions. |
+| 💀 **[games/hangman.php](games/hangman.php)** | needs server | programming words, written in PHP |
+| 🃏 **[flashcards.html](flashcards.html)** | double-click | 102 cards, 6 decks, the ones you miss come back |
+
+**Quizzes** — `quizzes/` has three sizes: a 5-minute **mini-quiz after every lesson**, a bigger
+**unit quiz** every few lessons, and a **final exam** for revision week. Every one of them ends
+with a hidden *"Check your answers"* section you click open once you've finished.
+Start with `quizzes/quiz-00-intro.md` — it has no code in it at all.
+
+Every `lesson.md` also ends with **💡 Did you know**, **🎮 Play with it** and a
+**🏆 Boss challenge** — the fun bits. Don't skip them; they're where it sticks.
 
 ## Extra
 

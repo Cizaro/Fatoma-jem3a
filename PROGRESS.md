@@ -1,6 +1,6 @@
 # PROGRESS — read this first
 
-**Last updated:** 2026-09-22 (second session)
+**Last updated:** 2026-09-22 (third session)
 **Update this file at the end of every session.** It is the handoff between machines and
 between agent sessions. If it is stale, the next session wastes an hour re-deriving context.
 
@@ -42,7 +42,7 @@ material over **Zoom**. I explain, she shares her screen and writes the code her
 
 ## 3. What is already done ✅
 
-The whole `Php/` folder — 79 files, every `.php` file passes `php -l`, examples verified by
+The whole `Php/` folder — 82 files, every `.php` file passes `php -l`, examples verified by
 actually running them.
 
 ```
@@ -60,7 +60,10 @@ Php/
 ├── 08-forms/                 $_POST/$_GET, validation, htmlspecialchars, register.php
 ├── 09-mysql/                 SQL, mysqli, prepared statements, school.sql, full CRUD page
 ├── 10-dynamic-page/          complete mini site: includes/, search, detail.php, admin.php
-├── games/                    php-arcade.html (4 games) + guess-number.php + hangman.php
+├── flashcards.html           102 cards, 6 decks, missed cards repeat until known twice
+├── games/                    php-arcade.html (6 games, 133 questions, XP + 8 badges),
+│                             php-quest.php (7-door escape room), guess-number.php,
+│                             hangman.php, README.md hub
 ├── projects/                 3 projects with starter files and checklists
 ├── roadmap.html              interactive A-Z map, 26 steps, progress saved in localStorage
 ├── quizzes/                  20 files: quiz-00 intro, 10 mini-quizzes, 4 unit quizzes,
@@ -77,9 +80,10 @@ Php/
 `ROADMAP.md` at the repo root is the same 26-step map as a Mermaid diagram, which GitHub
 renders inline.
 
-**Two pages are published as private Claude Artifacts** so she can play on her phone:
+**Three pages are published as private Claude Artifacts** so she can play on her phone:
 - Arcade: https://claude.ai/artifact/JYBuyUAnizeyXzAT9tXMu2
 - Roadmap: https://claude.ai/artifact/EDpJwwwvaoGwGHnjeAXdPb
+- Flashcards: https://claude.ai/artifact/WDYShUSe2eV7Yu19XxYJZn
 
 (Both are private — they have to be shared from each page's Share menu before she can open them.)
 
@@ -204,6 +208,24 @@ No `gh` CLI installed — use plain `git` for pushes.
 ## 7. Session log
 
 *(newest first — one short entry per working session, so the next agent knows what changed and why)*
+
+### 2026-09-22 (third) — Made it fun, and much deeper
+- **Arcade rebuilt**: 4 games -> 6 (added **Speed Round**, 45s true/false, and
+  **Code Builder**, ordering lines). Question bank 45 -> **133**. Added persistent
+  **XP, 8 levels and 8 badges**, all in localStorage under one `phparcade_save` key.
+- **New game `games/php-quest.php`**: a seven-door escape room. Rooms are one
+  multidimensional array at the top of the file, so adding a door needs no other change.
+  Hints appear automatically after 2 wrong tries. Full play-through tested.
+- **New `Php/flashcards.html`**: 102 cards in 6 decks, flip animation, "knew it / didn't",
+  a card must be right **twice** to count as known, missed cards re-queue 3 cards later,
+  plus an "only the ones I keep missing" mode.
+- **Every `lesson.md` now ends with three new sections**: 💡 Did you know (a real story -
+  Rasmus Lerdorf, the Samy worm, Little Bobby Tables, FizzBuzz, Yoda conditions),
+  🎮 Play with it (3-4 playful experiments), 🏆 Boss challenge, and a line pointing at the
+  matching arcade round, flashcard deck and mini-quiz.
+- **New `games/README.md`** hub explaining every game and what it drills.
+- Tone note for the next agent: the 💡/🎮/🏆 structure is now the house style for lessons.
+  Keep the facts **true and checkable** - they are there to make it memorable, not to decorate.
 
 ### 2026-09-22 (later) — Roadmap + a lot more quizzes
 - **Quizzes went from 5 files to 20.** Added `quiz-00-intro.md` (no code at all, for session 1),

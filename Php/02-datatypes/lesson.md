@@ -118,3 +118,38 @@ $s      = (string) 100;     // "100"
 ---
 
 ➡️ `examples.php` → `exercises.php` → quiz-01
+
+---
+
+## 💡 Did you know
+
+For most of PHP's life, `"abc" == 0` was **true**. PHP would look at `"abc"`, decide it wasn't
+a number, call it `0`, and agree that 0 equals 0. That single rule caused real security holes —
+password checks that accepted almost anything.
+
+It was finally fixed in **PHP 8** (2020). You are learning the version where it behaves sensibly.
+When you find an old tutorial insisting you must *always* use `===`, this is the story behind it.
+
+(`===` is still the better habit. Now you know why it exists.)
+
+## 🎮 Play with it
+
+1. **The type detective.** `var_dump()` these one at a time, and predict each one first:
+   `"5" + 5` · `"5" . 5` · `true + true` · `1 == "1"` · `0 == ""` · `null == false`
+   Some of them are genuinely surprising.
+2. **Your name in numbers.** `strlen()` your full name, then your mother's, then your city.
+   Whose is longest? A pointless question, answered with real code.
+3. **The shouting machine.** Take a sentence and print it `strtoupper`, then `strrev`,
+   then both at once — and work out which one PHP did first.
+
+## 🏆 Boss challenge
+
+Write a **username generator**: from `$first = "fatima"` and `$last = "hassan"`, produce
+`F.Hassan` — first letter of the first name capitalised, a dot, then the surname capitalised.
+
+You need `substr`, `strtoupper`, `ucfirst` and `.` working together in one line.
+
+## ▶ Practise this lesson
+
+`games/php-arcade.html` → **Guess the Output** ·
+`flashcards.html` → deck 2 *String functions* · `quizzes/mini-quizzes/lesson-02.md`

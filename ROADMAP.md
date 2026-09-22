@@ -2,8 +2,9 @@
 
 26 steps, one per letter. **A** is installing PHP. **Z** is a live website on the internet.
 
-> There is an interactive version with tick-boxes that saves your progress:
-> [`Php/roadmap.html`](Php/roadmap.html) — open it in a browser.
+> **Interactive version with tick-boxes:** [`Php/roadmap.html`](Php/roadmap.html) — open it in a browser.
+> **Drill the words:** [`Php/flashcards.html`](Php/flashcards.html) — 102 cards, 6 decks.
+> **Play instead of revising:** [`Php/games/`](Php/games/) — 6 arcade games, an escape room, hangman.
 
 ---
 

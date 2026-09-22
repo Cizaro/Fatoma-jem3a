@@ -114,3 +114,48 @@ This is how you print tables, grids, and pyramids.
 ---
 
 ➡️ `examples.php` → `exercises.php` → then play `games/guess-number.php`
+
+---
+
+## 💡 Did you know
+
+There is a tiny exercise called **FizzBuzz** that has been used in real job interviews for
+twenty years. Count to 100: say "Fizz" for multiples of 3, "Buzz" for multiples of 5,
+"FizzBuzz" for both, otherwise the number.
+
+It sounds trivial. It became famous because a surprising number of people who *called*
+themselves programmers couldn't write it. Everything it needs is in this lesson: a loop,
+`%`, and conditions in the right order.
+
+It's exercise 11 in your `exercises.php`. Do it, and you've passed a test that real job
+candidates have failed.
+
+## 🎮 Play with it
+
+1. **The countdown.** 10 down to 1, then `LIFT OFF`. Then make it count down in 2s.
+2. **Times tables.** Print the 7 times table. Then put the number in a variable and try 13.
+   You wrote one loop and got every table there is.
+3. **Draw something.** A square of stars. Then a triangle. Then a pyramid. Then a **diamond** —
+   which is just a pyramid with an upside-down one underneath.
+4. **Guess first.** Before running a loop to 1,000,000, guess how long it will take. Then
+   measure it: `$t = microtime(true);` before, `echo microtime(true) - $t;` after.
+   Computers are faster than your intuition.
+
+## 🏆 Boss challenge
+
+Print a **calendar month** — the numbers 1 to 30 in 7 columns, lined up:
+
+```
+ 1  2  3  4  5  6  7
+ 8  9 10 11 12 13 14
+15 16 17 18 19 20 21
+...
+```
+
+One loop, `printf("%3d", $i)` for the spacing, and a line break every time `$i % 7 == 0`.
+Tiny program, real-looking result.
+
+## ▶ Practise this lesson
+
+`games/php-arcade.html` → **Code Builder** · `games/guess-number.php` (binary search) ·
+`flashcards.html` → deck 4 *Loops & conditions* · `quizzes/mini-quizzes/lesson-05.md`

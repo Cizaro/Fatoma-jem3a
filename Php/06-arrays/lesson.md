@@ -135,3 +135,48 @@ print_r($a)               // print the array nicely (for debugging)
 ---
 
 Next: `examples.php` then `exercises.php` then quiz-03
+
+---
+
+## 💡 Did you know
+
+In most languages, a *list* (numbered items) and a *dictionary* (key → value) are two
+completely different things you have to choose between.
+
+PHP has one structure that is both. An "array" in PHP is really an **ordered map** — which is
+why `["a", "b"]` and `["name" => "Rana"]` are the same kind of thing, and why you can mix them
+in one array if you want to.
+
+It's unusual, occasionally confusing, and it's the reason PHP arrays feel so easy once they click.
+
+## 🎮 Play with it
+
+1. **Your top five.** An array of your five favourite songs. Print them numbered.
+   Then `shuffle()` it and print again. Congratulations, you wrote a playlist shuffler.
+2. **The word counter.** Take a sentence, `explode(" ", $sentence)`, and print how many words.
+   Then find the longest one with a loop.
+3. **Random picker.** `$names = [...]; echo $names[array_rand($names)];`
+   One line that decides who pays for coffee.
+4. **Break it deliberately.** Print `$a[99]` on a 3-item array and read the warning.
+   Then `echo $a;` and read that one too. Both are errors you will meet again.
+
+## 🏆 Boss challenge
+
+Build a **mini phone book**: an associative array of `name => number`. Then:
+print everybody, look one person up by name, add a new person, remove someone,
+and print how many contacts are left.
+
+That is the entire idea behind a database table — which is exactly where lesson 9 goes.
+
+## 🧠 One thing worth saying out loud
+
+This is the lesson people get stuck on, and getting stuck here is *normal*. Boxes with numbers
+on them is a genuinely new way of thinking. If it feels slow, it's because it's the first
+properly abstract idea in the course — not because you're behind.
+
+Draw the boxes on paper. Number them starting at 0. It clicks.
+
+## ▶ Practise this lesson
+
+`games/php-arcade.html` → **Fill the Blank** · `games/hangman.php` (it's arrays all the way down) ·
+`flashcards.html` → deck 3 *Array functions* · `quizzes/mini-quizzes/lesson-06.md`
