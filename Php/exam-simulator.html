@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>PHP Exam Simulator</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
@@ -70,7 +70,10 @@ code{font-family:var(--mono);font-size:.92em}
 .breakdown td:last-child,.breakdown th:last-child{text-align:right;font-variant-numeric:tabular-nums}
 
 /* exam */
-.hud{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line);
+/* top: the safe-area inset, not 0 — on a phone the clock would otherwise
+   sit under the notch, and the clock is the one thing she must always see */
+.hud{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);
+  border-bottom:1px solid var(--line);
   padding:11px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .clock{font-family:var(--mono);font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;
   background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:5px 14px}
@@ -226,10 +229,11 @@ footer a{color:var(--accent);text-decoration:none;margin:0 7px}
 <section id="results" class="hide"></section>
 
 <footer>
-  <a href="quizzes/final-exam.md">paper version</a>·
-  <a href="flashcards.html">flashcards</a>·
-  <a href="games/php-arcade.html">arcade</a>·
-  <a href="roadmap.html">roadmap</a>
+  <a data-path="quizzes/final-exam.md">paper version</a>·
+  <a data-path="flashcards.html">flashcards</a>·
+  <a data-path="games/php-arcade.html">arcade</a>·
+  <a data-path="roadmap.html">roadmap</a>
+  <br><br>Your answers are saved in this browser only — they don't follow you to another phone or laptop.
 </footer>
 </div>
 
@@ -373,6 +377,24 @@ const TOMARK = ALLQ.filter(q => q.type !== "mcq");
 const SAVE = "phpexam_attempt", HIST = "phpexam_history", THEME = "phpexam_theme";
 
 let answers = {}, awarded = {}, crit = {}, left = DURATION, timer = null, markIdx = 0, ranOut = false;
+
+/* ---------------------------------------------------------------
+   This page is used in two places: from the repo folder (double-clicked
+   or over `php -S`), where every link is a sibling file, and published
+   as an Artifact on her phone, where those files don't exist. So links
+   resolve at runtime — locally they stay relative; anywhere else the
+   lessons point at GitHub and the sibling pages at their own Artifacts.
+--------------------------------------------------------------- */
+const LOCAL = location.protocol === "file:"
+  || ["localhost", "127.0.0.1", ""].indexOf(location.hostname) !== -1;
+const REPO = "https://github.com/Cizaro/Fatoma-jem3a/blob/main/Php/";
+const PUBLISHED = {
+  "flashcards.html":       "https://claude.ai/artifact/WDYShUSe2eV7Yu19XxYJZn",
+  "roadmap.html":          "https://claude.ai/artifact/EDpJwwwvaoGwGHnjeAXdPb",
+  "games/php-arcade.html": "https://claude.ai/artifact/JYBuyUAnizeyXzAT9tXMu2"
+};
+const link = path => LOCAL ? path : (PUBLISHED[path] || REPO + path);
+const linkAttrs = path => LOCAL ? "" : ' target="_blank" rel="noopener"';
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -658,7 +680,7 @@ function paintResults(){
         <ul>${lost.map(q => `<li>
           <b style="color:var(--ink);font-family:var(--mono)">Q${q.n}</b> — ${q.label}
           <span style="color:var(--ink-3)">(${round(awarded[q.n] || 0)}/${q.marks})</span>
-          → <a href="${q.lesson}/lesson.md">${q.lesson}/</a></li>`).join("")}</ul>`
+          → <a href="${link(q.lesson + "/lesson.md")}"${linkAttrs()}>${q.lesson}/</a></li>`).join("")}</ul>`
       : `<p style="margin:9px 0 0;color:var(--accent);font-weight:600">
           Full marks. Nothing to revise — go and do something else.</p>`}
     </div>
@@ -680,6 +702,12 @@ function paintResults(){
 /* closing the tab mid-exam should at least ask */
 addEventListener("beforeunload", e => {
   if (timer){ e.preventDefault(); e.returnValue = ""; }
+});
+
+/* footer links resolve the same way */
+document.querySelectorAll("footer a[data-path]").forEach(a => {
+  a.href = link(a.dataset.path);
+  if (!LOCAL){ a.target = "_blank"; a.rel = "noopener"; }
 });
 
 paintStart();

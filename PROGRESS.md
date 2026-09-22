@@ -81,12 +81,17 @@ Php/
 `ROADMAP.md` at the repo root is the same 26-step map as a Mermaid diagram, which GitHub
 renders inline.
 
-**Three pages are published as private Claude Artifacts** so she can play on her phone:
+**Four pages are published as private Claude Artifacts** so she can use them on her phone:
 - Arcade: https://claude.ai/artifact/JYBuyUAnizeyXzAT9tXMu2
 - Roadmap: https://claude.ai/artifact/EDpJwwwvaoGwGHnjeAXdPb
 - Flashcards: https://claude.ai/artifact/WDYShUSe2eV7Yu19XxYJZn
+- Exam simulator: https://claude.ai/artifact/H3Ca9oVaXidqa51D5hesYc
 
-(Both are private — they have to be shared from each page's Share menu before she can open them.)
+(All private — each has to be shared from its own Share menu before she can open it.)
+
+**Publishing an update:** republishing a changed page creates a *new* Artifact unless the
+existing URL is passed in, which orphans the link she already has. Give the agent the URL above
+and say "update this artifact", rather than letting it publish fresh.
 
 ---
 
@@ -235,9 +240,16 @@ No `gh` CLI installed — use plain `git` for pushes.
   Found and fixed a real bug on the way — clicking a criterion's *label text* toggled the
   checkbox twice (my handler plus the browser's native label behaviour) and cancelled itself out.
   It now listens on the checkbox's `change` event instead.
+- **Published as a private Artifact** so she can sit it on her phone (URL in section 3).
+  Because the same file now runs in two places, its links resolve at runtime: relative when
+  it's opened from the repo folder, and pointing at GitHub (lessons) or the sibling Artifacts
+  (flashcards, arcade, roadmap) when it isn't. Viewport and the sticky clock are safe-area
+  aware so the timer doesn't hide under a phone notch. Checked at 375px — no sideways scroll,
+  code blocks scroll inside their own box.
 - **Second machine (this one) is now set up**: repo cloned, XAMPP 8.2 installed (PHP 8.2.12 —
-  same version as the main machine, plus MySQL and phpMyAdmin). `.claude-flow/` is a local
-  tool folder and is now gitignored.
+  same version as the main machine, plus MySQL and phpMyAdmin), `C:\xampp\php` added to the
+  user PATH. All 35 PHP files lint clean on it. `.claude-flow/` is a local tool folder and is
+  now gitignored.
 
 ### 2026-09-22 (third) — Made it fun, and much deeper
 - **Arcade rebuilt**: 4 games -> 6 (added **Speed Round**, 45s true/false, and
