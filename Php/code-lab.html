@@ -1,0 +1,1653 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PHP Code Lab</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F7F7F9; --surface:#FFFFFF; --surface-2:#EEEEF3; --line:#E3E3EB;
+  --ink:#191A22; --ink-2:#565A68; --ink-3:#8A8E9C;
+  --editor:#1C1E2A; --editor-ink:#E7E9F5; --gutter:#5A5F78;
+  --accent:#4B58C9; --accent-soft:#E9EAFB;
+  --good:#1F8A50; --good-soft:#E4F4EB; --bad:#C43A3A; --bad-soft:#FBEAEA;
+  --warm:#B06A16; --warm-soft:#FAF0E2;
+  --shadow:0 1px 2px rgba(25,26,34,.06), 0 12px 28px -16px rgba(25,26,34,.34);
+  --display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#121319; --surface:#1B1D26; --surface-2:#242733; --line:#2E3140;
+    --ink:#EBECF2; --ink-2:#A2A6B5; --ink-3:#757A8A;
+    --editor:#0E0F16; --editor-ink:#E7E9F5; --gutter:#4A4F66;
+    --accent:#8B93F0; --accent-soft:#22243E;
+    --good:#5CC48C; --good-soft:#15291E; --bad:#EF8080; --bad-soft:#2D191A;
+    --warm:#DFA05A; --warm-soft:#2B2015;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 28px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121319; --surface:#1B1D26; --surface-2:#242733; --line:#2E3140;
+  --ink:#EBECF2; --ink-2:#A2A6B5; --ink-3:#757A8A;
+  --editor:#0E0F16; --editor-ink:#E7E9F5; --gutter:#4A4F66;
+  --accent:#8B93F0; --accent-soft:#22243E;
+  --good:#5CC48C; --good-soft:#15291E; --bad:#EF8080; --bad-soft:#2D191A;
+  --warm:#DFA05A; --warm-soft:#2B2015;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 28px -16px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:0 40px}
+
+header{padding-block:24px 6px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(24px,5vw,32px);letter-spacing:-.02em}
+h1 em{font-style:normal;color:var(--accent)}
+.hsub{color:var(--ink-2);font-size:13.5px}
+.hbtns{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;background:none;border:1px solid var(--line);color:var(--ink-3);
+  border-radius:999px;padding:5px 12px;cursor:pointer}
+.chip:hover{color:var(--ink);border-color:var(--accent)}
+.chip.solved{border-color:var(--good);color:var(--good)}
+
+/* layout */
+.lab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:14px;margin-top:14px}
+@media (max-width:860px){ .lab{grid-template-columns:minmax(0,1fr)} }
+.pane{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.pane > header{padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface-2);
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pane > header .t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+.body{padding:16px;overflow-y:auto}
+
+/* brief */
+.num{font-family:var(--mono);font-size:11.5px;font-weight:700;color:var(--accent);
+  letter-spacing:.08em;text-transform:uppercase}
+.brief h2{font-family:var(--display);font-size:21px;letter-spacing:-.01em;margin:4px 0 10px}
+.brief p{margin-bottom:10px;color:var(--ink-2)}
+.brief ul,.brief ol{margin:0 0 12px 20px;color:var(--ink-2)}
+.brief li{margin-bottom:4px}
+.brief code{font-family:var(--mono);font-size:13px;background:var(--surface-2);
+  padding:2px 6px;border-radius:4px;color:var(--ink)}
+.brief pre{background:var(--editor);color:var(--editor-ink);padding:12px 14px;border-radius:9px;
+  font-family:var(--mono);font-size:13px;line-height:1.65;overflow-x:auto;margin-bottom:12px}
+.want{background:var(--accent-soft);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.want b{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:6px}
+.want pre{background:var(--surface);color:var(--ink);margin:0;font-size:13px;
+  border:1px solid var(--line)}
+.tip{background:var(--warm-soft);color:var(--warm);border-radius:9px;padding:10px 13px;
+  font-size:13.5px;margin-bottom:10px}
+
+/* editor */
+.edwrap{position:relative;background:var(--editor);flex:1;min-height:270px;display:flex}
+.gutter{padding:14px 0 14px 12px;color:var(--gutter);font-family:var(--mono);font-size:14px;
+  line-height:1.65;text-align:right;user-select:none;min-width:38px}
+#code{flex:1;background:transparent;color:var(--editor-ink);border:0;outline:none;resize:none;
+  padding:14px 14px 14px 10px;font-family:var(--mono);font-size:14px;line-height:1.65;
+  white-space:pre;overflow-wrap:normal;overflow-x:auto;tab-size:4}
+.bar{padding:11px 14px;border-top:1px solid var(--line);display:flex;gap:9px;
+  align-items:center;flex-wrap:wrap;background:var(--surface-2)}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:10px 20px;
+  font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{filter:brightness(1.1)}
+.btn.run{background:var(--good)}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink-2)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.out{background:var(--editor);color:var(--editor-ink);font-family:var(--mono);font-size:13.5px;
+  line-height:1.65;padding:14px;min-height:92px;max-height:260px;overflow:auto;white-space:pre-wrap;
+  word-break:break-word}
+.out .muted{color:var(--gutter)}
+.out .err{color:#FF9A9A}
+.verdict{padding:13px 16px;font-size:14.5px;display:none;border-top:1px solid var(--line)}
+.verdict.show{display:block}
+.verdict.ok{background:var(--good-soft);color:var(--good)}
+.verdict.no{background:var(--bad-soft);color:var(--bad)}
+.verdict b{display:block;margin-bottom:4px}
+.verdict ul{margin:6px 0 0 18px}
+.diff{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+@media (max-width:560px){ .diff{grid-template-columns:1fr} }
+.diff div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px}
+.diff b{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.diff pre{font-family:var(--mono);font-size:12.5px;white-space:pre-wrap;margin-top:5px;color:var(--ink)}
+
+/* picker */
+.picker{position:fixed;inset:0;background:rgba(10,11,16,.55);display:none;
+  align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto;z-index:50}
+.picker.show{display:flex}
+.pcard{background:var(--surface);border-radius:16px;max-width:660px;width:100%;
+  box-shadow:var(--shadow);padding:22px}
+.pcard h2{font-family:var(--display);font-size:21px;margin-bottom:3px}
+.pcard .psub{color:var(--ink-2);font-size:13.5px;margin-bottom:14px}
+.plist{display:grid;gap:7px;max-height:56vh;overflow-y:auto;padding-right:4px}
+.pgroup{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--ink-3);margin-top:10px}
+.pitem{display:flex;gap:10px;align-items:center;background:var(--surface-2);border:1px solid transparent;
+  border-radius:9px;padding:9px 12px;cursor:pointer;text-align:left;font-family:inherit;
+  color:inherit;font-size:14px;width:100%}
+.pitem:hover{border-color:var(--accent)}
+.pitem.cur{border-color:var(--accent);background:var(--accent-soft)}
+.pitem .mk{font-family:var(--mono);font-size:12px;color:var(--ink-3);min-width:26px}
+.pitem.done .mk{color:var(--good)}
+footer{margin-top:22px;padding-top:16px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--ink-3);text-align:center}
+footer a{color:var(--accent);text-decoration:none;margin:0 7px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div>
+    <h1>PHP <em>Code Lab</em></h1>
+    <p class="hsub">Write real PHP, press Run, see the output. It runs in the page — no server, no internet.</p>
+  </div>
+  <div class="hbtns">
+    <button class="chip" id="pickBtn">challenges</button>
+    <button class="chip" id="themeBtn">theme</button>
+  </div>
+</header>
+
+<div class="lab">
+  <section class="pane">
+    <header><span class="t" id="crumb">Loading…</span>
+      <span style="flex:1"></span>
+      <button class="chip" id="prevBtn">prev</button>
+      <button class="chip" id="nextBtn">next</button>
+    </header>
+    <div class="body brief" id="brief"></div>
+  </section>
+
+  <section class="pane">
+    <header><span class="t">your code — editor</span>
+      <span style="flex:1"></span>
+      <button class="chip" id="resetBtn">reset</button>
+      <button class="chip" id="solBtn">solution</button>
+    </header>
+    <div class="edwrap">
+      <div class="gutter" id="gutter">1</div>
+      <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off"
+        autocorrect="off" wrap="off"></textarea>
+    </div>
+    <div class="bar">
+      <button class="btn run" id="runBtn">▶ Run</button>
+      <button class="btn" id="checkBtn">Check my answer</button>
+      <span style="flex:1"></span>
+      <span class="hsub" id="hintCount"></span>
+    </div>
+    <div class="out" id="out"><span class="muted">Output appears here when you press Run.</span></div>
+    <div class="verdict" id="verdict"></div>
+  </section>
+</div>
+
+<footer>
+  <a href="index.html">course home</a><a href="stages.html">syntax stages</a>
+  <a href="flashcards.html">flashcards</a><a href="games/php-arcade.html">arcade</a>
+  <br><br>Your code and progress are saved in this browser only.
+</footer>
+</div>
+
+<div class="picker" id="picker">
+  <div class="pcard">
+    <h2>Challenges</h2>
+    <p class="psub" id="pstat"></p>
+    <div class="plist" id="plist"></div>
+    <div style="margin-top:14px;display:flex;gap:9px">
+      <button class="btn ghost" id="closePick">close</button>
+      <span style="flex:1"></span>
+      <button class="btn ghost" id="wipe">reset all progress</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================================
+   A SMALL PHP INTERPRETER, IN JAVASCRIPT
+   ----------------------------------------------------------------------------
+   It covers exactly the PHP this course teaches: echo, variables, strings,
+   maths, if/else, switch, loops, arrays and functions, plus ~45 built-ins.
+   It is NOT real PHP - it cannot do forms, files or databases. For those you
+   still run `php -S localhost:8000` like the lessons say.
+   ========================================================================== */
+
+/* ---------- values ---------- */
+class PhpArray {
+  constructor(){ this.map = new Map(); this.next = 0; }
+  static from(pairs){ const a = new PhpArray(); for (const [k,v] of pairs) a.set(k,v); return a; }
+  key(k){ // PHP turns "5" into 5 as a key
+    if (typeof k === "number") return Number.isInteger(k) ? k : Math.trunc(k);
+    if (typeof k === "boolean") return k ? 1 : 0;
+    if (k === null) return "";
+    if (typeof k === "string" && /^-?\d+$/.test(k)) return parseInt(k,10);
+    return k;
+  }
+  set(k,v){ const kk=this.key(k); this.map.set(kk,v); if (typeof kk==="number" && kk>=this.next) this.next=kk+1; }
+  push(v){ this.map.set(this.next, v); this.next++; }
+  get(k){ return this.map.get(this.key(k)); }
+  has(k){ return this.map.has(this.key(k)); }
+  del(k){ this.map.delete(this.key(k)); }
+  get size(){ return this.map.size; }
+  keys(){ return [...this.map.keys()]; }
+  values(){ return [...this.map.values()]; }
+  entries(){ return [...this.map.entries()]; }
+  clone(){ const a=new PhpArray(); for(const [k,v] of this.map) a.map.set(k, v instanceof PhpArray ? v.clone() : v); a.next=this.next; return a; }
+}
+
+const PHP = (() => {
+
+/* ---------- tokenizer ---------- */
+const KEYWORDS = new Set(["if","else","elseif","while","do","for","foreach","as","switch","case",
+  "default","break","continue","function","return","echo","print","true","false","null","and","or","not"]);
+
+function lex(src){
+  const T = [];
+  let i = 0, line = 1;
+  const push = (type, value) => T.push({type, value, line});
+  const isD = c => c >= "0" && c <= "9";
+  const isA = c => /[A-Za-z_\x80-\uffff]/.test(c);
+  const isAN = c => /[A-Za-z0-9_\x80-\uffff]/.test(c);
+
+  // strip the PHP tags; anything outside them is plain text we echo
+  let code = src;
+  const open = code.indexOf("<?php");
+  if (open !== -1){
+    const before = code.slice(0, open);
+    code = code.slice(open + 5);
+    if (before.trim()) T.push({type:"inline", value:before, line:1});
+  } else if (code.startsWith("<?")){
+    code = code.slice(2);
+  }
+  const close = code.indexOf("?>");
+  if (close !== -1) code = code.slice(0, close);
+
+  while (i < code.length){
+    const c = code[i];
+    if (c === "\n"){ line++; i++; continue; }
+    if (c === " " || c === "\t" || c === "\r"){ i++; continue; }
+
+    // comments
+    if (c === "/" && code[i+1] === "/" || c === "#"){
+      while (i < code.length && code[i] !== "\n") i++;
+      continue;
+    }
+    if (c === "/" && code[i+1] === "*"){
+      i += 2;
+      while (i < code.length && !(code[i] === "*" && code[i+1] === "/")){ if (code[i]==="\n") line++; i++; }
+      i += 2; continue;
+    }
+
+    // variable
+    if (c === "$" && isA(code[i+1])){
+      let j = i+1; while (j < code.length && isAN(code[j])) j++;
+      push("var", code.slice(i+1, j)); i = j; continue;
+    }
+
+    // number
+    if (isD(c) || (c === "." && isD(code[i+1]))){
+      let j = i, dot = false;
+      while (j < code.length && (isD(code[j]) || (code[j] === "." && !dot))){ if (code[j]===".") dot=true; j++; }
+      push("num", parseFloat(code.slice(i,j))); i = j; continue;
+    }
+
+    // single-quoted string
+    if (c === "'"){
+      let j = i+1, s = "";
+      while (j < code.length && code[j] !== "'"){
+        if (code[j] === "\\" && (code[j+1] === "'" || code[j+1] === "\\")){ s += code[j+1]; j += 2; }
+        else { if (code[j]==="\n") line++; s += code[j++]; }
+      }
+      push("str", s); i = j+1; continue;
+    }
+
+    // double-quoted string -> parts for interpolation
+    if (c === '"'){
+      let j = i+1; const parts = []; let buf = "";
+      while (j < code.length && code[j] !== '"'){
+        const ch = code[j];
+        if (ch === "\\"){
+          const n = code[j+1];
+          buf += n === "n" ? "\n" : n === "t" ? "\t" : n === "r" ? "\r"
+               : n === '"' ? '"' : n === "\\" ? "\\" : n === "$" ? "$" : "\\" + n;
+          j += 2; continue;
+        }
+        if (ch === "$" && isA(code[j+1])){
+          if (buf){ parts.push({lit:buf}); buf = ""; }
+          let k = j+1; while (k < code.length && isAN(code[k])) k++;
+          const name = code.slice(j+1, k);
+          let idx = null;
+          if (code[k] === "["){                       // "$a[0]" / "$a[key]" / "$a['key']"
+            let m = k+1, inner = "";
+            while (m < code.length && code[m] !== "]") inner += code[m++];
+            idx = inner.trim(); k = m+1;
+          }
+          parts.push({v:name, idx}); j = k; continue;
+        }
+        if (ch === "{" && code[j+1] === "$"){
+          if (buf){ parts.push({lit:buf}); buf = ""; }
+          let depth = 1, m = j+1, inner = "";
+          while (m < code.length && depth > 0){
+            if (code[m] === "{") depth++;
+            else if (code[m] === "}"){ depth--; if (!depth) break; }
+            inner += code[m++];
+          }
+          parts.push({expr:inner}); j = m+1; continue;
+        }
+        if (ch === "\n") line++;
+        buf += ch; j++;
+      }
+      if (buf) parts.push({lit:buf});
+      push("istr", parts); i = j+1; continue;
+    }
+
+    // identifiers / keywords
+    if (isA(c)){
+      let j = i; while (j < code.length && isAN(code[j])) j++;
+      const w = code.slice(i,j), lw = w.toLowerCase();
+      push(KEYWORDS.has(lw) ? lw : "id", w);
+      i = j; continue;
+    }
+
+    // operators, longest first
+    const ops = ["===","!==","<=>","**=","...","<<=",">>=","==","!=","<>","<=",">=","&&","||","**",
+                 "++","--","+=","-=","*=","/=",".=","%=","=>","->","::","?:"];
+    const three = code.substr(i,3), two = code.substr(i,2);
+    const found = ops.find(o => code.startsWith(o, i));
+    if (found){ push("op", found); i += found.length; continue; }
+    if ("+-*/%.=<>!?:;,()[]{}&|".includes(c)){ push("op", c); i++; continue; }
+
+    throw new PhpError(`Unexpected character "${c}"`, line);
+  }
+  push("eof", null);
+  return T;
+}
+
+class PhpError extends Error {
+  constructor(msg, line){ super(msg); this.line = line; }
+}
+
+/* ---------- parser ---------- */
+function parse(tokens){
+  let p = 0;
+  const peek = (k=0) => tokens[p+k];
+  const at = (type, value) => peek().type === type && (value === undefined || peek().value === value);
+  const atOp = v => at("op", v);
+  const next = () => tokens[p++];
+  const eat = (type, value) => {
+    if (!at(type, value)) throw new PhpError(
+      `Expected ${value !== undefined ? '"'+value+'"' : type} but found ` +
+      (peek().type === "eof" ? "the end of the file" : '"'+peek().value+'"'), peek().line);
+    return tokens[p++];
+  };
+  const opt = v => { if (atOp(v)){ p++; return true; } return false; };
+
+  function program(){ const b = []; while (!at("eof")) b.push(statement()); return {t:"block", body:b}; }
+
+  function block(){
+    if (opt("{")){ const b = []; while (!atOp("}")) b.push(statement()); eat("op","}"); return {t:"block", body:b}; }
+    return {t:"block", body:[statement()]};
+  }
+
+  function statement(){
+    const tk = peek();
+    if (tk.type === "inline"){ p++; return {t:"echo", args:[{t:"lit", v:tk.value}]}; }
+    if (tk.type === "echo" || tk.type === "print"){
+      p++; const args = [expr()];
+      while (opt(",")) args.push(expr());
+      opt(";"); return {t:"echo", args};
+    }
+    if (tk.type === "if") return ifStmt();
+    if (tk.type === "while"){ p++; eat("op","("); const c = expr(); eat("op",")");
+      return {t:"while", cond:c, body:block()}; }
+    if (tk.type === "do"){ p++; const b = block(); eat("while"); eat("op","(");
+      const c = expr(); eat("op",")"); opt(";"); return {t:"dowhile", cond:c, body:b}; }
+    if (tk.type === "for"){ p++; eat("op","(");
+      const init = atOp(";") ? null : expr(); eat("op",";");
+      const cond = atOp(";") ? null : expr(); eat("op",";");
+      const step = atOp(")") ? null : expr(); eat("op",")");
+      return {t:"for", init, cond, step, body:block()}; }
+    if (tk.type === "foreach"){ p++; eat("op","("); const src = expr(); eat("as");
+      let k = null, v = eat("var").value;
+      if (opt("=>")){ k = v; v = eat("var").value; }
+      eat("op",")"); return {t:"foreach", src, k, v, body:block()}; }
+    if (tk.type === "switch") return switchStmt();
+    if (tk.type === "break"){ p++; let n = 1; if (at("num")) n = next().value; opt(";"); return {t:"break", n}; }
+    if (tk.type === "continue"){ p++; let n = 1; if (at("num")) n = next().value; opt(";"); return {t:"continue", n}; }
+    if (tk.type === "return"){ p++; const v = atOp(";") ? null : expr(); opt(";"); return {t:"return", v}; }
+    if (tk.type === "function" && peek(1).type === "id"){
+      p++; const name = eat("id").value; eat("op","(");
+      const params = [];
+      while (!atOp(")")){
+        const pn = eat("var").value;
+        let def = null; if (opt("=")) def = expr();
+        params.push({name:pn, def});
+        if (!opt(",")) break;
+      }
+      eat("op",")");
+      return {t:"func", name, params, body:block()};
+    }
+    if (atOp("{")) return block();
+    if (atOp(";")){ p++; return {t:"block", body:[]}; }
+    const e = expr(); opt(";"); return {t:"expr", e};
+  }
+
+  function ifStmt(){
+    eat("if"); eat("op","("); const c = expr(); eat("op",")");
+    const then = block();
+    let alt = null;
+    if (at("elseif")){ const save = p; tokens[p] = {type:"if", value:"if", line:peek().line}; alt = ifStmt(); }
+    else if (at("else")){ p++; alt = at("if") ? ifStmt() : block(); }
+    return {t:"if", cond:c, then, alt};
+  }
+
+  function switchStmt(){
+    eat("switch"); eat("op","("); const d = expr(); eat("op",")"); eat("op","{");
+    const cases = [];
+    while (!atOp("}")){
+      if (at("case")){ p++; const v = expr(); if(!opt(":")) opt(";");
+        const body = []; while (!at("case") && !at("default") && !atOp("}")) body.push(statement());
+        cases.push({test:v, body}); }
+      else if (at("default")){ p++; if(!opt(":")) opt(";");
+        const body = []; while (!at("case") && !at("default") && !atOp("}")) body.push(statement());
+        cases.push({test:null, body}); }
+      else throw new PhpError("Only case and default are allowed inside a switch", peek().line);
+    }
+    eat("op","}");
+    return {t:"switch", disc:d, cases};
+  }
+
+  /* expressions, loosest binding first */
+  function expr(){ return assign(); }
+
+  function assign(){
+    const left = ternary();
+    const ops = ["=","+=","-=","*=","/=",".=","%="];
+    for (const o of ops){
+      if (atOp(o)){ p++; const right = assign(); return {t:"assign", op:o, target:left, value:right}; }
+    }
+    return left;
+  }
+  function ternary(){
+    let c = orE();
+    if (atOp("?")){ p++;
+      if (opt(":")) return {t:"ternary", cond:c, a:null, b:assign()};
+      const a = assign(); eat("op",":"); const b = assign();
+      return {t:"ternary", cond:c, a, b};
+    }
+    return c;
+  }
+  function orE(){ let l = andE(); while (atOp("||") || at("or")){ p++; l = {t:"bin", op:"||", l, r:andE()}; } return l; }
+  function andE(){ let l = eqE(); while (atOp("&&") || at("and")){ p++; l = {t:"bin", op:"&&", l, r:eqE()}; } return l; }
+  function eqE(){ let l = relE();
+    while (atOp("==")||atOp("!=")||atOp("===")||atOp("!==")||atOp("<>")){
+      const o = next().value; l = {t:"bin", op:o === "<>" ? "!=" : o, l, r:relE()}; } return l; }
+  function relE(){ let l = addE();
+    while (atOp("<")||atOp(">")||atOp("<=")||atOp(">=")||atOp("<=>")){
+      const o = next().value; l = {t:"bin", op:o, l, r:addE()}; } return l; }
+  function addE(){ let l = mulE();
+    while (atOp("+")||atOp("-")||atOp(".")){ const o = next().value; l = {t:"bin", op:o, l, r:mulE()}; } return l; }
+  function mulE(){ let l = powE();
+    while (atOp("*")||atOp("/")||atOp("%")){ const o = next().value; l = {t:"bin", op:o, l, r:powE()}; } return l; }
+  function powE(){ const l = unary(); if (atOp("**")){ p++; return {t:"bin", op:"**", l, r:powE()}; } return l; }
+
+  function unary(){
+    if (atOp("!")){ p++; return {t:"un", op:"!", e:unary()}; }
+    if (atOp("-")){ p++; return {t:"un", op:"-", e:unary()}; }
+    if (atOp("+")){ p++; return {t:"un", op:"+", e:unary()}; }
+    if (atOp("++")){ p++; const e = unary(); return {t:"preinc", e, by:1}; }
+    if (atOp("--")){ p++; const e = unary(); return {t:"preinc", e, by:-1}; }
+    // casts: (int) (float) (string) (bool)
+    if (atOp("(") && peek(1).type === "id" &&
+        ["int","integer","float","double","string","bool","boolean"].includes(String(peek(1).value).toLowerCase()) &&
+        tokens[p+2] && tokens[p+2].type === "op" && tokens[p+2].value === ")"){
+      p++; const kind = String(next().value).toLowerCase(); p++;
+      return {t:"cast", kind, e:unary()};
+    }
+    return postfix();
+  }
+
+  function postfix(){
+    let e = primary();
+    for(;;){
+      if (atOp("[")){ p++;
+        if (atOp("]")){ p++; e = {t:"push", arr:e}; continue; }
+        const k = expr(); eat("op","]"); e = {t:"index", arr:e, key:k}; continue; }
+      if (atOp("(")){ p++; const args = [];
+        while (!atOp(")")){ args.push(expr()); if (!opt(",")) break; }
+        eat("op",")"); e = {t:"call", callee:e, args}; continue; }
+      if (atOp("++")){ p++; e = {t:"postinc", e, by:1}; continue; }
+      if (atOp("--")){ p++; e = {t:"postinc", e, by:-1}; continue; }
+      break;
+    }
+    return e;
+  }
+
+  function primary(){
+    const tk = peek();
+    if (tk.type === "num"){ p++; return {t:"lit", v:tk.value}; }
+    if (tk.type === "str"){ p++; return {t:"lit", v:tk.value}; }
+    if (tk.type === "istr"){ p++; return {t:"istr", parts:tk.value}; }
+    if (tk.type === "true"){ p++; return {t:"lit", v:true}; }
+    if (tk.type === "false"){ p++; return {t:"lit", v:false}; }
+    if (tk.type === "null"){ p++; return {t:"lit", v:null}; }
+    if (tk.type === "var"){ p++; return {t:"var", name:tk.value}; }
+    if (tk.type === "id"){
+      if (String(tk.value).toLowerCase() === "array" && peek(1).type === "op" && peek(1).value === "("){
+        p += 2; return arrayLiteral(")");
+      }
+      p++; return {t:"name", name:tk.value};
+    }
+    if (atOp("[")){ p++; return arrayLiteral("]"); }
+    if (atOp("(")){ p++; const e = expr(); eat("op",")"); return e; }
+    throw new PhpError(
+      tk.type === "eof" ? "The code ended sooner than expected - check your brackets"
+                        : `I did not expect "${tk.value}" here`, tk.line);
+  }
+
+  function arrayLiteral(closer){
+    const items = [];
+    while (!atOp(closer)){
+      let k = null, v = expr();
+      if (opt("=>")){ k = v; v = expr(); }
+      items.push({k, v});
+      if (!opt(",")) break;
+    }
+    eat("op", closer);
+    return {t:"array", items};
+  }
+
+  return program();
+}
+
+/* ---------- helpers PHP-style ---------- */
+const BREAK = {sig:"break"}, CONTINUE = {sig:"continue"};
+class ReturnSig { constructor(v){ this.v = v; } }
+
+function toStr(v){
+  if (v === null || v === undefined) return "";
+  if (typeof v === "boolean") return v ? "1" : "";
+  if (typeof v === "number"){
+    if (Number.isInteger(v)) return String(v);
+    if (!isFinite(v)) return v > 0 ? "INF" : "-INF";
+    let s = String(parseFloat(v.toPrecision(14)));
+    if (s.includes("e")) s = v.toFixed(10).replace(/0+$/,"").replace(/\.$/,"");
+    return s;
+  }
+  if (v instanceof PhpArray) return "Array";
+  return String(v);
+}
+function toNum(v){
+  if (typeof v === "number") return v;
+  if (typeof v === "boolean") return v ? 1 : 0;
+  if (v === null || v === undefined) return 0;
+  if (v instanceof PhpArray) return v.size ? 1 : 0;
+  const m = String(v).trim().match(/^[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?/);
+  return m ? parseFloat(m[0]) : 0;
+}
+function truthy(v){
+  if (v === null || v === undefined || v === false) return false;
+  if (v === true) return true;
+  if (typeof v === "number") return v !== 0;
+  if (typeof v === "string") return v !== "" && v !== "0";
+  if (v instanceof PhpArray) return v.size > 0;
+  return true;
+}
+const isNumericStr = s => typeof s === "string" && s.trim() !== "" && !isNaN(Number(s.trim()));
+function looseEq(a,b){
+  if (a === null && b === null) return true;
+  if (typeof a === "boolean" || typeof b === "boolean") return truthy(a) === truthy(b);
+  if (a === null) return b === null || b === "" || b === 0 || b === false || (b instanceof PhpArray && !b.size);
+  if (b === null) return looseEq(b,a);
+  if (typeof a === "number" && typeof b === "number") return a === b;
+  // PHP 8: number vs non-numeric string compares as strings
+  if (typeof a === "number" && typeof b === "string") return isNumericStr(b) ? a === toNum(b) : toStr(a) === b;
+  if (typeof a === "string" && typeof b === "number") return looseEq(b,a);
+  if (typeof a === "string" && typeof b === "string")
+    return (isNumericStr(a) && isNumericStr(b)) ? toNum(a) === toNum(b) : a === b;
+  if (a instanceof PhpArray && b instanceof PhpArray){
+    if (a.size !== b.size) return false;
+    for (const [k,v] of a.entries()){ if (!b.has(k) || !looseEq(v, b.get(k))) return false; }
+    return true;
+  }
+  return a === b;
+}
+function strictEq(a,b){
+  const t = x => x === null ? "null" : x instanceof PhpArray ? "array" : typeof x;
+  if (t(a) !== t(b)) return false;
+  if (a instanceof PhpArray){
+    if (a.size !== b.size) return false;
+    const ae = a.entries(), be = b.entries();
+    for (let i=0;i<ae.length;i++){ if (ae[i][0]!==be[i][0] || !strictEq(ae[i][1],be[i][1])) return false; }
+    return true;
+  }
+  return a === b;
+}
+function cmp(a,b){
+  if (typeof a === "string" && typeof b === "string" && !(isNumericStr(a) && isNumericStr(b)))
+    return a < b ? -1 : a > b ? 1 : 0;
+  const x = toNum(a), y = toNum(b);
+  return x < y ? -1 : x > y ? 1 : 0;
+}
+function typeName(v){
+  if (v === null || v === undefined) return "NULL";
+  if (typeof v === "boolean") return "bool";
+  if (typeof v === "number") return Number.isInteger(v) ? "int" : "float";
+  if (typeof v === "string") return "string";
+  if (v instanceof PhpArray) return "array";
+  return "mixed";
+}
+
+/* ---------- the interpreter ---------- */
+function run(src, opts){
+  opts = opts || {};
+  const out = [];
+  const echo = s => {
+    out.push(s);
+    if (out.length > 20000) throw new PhpError("This printed far too much - is a loop never ending?");
+  };
+  const globals = new Map();
+  const funcs = new Map();
+  let steps = 0;
+  const tick = () => { if (++steps > 800000) throw new PhpError("This is taking forever - check for a loop with no way out"); };
+
+  const ast = parse(lex(src));
+
+  /* --- lvalue resolution --- */
+  function container(node, scope, create){
+    // returns {get(), set(v)}
+    if (node.t === "var"){
+      return { get: () => scope.has(node.name) ? scope.get(node.name) : null,
+               set: v => scope.set(node.name, v) };
+    }
+    if (node.t === "index" || node.t === "push"){
+      const base = container(node.arr, scope, true);
+      let arr = base.get();
+      if (!(arr instanceof PhpArray)){
+        if (arr === null || arr === "" || arr === undefined){ arr = new PhpArray(); base.set(arr); }
+        else if (typeof arr === "string" && node.t === "index"){
+          const k = toNum(ev(node.key, scope));
+          return { get: () => arr[k] !== undefined ? arr[k] : "", set: () => {} };
+        }
+      }
+      if (node.t === "push") return { get: () => null, set: v => arr.push(v) };
+      const key = ev(node.key, scope);
+      return { get: () => arr.has(key) ? arr.get(key) : null, set: v => arr.set(key, v) };
+    }
+    throw new PhpError("You can only assign to a variable or an array item");
+  }
+
+  /* --- expressions --- */
+  function ev(n, scope){
+    tick();
+    switch (n.t){
+      case "lit": return n.v;
+      case "istr": {
+        let s = "";
+        for (const part of n.parts){
+          if (part.lit !== undefined){ s += part.lit; continue; }
+          if (part.expr !== undefined){ s += toStr(ev(parse(lex("<?php " + part.expr + ";")).body[0].e, scope)); continue; }
+          let v = scope.has(part.v) ? scope.get(part.v) : null;
+          if (part.idx !== null && part.idx !== undefined && v instanceof PhpArray){
+            let key = part.idx;
+            if (/^['"].*['"]$/.test(key)) key = key.slice(1,-1);
+            else if (/^\$/.test(key)) key = scope.get(key.slice(1));
+            else if (/^-?\d+$/.test(key)) key = parseInt(key,10);
+            v = v.has(key) ? v.get(key) : null;
+          }
+          s += toStr(v);
+        }
+        return s;
+      }
+      case "var":
+        if (!scope.has(n.name)){
+          if (opts.warn) opts.warn(`Warning: Undefined variable $${n.name}`);
+          return null;
+        }
+        return scope.get(n.name);
+      case "name": {
+        const low = n.name.toLowerCase();
+        if (low === "true") return true;
+        if (low === "false") return false;
+        if (low === "null") return null;
+        if (low === "php_eol") return "\n";
+        return n.name; // bare word, PHP 8 would error; we are gentle
+      }
+      case "array": {
+        const a = new PhpArray();
+        for (const it of n.items){
+          const v = ev(it.v, scope);
+          if (it.k === null) a.push(v); else a.set(ev(it.k, scope), v);
+        }
+        return a;
+      }
+      case "index": {
+        const base = ev(n.arr, scope);
+        const key = ev(n.key, scope);
+        if (base instanceof PhpArray){
+          if (!base.has(key)){
+            if (opts.warn) opts.warn(`Warning: Undefined array key ${typeof key === "string" ? '"'+key+'"' : key}`);
+            return null;
+          }
+          return base.get(key);
+        }
+        if (typeof base === "string"){ const c = base[toNum(key)]; return c === undefined ? "" : c; }
+        return null;
+      }
+      case "assign": {
+        const box = container(n.target, scope, true);
+        let v = ev(n.value, scope);
+        if (n.op !== "="){
+          const cur = box.get();
+          v = n.op === "+=" ? arith("+", cur, v) : n.op === "-=" ? arith("-", cur, v)
+            : n.op === "*=" ? arith("*", cur, v) : n.op === "/=" ? arith("/", cur, v)
+            : n.op === "%=" ? arith("%", cur, v) : toStr(cur) + toStr(v);
+        }
+        if (v instanceof PhpArray) v = v.clone();   // PHP copies arrays on assignment
+        box.set(v);
+        return v;
+      }
+      case "bin": {
+        const o = n.op;
+        if (o === "&&") return truthy(ev(n.l, scope)) ? truthy(ev(n.r, scope)) : false;
+        if (o === "||") return truthy(ev(n.l, scope)) ? true : truthy(ev(n.r, scope));
+        const a = ev(n.l, scope), b = ev(n.r, scope);
+        switch (o){
+          case ".": return toStr(a) + toStr(b);
+          case "==": return looseEq(a,b);
+          case "!=": return !looseEq(a,b);
+          case "===": return strictEq(a,b);
+          case "!==": return !strictEq(a,b);
+          case "<": return cmp(a,b) < 0;
+          case ">": return cmp(a,b) > 0;
+          case "<=": return cmp(a,b) <= 0;
+          case ">=": return cmp(a,b) >= 0;
+          case "<=>": return cmp(a,b);
+          default: return arith(o, a, b);
+        }
+      }
+      case "un": {
+        const v = ev(n.e, scope);
+        if (n.op === "!") return !truthy(v);
+        if (n.op === "-") return -toNum(v);
+        return toNum(v);
+      }
+      case "cast": {
+        const v = ev(n.e, scope);
+        if (n.kind === "int" || n.kind === "integer") return Math.trunc(toNum(v));
+        if (n.kind === "float" || n.kind === "double") return toNum(v);
+        if (n.kind === "string") return toStr(v);
+        return truthy(v);
+      }
+      case "ternary": {
+        const c = ev(n.cond, scope);
+        if (n.a === null) return truthy(c) ? c : ev(n.b, scope);
+        return truthy(c) ? ev(n.a, scope) : ev(n.b, scope);
+      }
+      case "preinc": { const box = container(n.e, scope, true);
+        const v = toNum(box.get()) + n.by; box.set(v); return v; }
+      case "postinc": { const box = container(n.e, scope, true);
+        const old = box.get(); const cur = old === null ? 0 : toNum(old);
+        box.set(cur + n.by); return cur; }
+      case "push": throw new PhpError("$array[] can only be used when assigning something to it");
+      case "call": return call(n, scope);
+    }
+    throw new PhpError("I do not know how to run that yet");
+  }
+
+  function arith(op, a, b){
+    if (op === "+" && a instanceof PhpArray && b instanceof PhpArray){
+      const r = a.clone(); for (const [k,v] of b.entries()) if (!r.has(k)) r.set(k,v); return r;
+    }
+    const x = toNum(a), y = toNum(b);
+    switch (op){
+      case "+": return x + y;
+      case "-": return x - y;
+      case "*": return x * y;
+      case "/": if (y === 0) throw new PhpError("Division by zero"); return x / y;
+      case "%": if (Math.trunc(y) === 0) throw new PhpError("Modulo by zero");
+                return Math.trunc(x) % Math.trunc(y);
+      case "**": return Math.pow(x, y);
+    }
+  }
+
+  function call(n, scope){
+    if (n.callee.t !== "name") throw new PhpError("That is not something you can call");
+    const name = n.callee.name.toLowerCase();
+    const args = n.args.map(a => ev(a, scope));
+
+    if (funcs.has(name)){
+      const f = funcs.get(name);
+      const local = new Map();
+      f.params.forEach((prm, i) => {
+        let v = i < args.length ? args[i] : (prm.def ? ev(prm.def, new Map()) : null);
+        if (i >= args.length && !prm.def)
+          throw new PhpError(`Too few arguments to ${f.name}() - it needs $${prm.name}`);
+        if (v instanceof PhpArray) v = v.clone();
+        local.set(prm.name, v);
+      });
+      try { exec(f.body, local); }
+      catch (e){ if (e instanceof ReturnSig) return e.v; throw e; }
+      return null;
+    }
+    if (BUILTINS[name]) return BUILTINS[name](args, echo);
+    throw new PhpError(`Call to undefined function ${n.callee.name}()`);
+  }
+
+  /* --- statements --- */
+  function exec(n, scope){
+    tick();
+    switch (n.t){
+      case "block": for (const s of n.body) exec(s, scope); return;
+      case "echo": for (const a of n.args) echo(toStr(ev(a, scope))); return;
+      case "expr": ev(n.e, scope); return;
+      case "func": funcs.set(n.name.toLowerCase(), n); return;
+      case "if":
+        if (truthy(ev(n.cond, scope))) exec(n.then, scope);
+        else if (n.alt) exec(n.alt, scope);
+        return;
+      case "while":
+        while (truthy(ev(n.cond, scope))){
+          try { exec(n.body, scope); }
+          catch(e){ if (e === BREAK) break; if (e === CONTINUE) continue; throw e; }
+        }
+        return;
+      case "dowhile":
+        do {
+          try { exec(n.body, scope); }
+          catch(e){ if (e === BREAK) break; if (e === CONTINUE) continue; throw e; }
+        } while (truthy(ev(n.cond, scope)));
+        return;
+      case "for": {
+        if (n.init) ev(n.init, scope);
+        while (n.cond ? truthy(ev(n.cond, scope)) : true){
+          try { exec(n.body, scope); }
+          catch(e){ if (e === BREAK) break; if (e !== CONTINUE) throw e; }
+          if (n.step) ev(n.step, scope);
+        }
+        return;
+      }
+      case "foreach": {
+        const src = ev(n.src, scope);
+        if (!(src instanceof PhpArray))
+          throw new PhpError("foreach only works on an array");
+        for (const [k,v] of src.entries()){
+          if (n.k !== null) scope.set(n.k, k);
+          scope.set(n.v, v instanceof PhpArray ? v.clone() : v);
+          try { exec(n.body, scope); }
+          catch(e){ if (e === BREAK) break; if (e !== CONTINUE) throw e; }
+        }
+        return;
+      }
+      case "switch": {
+        const d = ev(n.disc, scope);
+        let started = false;
+        try {
+          for (const c of n.cases){
+            if (!started && c.test !== null && looseEq(d, ev(c.test, scope))) started = true;
+            if (!started && c.test === null) started = true;
+            if (started) for (const s of c.body) exec(s, scope);
+          }
+        } catch(e){ if (e !== BREAK) throw e; }
+        return;
+      }
+      case "break": throw BREAK;
+      case "continue": throw CONTINUE;
+      case "return": throw new ReturnSig(n.v ? ev(n.v, scope) : null);
+    }
+    throw new PhpError("I do not know how to run that statement yet");
+  }
+
+  // hoist function declarations so you can call one before it is written
+  (function hoist(node){
+    if (node.t === "block") node.body.forEach(hoist);
+    else if (node.t === "func") funcs.set(node.name.toLowerCase(), node);
+  })(ast);
+
+  try { exec(ast, globals); }
+  catch(e){
+    if (e instanceof ReturnSig) { /* return at top level: fine */ }
+    else throw e;
+  }
+  return out.join("");
+}
+
+/* ---------- built-in functions ---------- */
+/* PHP rounds 12.825 to 12.83, JavaScript's toFixed gives 12.82, because the binary
+   value is really 12.8249999... PHP pre-rounds to 15 significant digits first, so
+   we do the same. Without this the money in the receipt challenge is a penny out. */
+function phpRound(n, d){
+  d = d || 0;
+  const m = Math.pow(10, d);
+  const scaled = parseFloat((n * m).toPrecision(15));
+  const r = scaled < 0 ? -Math.round(-scaled) : Math.round(scaled);
+  return r / m;
+}
+function toFixedPhp(n, d){ return phpRound(n, d).toFixed(d); }
+
+function fmt(spec, args){
+  let i = 0;
+  return spec.replace(/%(-)?(\+)?(0)?(\d+)?(?:\.(\d+))?([sdfb%])/g,
+    (m, left, plus, zero, width, prec, kind) => {
+      if (kind === "%") return "%";
+      let v = args[i++];
+      let s;
+      if (kind === "d"){ const nn = Math.trunc(toNum(v)); s = String(nn); if (plus && nn >= 0) s = "+" + s; }
+      else if (kind === "f"){ s = toFixedPhp(toNum(v), prec === undefined ? 6 : +prec); }
+      else if (kind === "b"){ s = (toNum(v) >>> 0).toString(2); }
+      else { s = toStr(v); if (prec !== undefined) s = s.slice(0, +prec); }
+      if (width){
+        const w = +width;
+        if (s.length < w) s = left ? s.padEnd(w) : s.padStart(w, zero && !left ? "0" : " ");
+      }
+      return s;
+    });
+}
+function dump(v, indent){
+  const pad = " ".repeat(indent);
+  if (v === null || v === undefined) return pad + "NULL\n";
+  if (typeof v === "boolean") return pad + `bool(${v})\n`;
+  if (typeof v === "number") return Number.isInteger(v) ? pad + `int(${v})\n` : pad + `float(${toStr(v)})\n`;
+  if (typeof v === "string") return pad + `string(${v.length}) "${v}"\n`;
+  if (v instanceof PhpArray){
+    let s = pad + `array(${v.size}) {\n`;
+    for (const [k,val] of v.entries()){
+      s += pad + "  [" + (typeof k === "number" ? k : `"${k}"`) + "]=>\n";
+      s += dump(val, indent + 2);
+    }
+    return s + pad + "}\n";
+  }
+  return pad + "mixed\n";
+}
+function printR(v, indent){
+  if (v instanceof PhpArray){
+    const pad = " ".repeat(indent);
+    let s = "Array\n" + pad + "(\n";
+    for (const [k,val] of v.entries())
+      s += pad + "    [" + k + "] => " + printR(val, indent + 8).replace(/^\s+/, s0 => s0) + "\n";
+    return s + pad + ")\n";
+  }
+  return toStr(v);
+}
+const arr = v => v instanceof PhpArray ? v : new PhpArray();
+const BUILTINS = {
+  // output
+  print_r: (a, echo) => { const s = printR(a[0], 0); if (truthy(a[1])) return s; echo(s); return true; },
+  var_dump: (a, echo) => { a.forEach(v => echo(dump(v, 0))); return null; },
+  printf: (a, echo) => { const s = fmt(toStr(a[0]), a.slice(1)); echo(s); return s.length; },
+  sprintf: a => fmt(toStr(a[0]), a.slice(1)),
+  number_format: a => {
+    const n = toNum(a[0]), d = a.length > 1 ? Math.trunc(toNum(a[1])) : 0;
+    const dp = a.length > 2 ? toStr(a[2]) : ".", ts = a.length > 3 ? toStr(a[3]) : ",";
+    const parts = toFixedPhp(Math.abs(n), d).split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ts);
+    return (n < 0 ? "-" : "") + parts.join(parts[1] ? dp : "");
+  },
+  // strings
+  strlen: a => toStr(a[0]).length,
+  strtoupper: a => toStr(a[0]).toUpperCase(),
+  strtolower: a => toStr(a[0]).toLowerCase(),
+  ucfirst: a => { const s = toStr(a[0]); return s.charAt(0).toUpperCase() + s.slice(1); },
+  lcfirst: a => { const s = toStr(a[0]); return s.charAt(0).toLowerCase() + s.slice(1); },
+  ucwords: a => toStr(a[0]).replace(/(^|\s)(\S)/g, (m,p,c) => p + c.toUpperCase()),
+  trim: a => toStr(a[0]).trim(),
+  ltrim: a => toStr(a[0]).replace(/^\s+/, ""),
+  rtrim: a => toStr(a[0]).replace(/\s+$/, ""),
+  strrev: a => toStr(a[0]).split("").reverse().join(""),
+  substr: a => { const s = toStr(a[0]); let st = Math.trunc(toNum(a[1]));
+    if (st < 0) st = Math.max(0, s.length + st);
+    return a.length > 2 ? (toNum(a[2]) < 0 ? s.slice(st, s.length + toNum(a[2])) : s.substr(st, Math.trunc(toNum(a[2])))) : s.slice(st); },
+  strpos: a => { const i = toStr(a[0]).indexOf(toStr(a[1]), a.length > 2 ? toNum(a[2]) : 0); return i === -1 ? false : i; },
+  strrpos: a => { const i = toStr(a[0]).lastIndexOf(toStr(a[1])); return i === -1 ? false : i; },
+  str_contains: a => toStr(a[0]).includes(toStr(a[1])),
+  str_starts_with: a => toStr(a[0]).startsWith(toStr(a[1])),
+  str_ends_with: a => toStr(a[0]).endsWith(toStr(a[1])),
+  str_replace: a => toStr(a[2]).split(toStr(a[0])).join(toStr(a[1])),
+  str_repeat: a => toStr(a[0]).repeat(Math.max(0, Math.trunc(toNum(a[1])))),
+  str_pad: a => { const s = toStr(a[0]), len = Math.trunc(toNum(a[1])), p = a.length>2?toStr(a[2]):" ";
+    const type = a.length > 3 ? toNum(a[3]) : 1;
+    if (s.length >= len) return s;
+    if (type === 0) return s.padStart(len, p);
+    if (type === 2){ const total = len - s.length, l = Math.floor(total/2);
+      return p.repeat(l).slice(0,l) + s + p.repeat(total-l).slice(0,total-l); }
+    return s.padEnd(len, p); },
+  str_split: a => { const s = toStr(a[0]), n = a.length>1?Math.max(1,Math.trunc(toNum(a[1]))):1;
+    const r = new PhpArray(); for (let i=0;i<s.length;i+=n) r.push(s.substr(i,n)); return r; },
+  nl2br: a => toStr(a[0]).replace(/\n/g, "<br>\n"),
+  htmlspecialchars: a => toStr(a[0]).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;"),
+  implode: a => { const [g,arr2] = a[0] instanceof PhpArray ? ["", a[0]] : [toStr(a[0]), arr(a[1])];
+    return arr2.values().map(toStr).join(a[0] instanceof PhpArray ? "" : g); },
+  join: a => BUILTINS.implode(a),
+  explode: a => { const r = new PhpArray(); toStr(a[1]).split(toStr(a[0])).forEach(x => r.push(x)); return r; },
+  // numbers
+  abs: a => Math.abs(toNum(a[0])),
+  round: a => phpRound(toNum(a[0]), a.length>1?Math.trunc(toNum(a[1])):0),
+  floor: a => Math.floor(toNum(a[0])),
+  ceil: a => Math.ceil(toNum(a[0])),
+  sqrt: a => Math.sqrt(toNum(a[0])),
+  pow: a => Math.pow(toNum(a[0]), toNum(a[1])),
+  intdiv: a => { const y = Math.trunc(toNum(a[1])); if (!y) throw new PhpError("Division by zero");
+    return Math.trunc(Math.trunc(toNum(a[0])) / y); },
+  max: a => { const vals = a.length === 1 && a[0] instanceof PhpArray ? a[0].values() : a;
+    return vals.reduce((m,v) => cmp(v,m) > 0 ? v : m); },
+  min: a => { const vals = a.length === 1 && a[0] instanceof PhpArray ? a[0].values() : a;
+    return vals.reduce((m,v) => cmp(v,m) < 0 ? v : m); },
+  rand: a => a.length >= 2 ? Math.floor(Math.random()*(toNum(a[1])-toNum(a[0])+1))+Math.trunc(toNum(a[0]))
+                           : Math.floor(Math.random()*32768),
+  mt_rand: a => BUILTINS.rand(a),
+  random_int: a => BUILTINS.rand(a),
+  // types
+  intval: a => Math.trunc(toNum(a[0])),
+  floatval: a => toNum(a[0]),
+  strval: a => toStr(a[0]),
+  boolval: a => truthy(a[0]),
+  gettype: a => { const t = typeName(a[0]);
+    return t === "int" ? "integer" : t === "float" ? "double" : t === "bool" ? "boolean" : t; },
+  is_numeric: a => typeof a[0] === "number" || isNumericStr(a[0]),
+  is_int: a => typeof a[0] === "number" && Number.isInteger(a[0]),
+  is_integer: a => BUILTINS.is_int(a),
+  is_float: a => typeof a[0] === "number" && !Number.isInteger(a[0]),
+  is_string: a => typeof a[0] === "string",
+  is_bool: a => typeof a[0] === "boolean",
+  is_array: a => a[0] instanceof PhpArray,
+  is_null: a => a[0] === null || a[0] === undefined,
+  isset: a => a[0] !== null && a[0] !== undefined,
+  empty: a => !truthy(a[0]),
+  // arrays
+  count: a => a[0] instanceof PhpArray ? a[0].size : (typeof a[0] === "string" ? 1 : (a[0]===null?0:1)),
+  sizeof: a => BUILTINS.count(a),
+  array_sum: a => arr(a[0]).values().reduce((s,v) => s + toNum(v), 0),
+  array_product: a => arr(a[0]).values().reduce((s,v) => s * toNum(v), 1),
+  array_keys: a => { const r = new PhpArray(); arr(a[0]).keys().forEach(k => r.push(k)); return r; },
+  array_values: a => { const r = new PhpArray(); arr(a[0]).values().forEach(v => r.push(v)); return r; },
+  array_reverse: a => { const r = new PhpArray(); arr(a[0]).values().reverse().forEach(v => r.push(v)); return r; },
+  array_unique: a => { const r = new PhpArray(); const seen = new Set();
+    for (const [k,v] of arr(a[0]).entries()){ const s = toStr(v); if (!seen.has(s)){ seen.add(s); r.set(k,v); } } return r; },
+  array_merge: a => { const r = new PhpArray();
+    a.forEach(x => { for (const [k,v] of arr(x).entries()) typeof k === "number" ? r.push(v) : r.set(k,v); }); return r; },
+  array_slice: a => { const vals = arr(a[0]).values();
+    const off = Math.trunc(toNum(a[1])), len = a.length > 2 ? Math.trunc(toNum(a[2])) : undefined;
+    const r = new PhpArray(); vals.slice(off, len === undefined ? undefined : (len < 0 ? vals.length+len : off+len))
+      .forEach(v => r.push(v)); return r; },
+  in_array: a => arr(a[1]).values().some(v => truthy(a[2]) ? strictEq(v,a[0]) : looseEq(v,a[0])),
+  array_search: a => { for (const [k,v] of arr(a[1]).entries()) if (looseEq(v,a[0])) return k; return false; },
+  array_key_exists: a => arr(a[1]).has(a[0]),
+  array_flip: a => { const r = new PhpArray(); for (const [k,v] of arr(a[0]).entries()) r.set(v,k); return r; },
+  array_fill: a => { const r = new PhpArray(); const st = Math.trunc(toNum(a[0])), n = Math.trunc(toNum(a[1]));
+    for (let i=0;i<n;i++) r.set(st+i, a[2]); return r; },
+  array_combine: a => { const ks = arr(a[0]).values(), vs = arr(a[1]).values(); const r = new PhpArray();
+    ks.forEach((k,i) => r.set(k, vs[i])); return r; },
+  range: a => { const r = new PhpArray();
+    if (typeof a[0] === "string" && typeof a[1] === "string" && a[0].length === 1 && a[1].length === 1 && !isNumericStr(a[0])){
+      const s = a[0].charCodeAt(0), e = a[1].charCodeAt(0), st = s <= e ? 1 : -1;
+      for (let c = s; st > 0 ? c <= e : c >= e; c += st) r.push(String.fromCharCode(c));
+      return r;
+    }
+    const s = toNum(a[0]), e = toNum(a[1]); let st = a.length > 2 ? Math.abs(toNum(a[2])) : 1;
+    if (!st) st = 1;
+    if (s <= e) for (let v = s; v <= e + 1e-9; v += st) r.push(v);
+    else for (let v = s; v >= e - 1e-9; v -= st) r.push(v);
+    return r; },
+  compact: () => new PhpArray(),
+  // these mutate in PHP; our evaluator passes the same object, so they work
+  sort: a => { const v = arr(a[0]).values().sort(cmp); a[0].map.clear(); a[0].next = 0; v.forEach(x => a[0].push(x)); return true; },
+  rsort: a => { const v = arr(a[0]).values().sort((x,y)=>cmp(y,x)); a[0].map.clear(); a[0].next = 0; v.forEach(x => a[0].push(x)); return true; },
+  asort: a => { const e = arr(a[0]).entries().sort((x,y)=>cmp(x[1],y[1])); a[0].map.clear(); e.forEach(([k,v]) => a[0].map.set(k,v)); return true; },
+  arsort: a => { const e = arr(a[0]).entries().sort((x,y)=>cmp(y[1],x[1])); a[0].map.clear(); e.forEach(([k,v]) => a[0].map.set(k,v)); return true; },
+  ksort: a => { const e = arr(a[0]).entries().sort((x,y)=>cmp(x[0],y[0])); a[0].map.clear(); e.forEach(([k,v]) => a[0].map.set(k,v)); return true; },
+  krsort: a => { const e = arr(a[0]).entries().sort((x,y)=>cmp(y[0],x[0])); a[0].map.clear(); e.forEach(([k,v]) => a[0].map.set(k,v)); return true; },
+  shuffle: a => { const v = arr(a[0]).values(); for (let i=v.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [v[i],v[j]]=[v[j],v[i]]; }
+    a[0].map.clear(); a[0].next=0; v.forEach(x => a[0].push(x)); return true; },
+  array_push: a => { for (let i=1;i<a.length;i++) a[0].push(a[i]); return a[0].size; },
+  array_pop: a => { const ks = a[0].keys(); if (!ks.length) return null;
+    const k = ks[ks.length-1], v = a[0].get(k); a[0].del(k);
+    if (typeof k === "number") a[0].next = Math.max(0, a[0].next - 1); return v; },
+  array_shift: a => { const e = a[0].entries(); if (!e.length) return null;
+    const v = e[0][1]; a[0].map.clear(); a[0].next = 0;
+    e.slice(1).forEach(([k,val]) => typeof k === "number" ? a[0].push(val) : a[0].set(k,val)); return v; },
+  array_unshift: a => { const e = a[0].entries(); a[0].map.clear(); a[0].next = 0;
+    for (let i=1;i<a.length;i++) a[0].push(a[i]);
+    e.forEach(([k,val]) => typeof k === "number" ? a[0].push(val) : a[0].set(k,val)); return a[0].size; },
+  array_rand: a => { const ks = a[0].keys(); return ks[Math.floor(Math.random()*ks.length)]; },
+  unset: () => null,
+  // misc
+  date: a => { const f = toStr(a[0]); const d = new Date();
+    const pad = n => String(n).padStart(2,"0");
+    return f.replace(/[YmdHisjnAy]/g, ch => ({
+      Y:String(d.getFullYear()), y:String(d.getFullYear()).slice(2), m:pad(d.getMonth()+1), n:String(d.getMonth()+1),
+      d:pad(d.getDate()), j:String(d.getDate()), H:pad(d.getHours()), i:pad(d.getMinutes()),
+      s:pad(d.getSeconds()), A:d.getHours()<12?"AM":"PM"
+    })[ch] || ch); },
+  php_eol: () => "\n"
+};
+
+return { run, PhpError, toStr };
+})();
+
+/* ============================================================================
+   THE CHALLENGES
+   ========================================================================== */
+const N = "\n";
+const CH = [
+{g:"Lesson 1 · echo and variables", id:"e1", title:"Say hello",
+ brief:`<p>Every program starts here. Use <code>echo</code> to print a piece of text.</p>
+        <p>Remember the three parts: the word <code>echo</code>, the text in quotes, and the
+        semicolon at the end.</p>`,
+ want:"Hello world",
+ starter:`<?php\n// print Hello world\n`,
+ tests:[{out:"Hello world"}],
+ sol:`<?php\necho "Hello world";\n`},
+
+{g:"Lesson 1 · echo and variables", id:"e2", title:"Three lines",
+ brief:`<p>Print three lines. <code>\\n</code> means "new line", and it only works inside
+        <b>double</b> quotes.</p>`,
+ want:"one\ntwo\nthree",
+ starter:`<?php\n`,
+ tests:[{out:"one\ntwo\nthree"}],
+ sol:`<?php\necho "one\\n";\necho "two\\n";\necho "three";\n`},
+
+{g:"Lesson 1 · echo and variables", id:"e3", title:"Your first variable",
+ brief:`<p>Put the text <code>Fatima</code> into a variable called <code>$name</code>,
+        then print <code>Hello Fatima</code> using that variable.</p>
+        <p>Don't type the name twice — the point is that the greeting comes from the box.</p>`,
+ want:"Hello Fatima",
+ starter:`<?php\n$name = \n`,
+ tests:[{out:"Hello Fatima"}, {re:/\$name\s*=/, msg:"Store the name in a variable called $name"},
+        {re:/echo[^;]*\$name/, msg:"Your echo must use $name, not the word Fatima"}],
+ sol:`<?php\n$name = "Fatima";\necho "Hello $name";\n`},
+
+{g:"Lesson 1 · echo and variables", id:"e4", title:"Glue it together",
+ brief:`<p>Two variables are given to you. Print the full name with a space in the middle,
+        using the dot operator.</p>
+        <p>Careful: <code>$a . $b</code> gives <code>FatimaHassan</code>. You have to supply
+        the space yourself.</p>`,
+ want:"Fatima Hassan",
+ starter:`<?php\n$first = "Fatima";\n$last = "Hassan";\n\n`,
+ tests:[{out:"Fatima Hassan"}, {re:/\./, msg:"Use the dot operator to join them"}],
+ sol:`<?php\n$first = "Fatima";\n$last = "Hassan";\n\necho $first . " " . $last;\n`},
+
+{g:"Lesson 2 · types and strings", id:"t1", title:"Shout it",
+ brief:`<p>Print the word in <code>$word</code> in capitals.</p>
+        <p>You want <code>strtoupper()</code>.</p>`,
+ want:"PROGRAMMING",
+ starter:`<?php\n$word = "programming";\n\n`,
+ tests:[{out:"PROGRAMMING"}, {re:/strtoupper/, msg:"Use strtoupper()"}],
+ sol:`<?php\n$word = "programming";\n\necho strtoupper($word);\n`},
+
+{g:"Lesson 2 · types and strings", id:"t2", title:"How long is it?",
+ brief:`<p>Print the sentence, then how many characters it has, in this shape:</p>
+        <pre>PHP is fun has 10 characters</pre>
+        <p><code>strlen()</code> counts every character, spaces included.</p>`,
+ want:"PHP is fun has 10 characters",
+ starter:`<?php\n$s = "PHP is fun";\n\n`,
+ tests:[{out:"PHP is fun has 10 characters"}, {re:/strlen/, msg:"Use strlen() — don't just type 10"}],
+ sol:`<?php\n$s = "PHP is fun";\n\necho $s . " has " . strlen($s) . " characters";\n`},
+
+{g:"Lesson 2 · types and strings", id:"t3", title:"Tidy the name",
+ brief:`<p><code>$messy</code> has spaces round it and no capital letter. Print it clean:
+        no spaces at the edges, first letter capital.</p>
+        <p>You need two functions, one inside the other. Work out which runs first.</p>`,
+ want:"Fatima",
+ starter:`<?php\n$messy = "   fatima   ";\n\n`,
+ tests:[{out:"Fatima"}, {re:/trim/, msg:"Use trim() to remove the spaces"},
+        {re:/ucfirst/, msg:"Use ucfirst() for the capital letter"}],
+ sol:`<?php\n$messy = "   fatima   ";\n\necho ucfirst(trim($messy));\n`},
+
+{g:"Lesson 3 · operators", id:"o1", title:"The four sums",
+ brief:`<p>Print the four operations on <code>$a</code> and <code>$b</code>, one per line,
+        exactly in this shape:</p>
+        <pre>24 + 7 = 31\n24 - 7 = 17\n24 * 7 = 168\n24 % 7 = 3</pre>
+        <p>Remember maths does not happen inside quotes — use brackets.</p>`,
+ want:"24 + 7 = 31\n24 - 7 = 17\n24 * 7 = 168\n24 % 7 = 3",
+ starter:`<?php\n$a = 24;\n$b = 7;\n\n`,
+ tests:[{out:"24 + 7 = 31\n24 - 7 = 17\n24 * 7 = 168\n24 % 7 = 3"},
+        {re:/\$a\s*\+\s*\$b/, msg:"Calculate it from $a and $b — don't type the answers"}],
+ sol:`<?php\n$a = 24;\n$b = 7;\n\necho "$a + $b = " . ($a + $b) . "\\n";\necho "$a - $b = " . ($a - $b) . "\\n";\necho "$a * $b = " . ($a * $b) . "\\n";\necho "$a % $b = " . ($a % $b);\n`},
+
+{g:"Lesson 3 · operators", id:"o2", title:"Take the discount off",
+ brief:`<p>A price and a discount percentage are given. Print the final price.</p>
+        <p>100 with 25% off is 75.</p>`,
+ want:"75",
+ starter:`<?php\n$price = 100;\n$discount = 25;\n\n`,
+ tests:[{out:"75"}, {re:/\$discount/, msg:"Work it out from $discount, don't hard-code 75"}],
+ sol:`<?php\n$price = 100;\n$discount = 25;\n\necho $price - ($price * $discount / 100);\n`},
+
+{g:"Lesson 4 · conditions", id:"c1", title:"Old enough?",
+ brief:`<p>If <code>$age</code> is 18 or more print <code>adult</code>, otherwise print
+        <code>child</code>.</p>
+        <p>Try changing $age to 15 and running it again before you check.</p>`,
+ want:"adult",
+ starter:`<?php\n$age = 20;\n\n`,
+ tests:[{out:"adult"}, {re:/if\s*\(/, msg:"Use an if"},
+        {alt:{code:`$age = 12;`, out:"child"}, msg:"With $age = 12 it should print child"}],
+ sol:`<?php\n$age = 20;\n\nif ($age >= 18) {\n    echo "adult";\n} else {\n    echo "child";\n}\n`},
+
+{g:"Lesson 4 · conditions", id:"c2", title:"Even or odd",
+ brief:`<p>Print <code>Even</code> or <code>Odd</code> for <code>$n</code>.</p>
+        <p>The trick is <code>%</code>: if <code>$n % 2</code> is 0, it's even.</p>`,
+ want:"Odd",
+ starter:`<?php\n$n = 7;\n\n`,
+ tests:[{out:"Odd"}, {re:/%/, msg:"Use the % operator"},
+        {alt:{code:`$n = 10;`, out:"Even"}, msg:"With $n = 10 it should print Even"}],
+ sol:`<?php\n$n = 7;\n\nif ($n % 2 == 0) {\n    echo "Even";\n} else {\n    echo "Odd";\n}\n`},
+
+{g:"Lesson 4 · conditions", id:"c3", title:"The grade chain",
+ brief:`<p>Print the letter grade for <code>$mark</code>:</p>
+        <ul><li>18 or more → <code>A</code></li><li>16 or more → <code>B</code></li>
+        <li>14 or more → <code>C</code></li><li>10 or more → <code>D</code></li>
+        <li>anything else → <code>F</code></li></ul>
+        <p class="tip">⚠️ The order of your conditions decides the answer. Strictest first.</p>`,
+ want:"B",
+ starter:`<?php\n$mark = 16;\n\n`,
+ tests:[{out:"B"},
+        {alt:{code:`$mark = 19;`, out:"A"}, msg:"19 must give A — if it gives D, your conditions are in the wrong order"},
+        {alt:{code:`$mark = 11;`, out:"D"}, msg:"11 should give D"},
+        {alt:{code:`$mark = 4;`, out:"F"}, msg:"4 should give F"}],
+ sol:`<?php\n$mark = 16;\n\nif ($mark >= 18) {\n    echo "A";\n} elseif ($mark >= 16) {\n    echo "B";\n} elseif ($mark >= 14) {\n    echo "C";\n} elseif ($mark >= 10) {\n    echo "D";\n} else {\n    echo "F";\n}\n`},
+
+{g:"Lesson 4 · conditions", id:"c4", title:"Two conditions",
+ brief:`<p>A student passes only if the grade is 10 or more <b>and</b> attendance is 75 or more.
+        Print <code>Passed</code> or <code>Failed</code>.</p>`,
+ want:"Failed",
+ starter:`<?php\n$grade = 14;\n$attendance = 60;\n\n`,
+ tests:[{out:"Failed"}, {re:/&&/, msg:"Use && to join the two conditions"},
+        {alt:{code:`$grade = 14;\n$attendance = 90;`, out:"Passed"}, msg:"14 and 90 should pass"}],
+ sol:`<?php\n$grade = 14;\n$attendance = 60;\n\nif ($grade >= 10 && $attendance >= 75) {\n    echo "Passed";\n} else {\n    echo "Failed";\n}\n`},
+
+{g:"Lesson 5 · loops", id:"l1", title:"Count to five",
+ brief:`<p>Print the numbers 1 to 5, each on its own line, using a <code>for</code> loop.</p>`,
+ want:"1\n2\n3\n4\n5",
+ starter:`<?php\n`,
+ tests:[{out:"1\n2\n3\n4\n5"}, {re:/for\s*\(/, msg:"Use a for loop, not five echo lines"}],
+ sol:`<?php\nfor ($i = 1; $i <= 5; $i++) {\n    echo $i . "\\n";\n}\n`},
+
+{g:"Lesson 5 · loops", id:"l2", title:"Backwards",
+ brief:`<p>Count down from 5 to 1 on one line, separated by spaces, then the word
+        <code>GO</code>.</p>`,
+ want:"5 4 3 2 1 GO",
+ starter:`<?php\n`,
+ tests:[{out:"5 4 3 2 1 GO"}, {re:/for\s*\(|while\s*\(/, msg:"Use a loop"}],
+ sol:`<?php\nfor ($i = 5; $i >= 1; $i--) {\n    echo $i . " ";\n}\necho "GO";\n`},
+
+{g:"Lesson 5 · loops", id:"l3", title:"Add them all up",
+ brief:`<p>Add up every number from 1 to 100 and print the total.</p>
+        <p>Start your total at 0 <b>before</b> the loop. The answer is 5050 — if you get
+        something close but not exact, your loop is off by one.</p>`,
+ want:"5050",
+ starter:`<?php\n$total = 0;\n\n`,
+ tests:[{out:"5050"}, {re:/for\s*\(|while\s*\(/, msg:"Use a loop — don't just type 5050"}],
+ sol:`<?php\n$total = 0;\n\nfor ($i = 1; $i <= 100; $i++) {\n    $total += $i;\n}\necho $total;\n`},
+
+{g:"Lesson 5 · loops", id:"l4", title:"Times table",
+ brief:`<p>Print the 7 times table, from 1 to 5, in this shape:</p>
+        <pre>7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35</pre>`,
+ want:"7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35",
+ starter:`<?php\n$table = 7;\n\n`,
+ tests:[{out:"7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35"},
+        {re:/for\s*\(|while\s*\(/, msg:"Use a loop"}],
+ sol:`<?php\n$table = 7;\n\nfor ($i = 1; $i <= 5; $i++) {\n    echo "$table x $i = " . ($table * $i) . "\\n";\n}\n`},
+
+{g:"Lesson 5 · loops", id:"l5", title:"Skip and stop",
+ brief:`<p>Loop from 1 to 10. <b>Skip</b> the number 4 entirely, and <b>stop</b> completely
+        when you reach 8. Print the rest separated by spaces.</p>
+        <p>You want <code>continue</code> and <code>break</code>.</p>`,
+ want:"1 2 3 5 6 7",
+ starter:`<?php\n`,
+ tests:[{out:"1 2 3 5 6 7"}, {re:/continue/, msg:"Use continue to skip the 4"},
+        {re:/break/, msg:"Use break to stop at 8"}],
+ sol:`<?php\nfor ($i = 1; $i <= 10; $i++) {\n    if ($i == 4) continue;\n    if ($i == 8) break;\n    echo $i . " ";\n}\n`},
+
+{g:"Lesson 5 · loops", id:"l6", title:"The triangle",
+ brief:`<p>Print this, using a loop:</p><pre>*\n**\n***\n****\n*****</pre>
+        <p><code>str_repeat("*", $i)</code> makes this short. A loop inside a loop also works.</p>`,
+ want:"*\n**\n***\n****\n*****",
+ starter:`<?php\n`,
+ tests:[{out:"*\n**\n***\n****\n*****"}, {re:/for\s*\(|while\s*\(/, msg:"Use a loop"}],
+ sol:`<?php\nfor ($i = 1; $i <= 5; $i++) {\n    echo str_repeat("*", $i) . "\\n";\n}\n`},
+
+{g:"Lesson 5 · loops", id:"l7", title:"FizzBuzz",
+ brief:`<p>The famous one. For 1 to 15:</p>
+        <ul><li>divisible by 3 <b>and</b> 5 → <code>FizzBuzz</code></li>
+        <li>divisible by 3 → <code>Fizz</code></li>
+        <li>divisible by 5 → <code>Buzz</code></li>
+        <li>otherwise → the number</li></ul>
+        <p>One per line. <span class="tip" style="display:inline-block;margin:6px 0 0">
+        Think hard about the order — get it wrong and 15 prints Fizz.</span></p>`,
+ want:"1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz",
+ starter:`<?php\n`,
+ tests:[{out:"1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz"},
+        {re:/for\s*\(|while\s*\(/, msg:"Use a loop"}],
+ sol:`<?php\nfor ($i = 1; $i <= 15; $i++) {\n    if ($i % 3 == 0 && $i % 5 == 0) {\n        echo "FizzBuzz\\n";\n    } elseif ($i % 3 == 0) {\n        echo "Fizz\\n";\n    } elseif ($i % 5 == 0) {\n        echo "Buzz\\n";\n    } else {\n        echo $i . "\\n";\n    }\n}\n`},
+
+{g:"Lesson 6 · arrays", id:"a1", title:"First and last",
+ brief:`<p>Print the first colour, then the last one, separated by a space.</p>
+        <p>Don't type index 2 — work the last index out from <code>count()</code>, so it still
+        works if the list grows.</p>`,
+ want:"red blue",
+ starter:`<?php\n$colors = ["red", "green", "blue"];\n\n`,
+ tests:[{out:"red blue"}, {re:/count\s*\(/, msg:"Use count() to find the last index"}],
+ sol:`<?php\n$colors = ["red", "green", "blue"];\n\necho $colors[0] . " " . $colors[count($colors) - 1];\n`},
+
+{g:"Lesson 6 · arrays", id:"a2", title:"List them out",
+ brief:`<p>Print every fruit on its own line, numbered:</p>
+        <pre>1. apple\n2. banana\n3. grape</pre>
+        <p>Use a <code>foreach</code>. The key starts at 0, so you'll need to add 1.</p>`,
+ want:"1. apple\n2. banana\n3. grape",
+ starter:`<?php\n$fruits = ["apple", "banana", "grape"];\n\n`,
+ tests:[{out:"1. apple\n2. banana\n3. grape"}, {re:/foreach/, msg:"Use a foreach loop"}],
+ sol:`<?php\n$fruits = ["apple", "banana", "grape"];\n\nforeach ($fruits as $i => $fruit) {\n    echo ($i + 1) . ". " . $fruit . "\\n";\n}\n`},
+
+{g:"Lesson 6 · arrays", id:"a3", title:"The average",
+ brief:`<p>Print how many marks there are, the total, and the average — in this shape:</p>
+        <pre>Count: 5\nTotal: 68\nAverage: 13.6</pre>`,
+ want:"Count: 5\nTotal: 68\nAverage: 13.6",
+ starter:`<?php\n$marks = [18, 14, 9, 11, 16];\n\n`,
+ tests:[{out:"Count: 5\nTotal: 68\nAverage: 13.6"},
+        {re:/count\s*\(/, msg:"Use count()"}, {re:/array_sum|foreach|for\s*\(/, msg:"Add them up with array_sum() or a loop"}],
+ sol:`<?php\n$marks = [18, 14, 9, 11, 16];\n\necho "Count: " . count($marks) . "\\n";\necho "Total: " . array_sum($marks) . "\\n";\necho "Average: " . (array_sum($marks) / count($marks));\n`},
+
+{g:"Lesson 6 · arrays", id:"a4", title:"Read the record",
+ brief:`<p>An associative array describes one student. Print it like this:</p>
+        <pre>name: Fatima\nage: 20\nmajor: Computer Science</pre>
+        <p>Use <code>foreach ($student as $key => $value)</code>.</p>`,
+ want:"name: Fatima\nage: 20\nmajor: Computer Science",
+ starter:`<?php\n$student = [\n    "name"  => "Fatima",\n    "age"   => 20,\n    "major" => "Computer Science"\n];\n\n`,
+ tests:[{out:"name: Fatima\nage: 20\nmajor: Computer Science"},
+        {re:/foreach/, msg:"Use a foreach with the key and the value"},
+        {re:/=>/, msg:"You need $key => $value in the foreach"}],
+ sol:`<?php\n$student = [\n    "name"  => "Fatima",\n    "age"   => 20,\n    "major" => "Computer Science"\n];\n\nforeach ($student as $key => $value) {\n    echo "$key: $value\\n";\n}\n`},
+
+{g:"Lesson 6 · arrays", id:"a5", title:"Pass or fail",
+ brief:`<p>Walk the class and print each name with Pass or Fail (pass is 10 or more):</p>
+        <pre>Fatima: Pass\nSara: Fail\nLina: Pass</pre>
+        <p>This is an array of arrays — exactly what a database table looks like.</p>`,
+ want:"Fatima: Pass\nSara: Fail\nLina: Pass",
+ starter:`<?php\n$class = [\n    ["name" => "Fatima", "grade" => 17],\n    ["name" => "Sara",   "grade" => 8],\n    ["name" => "Lina",   "grade" => 12],\n];\n\n`,
+ tests:[{out:"Fatima: Pass\nSara: Fail\nLina: Pass"}, {re:/foreach/, msg:"Use a foreach"}],
+ sol:`<?php\n$class = [\n    ["name" => "Fatima", "grade" => 17],\n    ["name" => "Sara",   "grade" => 8],\n    ["name" => "Lina",   "grade" => 12],\n];\n\nforeach ($class as $s) {\n    echo $s["name"] . ": " . ($s["grade"] >= 10 ? "Pass" : "Fail") . "\\n";\n}\n`},
+
+{g:"Lesson 6 · arrays", id:"a6", title:"Count the letters",
+ brief:`<p>Count how many times each letter appears in <code>$word</code> and print:</p>
+        <pre>p=1\nr=2\no=1\ng=2\na=1\nm=2\ni=1\nn=1</pre>
+        <p>Hints: <code>str_split()</code> gives you an array of letters. Build an associative
+        array where the letter is the key. <code>isset()</code> tells you if a key exists yet.</p>`,
+ want:"p=1\nr=2\no=1\ng=2\na=1\nm=2\ni=1\nn=1",
+ starter:`<?php\n$word = "programming";\n$count = [];\n\n`,
+ tests:[{out:"p=1\nr=2\no=1\ng=2\na=1\nm=2\ni=1\nn=1"}, {re:/foreach|for\s*\(/, msg:"Use a loop"}],
+ sol:`<?php\n$word = "programming";\n$count = [];\n\nforeach (str_split($word) as $letter) {\n    if (isset($count[$letter])) {\n        $count[$letter] = $count[$letter] + 1;\n    } else {\n        $count[$letter] = 1;\n    }\n}\n\nforeach ($count as $letter => $n) {\n    echo "$letter=$n\\n";\n}\n`},
+
+{g:"Lesson 7 · functions", id:"f1", title:"Write your first function",
+ brief:`<p>Write a function called <code>square</code> that takes a number and
+        <b>returns</b> it multiplied by itself. Then print <code>square(7)</code>.</p>
+        <p class="tip">⚠️ <code>return</code>, not <code>echo</code>. The difference matters —
+        the next challenge proves why.</p>`,
+ want:"49",
+ starter:`<?php\n// write the function here\n\n\necho square(7);\n`,
+ tests:[{out:"49"}, {re:/function\s+square/i, msg:"Your function must be called square"},
+        {re:/return/, msg:"It has to RETURN the answer, not echo it"}],
+ sol:`<?php\nfunction square($n) {\n    return $n * $n;\n}\n\necho square(7);\n`},
+
+{g:"Lesson 7 · functions", id:"f2", title:"Why return matters",
+ brief:`<p>Using your <code>square</code> function, print the sum of
+        <code>square(3)</code> and <code>square(4)</code>.</p>
+        <p>This only works because the function returns. If it echoed, there would be nothing
+        to add.</p>`,
+ want:"25",
+ starter:`<?php\nfunction square($n) {\n    return $n * $n;\n}\n\n`,
+ tests:[{out:"25"}, {re:/square\s*\(\s*3\s*\)/, msg:"Call square(3)"},
+        {re:/square\s*\(\s*4\s*\)/, msg:"Call square(4)"}],
+ sol:`<?php\nfunction square($n) {\n    return $n * $n;\n}\n\necho square(3) + square(4);\n`},
+
+{g:"Lesson 7 · functions", id:"f3", title:"A default value",
+ brief:`<p>Write <code>discount($price, $percent = 10)</code> that returns the price after the
+        discount. Then print both calls shown in the starter.</p>
+        <p>The first should give 180 (the default 10%), the second 150.</p>`,
+ want:"180\n150",
+ starter:`<?php\n// write discount() here\n\n\necho discount(200) . "\\n";\necho discount(200, 25);\n`,
+ tests:[{out:"180\n150"}, {re:/function\s+discount/i, msg:"Call the function discount"},
+        {re:/=\s*10/, msg:"Give $percent a default value of 10"}],
+ sol:`<?php\nfunction discount($price, $percent = 10) {\n    return $price - ($price * $percent / 100);\n}\n\necho discount(200) . "\\n";\necho discount(200, 25);\n`},
+
+{g:"Lesson 7 · functions", id:"f4", title:"Count the vowels",
+ brief:`<p>Write <code>countVowels($word)</code> that returns how many vowels (a e i o u)
+        are in a word. Print the result for <code>Programming</code>.</p>
+        <p>Hints: <code>strtolower()</code>, <code>str_split()</code>, <code>in_array()</code>.</p>`,
+ want:"3",
+ starter:`<?php\n// write countVowels() here\n\n\necho countVowels("Programming");\n`,
+ tests:[{out:"3"}, {re:/function\s+countVowels/i, msg:"Call the function countVowels"},
+        {re:/return/, msg:"It must return the count"}],
+ sol:`<?php\nfunction countVowels($word) {\n    $vowels = ["a", "e", "i", "o", "u"];\n    $n = 0;\n    foreach (str_split(strtolower($word)) as $letter) {\n        if (in_array($letter, $vowels)) {\n            $n++;\n        }\n    }\n    return $n;\n}\n\necho countVowels("Programming");\n`},
+
+{g:"Lesson 7 · functions", id:"f5", title:"Two functions working together",
+ brief:`<p>Write two functions:</p>
+        <ul><li><code>letterGrade($mark)</code> — returns A/B/C/D/F as in the grade chain</li>
+        <li><code>hasPassed($mark)</code> — returns true if 10 or more</li></ul>
+        <p>Then print, for each student: <code>Name - mark - grade - Pass/Fail</code>.</p>`,
+ want:"Fatima - 17 - B - Pass\nSara - 8 - F - Fail\nLina - 12 - D - Pass",
+ starter:`<?php\n$class = [\n    ["name" => "Fatima", "mark" => 17],\n    ["name" => "Sara",   "mark" => 8],\n    ["name" => "Lina",   "mark" => 12],\n];\n\n// your two functions here\n\n\n// then the loop\n`,
+ tests:[{out:"Fatima - 17 - B - Pass\nSara - 8 - F - Fail\nLina - 12 - D - Pass"},
+        {re:/function\s+letterGrade/i, msg:"Write a letterGrade() function"},
+        {re:/function\s+hasPassed/i, msg:"Write a hasPassed() function"},
+        {re:/foreach/, msg:"Loop the class with foreach"}],
+ sol:`<?php\n$class = [\n    ["name" => "Fatima", "mark" => 17],\n    ["name" => "Sara",   "mark" => 8],\n    ["name" => "Lina",   "mark" => 12],\n];\n\nfunction letterGrade($mark) {\n    if ($mark >= 18) return "A";\n    if ($mark >= 16) return "B";\n    if ($mark >= 14) return "C";\n    if ($mark >= 10) return "D";\n    return "F";\n}\n\nfunction hasPassed($mark) {\n    return $mark >= 10;\n}\n\nforeach ($class as $s) {\n    echo $s["name"] . " - " . $s["mark"] . " - " . letterGrade($s["mark"])\n       . " - " . (hasPassed($s["mark"]) ? "Pass" : "Fail") . "\\n";\n}\n`},
+
+{g:"Boss challenges", id:"b1", title:"The receipt",
+ brief:`<p>Print a receipt. Every number must be <b>calculated</b> from the variables, and
+        money shown to 2 decimal places with <code>number_format()</code>.</p>
+        <pre>Item     : Notebook\nPrice    : 4.75\nQuantity : 3\nSubtotal : 14.25\nDiscount : 1.43\nTOTAL    : 12.83</pre>
+        <p>Discount is 10% of the subtotal. Total is subtotal minus discount.</p>`,
+ want:"Item     : Notebook\nPrice    : 4.75\nQuantity : 3\nSubtotal : 14.25\nDiscount : 1.43\nTOTAL    : 12.83",
+ starter:`<?php\n$item = "Notebook";\n$price = 4.75;\n$qty = 3;\n$discountPct = 10;\n\n`,
+ tests:[{out:"Item     : Notebook\nPrice    : 4.75\nQuantity : 3\nSubtotal : 14.25\nDiscount : 1.43\nTOTAL    : 12.83"},
+        {re:/\$price\s*\*\s*\$qty|\$qty\s*\*\s*\$price/, msg:"Work the subtotal out from $price and $qty"}],
+ sol:`<?php\n$item = "Notebook";\n$price = 4.75;\n$qty = 3;\n$discountPct = 10;\n\n$subtotal = $price * $qty;\n$discount = $subtotal * $discountPct / 100;\n$total = $subtotal - $discount;\n\necho "Item     : $item\\n";\necho "Price    : " . number_format($price, 2) . "\\n";\necho "Quantity : $qty\\n";\necho "Subtotal : " . number_format($subtotal, 2) . "\\n";\necho "Discount : " . number_format($discount, 2) . "\\n";\necho "TOTAL    : " . number_format($total, 2);\n`},
+
+{g:"Boss challenges", id:"b2", title:"The class report",
+ brief:`<p>The full thing. Print a lined-up table, then the statistics underneath:</p>
+        <pre>NAME       MARK GRADE RESULT\n--------------------------------\nFatima       17     B   Pass\nSara          8     F   Fail\nLina         12     D   Pass\nNour         19     A   Pass\n--------------------------------\nAverage: 14\nPassed: 3 of 4</pre>
+        <p><code>printf("%-10s %4d %5s %6s\\n", ...)</code> handles the columns.
+        The dashes are 32 long. Average is rounded to a whole number.</p>`,
+ want:"NAME       MARK GRADE RESULT\n--------------------------------\nFatima       17     B   Pass\nSara          8     F   Fail\nLina         12     D   Pass\nNour         19     A   Pass\n--------------------------------\nAverage: 14\nPassed: 3 of 4",
+ starter:`<?php\n$class = [\n    ["name" => "Fatima", "mark" => 17],\n    ["name" => "Sara",   "mark" => 8],\n    ["name" => "Lina",   "mark" => 12],\n    ["name" => "Nour",   "mark" => 19],\n];\n\n`,
+ tests:[{out:"NAME       MARK GRADE RESULT\n--------------------------------\nFatima       17     B   Pass\nSara          8     F   Fail\nLina         12     D   Pass\nNour         19     A   Pass\n--------------------------------\nAverage: 14\nPassed: 3 of 4"},
+        {re:/foreach/, msg:"Loop the class"}],
+ sol:`<?php\n$class = [\n    ["name" => "Fatima", "mark" => 17],\n    ["name" => "Sara",   "mark" => 8],\n    ["name" => "Lina",   "mark" => 12],\n    ["name" => "Nour",   "mark" => 19],\n];\n\nfunction letterGrade($mark) {\n    if ($mark >= 18) return "A";\n    if ($mark >= 16) return "B";\n    if ($mark >= 14) return "C";\n    if ($mark >= 10) return "D";\n    return "F";\n}\n\necho "NAME       MARK GRADE RESULT\\n";\necho str_repeat("-", 32) . "\\n";\n\n$total = 0;\n$passed = 0;\nforeach ($class as $s) {\n    printf("%-10s %4d %5s %6s\\n", $s["name"], $s["mark"],\n           letterGrade($s["mark"]), $s["mark"] >= 10 ? "Pass" : "Fail");\n    $total += $s["mark"];\n    if ($s["mark"] >= 10) $passed++;\n}\n\necho str_repeat("-", 32) . "\\n";\necho "Average: " . round($total / count($class)) . "\\n";\necho "Passed: $passed of " . count($class);\n`}
+];
+
+/* ============================================================================
+   UI
+   ========================================================================== */
+const $ = id => document.getElementById(id);
+const KEY = "phplab_v1";
+let state = { solved:{}, code:{}, i:0, tries:0 };
+try { const r = localStorage.getItem(KEY); if (r) state = Object.assign(state, JSON.parse(r)); } catch(e){}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} };
+
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const cur = () => CH[state.i];
+
+function gutter(){
+  const lines = $("code").value.split("\n").length;
+  $("gutter").textContent = Array.from({length:Math.max(lines,1)}, (_,i) => i+1).join("\n");
+}
+
+function load(i){
+  state.i = Math.max(0, Math.min(CH.length - 1, i));
+  state.tries = 0;
+  const c = cur();
+  $("crumb").textContent = `${c.g} — ${state.i+1} of ${CH.length}`;
+  $("brief").innerHTML = `<div class="num">Challenge ${state.i+1}${state.solved[c.id] ? " · solved ✓" : ""}</div>
+    <h2>${esc(c.title)}</h2>${c.brief}
+    <div class="want"><b>Expected output</b><pre>${esc(c.want)}</pre></div>`;
+  $("code").value = state.code[c.id] !== undefined ? state.code[c.id] : c.starter;
+  $("out").innerHTML = '<span class="muted">Output appears here when you press Run.</span>';
+  $("verdict").className = "verdict";
+  $("hintCount").textContent = "";
+  $("prevBtn").disabled = state.i === 0;
+  $("nextBtn").disabled = state.i === CH.length - 1;
+  gutter(); save();
+}
+
+function exec(code){
+  const warns = [];
+  try {
+    const out = PHP.run(code, { warn: w => warns.push(w) });
+    return { out, warns };
+  } catch(e){
+    return { out:null, warns, error: (e.line ? `Parse error on line ${e.line}: ` : "Error: ") + e.message };
+  }
+}
+
+function showOut(r){
+  if (r.error){ $("out").innerHTML = `<span class="err">${esc(r.error)}</span>`; return; }
+  let html = "";
+  if (r.warns.length) html += `<span class="err">${esc(r.warns.join("\n"))}\n</span>`;
+  html += r.out === "" ? '<span class="muted">(nothing was printed)</span>' : esc(r.out);
+  $("out").innerHTML = html;
+}
+
+$("runBtn").onclick = () => {
+  const c = cur();
+  state.code[c.id] = $("code").value; save();
+  showOut(exec($("code").value));
+  $("verdict").className = "verdict";
+};
+
+$("checkBtn").onclick = () => {
+  const c = cur(), code = $("code").value;
+  state.code[c.id] = code; save();
+  const r = exec(code);
+  showOut(r);
+  const v = $("verdict");
+
+  if (r.error){
+    v.className = "verdict show no";
+    v.innerHTML = `<b>It didn't run</b>${esc(r.error)}<br><span style="opacity:.8">
+      Fix the error first — the check can't judge code that won't run.</span>`;
+    state.tries++; hintIfStuck(); return;
+  }
+
+  const fails = [];
+  for (const t of c.tests){
+    if (t.out !== undefined){
+      if (r.out.replace(/[ \t]+$/gm,"").trimEnd() !== t.out.trimEnd())
+        fails.push({diff:true, got:r.out, want:t.out});
+    } else if (t.re){
+      if (!t.re.test(code)) fails.push({msg:t.msg});
+    } else if (t.alt){
+      const swapped = code.replace(/^\s*\$\w+\s*=[^;]*;\s*$/gm, m => {
+        const name = m.trim().split("=")[0].trim();
+        const rep = t.alt.code.split("\n").find(l => l.trim().startsWith(name));
+        return rep !== undefined ? rep : m;
+      });
+      const r2 = exec(swapped);
+      if (r2.error || r2.out.trimEnd() !== t.alt.out.trimEnd()) fails.push({msg:t.msg});
+    }
+  }
+
+  if (!fails.length){
+    state.solved[c.id] = 1; save();
+    const done = Object.keys(state.solved).length;
+    v.className = "verdict show ok";
+    v.innerHTML = `<b>✅ Correct</b>That's ${done} of ${CH.length} solved.` +
+      (state.i < CH.length-1 ? ` <button class="btn" style="margin-left:8px;padding:6px 14px"
+         onclick="window.__next()">next challenge →</button>` : " You've finished every challenge.");
+    $("brief").querySelector(".num").textContent = `Challenge ${state.i+1} · solved ✓`;
+  } else {
+    state.tries++;
+    v.className = "verdict show no";
+    const d = fails.find(f => f.diff);
+    v.innerHTML = `<b>❌ Not yet</b>` +
+      (fails.filter(f => f.msg).length
+        ? `<ul>${fails.filter(f=>f.msg).map(f=>`<li>${esc(f.msg)}</li>`).join("")}</ul>` : "") +
+      (d ? `<div class="diff">
+        <div><b>your output</b><pre>${esc(d.got) || "<i>nothing</i>"}</pre></div>
+        <div><b>expected</b><pre>${esc(d.want)}</pre></div></div>` : "");
+    hintIfStuck();
+  }
+};
+window.__next = () => load(state.i + 1);
+
+function hintIfStuck(){
+  $("hintCount").textContent = state.tries >= 3
+    ? "stuck? the solution button is there"
+    : `${3 - state.tries} more ${3-state.tries===1?"try":"tries"} before the solution unlocks`;
+}
+
+$("solBtn").onclick = () => {
+  if (state.tries < 3 && !state.solved[cur().id]){
+    alert("Try it at least three times first. Struggling is where it sticks — the button unlocks after that.");
+    return;
+  }
+  if (!confirm("Show the solution? Read it, close it, then type it yourself — don't paste.")) return;
+  $("code").value = cur().sol; gutter();
+  $("out").innerHTML = '<span class="muted">This is one correct answer. Run it, then rewrite it yourself.</span>';
+};
+$("resetBtn").onclick = () => { $("code").value = cur().starter; gutter(); };
+$("prevBtn").onclick = () => load(state.i - 1);
+$("nextBtn").onclick = () => load(state.i + 1);
+
+/* editor niceties */
+const ta = $("code");
+ta.addEventListener("input", gutter);
+ta.addEventListener("scroll", () => { $("gutter").scrollTop = ta.scrollTop; });
+ta.addEventListener("keydown", e => {
+  if (e.key === "Tab"){
+    e.preventDefault();
+    const s = ta.selectionStart, en = ta.selectionEnd;
+    ta.value = ta.value.slice(0,s) + "    " + ta.value.slice(en);
+    ta.selectionStart = ta.selectionEnd = s + 4; gutter();
+  }
+  if (e.key === "Enter"){            // keep the indent of the line you're on
+    const s = ta.selectionStart;
+    const lineStart = ta.value.lastIndexOf("\n", s - 1) + 1;
+    const indent = (ta.value.slice(lineStart, s).match(/^[ \t]*/) || [""])[0];
+    const extra = /\{\s*$/.test(ta.value.slice(lineStart, s)) ? "    " : "";
+    if (indent || extra){
+      e.preventDefault();
+      const ins = "\n" + indent + extra;
+      ta.value = ta.value.slice(0,s) + ins + ta.value.slice(ta.selectionEnd);
+      ta.selectionStart = ta.selectionEnd = s + ins.length; gutter();
+    }
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter"){ e.preventDefault(); $("runBtn").click(); }
+});
+
+/* challenge picker */
+function picker(){
+  const solved = Object.keys(state.solved).length;
+  $("pstat").textContent = `${solved} of ${CH.length} solved`;
+  let html = "", g = null;
+  CH.forEach((c, i) => {
+    if (c.g !== g){ g = c.g; html += `<div class="pgroup">${esc(g)}</div>`; }
+    html += `<button class="pitem${i===state.i?" cur":""}${state.solved[c.id]?" done":""}" data-i="${i}">
+      <span class="mk">${state.solved[c.id] ? "✓" : i+1}</span><span>${esc(c.title)}</span></button>`;
+  });
+  $("plist").innerHTML = html;
+  $("plist").querySelectorAll("[data-i]").forEach(b =>
+    b.onclick = () => { load(+b.dataset.i); $("picker").classList.remove("show"); });
+  $("picker").classList.add("show");
+}
+$("pickBtn").onclick = picker;
+$("closePick").onclick = () => $("picker").classList.remove("show");
+$("picker").onclick = e => { if (e.target === $("picker")) $("picker").classList.remove("show"); };
+$("wipe").onclick = () => {
+  if (!confirm("Forget every solved challenge and all your saved code?")) return;
+  state = { solved:{}, code:{}, i:0, tries:0 }; save();
+  $("picker").classList.remove("show"); load(0);
+};
+
+$("themeBtn").onclick = () => {
+  const c = document.documentElement.getAttribute("data-theme");
+  const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+  const n = c ? (c === "dark" ? "light" : "dark") : (dark ? "light" : "dark");
+  document.documentElement.setAttribute("data-theme", n);
+  try { localStorage.setItem("phplab_theme", n); } catch(e){}
+};
+try { const t = localStorage.getItem("phplab_theme"); if (t) document.documentElement.setAttribute("data-theme", t); } catch(e){}
+
+load(state.i);
+</script>

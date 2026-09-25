@@ -42,7 +42,7 @@ material over **Zoom**. I explain, she shares her screen and writes the code her
 
 ## 3. What is already done ✅
 
-The whole `Php/` folder — 98 files, every `.php` file passes `php -l`, examples verified by
+The whole `Php/` folder — 99 files, every `.php` file passes `php -l`, examples verified by
 actually running them.
 
 ```
@@ -64,6 +64,8 @@ Php/
 ├── stages/                   PURE BEGINNER SYNTAX TRACK: 6 world .md files + a
 │                             practice .php per world. 30 stages, 6 bosses.
 ├── stages.html               the clickable version - type the line, clear the stage
+├── code-lab.html             WRITE-AND-RUN EXERCISES: a PHP interpreter in JavaScript
+│                             plus 33 auto-marked challenges (lessons 1-7)
 ├── flashcards.html           102 cards, 6 decks, missed cards repeat until known twice
 ├── games/                    php-arcade.html (6 games, 133 questions, XP + 8 badges),
 │                             php-quest.php (7-door escape room), guess-number.php,
@@ -85,9 +87,10 @@ Php/
 `ROADMAP.md` at the repo root is the same 26-step map as a Mermaid diagram, which GitHub
 renders inline.
 
-**Six pages are published as private Claude Artifacts** so she can use them on her phone:
+**Seven pages are published as private Claude Artifacts** so she can use them on her phone:
 - Course home: https://claude.ai/artifact/GyRYKwKisjEBU5wkBanfAe
 - Syntax Stages: https://claude.ai/artifact/Gqn7w4oMjEMCoC8CePNvk4
+- Code Lab: https://claude.ai/artifact/9Rq4wkJkdfJc7uA7KeaE2c
 - Arcade: https://claude.ai/artifact/JYBuyUAnizeyXzAT9tXMu2
 - Roadmap: https://claude.ai/artifact/EDpJwwwvaoGwGHnjeAXdPb
 - Flashcards: https://claude.ai/artifact/WDYShUSe2eV7Yu19XxYJZn
@@ -277,6 +280,28 @@ No `gh` CLI installed — use plain `git` for pushes.
   same version as the main machine, plus MySQL and phpMyAdmin), `C:\xampp\php` added to the
   user PATH. All 35 PHP files lint clean on it. `.claude-flow/` is a local tool folder and is
   now gitignored.
+
+### 2026-09-25 (later) — The code lab: she can finally write and run code in the page
+- **New `Php/code-lab.html`.** The gap was real: there were exercises (`exercises.php` with
+  TODOs, run in the terminal) and typing drills, but nothing freeCodeCamp-shaped where you
+  write code, press Run, and get marked.
+- **It contains a small PHP interpreter written in JavaScript** - lexer, recursive-descent
+  parser, evaluator - covering exactly the course subset: echo, variables, string
+  interpolation, maths, if/elseif/else, switch, for/while/do-while/foreach, break/continue,
+  arrays (ordered map, like real PHP), user functions with defaults and return, and ~90
+  built-ins. Plus PHP's loose/strict comparison rules and truthiness.
+- **Verified against real PHP 8.2**: every one of the 33 model answers was extracted to a
+  .php file, run through the real `php` CLI, and compared with the lab's output. All 33 match.
+  That test caught a genuine bug - `number_format(12.825, 2)` is `12.83` in PHP but `12.82`
+  via JS `toFixed`, because the binary value is 12.8249999... There is now a `phpRound()`
+  helper that pre-rounds to 15 significant digits the way PHP does. **Re-run that comparison
+  if you touch the interpreter.**
+- Safety: an infinite loop is caught (step and output ceilings), division by zero, undefined
+  variables and undefined functions all give PHP-style messages instead of freezing.
+- **The `alt` test type is worth knowing about**: it re-runs the student's code with a
+  variable swapped, so the grade-chain challenge can catch a wrong condition ORDER even when
+  the visible output is right. That is the bug the lessons warn about, caught automatically.
+- Covers lessons 1-7 only. Forms and MySQL genuinely need a server; the page says so.
 
 ### 2026-09-25 — Pure-beginner syntax track ("stages")
 - **New `Php/stages/`**: a syntax-only course for someone who has never typed code.

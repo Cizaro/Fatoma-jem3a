@@ -20,6 +20,21 @@ is the work your exam will ask about:
 
 ---
 
+## 💻 Want to actually write code?
+
+**[`code-lab.html`](code-lab.html)** — an editor in the page. You write real PHP, press
+**Run**, and see the output immediately. Press **Check** and it compares your output to
+what was wanted and shows you the difference, line by line. 33 exercises, from `echo "Hello"`
+up to a full class report.
+
+It runs PHP *inside the page* — no server, no internet, nothing to install. Every answer was
+checked against real PHP 8.2 to make sure the lab agrees with the real thing.
+
+> It covers lessons 1–7 (the language). Forms and MySQL still need a real server —
+> that's `php -S localhost:8000`, as the lessons say.
+
+---
+
 ## 🎮 Never written code before? Start here
 
 **[`stages.html`](stages.html)** — 30 tiny syntax stages in 6 worlds, each one 3 minutes.
@@ -90,6 +105,7 @@ Full details in [`games/README.md`](games/README.md).
 | 🃏 **[flashcards.html](flashcards.html)** | double-click | 102 cards, 6 decks, the ones you miss come back |
 | ⏱ **[exam-simulator.html](exam-simulator.html)** | double-click | the final exam on a 90-minute clock, marked for you |
 | 🎮 **[stages.html](stages.html)** | double-click | 30 syntax stages + 6 bosses, for a pure beginner |
+| 💻 **[code-lab.html](code-lab.html)** | double-click | **33 write-real-code exercises that run and mark themselves** |
 
 **Quizzes** — `quizzes/` has three sizes: a 5-minute **mini-quiz after every lesson**, a bigger
 **unit quiz** every few lessons, and a **final exam** for revision week. Every one of them ends
