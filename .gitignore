@@ -28,3 +28,6 @@ dump-*.sql
 
 # Local agent tooling (not part of the course)
 .claude-flow/
+
+# empty files shell redirects leave behind
+Php/LOCAL
