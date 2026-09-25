@@ -1,0 +1,70 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Operators</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css">
+<body class="reader">
+<article class="prose">
+<h1>Lesson 3 — Operators</h1>
+<p>An operator is a symbol that does something to values. You already used <code>+</code> and <code>.</code>.</p>
+<h2>1. Arithmetic (math)</h2>
+<div class="tablewrap"><table><thead><tr><th>Op</th><th>Name</th><th><code>$a = 10, $b = 3</code></th></tr></thead><tbody><tr><td><code>+</code></td><td>add</td><td><code>13</code></td></tr><tr><td><code>-</code></td><td>subtract</td><td><code>7</code></td></tr><tr><td><code>*</code></td><td>multiply</td><td><code>30</code></td></tr><tr><td><code>/</code></td><td>divide</td><td><code>3.333...</code></td></tr><tr><td><code>%</code></td><td>modulo (remainder)</td><td><code>1</code></td></tr><tr><td><code>**</code></td><td>power</td><td><code>10 ** 3</code> = <code>1000</code></td></tr></tbody></table></div>
+<h2>2. Assignment (putting values in)</h2>
+<div class="tablewrap"><table><thead><tr><th>Op</th><th>Example</th><th>Same as</th></tr></thead><tbody><tr><td><code>=</code></td><td><code>$x = 5</code></td><td>—</td></tr><tr><td><code>+=</code></td><td><code>$x += 3</code></td><td><code>$x = $x + 3</code></td></tr><tr><td><code>-=</code></td><td><code>$x -= 3</code></td><td><code>$x = $x - 3</code></td></tr><tr><td><code>*=</code></td><td><code>$x *= 2</code></td><td><code>$x = $x * 2</code></td></tr><tr><td><code>/=</code></td><td><code>$x /= 2</code></td><td><code>$x = $x / 2</code></td></tr><tr><td><code>.=</code></td><td><code>$s .= &quot;hi&quot;</code></td><td><code>$s = $s . &quot;hi&quot;</code></td></tr></tbody></table></div>
+<h3><code>++</code> and <code>--</code></h3>
+<pre class="lang-php"><code>$i = 5;
+$i++;   // now 6   (&quot;increment&quot;)
+$i--;   // now 5   (&quot;decrement&quot;)</code></pre>
+<p>You will see <code>$i++</code> in <strong>every loop</strong> next lesson.</p>
+<h2>3. Comparison — these give <code>true</code> or <code>false</code></h2>
+<div class="tablewrap"><table><thead><tr><th>Op</th><th>Means</th><th>Example</th></tr></thead><tbody><tr><td><code>==</code></td><td>equal <strong>in value</strong></td><td><code>5 == &quot;5&quot;</code> → true</td></tr><tr><td><code>===</code></td><td>equal in value <strong>AND type</strong></td><td><code>5 === &quot;5&quot;</code> → <strong>false</strong></td></tr><tr><td><code>!=</code></td><td>not equal</td><td><code>5 != 3</code> → true</td></tr><tr><td><code>!==</code></td><td>not identical</td><td><code>5 !== &quot;5&quot;</code> → true</td></tr><tr><td><code>&gt;</code></td><td>greater</td><td><code>5 &gt; 3</code> → true</td></tr><tr><td><code>&lt;</code></td><td>smaller</td><td><code>5 &lt; 3</code> → false</td></tr><tr><td><code>&gt;=</code></td><td>greater or equal</td><td><code>5 &gt;= 5</code> → true</td></tr><tr><td><code>&lt;=</code></td><td>smaller or equal</td><td><code>4 &lt;= 5</code> → true</td></tr></tbody></table></div>
+<h3>🚨 The #1 beginner bug: <code>=</code> vs <code>==</code></h3>
+<pre class="lang-php"><code>$x = 5;     // PUT 5 into x        (assignment)
+$x == 5;    // IS x equal to 5?    (question → true/false)</code></pre>
+<p>Writing <code>if ($x = 5)</code> instead of <code>if ($x == 5)</code> <strong>changes</strong> <code>$x</code> and the <code>if</code> is always true. When your <code>if</code> behaves insanely, check this first.</p>
+<h3><code>==</code> vs <code>===</code></h3>
+<pre class="lang-php"><code>5 == &quot;5&quot;    // true   — same value, PHP ignores the type
+5 === &quot;5&quot;   // false  — one is int, one is string</code></pre>
+<p>Use <code>===</code> when you want to be strict and safe. Many bugs disappear when you use <code>===</code>.</p>
+<h2>4. Logical — combining conditions</h2>
+<div class="tablewrap"><table><thead><tr><th>Op</th><th>Name</th><th>True when</th></tr></thead><tbody><tr><td><code>&amp;&amp;</code></td><td>AND</td><td><strong>both</strong> sides are true</td></tr><tr><td>`\</td><td>\</td><td>`</td><td>OR</td><td><strong>at least one</strong> side is true</td></tr><tr><td><code>!</code></td><td>NOT</td><td>flips it: <code>!true</code> → false</td></tr></tbody></table></div>
+<pre class="lang-php"><code>$age = 20;
+$hasCard = true;
+
+$age &gt;= 18 &amp;&amp; $hasCard   // true  — both conditions pass
+$age &gt;= 18 || $hasCard   // true  — one is enough
+!$hasCard                // false</code></pre>
+<p>Think of it in normal language: <em>&quot;You can enter </em><em>if</em><em> you are 18 </em><em>and</em><em> you have a card.&quot;</em></p>
+<h2>5. Order (who goes first)</h2>
+<p>Same as in math class: <code>*</code> and <code>/</code> before <code>+</code> and <code>-</code>. Comparison happens after math. Logical <code>&amp;&amp;</code> / <code>||</code> come last.</p>
+<pre class="lang-php"><code>echo 2 + 3 * 4;      // 14   (not 20)
+echo (2 + 3) * 4;    // 20</code></pre>
+<p><strong>Use brackets when unsure.</strong> Nobody has ever been fired for writing extra brackets.</p>
+<h2>6. Bonus: the ternary (a tiny if)</h2>
+<pre class="lang-php"><code>$age = 20;
+$status = ($age &gt;= 18) ? &quot;adult&quot; : &quot;child&quot;;</code></pre>
+<p>Read it as: <em>condition <code>?</code> value-if-true <code>:</code> value-if-false</em>. Handy, but don&#x27;t overuse it.</p>
+<hr>
+<p>➡️ <code>examples.php</code> → <code>exercises.php</code></p>
+<hr>
+<h2>💡 Did you know</h2>
+<p>PHP has an operator officially called the <strong>spaceship</strong>: <code>&lt;=&gt;</code>. It returns <code>-1</code>, <code>0</code> or <code>1</code> depending on whether the left side is smaller than, equal to, or bigger than the right.</p>
+<pre class="lang-php"><code>echo 1 &lt;=&gt; 2;   // -1
+echo 2 &lt;=&gt; 2;   //  0
+echo 3 &lt;=&gt; 2;   //  1</code></pre>
+<p>It exists because sorting functions need exactly those three answers. It arrived in PHP 7, and yes, that is its real name — because it looks like a little spaceship.</p>
+<h2>🎮 Play with it</h2>
+<ol><li><strong>Dice.</strong> <code>echo rand(1, 6);</code> — run it ten times. Then roll two dice and print the total.</li><li><strong>The odd/even machine.</strong> Print <code>$n % 2</code> for the numbers 1 to 10 in a row. You get <code>1 0 1 0 1 0...</code> — that alternating pattern is the trick behind striped table rows on real websites.</li><li><strong>Clock maths.</strong> It is 21:00. What time is it 7 hours later? <code>(21 + 7) % 24</code>. The same <code>%</code> you use for even numbers, doing something completely different.</li></ol>
+<h2>🏆 Boss challenge</h2>
+<p><strong>Seconds into a readable time.</strong> From <code>$seconds = 9384;</code> print <code>2h 36m 24s</code>.</p>
+<p>You need <code>intdiv()</code> and <code>%</code> working together, and you have to think about what is left over after each step. This is the exact logic behind every video player&#x27;s progress bar.</p>
+<h2>▶ Practise this lesson</h2>
+<p><code>games/php-arcade.html</code> → <strong>Speed Round</strong> · <code>flashcards.html</code> → deck 1 <em>Syntax &amp; symbols</em> · <code>quizzes/mini-quizzes/lesson-03.md</code></p>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="datatypes.html"><span>Previous</span>Data types and strings</a>
+<a class="next" href="conditions.html"><span>Next lesson</span>Making decisions</a>
+</nav>
+<script src="../embed.js"></script>

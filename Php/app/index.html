@@ -1,0 +1,179 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PHP Course</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="app.css">
+
+<div class="shell">
+  <div class="scrim" id="scrim"></div>
+
+  <aside class="rail" id="rail">
+    <div class="brand">
+      <span class="dot">P</span>
+      <b>PHP Course<span>MIT320 &middot; for Fatima</span></b>
+    </div>
+
+    <div class="railprog">
+      <div class="t"><span>Course progress</span><b id="pcPct">0%</b></div>
+      <div class="b"><i id="pcBar"></i></div>
+      <div class="t" style="margin:7px 0 0"><span id="pcSteps">0 of 74 steps</span></div>
+    </div>
+
+    <div class="navsec">Start</div>
+    <nav class="nav" id="navTop"></nav>
+
+    <div class="navsec">Lessons</div>
+    <nav class="nav" id="navLessons"></nav>
+
+    <div class="navsec">Practise</div>
+    <nav class="nav" id="navPractice"></nav>
+
+    <div class="railfoot">
+      Everything saves in this browser only.
+      <br><button id="themeBtn">theme</button>
+    </div>
+  </aside>
+
+  <main class="stage">
+    <div class="topbar">
+      <button class="burger" id="burger" aria-label="Menu">&#9776;</button>
+      <span class="title" id="topTitle">PHP Course</span>
+    </div>
+    <iframe id="stage" title="Course content" src="lessons/algorithms.html"></iframe>
+  </main>
+</div>
+
+<script>
+/* ---------------------------------------------------------------
+   The whole course behind one link. Each view is a real page in this
+   same artifact, shown in the frame; the rail is the only navigation.
+   Routes live in the hash so a view can be linked and the back button
+   works: #/lesson/arrays, #/arcade, #/exam ...
+--------------------------------------------------------------- */
+/* Each route carries two paths: where the page sits in the repo (the shell
+   lives in Php/app/, so "../"), and where it sits when this is published as
+   one artifact (everything flattened next to the shell). One source, both
+   homes, no second copy of anything to keep in step. */
+const ROUTES = [
+  // group, id, icon, title, repo path, published path
+  ["top",      "home",       "◆", "Course map",       "../index.html",   "home.html"],
+  ["top",      "roadmap",    "↗", "A to Z roadmap",   "../roadmap.html", "roadmap.html"],
+
+  ["lesson",   "algorithms", "0A", "Algorithms &amp; flowcharts", "lessons/algorithms.html", "lessons/algorithms.html"],
+  ["lesson",   "basics",     "1",  "echo, variables",            "lessons/basics.html", "lessons/basics.html"],
+  ["lesson",   "datatypes",  "2",  "Data types &amp; strings",   "lessons/datatypes.html", "lessons/datatypes.html"],
+  ["lesson",   "operators",  "3",  "Operators",                  "lessons/operators.html", "lessons/operators.html"],
+  ["lesson",   "conditions", "4",  "Making decisions",           "lessons/conditions.html", "lessons/conditions.html"],
+  ["lesson",   "loops",      "5",  "Loops",                      "lessons/loops.html", "lessons/loops.html"],
+  ["lesson",   "arrays",     "6",  "Arrays",                     "lessons/arrays.html", "lessons/arrays.html"],
+  ["lesson",   "functions",  "7",  "Functions",                  "lessons/functions.html", "lessons/functions.html"],
+  ["lesson",   "forms",      "8",  "Forms",                      "lessons/forms.html", "lessons/forms.html"],
+  ["lesson",   "mysql",      "9",  "MySQL",                      "lessons/mysql.html", "lessons/mysql.html"],
+  ["lesson",   "dynamic",    "10", "Dynamic pages",              "lessons/dynamic.html", "lessons/dynamic.html"],
+
+  ["practice", "stages",     "▸", "Syntax stages", "../stages.html", "stages.html"],
+  ["practice", "lab",        "⌨", "Code lab",      "../code-lab.html", "code-lab.html"],
+  ["practice", "arcade",     "●", "Arcade",        "../games/php-arcade.html", "games/php-arcade.html"],
+  ["practice", "cards",      "■", "Flashcards",    "../flashcards.html", "flashcards.html"],
+  ["practice", "exam",       "⏱", "Exam simulator","../exam-simulator.html", "exam-simulator.html"]
+];
+
+const LOCAL = location.protocol === "file:"
+  || ["localhost","127.0.0.1",""].indexOf(location.hostname) !== -1;
+const pathOf = r => LOCAL ? r[4] : (r[5] || r[4]);
+
+const $ = id => document.getElementById(id);
+const stage = $("stage");
+const byId = Object.fromEntries(ROUTES.map(r => [r[1], r]));
+
+/* ---------- navigation ---------- */
+function paintNav(){
+  const groups = { top:$("navTop"), lesson:$("navLessons"), practice:$("navPractice") };
+  Object.values(groups).forEach(g => g.innerHTML = "");
+  ROUTES.forEach(([group, id, icon, title, file]) => {
+    const a = document.createElement("a");
+    a.href = "#/" + id;
+    a.dataset.id = id;
+    a.innerHTML = group === "lesson"
+      ? `<span class="num">${icon}</span><span class="n">${title}</span><span class="tick" data-tick="${id}"></span>`
+      : `<span class="ic">${icon}</span><span class="n">${title}</span>`;
+    groups[group].appendChild(a);
+  });
+}
+
+function go(id, push){
+  const r = byId[id] || byId.algorithms;
+  const want = pathOf(r);
+  if (stage.getAttribute("src") !== want) stage.setAttribute("src", want);
+  document.querySelectorAll(".nav a").forEach(a => a.classList.toggle("on", a.dataset.id === r[1]));
+  $("topTitle").innerHTML = r[3];
+  document.title = r[3].replace(/&amp;/g, "&") + " · PHP Course";
+  closeRail();
+  if (push && location.hash !== "#/" + id) location.hash = "#/" + id;
+}
+
+function fromHash(){
+  const id = (location.hash || "").replace(/^#\/?/, "") || "algorithms";
+  go(id, false);
+}
+addEventListener("hashchange", fromHash);
+
+/* ---------- mobile drawer ---------- */
+function closeRail(){ $("rail").classList.remove("open"); $("scrim").classList.remove("on"); }
+$("burger").onclick = () => { $("rail").classList.toggle("open"); $("scrim").classList.toggle("on"); };
+$("scrim").onclick = closeRail;
+
+/* ---------- theme, shared with every page in the frame ---------- */
+const THEME = "course_theme";
+function applyTheme(t){
+  if (t) document.documentElement.setAttribute("data-theme", t);
+  try { localStorage.setItem(THEME, t); } catch(e) {}
+  tellFrame();
+}
+function tellFrame(){
+  let t = null;
+  try { t = localStorage.getItem(THEME); } catch(e) {}
+  try { stage.contentWindow.postMessage({ course:true, theme:t }, "*"); } catch(e) {}
+}
+try { const t = localStorage.getItem(THEME); if (t) document.documentElement.setAttribute("data-theme", t); } catch(e) {}
+$("themeBtn").onclick = () => {
+  const now = document.documentElement.getAttribute("data-theme")
+    || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  applyTheme(now === "dark" ? "light" : "dark");
+};
+
+/* a page inside the frame can ask the shell to navigate */
+addEventListener("message", e => {
+  const d = e.data;
+  if (!d || !d.course) return;
+  if (d.go) location.hash = "#/" + d.go;
+});
+stage.addEventListener("load", () => { tellFrame(); paintProgress(); });
+
+/* ---------- progress, read from the course map's own store ---------- */
+function paintProgress(){
+  let done = {};
+  try { done = JSON.parse(localStorage.getItem("phpcourse_progress") || "{}"); } catch(e) {}
+  const total = 74;                       // the course map is the source of truth
+  const n = Object.keys(done).length;
+  const pct = Math.min(100, Math.round(n / total * 100));
+  $("pcPct").textContent = pct + "%";
+  $("pcBar").style.width = pct + "%";
+  $("pcSteps").textContent = n + " of " + total + " steps";
+
+  // a lesson with every step ticked gets a tick in the rail
+  const PREFIX = { algorithms:"alg", basics:"1", datatypes:"2", operators:"3", conditions:"4",
+                   loops:"5", arrays:"6", functions:"7", forms:"8", mysql:"9", dynamic:"10" };
+  Object.entries(PREFIX).forEach(([id, p]) => {
+    const el = document.querySelector(`[data-tick="${id}"]`);
+    if (el) el.textContent = Object.keys(done).some(k => k.split(".")[0] === p) ? "✓" : "";
+  });
+}
+addEventListener("focus", paintProgress);
+
+paintNav();
+fromHash();
+paintProgress();
+</script>

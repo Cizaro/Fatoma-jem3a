@@ -1,0 +1,86 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>A dynamic page with a database</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css">
+<body class="reader">
+<article class="prose">
+<h1>Lesson 10 — Building a Dynamic Webpage with a MySQL Database</h1>
+<p>Matches <strong>Chapter 12</strong> in your textbook. This is where everything you learned joins together.</p>
+<p>A <strong>static</strong> page shows the same thing to everybody. A <strong>dynamic</strong> page builds itself from the database every time someone opens it. Change a row in MySQL, refresh — the page changed. Nobody edited HTML.</p>
+<h2>1. The shape of a real PHP site</h2>
+<pre><code>index.php      the list page (with search)
+detail.php     one item, chosen by ?id=
+admin.php      add / edit / delete
+includes/
+    db.php     the connection
+    header.php the top of every page
+    footer.php the bottom of every page</code></pre>
+<h2>2. <code>include</code> and <code>require</code> — stop repeating yourself</h2>
+<pre class="lang-php"><code>require &quot;includes/header.php&quot;;   // paste that file in, right here</code></pre>
+<div class="tablewrap"><table><thead><tr><th></th><th>Difference</th></tr></thead><tbody><tr><td><code>include</code></td><td>if the file is missing: warning, page continues</td></tr><tr><td><code>require</code></td><td>if the file is missing: fatal error, page stops</td></tr><tr><td><code>require_once</code></td><td>same, but never loads it twice</td></tr></tbody></table></div>
+<p>Use <code>require</code> for things the page cannot live without (the database). Write your header once and every page gets the same menu. Change it once and all pages change.</p>
+<h2>3. Passing data through the URL</h2>
+<pre class="lang-php"><code>&lt;a href=&quot;detail.php?id=3&quot;&gt;See more&lt;/a&gt;</code></pre>
+<p><code>detail.php</code> reads it with <code>$_GET[&quot;id&quot;]</code>. That is how every product page, article page and profile page on the internet works.</p>
+<p><strong>Always validate what arrives:</strong></p>
+<pre class="lang-php"><code>$id = (int)($_GET[&quot;id&quot;] ?? 0);     // force it to be a number
+if ($id &lt;= 0) { die(&quot;Bad id&quot;); }</code></pre>
+<h2>4. Search: form + <code>LIKE</code> + prepared statement</h2>
+<pre class="lang-php"><code>$search = trim($_GET[&quot;search&quot;] ?? &quot;&quot;);
+
+if ($search !== &quot;&quot;) {
+    $stmt = mysqli_prepare($conn, &quot;SELECT * FROM courses WHERE title LIKE ?&quot;);
+    $term = &quot;%&quot; . $search . &quot;%&quot;;                 // % means &quot;anything&quot;
+    mysqli_stmt_bind_param($stmt, &quot;s&quot;, $term);
+} else {
+    $stmt = mysqli_prepare($conn, &quot;SELECT * FROM courses&quot;);
+}
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);</code></pre>
+<p>The <code>%</code> wildcards go in the <strong>PHP variable</strong>, not in the SQL string. That keeps the statement safe.</p>
+<h2>5. &quot;No results&quot; — never show an empty page</h2>
+<pre class="lang-php"><code>if (mysqli_num_rows($result) === 0) {
+    echo &quot;&lt;p&gt;Nothing found.&lt;/p&gt;&quot;;
+} else {
+    while ($row = mysqli_fetch_assoc($result)) { ... }
+}</code></pre>
+<p>A blank page makes a user think the site is broken. Always say <em>something</em>.</p>
+<h2>6. Redirect after saving (the PRG pattern)</h2>
+<p>After an INSERT, send the browser somewhere else:</p>
+<pre class="lang-php"><code>header(&quot;Location: index.php?added=1&quot;);
+exit;                     // ALWAYS exit after a header redirect</code></pre>
+<p>Without this, pressing F5 re-submits the form and inserts the row twice. You have seen &quot;Confirm Form Resubmission&quot; on real websites — that is exactly this bug.</p>
+<p>⚠️ <code>header()</code> must run <strong>before any HTML is printed</strong>. Not even a space before <code>&lt;?php</code>.</p>
+<h2>7. The checklist of a good dynamic page</h2>
+<ul><li>[ ] Every user value goes through a <strong>prepared statement</strong></li><li>[ ] Every printed value goes through <strong><code>htmlspecialchars()</code></strong></li><li>[ ] Every id from a URL is forced with <strong><code>(int)</code></strong></li><li>[ ] An empty result shows a friendly message</li><li>[ ] Forms redirect after saving</li><li>[ ] The connection is closed at the end</li></ul>
+<hr>
+<h2>Files here</h2>
+<p>Run the server from the <code>Php</code> folder (<code>php -S localhost:8000</code>) or put the folder in XAMPP&#x27;s <code>htdocs</code>, then import <code>courses.sql</code> in phpMyAdmin and open <code>index.php</code>.</p>
+<ul><li><code>courses.sql</code> — the database for this mini site</li><li><code>includes/</code> — db, header, footer</li><li><code>index.php</code> — the catalogue with a search box</li><li><code>detail.php</code> — one course page</li><li><code>admin.php</code> — add and delete courses</li></ul>
+<hr>
+<h2>Your turn</h2>
+<ol><li>Add a <strong>price</strong> column and show it on both pages.</li><li>Add a <code>&lt;select&gt;</code> to filter by level (beginner / advanced).</li><li>Sort by newest first.</li><li>Add an &quot;edit&quot; button to <code>admin.php</code> (you did this in Lesson 9 — reuse it).</li><li>Show <em>&quot;Showing X courses&quot;</em> above the list.</li></ol>
+<hr>
+<h2>💡 Did you know</h2>
+<p><strong>WordPress powers something like 43% of all websites on the internet</strong> — and WordPress is PHP and MySQL. Exactly what you have just built.</p>
+<p>Every WordPress site is doing what your <code>index.php</code> does: read rows from a database, loop over them, print HTML. The theme decides what it looks like; the PHP decides what it <em>says</em>.</p>
+<p>That is the connection back to chapters 8 and 9 of your textbook. A CMS isn&#x27;t magic — it&#x27;s this lesson, with ten years of features bolted on. You now know what&#x27;s underneath it.</p>
+<h2>🎮 Play with it</h2>
+<ol><li><strong>Prove it&#x27;s dynamic.</strong> Open <code>index.php</code>, then change a course title directly in phpMyAdmin, then refresh the page. You changed a website without touching a single line of code. That&#x27;s the whole idea.</li><li><strong>Break the URL.</strong> Try <code>detail.php?id=999</code>, then <code>?id=abc</code>, then <code>?id=-1</code>, then <code>?id=&lt;script&gt;</code>. Your page handles all of them. Now delete the <code>(int)</code> and try again. Put it back.</li><li><strong>Change the header once.</strong> Add a link to <code>includes/header.php</code> and watch it appear on every single page at the same time. That is why we split the files up.</li><li><strong>Watch the clock.</strong> The footer prints the time the page was generated. Refresh it a few times. That changing number is the difference between a static page and a dynamic one.</li></ol>
+<h2>🏆 Boss challenge</h2>
+<p>Add a <strong>&quot;most popular course&quot;</strong> feature: a <code>views</code> column that goes up by 1 every time someone opens that course&#x27;s detail page, and a badge on the list page next to whichever course has the most views.</p>
+<p>It needs an <code>UPDATE</code> on the detail page, an <code>ORDER BY views DESC LIMIT 1</code> on the list page, and a bit of thinking about where exactly the counter should increase.</p>
+<p>Every &quot;trending&quot; section on every website you use is this, at a much bigger scale.</p>
+<h2>🎓 You&#x27;ve arrived</h2>
+<p>If this page works and you understand every line of it, you have finished chapters 10, 11 and 12 of your textbook. The rest of the roadmap — logins, JOINs, OOP, deployment — is all built on what you can already do.</p>
+<p>Go and look at <code>../roadmap.html</code> and tick off Q, R and S. You&#x27;ve earned them.</p>
+<h2>▶ Practise this lesson</h2>
+<p><code>games/php-arcade.html</code> → <strong>Code Builder</strong> · <code>flashcards.html</code> → deck 5 + deck 6 · <code>quizzes/mini-quizzes/lesson-10.md</code> · then <code>quizzes/final-exam.md</code></p>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="mysql.html"><span>Previous</span>Database basics with MySQL</a>
+</nav>
+<script src="../embed.js"></script>

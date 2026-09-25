@@ -1,0 +1,100 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Making decisions</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css">
+<body class="reader">
+<article class="prose">
+<h1>Lesson 4 — Making Decisions: if / else / switch</h1>
+<p>Until now your code ran straight from top to bottom. Now it can <strong>choose</strong>.</p>
+<h2>1. <code>if</code></h2>
+<pre class="lang-php"><code>$age = 20;
+
+if ($age &gt;= 18) {
+    echo &quot;You are an adult&quot;;
+}</code></pre>
+<p>Shape:</p>
+<pre class="lang-php"><code>if (condition) {
+    // runs ONLY if the condition is true
+}</code></pre>
+<ul><li>The condition goes in <strong>round brackets</strong> <code>( )</code></li><li>The code goes in <strong>curly brackets</strong> <code>{ }</code></li><li><strong>No semicolon after <code>if (...)</code></strong> ← writing <code>if ($x &gt; 5);</code> is a classic silent bug</li></ul>
+<h2>2. <code>if / else</code></h2>
+<pre class="lang-php"><code>if ($age &gt;= 18) {
+    echo &quot;Adult&quot;;
+} else {
+    echo &quot;Child&quot;;
+}</code></pre>
+<p><code>else</code> = &quot;in all other cases&quot;. It has no condition of its own.</p>
+<h2>3. <code>if / elseif / else</code></h2>
+<p>For more than two paths:</p>
+<pre class="lang-php"><code>$grade = 15;
+
+if ($grade &gt;= 16) {
+    echo &quot;Excellent&quot;;
+} elseif ($grade &gt;= 14) {
+    echo &quot;Very good&quot;;
+} elseif ($grade &gt;= 10) {
+    echo &quot;Pass&quot;;
+} else {
+    echo &quot;Fail&quot;;
+}</code></pre>
+<p>⚠️ <strong>Order matters!</strong> PHP checks top to bottom and <strong>stops at the first true one</strong>. If you put <code>$grade &gt;= 10</code> first, a grade of 18 would print &quot;Pass&quot; and never reach &quot;Excellent&quot;.</p>
+<h2>4. Nested <code>if</code> (an if inside an if)</h2>
+<pre class="lang-php"><code>if ($isLoggedIn) {
+    if ($isAdmin) {
+        echo &quot;Welcome boss&quot;;
+    } else {
+        echo &quot;Welcome user&quot;;
+    }
+} else {
+    echo &quot;Please log in&quot;;
+}</code></pre>
+<p>Works, but too much nesting gets ugly. Often <code>&amp;&amp;</code> is cleaner:</p>
+<pre class="lang-php"><code>if ($isLoggedIn &amp;&amp; $isAdmin) { ... }</code></pre>
+<h2>5. <code>switch</code> — when you compare ONE variable to many values</h2>
+<pre class="lang-php"><code>$day = &quot;Monday&quot;;
+
+switch ($day) {
+    case &quot;Saturday&quot;:
+    case &quot;Sunday&quot;:
+        echo &quot;Weekend!&quot;;
+        break;
+    case &quot;Monday&quot;:
+        echo &quot;Start of the week&quot;;
+        break;
+    default:
+        echo &quot;A normal day&quot;;
+}</code></pre>
+<ul><li><code>break</code> stops the switch. <strong>Forget it and PHP keeps running the next cases</strong> (this is called &quot;fall-through&quot;). Sometimes useful on purpose — like stacking <code>Saturday</code> and <code>Sunday</code> above.</li><li><code>default</code> is the <code>else</code> of switch.</li></ul>
+<p>Use <code>switch</code> for exact values (a day, a menu choice). Use <code>if</code> for ranges (<code>&gt;= 10</code>).</p>
+<h2>6. What counts as true?</h2>
+<p>PHP treats these as <strong>false</strong>: <code>false</code>, <code>0</code>, <code>0.0</code>, <code>&quot;&quot;</code> (empty string), <code>&quot;0&quot;</code>, <code>[]</code> (empty array), <code>null</code>. <strong>Everything else is true</strong> — including <code>&quot;hello&quot;</code>, <code>-5</code>, and <code>&quot;false&quot;</code> (a non-empty string!).</p>
+<pre class="lang-php"><code>if (&quot;0&quot;)    // false! surprising but true
+if (&quot;hi&quot;)   // true
+if (-3)     // true</code></pre>
+<hr>
+<h2>Watch out ⚠️</h2>
+<div class="tablewrap"><table><thead><tr><th>Mistake</th><th>Result</th></tr></thead><tbody><tr><td><code>if ($x = 5)</code></td><td>assigns instead of comparing → always true</td></tr><tr><td><code>if ($x &gt; 5);</code></td><td>the <code>;</code> ends the if — the block always runs</td></tr><tr><td>missing <code>break</code> in switch</td><td>several cases run</td></tr><tr><td>wrong order of <code>elseif</code></td><td>wrong branch wins</td></tr></tbody></table></div>
+<hr>
+<p>➡️ <code>examples.php</code> → <code>exercises.php</code> → quiz-02 → play &quot;Fix the bug&quot; in the arcade</p>
+<hr>
+<h2>💡 Did you know</h2>
+<p>The <code>=</code> vs <code>==</code> mistake is so common that programmers invented a defensive trick for it called <strong>Yoda conditions</strong> — writing the constant first:</p>
+<pre class="lang-php"><code>if (5 == $x)      // &quot;five, x is&quot; — hence the name</code></pre>
+<p>Why bother? Because if you slip and type one <code>=</code>, then <code>if (5 = $x)</code> is <em>impossible</em> — PHP refuses to run and tells you straight away. Whereas <code>if ($x = 5)</code> is perfectly legal, and silently always true.</p>
+<p>You don&#x27;t have to write this way. But now you know why some code looks backwards.</p>
+<h2>🎮 Play with it</h2>
+<ol><li><strong>The mood ring.</strong> Set <code>$temperature</code> and print a different sentence for freezing, cold, nice, hot, and &quot;stay inside&quot;. Run it five times with five different numbers.</li><li><strong>Rock, paper, scissors</strong> against the computer: <code>$you = &quot;rock&quot;;</code> and <code>$pc = [&quot;rock&quot;,&quot;paper&quot;,&quot;scissors&quot;][rand(0,2)];</code> then work out who won. It takes more branches than you&#x27;d expect — that&#x27;s the point.</li><li><strong>The truthiness quiz.</strong> Loop over <code>[0, 1, &quot;&quot;, &quot;0&quot;, &quot;a&quot;, -1, null, []]</code> and print whether PHP thinks each one is true. At least two of the answers will annoy you.</li></ol>
+<h2>🏆 Boss challenge</h2>
+<p>Write a <strong>triangle checker</strong>. Given three side lengths, print whether they make: an equilateral triangle (all equal), isosceles (exactly two equal), scalene (all different), or <strong>no triangle at all</strong> — which happens when one side is longer than the other two combined.</p>
+<p>That last case is the one everybody forgets, and it&#x27;s exactly why the order of your conditions matters.</p>
+<h2>▶ Practise this lesson</h2>
+<p><code>games/php-arcade.html</code> → <strong>Fix the Bug</strong> · <code>games/php-quest.php</code> (door 5 is this very bug) · <code>flashcards.html</code> → deck 4 <em>Loops &amp; conditions</em> · <code>quizzes/mini-quizzes/lesson-04.md</code></p>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="operators.html"><span>Previous</span>Operators</a>
+<a class="next" href="loops.html"><span>Next lesson</span>Loops</a>
+</nav>
+<script src="../embed.js"></script>

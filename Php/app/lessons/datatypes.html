@@ -1,0 +1,91 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Data types and strings</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css">
+<body class="reader">
+<article class="prose">
+<h1>Lesson 2 — Data Types &amp; Strings</h1>
+<p>PHP values come in types. You never declare the type — PHP looks at the value and decides.</p>
+<h2>The 4 types you&#x27;ll use every day</h2>
+<div class="tablewrap"><table><thead><tr><th>Type</th><th>Means</th><th>Example</th></tr></thead><tbody><tr><td><strong>string</strong></td><td>text</td><td><code>&quot;Fatima&quot;</code>, <code>&#x27;hello&#x27;</code>, <code>&quot;123&quot;</code></td></tr><tr><td><strong>int</strong></td><td>whole number</td><td><code>20</code>, <code>-5</code>, <code>0</code></td></tr><tr><td><strong>float</strong></td><td>decimal number</td><td><code>15.75</code>, <code>3.14</code></td></tr><tr><td><strong>bool</strong></td><td>true or false</td><td><code>true</code>, <code>false</code></td></tr></tbody></table></div>
+<p>Two more you&#x27;ll meet later: <strong>array</strong> (Lesson 6) and <strong>null</strong> (= empty, nothing).</p>
+<pre class="lang-php"><code>$name   = &quot;Fatima&quot;;   // string
+$age    = 20;         // int
+$grade  = 15.5;       // float
+$passed = true;       // bool</code></pre>
+<h3>Check a type</h3>
+<pre class="lang-php"><code>var_dump($age);     // int(20)
+echo gettype($age); // integer</code></pre>
+<p><code>var_dump()</code> is your best friend when something behaves weirdly — it shows the type <em>and</em> the value.</p>
+<p>⚠️ <code>&quot;20&quot;</code> (with quotes) is a <strong>string</strong>, not a number. It usually still works in math because PHP converts it automatically, but <code>var_dump</code> will show you the truth.</p>
+<h3>Printing a bool surprises everyone</h3>
+<pre class="lang-php"><code>echo true;    // prints 1
+echo false;   // prints NOTHING (empty)</code></pre>
+<p>That&#x27;s why we use <code>var_dump()</code> for booleans.</p>
+<h2>Strings — the things you&#x27;ll touch most</h2>
+<h3>Glue them: <code>.</code></h3>
+<pre class="lang-php"><code>$first = &quot;Fatima&quot;;
+$last  = &quot;Ali&quot;;
+$full  = $first . &quot; &quot; . $last;   // &quot;Fatima Ali&quot;</code></pre>
+<p><code>.=</code> adds to the end of an existing string:</p>
+<pre class="lang-php"><code>$s = &quot;Hello&quot;;
+$s .= &quot; world&quot;;   // &quot;Hello world&quot;</code></pre>
+<h3>Useful string functions</h3>
+<pre class="lang-php"><code>strlen(&quot;Fatima&quot;)               // 6      - how many characters
+strtoupper(&quot;fatima&quot;)           // FATIMA
+strtolower(&quot;FATIMA&quot;)           // fatima
+ucfirst(&quot;fatima&quot;)              // Fatima - capital first letter
+trim(&quot;  hi  &quot;)                 // &quot;hi&quot;   - removes spaces at the edges
+strrev(&quot;abc&quot;)                  // cba    - reversed
+str_replace(&quot;a&quot;, &quot;@&quot;, &quot;cat&quot;)   // c@t
+substr(&quot;Fatima&quot;, 0, 3)         // Fat    - cut from position 0, 3 chars
+strpos(&quot;Fatima&quot;, &quot;t&quot;)          // 2      - where is &quot;t&quot;? (counting from 0!)
+str_repeat(&quot;-&quot;, 10)            // ----------</code></pre>
+<blockquote><p><strong>Counting starts at 0</strong>, not 1. In <code>&quot;Fatima&quot;</code>, <code>F</code> is position 0, <code>a</code> is 1, <code>t</code> is 2. This trips up every beginner exactly once. Now it&#x27;s twice, because I warned you. 🙂</p></blockquote>
+<h2>Numbers</h2>
+<pre class="lang-php"><code>$a = 10;
+$b = 3;
+
+echo $a + $b;      // 13
+echo $a / $b;      // 3.3333333333333
+echo intdiv($a,$b);// 3        - whole division
+echo $a % $b;      // 1        - the REMAINDER (modulo)
+echo round(3.7);   // 4
+echo floor(3.7);   // 3        - always down
+echo ceil(3.2);    // 4        - always up
+echo abs(-5);      // 5
+echo max(4, 9, 2); // 9
+echo min(4, 9, 2); // 2
+echo rand(1, 6);   // a random number, like rolling a dice</code></pre>
+<p><strong><code>%</code> (modulo) is more useful than it looks:</strong> <code>$n % 2 == 0</code> means &quot;<code>$n</code> is even&quot;. You&#x27;ll use that trick constantly.</p>
+<h2>Converting types</h2>
+<pre class="lang-php"><code>$text   = &quot;42&quot;;
+$number = (int) $text;      // 42 as a real int
+$price  = (float) &quot;9.99&quot;;   // 9.99
+$s      = (string) 100;     // &quot;100&quot;</code></pre>
+<hr>
+<h2>Watch out ⚠️</h2>
+<ul><li><code>&quot;5&quot; + 5</code> gives <code>10</code> (PHP converts). But <code>&quot;abc&quot; + 5</code> is an error in PHP 8.</li><li><code>.</code> joins text, <code>+</code> adds numbers. Using <code>+</code> on two strings tries to add them as numbers!</li><li><code>echo false;</code> prints nothing — not the word &quot;false&quot;.</li></ul>
+<hr>
+<p>➡️ <code>examples.php</code> → <code>exercises.php</code> → quiz-01</p>
+<hr>
+<h2>💡 Did you know</h2>
+<p>For most of PHP&#x27;s life, <code>&quot;abc&quot; == 0</code> was <strong>true</strong>. PHP would look at <code>&quot;abc&quot;</code>, decide it wasn&#x27;t a number, call it <code>0</code>, and agree that 0 equals 0. That single rule caused real security holes — password checks that accepted almost anything.</p>
+<p>It was finally fixed in <strong>PHP 8</strong> (2020). You are learning the version where it behaves sensibly. When you find an old tutorial insisting you must <em>always</em> use <code>===</code>, this is the story behind it.</p>
+<p>(<code>===</code> is still the better habit. Now you know why it exists.)</p>
+<h2>🎮 Play with it</h2>
+<ol><li><strong>The type detective.</strong> <code>var_dump()</code> these one at a time, and predict each one first: <code>&quot;5&quot; + 5</code> · <code>&quot;5&quot; . 5</code> · <code>true + true</code> · <code>1 == &quot;1&quot;</code> · <code>0 == &quot;&quot;</code> · <code>null == false</code> Some of them are genuinely surprising.</li><li><strong>Your name in numbers.</strong> <code>strlen()</code> your full name, then your mother&#x27;s, then your city. Whose is longest? A pointless question, answered with real code.</li><li><strong>The shouting machine.</strong> Take a sentence and print it <code>strtoupper</code>, then <code>strrev</code>, then both at once — and work out which one PHP did first.</li></ol>
+<h2>🏆 Boss challenge</h2>
+<p>Write a <strong>username generator</strong>: from <code>$first = &quot;fatima&quot;</code> and <code>$last = &quot;hassan&quot;</code>, produce <code>F.Hassan</code> — first letter of the first name capitalised, a dot, then the surname capitalised.</p>
+<p>You need <code>substr</code>, <code>strtoupper</code>, <code>ucfirst</code> and <code>.</code> working together in one line.</p>
+<h2>▶ Practise this lesson</h2>
+<p><code>games/php-arcade.html</code> → <strong>Guess the Output</strong> · <code>flashcards.html</code> → deck 2 <em>String functions</em> · <code>quizzes/mini-quizzes/lesson-02.md</code></p>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="basics.html"><span>Previous</span>echo, variables, comments</a>
+<a class="next" href="operators.html"><span>Next lesson</span>Operators</a>
+</nav>
+<script src="../embed.js"></script>

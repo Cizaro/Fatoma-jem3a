@@ -1,0 +1,115 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Database basics with MySQL</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css">
+<body class="reader">
+<article class="prose">
+<h1>Lesson 9 — Database Basics with MySQL</h1>
+<p>Matches <strong>Chapter 11 - Database Basics with MySQL</strong> in your textbook.</p>
+<p>Until now everything disappeared when the page reloaded. A <strong>database</strong> is where data stays.</p>
+<h2>1. The vocabulary</h2>
+<div class="tablewrap"><table><thead><tr><th>Word</th><th>What it is</th><th>Compare to</th></tr></thead><tbody><tr><td><strong>Database</strong></td><td>the whole box</td><td>an Excel file</td></tr><tr><td><strong>Table</strong></td><td>one set of data</td><td>one sheet</td></tr><tr><td><strong>Column / field</strong></td><td>one piece of info (name, age)</td><td>a column</td></tr><tr><td><strong>Row / record</strong></td><td>one complete entry (one student)</td><td>a row</td></tr><tr><td><strong>Primary key</strong></td><td>the unique id of a row</td><td>the student number</td></tr></tbody></table></div>
+<p>An associative array from Lesson 6 <strong>is</strong> a row: <code>[&quot;name&quot; =&gt; &quot;Fatima&quot;, &quot;grade&quot; =&gt; 18]</code>. A multidimensional array is a table. You already know the shape.</p>
+<h2>2. Getting MySQL</h2>
+<p>Install <strong>XAMPP</strong>, open the control panel, press <strong>Start</strong> on <code>Apache</code> and on <code>MySQL</code>. Then open <code>http://localhost/phpmyadmin</code> — that is your visual tool for the database.</p>
+<h2>3. Column types (the ones you need)</h2>
+<div class="tablewrap"><table><thead><tr><th>Type</th><th>For</th></tr></thead><tbody><tr><td><code>INT</code></td><td>whole numbers, ids</td></tr><tr><td><code>VARCHAR(100)</code></td><td>short text, max 100 characters</td></tr><tr><td><code>TEXT</code></td><td>long text</td></tr><tr><td><code>DECIMAL(6,2)</code></td><td>money, marks (6 digits, 2 after the dot)</td></tr><tr><td><code>DATE</code> / <code>DATETIME</code></td><td>dates</td></tr><tr><td><code>BOOLEAN</code></td><td>true / false</td></tr></tbody></table></div>
+<h2>4. SQL — the language of databases</h2>
+<p>SQL is not PHP. It is a separate little language you write <strong>inside</strong> PHP strings.</p>
+<h3>Create</h3>
+<pre class="lang-sql"><code>CREATE DATABASE school;
+
+CREATE TABLE students (
+    id      INT AUTO_INCREMENT PRIMARY KEY,
+    name    VARCHAR(100) NOT NULL,
+    email   VARCHAR(100),
+    grade   DECIMAL(4,2),
+    created DATETIME DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+<p><code>AUTO_INCREMENT</code> = MySQL gives each new row the next number by itself. You never set the id.</p>
+<h3>The four operations you will use forever (CRUD)</h3>
+<pre class="lang-sql"><code>-- CREATE
+INSERT INTO students (name, email, grade) VALUES (&#x27;Fatima&#x27;, &#x27;f@mail.com&#x27;, 18);
+
+-- READ
+SELECT * FROM students;
+SELECT name, grade FROM students WHERE grade &gt;= 10;
+SELECT * FROM students ORDER BY grade DESC;
+SELECT * FROM students WHERE name LIKE &#x27;F%&#x27;;     -- starts with F
+SELECT * FROM students LIMIT 5;
+
+-- UPDATE
+UPDATE students SET grade = 19 WHERE id = 1;
+
+-- DELETE
+DELETE FROM students WHERE id = 3;</code></pre>
+<p>🚨 <strong><code>UPDATE</code> and <code>DELETE</code> without <code>WHERE</code> hit every single row.</strong> There is no undo. Write the <code>WHERE</code> first, then the rest.</p>
+<h3>Useful extras</h3>
+<pre class="lang-sql"><code>SELECT COUNT(*) FROM students;
+SELECT AVG(grade) FROM students;
+SELECT MAX(grade), MIN(grade) FROM students;
+SELECT * FROM students WHERE grade BETWEEN 10 AND 16;
+SELECT * FROM students WHERE name LIKE &#x27;%a%&#x27;;    -- contains an a</code></pre>
+<h2>5. Connecting from PHP (mysqli)</h2>
+<pre class="lang-php"><code>$conn = mysqli_connect(&quot;localhost&quot;, &quot;root&quot;, &quot;&quot;, &quot;school&quot;);
+
+if (!$conn) {
+    die(&quot;Connection failed: &quot; . mysqli_connect_error());
+}</code></pre>
+<p>On XAMPP the defaults are: host <code>localhost</code>, user <code>root</code>, password <strong>empty</strong>.</p>
+<h3>Reading rows</h3>
+<pre class="lang-php"><code>$result = mysqli_query($conn, &quot;SELECT * FROM students&quot;);
+
+while ($row = mysqli_fetch_assoc($result)) {
+    echo $row[&quot;name&quot;] . &quot; - &quot; . $row[&quot;grade&quot;] . &quot;&lt;br&gt;&quot;;
+}</code></pre>
+<p><code>mysqli_fetch_assoc()</code> gives you <strong>one row as an associative array</strong>, then moves to the next. When there are no rows left it gives <code>false</code> and the <code>while</code> stops. That is the whole trick.</p>
+<h3>Writing</h3>
+<pre class="lang-php"><code>mysqli_query($conn, &quot;INSERT INTO students (name, grade) VALUES (&#x27;Sara&#x27;, 14)&quot;);
+echo mysqli_affected_rows($conn) . &quot; row added&quot;;</code></pre>
+<h2>6. 🚨 SQL injection — the one security rule</h2>
+<p><strong>Never</strong> glue user input straight into SQL:</p>
+<pre class="lang-php"><code>// DANGEROUS - never do this
+$id = $_GET[&quot;id&quot;];
+mysqli_query($conn, &quot;SELECT * FROM students WHERE id = $id&quot;);</code></pre>
+<p>If someone visits <code>?id=1 OR 1=1</code> they get every row. Worse things are possible.</p>
+<p>Use a <strong>prepared statement</strong> — the values travel separately from the SQL:</p>
+<pre class="lang-php"><code>$stmt = mysqli_prepare($conn, &quot;SELECT * FROM students WHERE id = ?&quot;);
+mysqli_stmt_bind_param($stmt, &quot;i&quot;, $id);      // i = integer, s = string, d = decimal
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);</code></pre>
+<p>The <code>?</code> is a placeholder. MySQL now treats the value as <em>data</em>, never as commands.</p>
+<p><strong>Rule: any value that came from a user goes through a prepared statement. No exceptions.</strong></p>
+<h2>7. Always close</h2>
+<pre class="lang-php"><code>mysqli_close($conn);</code></pre>
+<hr>
+<h2>Files here</h2>
+<ul><li><code>school.sql</code> — import this in phpMyAdmin to create the database with sample data</li><li><code>01-connect.php</code> — test your connection</li><li><code>02-select.php</code> — read and display rows</li><li><code>03-insert.php</code> — add a row safely with a prepared statement</li><li><code>04-crud.php</code> — all four operations in one page</li></ul>
+<hr>
+<h2>Watch out</h2>
+<div class="tablewrap"><table><thead><tr><th>Mistake</th><th>Result</th></tr></thead><tbody><tr><td>MySQL not started in XAMPP</td><td>&quot;Connection refused&quot;</td></tr><tr><td>wrong database name</td><td>&quot;Unknown database&quot;</td></tr><tr><td><code>UPDATE</code>/<code>DELETE</code> with no <code>WHERE</code></td><td>you destroy the table</td></tr><tr><td>gluing <code>$_GET</code> into SQL</td><td>SQL injection</td></tr><tr><td><code>=</code> in SQL means compare (not <code>==</code>)</td><td>SQL is not PHP</td></tr></tbody></table></div>
+<hr>
+<p>Next: <code>../10-dynamic-page/</code></p>
+<hr>
+<h2>💡 Did you know — Little Bobby Tables</h2>
+<p>There is a famous cartoon (xkcd #327) where a school calls a mother to say their student database has been wiped. Her son&#x27;s registered name was:</p>
+<pre><code>Robert&#x27;); DROP TABLE Students;--</code></pre>
+<p>The school&#x27;s code glued that name straight into its SQL, so the database read it as a command and deleted the table. The mother&#x27;s reply: <em>&quot;And I hope you&#x27;ve learned to sanitise your database inputs.&quot;</em></p>
+<p>It&#x27;s a joke, but it&#x27;s an exact description of <strong>SQL injection</strong>, and versions of it have caused real breaches at real companies. A prepared statement is what makes the name just a name — even that one.</p>
+<p>Bonus fact: <strong>MySQL is named after a person.</strong> Co-founder Monty Widenius named it after his daughter, My.</p>
+<h2>🎮 Play with it</h2>
+<ol><li><strong>Talk to the database directly.</strong> In phpMyAdmin, open the SQL tab and run <code>SELECT * FROM students WHERE name LIKE &#x27;F%&#x27;</code>. Change the letter. Change it to <code>%a%</code>. No PHP at all — just you and the data.</li><li><strong>Sort things.</strong> <code>ORDER BY grade DESC</code>, then <code>ASC</code>, then <code>ORDER BY name</code>. Three words, three completely different pages.</li><li><strong>Ask real questions.</strong> <code>SELECT AVG(grade) FROM students;</code> then <code>SELECT major, COUNT(*) FROM students GROUP BY major;</code> That second one is a report a manager would pay for.</li><li><strong>Break something safely.</strong> <code>UPDATE students SET grade = 20;</code> — with no <code>WHERE</code>. Look at what happened to every row. Then re-import <code>school.sql</code> to undo it. Do this <em>once</em>, on purpose, in practice — so you never do it by accident on something that matters.</li></ol>
+<h2>🏆 Boss challenge</h2>
+<p>Add a <strong><code>courses</code> table</strong> to the <code>school</code> database with an id, a title and a teacher. Fill it with five rows using <code>INSERT</code>. Then write a PHP page that shows both tables, side by side, each in its own HTML table.</p>
+<p>You&#x27;ve now got two tables. Joining them is lesson W on the roadmap.</p>
+<h2>▶ Practise this lesson</h2>
+<p><code>games/php-arcade.html</code> → <strong>Match the Words</strong> (SQL set) + <strong>Code Builder</strong> · <code>games/php-quest.php</code> (door 6) · <code>flashcards.html</code> → deck 6 <em>SQL &amp; MySQL</em> · <code>quizzes/mini-quizzes/lesson-09.md</code></p>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="forms.html"><span>Previous</span>Forms: HTML talks to PHP</a>
+<a class="next" href="dynamic.html"><span>Next lesson</span>A dynamic page with a database</a>
+</nav>
+<script src="../embed.js"></script>

@@ -1,0 +1,126 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Algorithms, flowcharts, pseudocode</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css">
+<body class="reader">
+<article class="prose">
+<h1>Lesson 0A — Algorithms, Flowcharts and Pseudocode</h1>
+<blockquote><p><strong>This is MIT320 Lesson 1.</strong> It is the first thing your lecturer teaches, and there is <strong>no PHP in it at all</strong>. That is on purpose: you design the solution first, then you type it.</p>
+<p>Everything here is examinable. &quot;Draw the flowchart&quot;, &quot;write the pseudocode&quot; and &quot;what is an algorithm&quot; are the easiest marks on the paper, because they are the only questions where a correct answer needs no working code.</p></blockquote>
+<hr>
+<h2>1. What an algorithm is</h2>
+<p>An <strong>algorithm</strong> is a step-by-step procedure for solving a problem.</p>
+<p>That is the definition to write in the exam. But a definition you can repeat is not the same as one you can use, so here is the test. In computer science, something only counts as an algorithm if all three of these are true:</p>
+<div class="tablewrap"><table><thead><tr><th>Rule</th><th>In plain words</th></tr></thead><tbody><tr><td>It has <strong>data to work on</strong></td><td>you give it something: two numbers, four marks, a word</td></tr><tr><td>It produces <strong>at least one result</strong></td><td>it tells you something back. A procedure that answers nothing is not an algorithm</td></tr><tr><td>It <strong>terminates</strong> after a finite number of steps</td><td>it stops. A recipe that never ends is not a recipe</td></tr></tbody></table></div>
+<p>That third one is the interesting one. <code>while ($x &gt; 0)</code> where nothing ever changes <code>$x</code> is not a slow algorithm. It is <strong>not an algorithm at all</strong>.</p>
+<p>A recipe is the comparison everybody uses, and it is a good one. &quot;Beat two eggs, add flour, bake for 20 minutes&quot; has data (eggs, flour), a result (a cake) and an end (20 minutes).</p>
+<hr>
+<h2>2. The Program Development Life Cycle (PDLC)</h2>
+<p>Six phases. Expect &quot;list the phases of the PDLC&quot; as a written question, so learn them in order.</p>
+<div class="tablewrap"><table><thead><tr><th>#</th><th>Phase</th><th>What happens</th></tr></thead><tbody><tr><td>1</td><td><strong>Problem definition</strong></td><td>say clearly what problem the software must solve</td></tr><tr><td>2</td><td><strong>Problem analysis</strong></td><td>work out the inputs, the processes and the outputs. Find the constraints</td></tr><tr><td>3</td><td><strong>Algorithm development</strong></td><td>design the steps. This is where flowcharts and pseudocode live</td></tr><tr><td>4</td><td><strong>Coding and documentation</strong></td><td>turn the algorithm into a real language, and write down how it works</td></tr><tr><td>5</td><td><strong>Testing and debugging</strong></td><td>run it, find the bugs, fix them</td></tr><tr><td>6</td><td><strong>Maintenance</strong></td><td>keep fixing and improving it after people are using it</td></tr></tbody></table></div>
+<p>Notice where coding sits: <strong>phase 4 of 6</strong>. Most of the work happens before you type, and a good chunk happens after you think you are finished.</p>
+<p>Another way to say the same thing, which your slides also use: programming has a <strong>problem solving phase</strong> (produce the algorithm) and an <strong>implementation phase</strong> (write it in a language). Design is the most important part, because a program built on a wrong design is wrong no matter how neatly it is typed.</p>
+<hr>
+<h2>3. Writing an algorithm in plain English</h2>
+<p>The first way to express an algorithm is ordinary language, using a small set of verbs so each line does exactly one thing:</p>
+<ul><li><strong>read</strong>, <strong>write</strong>, <strong>compute</strong>, <strong>set</strong> — for input, output and assignment</li><li><strong>add</strong>, <strong>subtract</strong>, <strong>multiply</strong>, <strong>divide</strong> — for the maths</li><li><strong>equal to</strong>, <strong>less than</strong>, <strong>greater than</strong> — for the comparisons</li><li><strong>repeat for</strong>, <strong>while</strong>, <strong>if</strong>, <strong>halt</strong>, <strong>exit</strong> — for the control</li></ul>
+<p>Example, the one from your slides:</p>
+<pre><code>1. Initialize sum to 0
+2. Enter the two numbers
+3. Add them and store the result in sum
+4. Print sum</code></pre>
+<p>Four lines, each doing one thing, in order. That is a complete algorithm.</p>
+<hr>
+<h2>4. Pseudocode, and the notation your lecturer uses</h2>
+<p>Plain English gets wordy. <strong>Pseudocode</strong> is the middle ground: part English, part programming notation. It is <em>fake code</em>.</p>
+<ul><li>It has <strong>no syntax rules</strong>, so it cannot give you a syntax error</li><li>It is <strong>never compiled or run</strong></li><li>It can be translated into <strong>any</strong> language afterwards: PHP, Python, C, anything</li></ul>
+<p>The point is that you get to think about the logic without fighting semicolons.</p>
+<p><strong>Use your lecturer&#x27;s conventions</strong>, because those are what the marker is reading:</p>
+<div class="tablewrap"><table><thead><tr><th>Convention</th><th>How it is written</th></tr></thead><tbody><tr><td>The algorithm has a <strong>name</strong></td><td><code>Algorithm GCD</code></td></tr><tr><td><strong>Comments</strong> go in square brackets</td><td><code>[this returns the greatest common divisor]</code></td></tr><tr><td><strong>Variable names in CAPITALS</strong></td><td><code>GRADE</code>, <code>M1</code>, <code>X</code></td></tr><tr><td><strong>Assignment uses a left arrow</strong></td><td><code>GRADE &lt;-- (M1+M2+M3+M4)/4</code></td></tr><tr><td><strong>Operators are the algebraic ones</strong></td><td><code>+ - * / &lt; &gt; = !=</code></td></tr><tr><td><strong>Decisions</strong></td><td><code>if-then</code>, <code>if-then-else</code>, <code>endif</code></td></tr><tr><td><strong>Repetition</strong></td><td><code>Repeat</code>, <code>for</code>, <code>while</code>, <code>until</code></td></tr></tbody></table></div>
+<p>Written out, one of your slide examples looks like this:</p>
+<pre><code>Input M1, M2, M3, M4
+GRADE &lt;-- (M1 + M2 + M3 + M4) / 4
+if (GRADE &lt; 60) then
+    Print &quot;FAIL&quot;
+else
+    Print &quot;PASS&quot;
+endif</code></pre>
+<p><strong>Watch the arrow.</strong> In pseudocode <code>&lt;--</code> means <em>put this value in here</em>, and a single <code>=</code> means <em>is it equal?</em>. In PHP those swap round: <code>=</code> puts a value in, and <code>==</code> compares. Mixing them up is the single most common mark lost on this topic.</p>
+<hr>
+<h2>5. Flowcharts</h2>
+<p>A flowchart is the same algorithm drawn as a picture. It shows the logic, the individual steps, and how they connect.</p>
+<h3>The symbols</h3>
+<div class="tablewrap"><table><thead><tr><th>Symbol</th><th>Shape</th><th>What it means</th></tr></thead><tbody><tr><td><strong>Oval</strong></td><td>rounded box</td><td>start or end of the program (a <em>terminal</em>)</td></tr><tr><td><strong>Parallelogram</strong></td><td>leaning box</td><td>input or output. <code>Input M1</code> or <code>Print SUM</code></td></tr><tr><td><strong>Rectangle</strong></td><td>plain box</td><td>a process. Doing maths, assigning a value</td></tr><tr><td><strong>Diamond</strong></td><td>turned square</td><td>a decision. Two ways out: yes and no</td></tr><tr><td><strong>Flow line</strong></td><td>arrow</td><td>the direction the logic travels</td></tr></tbody></table></div>
+<h3>The two rules that cost marks</h3>
+<ol><li><strong>A flowchart must have a start and a stop.</strong> Both of them. Ovals.</li><li><strong>Every step must connect.</strong> Nothing left hanging with an arrow going nowhere.</li></ol>
+<p>Those two are easy to check before you hand the paper in, and easy to lose a mark on if you do not.</p>
+<h3>The decision structure</h3>
+<p>A diamond holds a <strong>logical expression</strong>: a question with a yes/no answer, like <code>A &gt; B</code>.</p>
+<pre><code>        +-----------+
+   Yes  |  is A&gt;B ? |  No
+   &lt;----+-----------+----&gt;
+   |                     |
++--------+          +--------+
+|Print A |          |Print B |
++--------+          +--------+</code></pre>
+<p>which is exactly this pseudocode:</p>
+<pre><code>if A &gt; B then
+    print A
+else
+    print B
+endif</code></pre>
+<p>If the condition is <strong>true</strong> you take the left branch. If it is <strong>false</strong> you take the right one. Only one of the two ever runs.</p>
+<h3>Relational operators</h3>
+<p>These are the questions a diamond is allowed to ask:</p>
+<div class="tablewrap"><table><thead><tr><th>Pseudocode</th><th>Means</th><th>In PHP</th></tr></thead><tbody><tr><td><code>&gt;</code></td><td>greater than</td><td><code>&gt;</code></td></tr><tr><td><code>&lt;</code></td><td>less than</td><td><code>&lt;</code></td></tr><tr><td><code>=</code></td><td>equal to</td><td><code>==</code> (or <code>===</code>)</td></tr><tr><td><code>&gt;=</code></td><td>greater than or equal to</td><td><code>&gt;=</code></td></tr><tr><td><code>&lt;=</code></td><td>less than or equal to</td><td><code>&lt;=</code></td></tr><tr><td><code>!=</code></td><td>not equal to</td><td><code>!=</code> (or <code>!==</code>)</td></tr></tbody></table></div>
+<p>The middle row is the trap. Pseudocode <code>=</code> is PHP <code>==</code>.</p>
+<hr>
+<h2>6. Euclid&#x27;s algorithm, the one you will be asked to trace</h2>
+<p>Finding the <strong>greatest common divisor</strong> of two positive numbers, written by Euclid in ancient Greece and still correct today. This one appears in your slides three times over (English, pseudocode, flowchart), which is a strong hint about the exam.</p>
+<pre><code>Algorithm GCD [returns the greatest common divisor of two positive integers]
+
+1. Read : A, B
+2. X &lt;-- A, Y &lt;-- B
+3. Repeat steps 4 to 5 while (X != Y)
+4. if X &gt; Y then X &lt;-- X - Y
+5. if Y &gt; X then Y &lt;-- Y - X
+6. Write : &quot;Greatest common divisor: &quot;, X
+7. Exit</code></pre>
+<p>The idea in one sentence: <strong>keep subtracting the smaller from the larger until they are equal, and that value is the answer.</strong></p>
+<p>Trace it for GCD(48, 18) and show the table. Markers love the table:</p>
+<div class="tablewrap"><table><thead><tr><th>Step</th><th>X</th><th>Y</th><th>What happened</th></tr></thead><tbody><tr><td>start</td><td>48</td><td>18</td><td></td></tr><tr><td>1</td><td>30</td><td>18</td><td>X was bigger, so X &lt;-- 48 - 18</td></tr><tr><td>2</td><td>12</td><td>18</td><td>X was bigger, so X &lt;-- 30 - 18</td></tr><tr><td>3</td><td>12</td><td>6</td><td>Y was bigger, so Y &lt;-- 18 - 12</td></tr><tr><td>4</td><td>6</td><td>6</td><td>X was bigger, so X &lt;-- 12 - 6</td></tr><tr><td>stop</td><td>6</td><td>6</td><td>X equals Y. <strong>GCD is 6</strong></td></tr></tbody></table></div>
+<p>Check it yourself: 6 divides 48 (eight times) and 6 divides 18 (three times), and nothing bigger does both.</p>
+<hr>
+<h2>7. From algorithm to PHP</h2>
+<p>This is the part your slides do not show, and it is the reason this lesson exists inside a PHP course. The algorithm is the design. PHP is one way of building it.</p>
+<p>The grade example, side by side:</p>
+<div class="tablewrap"><table><thead><tr><th>Pseudocode</th><th>PHP</th></tr></thead><tbody><tr><td><code>Input M1, M2, M3, M4</code></td><td><code>$m1 = 15; $m2 = 12; ...</code></td></tr><tr><td><code>GRADE &lt;-- (M1+M2+M3+M4)/4</code></td><td><code>$grade = ($m1 + $m2 + $m3 + $m4) / 4;</code></td></tr><tr><td><code>if (GRADE &lt; 60) then</code></td><td><code>if ($grade &lt; 60) {</code></td></tr><tr><td><code>Print &quot;FAIL&quot;</code></td><td><code>echo &quot;FAIL&quot;;</code></td></tr><tr><td><code>else</code></td><td><code>} else {</code></td></tr><tr><td><code>Print &quot;PASS&quot;</code></td><td><code>echo &quot;PASS&quot;;</code></td></tr><tr><td><code>endif</code></td><td><code>}</code></td></tr></tbody></table></div>
+<p>Line for line. Every pseudocode line became exactly one PHP line. That is what a good algorithm buys you: the hard thinking is already done, and typing it is mechanical.</p>
+<p><code>examples.php</code> in this folder runs all of it for real.</p>
+<blockquote><p><strong>Careful with the pass mark.</strong> MIT320&#x27;s example marks out of 100 and fails below <strong>60</strong>. The rest of this course marks out of 20 and passes at <strong>10</strong>, because that is what your other material uses. Neither is wrong. Read the question and use the number it gives you.</p></blockquote>
+<hr>
+<h2>Watch out ⚠️</h2>
+<div class="tablewrap"><table><thead><tr><th>Mistake</th><th>What happens</th></tr></thead><tbody><tr><td>Flowchart with no Stop oval</td><td>marked wrong, even if the logic is perfect</td></tr><tr><td>An arrow that connects to nothing</td><td>same. Every step must join up</td></tr><tr><td>Using <code>=</code> for comparison in PHP</td><td><code>if ($x = 5)</code> assigns 5 and is always true</td></tr><tr><td>Writing PHP syntax in a pseudocode answer</td><td><code>$</code> and <code>;</code> do not belong in pseudocode</td></tr><tr><td>A loop where nothing changes</td><td>not a slow algorithm, not an algorithm at all</td></tr><tr><td>Putting a decision in a rectangle</td><td>decisions are diamonds. Always</td></tr></tbody></table></div>
+<hr>
+<h2>💡 Did you know</h2>
+<p>The word <strong>algorithm</strong> is somebody&#x27;s name. <strong>Muhammad ibn Musa al-Khwarizmi</strong> was a mathematician working in Baghdad in the 800s. When his book on calculation reached Europe in Latin translation, his name came with it, got mangled into <em>algorismus</em>, and ended up meaning &quot;the steps you follow to calculate something&quot;.</p>
+<p>His other book gave us a second word. Its title contains <em>al-jabr</em>, the operation of moving a term to the other side of an equation. In English that became <strong>algebra</strong>.</p>
+<p>So in a lesson about algorithms in algebra you are saying one man&#x27;s name twice, and his name is on your exam paper more often than your lecturer&#x27;s.</p>
+<p>Euclid, whose GCD algorithm you just traced, was even earlier: roughly 300 BC. His method is still the one your computer uses to reduce a fraction. Over two thousand years, and nobody has found a better way to do it.</p>
+<h2>🎮 Play with it</h2>
+<ol><li><strong>Write the algorithm for making tea.</strong> Properly. Every step. Then hand it to somebody and make them follow it <em>exactly</em>, doing nothing you did not write. They will end up holding a kettle with no water in it. That is what a computer does with your code.</li><li><strong>Trace Euclid backwards.</strong> GCD(1071, 462) with the subtraction method. Draw the table. It takes a while. Then look up how the <em>division</em> version does it in three lines, and you will understand why algorithms get improved.</li><li><strong>Draw the flowchart for something silly</strong> that has a decision in it: &quot;should I go to the lecture?&quot; Diamond for the condition, two branches, a stop on each. The shapes stick faster when the content is daft.</li><li><strong>The 60 vs 10 trap.</strong> Take the grade flowchart and redraw it for marks out of 20 passing at 10. One number changes. Prove to yourself that the <em>structure</em> is the answer, not the numbers in it.</li></ol>
+<h2>🏆 Boss challenge</h2>
+<p>Take the <strong>sum of five numbers</strong> problem, the one with a loop, and produce all three forms on one page:</p>
+<ol><li>the algorithm in plain English</li><li>the pseudocode, using the arrow and CAPITAL variables</li><li>the flowchart, with a proper start, stop and a loop arrow going back up</li></ol>
+<p>Then write it in PHP and check the PHP and the pseudocode agree line for line.</p>
+<p>If your flowchart&#x27;s loop arrow does not go <em>back</em> to an earlier box, you have not drawn a loop. You have drawn five boxes.</p>
+<h2>▶ Practise this lesson</h2>
+<p><code>quizzes/mini-quizzes/lesson-00-algorithms.md</code> · <code>games/php-arcade.html</code> → <strong>Match the Words</strong> (the algorithm set) · then <code>exercises.php</code> in this folder, which is your lecturer&#x27;s own five exercises.</p>
+</article>
+<nav class="lessonnav">
+<a class="next" href="basics.html"><span>Next lesson</span>echo, variables, comments</a>
+</nav>
+<script src="../embed.js"></script>

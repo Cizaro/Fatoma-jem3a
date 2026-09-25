@@ -1,0 +1,99 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Forms: HTML talks to PHP</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css">
+<body class="reader">
+<article class="prose">
+<h1>Lesson 8 — Forms: HTML talks to PHP</h1>
+<p>This is the lesson where PHP becomes <strong>web</strong> development. This matches <strong>Chapter 10 - Building Dynamic Webpages with PHP</strong> in your textbook.</p>
+<h2>1. First: run a server</h2>
+<p>Forms need a server. In the <code>Php</code> folder, run:</p>
+<pre class="lang-bash"><code>php -S localhost:8000</code></pre>
+<p>Then open <code>http://localhost:8000/08-forms/form.php</code> in your browser. Keep the terminal open. <code>Ctrl + C</code> stops the server.</p>
+<h2>2. Mixing PHP into HTML</h2>
+<p>A <code>.php</code> file can contain both. PHP runs first, HTML is what the visitor sees.</p>
+<pre class="lang-php"><code>&lt;h1&gt;Hello &lt;?php echo $name; ?&gt;&lt;/h1&gt;</code></pre>
+<p>Short version, used everywhere:</p>
+<pre class="lang-php"><code>&lt;h1&gt;Hello &lt;?= $name ?&gt;&lt;/h1&gt;</code></pre>
+<p><code>&lt;?=</code> means <code>&lt;?php echo</code>. Very handy inside HTML.</p>
+<h2>3. How a form sends data</h2>
+<pre class="lang-html"><code>&lt;form method=&quot;post&quot; action=&quot;process.php&quot;&gt;
+    &lt;input type=&quot;text&quot; name=&quot;username&quot;&gt;
+    &lt;button type=&quot;submit&quot;&gt;Send&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+<p>Three things do the work:</p>
+<div class="tablewrap"><table><thead><tr><th>Attribute</th><th>Meaning</th></tr></thead><tbody><tr><td><code>action</code></td><td>which PHP file receives the data (empty = this same file)</td></tr><tr><td><code>method</code></td><td>how it travels: <code>post</code> or <code>get</code></td></tr><tr><td><code>name</code></td><td><strong>the key you read in PHP.</strong> No <code>name</code>, no data.</td></tr></tbody></table></div>
+<h2>4. Reading the data in PHP</h2>
+<pre class="lang-php"><code>$username = $_POST[&quot;username&quot;];   // the name=&quot;username&quot; from the form</code></pre>
+<p><code>$_POST</code> is an array PHP fills for you automatically. So is <code>$_GET</code>.</p>
+<div class="tablewrap"><table><thead><tr><th></th><th><code>GET</code></th><th><code>POST</code></th></tr></thead><tbody><tr><td>where the data goes</td><td>in the URL: <code>?name=fatima</code></td><td>hidden in the request body</td></tr><tr><td>visible to the user</td><td>yes</td><td>no</td></tr><tr><td>size limit</td><td>small</td><td>large</td></tr><tr><td>use it for</td><td>searches, filters, links</td><td>logins, sign-ups, anything private</td></tr></tbody></table></div>
+<p><strong>Never send a password with GET.</strong> It would sit in the URL and in the browser history.</p>
+<h2>5. The self-submitting page (the normal pattern)</h2>
+<p>One file shows the form <strong>and</strong> handles it:</p>
+<pre class="lang-php"><code>&lt;?php
+if ($_SERVER[&quot;REQUEST_METHOD&quot;] == &quot;POST&quot;) {
+    $name = $_POST[&quot;name&quot;];
+    echo &quot;Hello $name&quot;;
+}
+?&gt;
+&lt;form method=&quot;post&quot;&gt;
+    &lt;input type=&quot;text&quot; name=&quot;name&quot;&gt;
+    &lt;button&gt;Send&lt;/button&gt;
+&lt;/form&gt;</code></pre>
+<p>The <code>if</code> stops PHP from running the handling code on the first visit, when nothing was submitted yet.</p>
+<h2>6. Checking the data is there</h2>
+<p>If the key doesn&#x27;t exist, PHP warns you. Guard it:</p>
+<pre class="lang-php"><code>if (isset($_POST[&quot;name&quot;]) &amp;&amp; $_POST[&quot;name&quot;] != &quot;&quot;) { ... }
+
+// or the short way (PHP 7+): use this value, or &quot;&quot; if it is missing
+$name = $_POST[&quot;name&quot;] ?? &quot;&quot;;
+
+// empty() is true for &quot;&quot;, 0, null, and missing
+if (empty($_POST[&quot;name&quot;])) { $errors[] = &quot;Name is required&quot;; }</code></pre>
+<h2>7. Validation — never trust the user</h2>
+<p>Client-side checks (<code>required</code> in HTML) can be bypassed. <strong>Always check again in PHP.</strong></p>
+<pre class="lang-php"><code>$errors = [];
+
+if (empty($name))                                    $errors[] = &quot;Name is required&quot;;
+if (strlen($password) &lt; 6)                           $errors[] = &quot;Password too short&quot;;
+if (!filter_var($email, FILTER_VALIDATE_EMAIL))      $errors[] = &quot;Invalid email&quot;;
+if (!is_numeric($age))                               $errors[] = &quot;Age must be a number&quot;;
+
+if (count($errors) == 0) {
+    // safe to continue
+}</code></pre>
+<h2>8. Security: escape before you print</h2>
+<p>If a user types <code>&lt;script&gt;alert(&#x27;hacked&#x27;)&lt;/script&gt;</code> into your form and you echo it straight back, their script runs in the page. That attack is called <strong>XSS</strong>.</p>
+<p>The fix is one function:</p>
+<pre class="lang-php"><code>echo htmlspecialchars($name);</code></pre>
+<p>It turns <code>&lt;</code> into <code>&amp;lt;</code> so the browser shows the text instead of running it.</p>
+<p><strong>Rule: <code>htmlspecialchars()</code> every single time you print something a user typed.</strong></p>
+<h2>9. Where to put forms in this course</h2>
+<ul><li><code>form.php</code> - the form + handling in one file (the pattern you&#x27;ll actually use)</li><li><code>process.php</code> + <code>form-separate.php</code> - the two-file version, to see <code>action</code> clearly</li><li><code>register.php</code> - a full sign-up form with validation, errors and escaping</li></ul>
+<hr>
+<h2>Watch out</h2>
+<div class="tablewrap"><table><thead><tr><th>Mistake</th><th>Result</th></tr></thead><tbody><tr><td>no <code>name=</code> on the input</td><td>the data never arrives</td></tr><tr><td><code>method=&quot;get&quot;</code> but reading <code>$_POST</code></td><td>empty</td></tr><tr><td>opening the file by double-click</td><td>PHP code shows as text - you need the server</td></tr><tr><td>forgetting <code>isset</code></td><td>&quot;Undefined array key&quot; warning</td></tr><tr><td>forgetting <code>htmlspecialchars</code></td><td>XSS hole</td></tr></tbody></table></div>
+<hr>
+<p>Next: the files in this folder, then <code>../projects/</code></p>
+<hr>
+<h2>💡 Did you know — the one-million-friend worm</h2>
+<p>In October 2005 a 19-year-old called Samy Kamkar found that MySpace didn&#x27;t properly escape what users typed into their profile. He put a small script in his own profile page. Anyone who <strong>viewed</strong> his profile silently ran it — which added him as a friend, and copied the script onto <em>their</em> profile too.</p>
+<p>In under 20 hours he had over a million friends and MySpace had to shut the site down.</p>
+<p>That is XSS. That is the attack <code>htmlspecialchars()</code> prevents. It is one function call, and leaving it out is how that happened.</p>
+<h2>🎮 Play with it</h2>
+<ol><li><strong>Attack your own page.</strong> In <code>form.php</code>, type <code>&lt;b&gt;hello&lt;/b&gt;</code> as your name. It shows as text, because of <code>htmlspecialchars()</code>. Now temporarily delete that function, reload, and try again — it goes bold. Put it straight back. You just performed the attack you&#x27;re defending against.</li><li><strong>Watch GET work.</strong> Submit <code>form-separate.php</code> with GET and watch the URL change. Then edit the URL by hand and press enter. The page believes you. That&#x27;s why passwords never go through GET.</li><li><strong>Empty everything.</strong> Submit <code>register.php</code> completely blank. Six errors at once, no crash. That&#x27;s what good validation looks like.</li><li><strong>The compliment generator.</strong> A form with a name box that replies with a random compliment from an array. Pointless, fun, and it&#x27;s the whole request-response cycle in one file.</li></ol>
+<h2>🏆 Boss challenge</h2>
+<p>Build a <strong>pizza order form</strong>: name, size (a <code>&lt;select&gt;</code>), toppings (checkboxes), and notes (a <code>&lt;textarea&gt;</code>). On submit, print a tidy order summary with a calculated price — base price by size, plus 1.50 per topping.</p>
+<p>Validate everything: the name is required, at least one topping must be chosen. Everything printed goes through <code>htmlspecialchars()</code>.</p>
+<p>This is genuinely the shape of a real e-commerce checkout, minus the payment.</p>
+<h2>▶ Practise this lesson</h2>
+<p><code>games/php-arcade.html</code> → <strong>Speed Round</strong> · <code>games/php-quest.php</code> (the last door) · <code>flashcards.html</code> → deck 5 <em>Forms &amp; security</em> · <code>quizzes/mini-quizzes/lesson-08.md</code></p>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="functions.html"><span>Previous</span>Functions</a>
+<a class="next" href="mysql.html"><span>Next lesson</span>Database basics with MySQL</a>
+</nav>
+<script src="../embed.js"></script>

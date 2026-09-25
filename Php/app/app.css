@@ -1,0 +1,164 @@
+/* ============================================================
+   The course design system. One file, used by the app shell,
+   every lesson page, and (via embed.js) the pages loaded inside it.
+   Change a token here and the whole ecosystem moves together.
+   ============================================================ */
+:root{
+  --paper:#F7F6F3; --surface:#FFFFFF; --surface-2:#EFEDE8;
+  --ink:#1A1D21; --ink-2:#5C6168; --ink-3:#8D939B;
+  --line:#E2DFD8; --accent:#0F7B6C; --accent-soft:#E3F1EE;
+  --warm:#B5541F; --warm-soft:#FBEDE4; --gold:#A57C1B; --gold-soft:#FBF2DC;
+  --cabinet:#15181C; --cabinet-ink:#F2F1EE;
+  --shadow:0 1px 2px rgba(26,29,33,.06), 0 10px 28px -14px rgba(26,29,33,.28);
+  --lift:0 2px 4px rgba(26,29,33,.06), 0 18px 40px -20px rgba(26,29,33,.45);
+  --display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --r:14px; --rail:250px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
+    --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
+    --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
+    --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B; --gold-soft:#2C2517;
+    --cabinet:#0E1013; --cabinet-ink:#F2F1EE;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+    --lift:0 2px 4px rgba(0,0,0,.5), 0 18px 40px -20px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
+  --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
+  --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
+  --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B; --gold-soft:#2C2517;
+  --cabinet:#0E1013; --cabinet-ink:#F2F1EE;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
+  --lift:0 2px 4px rgba(0,0,0,.5), 0 18px 40px -20px rgba(0,0,0,.9);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ============================================================
+   APP SHELL
+   ============================================================ */
+.shell{display:grid;grid-template-columns:var(--rail) 1fr;height:100dvh;overflow:hidden}
+
+.rail{background:var(--surface);border-right:1px solid var(--line);display:flex;
+  flex-direction:column;overflow-y:auto;padding-bottom:16px}
+.brand{display:flex;align-items:center;gap:10px;padding:20px 18px 16px;
+  position:sticky;top:0;background:var(--surface);z-index:2}
+.brand .dot{width:30px;height:30px;border-radius:9px;background:var(--accent);color:#fff;
+  display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:15px;flex:none}
+.brand b{font-family:var(--display);font-size:16px;letter-spacing:-.015em;line-height:1.15}
+.brand span{display:block;font-size:11.5px;color:var(--ink-3);font-weight:400;font-family:var(--body)}
+
+.railprog{margin:0 18px 16px;padding:13px 14px;background:var(--paper);
+  border:1px solid var(--line);border-radius:12px}
+.railprog .t{display:flex;justify-content:space-between;align-items:baseline;
+  font-size:12px;color:var(--ink-3);font-family:var(--mono);margin-bottom:7px}
+.railprog .t b{color:var(--ink);font-size:14px}
+.railprog .b{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.railprog .b i{display:block;height:100%;background:var(--accent);border-radius:99px;
+  width:0;transition:width .5s cubic-bezier(.16,1,.3,1)}
+
+.navsec{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink-3);padding:14px 20px 7px}
+.nav{display:flex;flex-direction:column;gap:1px;padding:0 10px}
+.nav a{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;
+  text-decoration:none;color:var(--ink-2);font-size:14.5px;line-height:1.3}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+.nav a.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.nav a .ic{width:20px;text-align:center;flex:none;font-size:15px}
+.nav a .n{flex:1}
+.nav a .tick{font-size:12px;color:var(--accent);flex:none}
+.nav a .num{font-family:var(--mono);font-size:11px;color:var(--ink-3);flex:none}
+.nav a.on .num{color:var(--accent)}
+
+.railfoot{margin-top:auto;padding:16px 20px 0;font-size:11.5px;color:var(--ink-3);
+  border-top:1px solid var(--line);margin-inline:10px}
+.railfoot button{background:none;border:1px solid var(--line);color:var(--ink-3);
+  border-radius:999px;padding:5px 12px;font:inherit;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:8px}
+.railfoot button:hover{color:var(--ink);border-color:var(--accent)}
+
+/* the drawer scrim is fixed and hidden until mobile opens it. It must be
+   out of the grid flow or it takes a column and shunts the rail sideways. */
+.scrim{position:fixed;inset:0;background:rgba(15,17,20,.45);z-index:35;display:none}
+
+.stage{position:relative;overflow:hidden;background:var(--paper);
+  display:flex;flex-direction:column;min-width:0}
+.stage iframe{width:100%;flex:1;min-height:0;border:0;display:block;background:var(--paper)}
+
+.topbar{display:none;align-items:center;gap:12px;padding:10px 14px;
+  background:var(--surface);border-bottom:1px solid var(--line);
+  padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.burger{background:none;border:1px solid var(--line);color:var(--ink-2);border-radius:9px;
+  padding:7px 11px;cursor:pointer;font-size:15px;line-height:1}
+.topbar .title{font-family:var(--display);font-size:16px;letter-spacing:-.01em}
+
+@media (max-width:820px){
+  .shell{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .topbar{display:flex}
+  .rail{position:fixed;inset:0 auto 0 0;width:min(86vw,300px);z-index:40;
+    transform:translateX(-100%);transition:transform .22s cubic-bezier(.16,1,.3,1);
+    box-shadow:var(--lift)}
+  .rail.open{transform:none}
+  .scrim.on{display:block}
+}
+
+/* ============================================================
+   LESSON READER
+   ============================================================ */
+body.reader{padding:0}
+.prose{max-width:760px;margin:0 auto;padding:40px 22px 10px}
+.prose h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,5.2vw,40px);
+  letter-spacing:-.03em;line-height:1.05;margin:0 0 22px;text-wrap:balance}
+.prose h2{font-family:var(--display);font-weight:700;font-size:23px;letter-spacing:-.02em;
+  margin:38px 0 12px;padding-top:20px;border-top:1px solid var(--line);text-wrap:balance}
+.prose h2:first-of-type{border-top:0;padding-top:0}
+.prose h3{font-family:var(--display);font-size:18px;margin:26px 0 8px;letter-spacing:-.01em}
+.prose p{margin:0 0 15px;max-width:68ch}
+.prose ul,.prose ol{margin:0 0 16px;padding-left:22px;max-width:68ch}
+.prose li{margin-bottom:7px}
+.prose strong{font-weight:600}
+.prose code{font-family:var(--mono);font-size:.9em;background:var(--surface-2);
+  padding:2px 6px;border-radius:5px;word-break:break-word}
+.prose pre{background:var(--cabinet);color:var(--cabinet-ink);padding:18px 20px;
+  border-radius:12px;overflow-x:auto;margin:0 0 18px;line-height:1.7}
+.prose pre code{background:none;padding:0;font-size:13.5px;color:inherit}
+.prose blockquote{margin:0 0 18px;padding:15px 18px;background:var(--accent-soft);
+  border-left:3px solid var(--accent);border-radius:0 11px 11px 0}
+.prose blockquote p:last-child{margin-bottom:0}
+.prose hr{border:0;border-top:1px solid var(--line);margin:30px 0}
+.tablewrap{overflow-x:auto;margin:0 0 18px;border:1px solid var(--line);border-radius:11px}
+.prose table{border-collapse:collapse;width:100%;font-size:14px}
+.prose th,.prose td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--line);
+  vertical-align:top}
+.prose th{background:var(--surface-2);font-family:var(--mono);font-size:11px;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2);font-weight:600}
+.prose tr:last-child td{border-bottom:0}
+.prose td code{white-space:nowrap}
+
+.lessonnav{max-width:760px;margin:0 auto;padding:10px 22px 60px;display:flex;gap:12px;
+  flex-wrap:wrap}
+.lessonnav a{flex:1;min-width:210px;text-decoration:none;background:var(--surface);
+  border:1px solid var(--line);border-radius:12px;padding:14px 16px;color:var(--ink);
+  font-weight:600;box-shadow:var(--shadow);transition:border-color .12s,transform .12s}
+.lessonnav a:hover{border-color:var(--accent);transform:translateY(-2px)}
+.lessonnav a span{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:3px;font-weight:600}
+.lessonnav .next{text-align:right}
+
+/* ============================================================
+   SHARED BITS the embedded pages borrow
+   ============================================================ */
+.btn{background:var(--accent);color:#fff;border:0;border-radius:11px;padding:12px 24px;
+  font-size:15px;font-weight:600;font-family:inherit;cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink-2)}

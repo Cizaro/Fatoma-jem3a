@@ -1,0 +1,92 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Loops</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css">
+<body class="reader">
+<article class="prose">
+<h1>Lesson 5 — Loops (repeat without repeating yourself)</h1>
+<p>Imagine printing numbers 1 to 100. You will not write 100 <code>echo</code> lines. You write a loop.</p>
+<h2>1. <code>for</code> — when you know how many times</h2>
+<pre class="lang-php"><code>for ($i = 1; $i &lt;= 5; $i++) {
+    echo $i;
+}
+// 12345</code></pre>
+<p>The three parts inside <code>( )</code>, separated by <code>;</code>:</p>
+<div class="tablewrap"><table><thead><tr><th>Part</th><th>Code</th><th>When it runs</th></tr></thead><tbody><tr><td>1. start</td><td><code>$i = 1</code></td><td><strong>once</strong>, at the beginning</td></tr><tr><td>2. condition</td><td><code>$i &lt;= 5</code></td><td>before every round — if false, the loop stops</td></tr><tr><td>3. step</td><td><code>$i++</code></td><td>after every round</td></tr></tbody></table></div>
+<p>Trace it out loud: <code>i=1</code> → 1 ≤ 5 ✓ print 1 → i becomes 2 → 2 ≤ 5 ✓ print 2 → ... → i becomes 6 → 6 ≤ 5 ✗ <strong>stop</strong>.</p>
+<p><code>$i</code> is just a variable name (i = index). You can call it <code>$row</code> or <code>$n</code>.</p>
+<h3>Counting backwards, or in steps</h3>
+<pre class="lang-php"><code>for ($i = 10; $i &gt;= 1; $i--)  { ... }   // 10 down to 1
+for ($i = 0; $i &lt;= 20; $i += 5) { ... } // 0, 5, 10, 15, 20</code></pre>
+<h2>2. <code>while</code> — when you don&#x27;t know how many times</h2>
+<pre class="lang-php"><code>$i = 1;
+while ($i &lt;= 5) {
+    echo $i;
+    $i++;          // ← IF YOU FORGET THIS, THE LOOP NEVER ENDS
+}</code></pre>
+<p>&quot;Keep going <strong>while</strong> this is true.&quot;</p>
+<p>🚨 <strong>Infinite loop:</strong> if nothing inside changes the condition, the loop runs forever and freezes the page. Press <code>Ctrl + C</code> in the terminal to kill it. Every beginner does this once.</p>
+<h2>3. <code>do...while</code> — runs at least once</h2>
+<pre class="lang-php"><code>$i = 10;
+do {
+    echo $i;
+    $i++;
+} while ($i &lt;= 5);     // prints 10 once, THEN checks</code></pre>
+<p>The check is at the <strong>end</strong>, so the body always runs one time minimum. Rare, but exams love it.</p>
+<h2>4. <code>foreach</code> — for arrays (full detail in Lesson 6)</h2>
+<pre class="lang-php"><code>$names = [&quot;Fatima&quot;, &quot;Sara&quot;, &quot;Lina&quot;];
+foreach ($names as $name) {
+    echo $name;
+}</code></pre>
+<p>The cleanest way to walk through a list. No counter, no off-by-one mistakes.</p>
+<h2>5. <code>break</code> and <code>continue</code></h2>
+<pre class="lang-php"><code>for ($i = 1; $i &lt;= 10; $i++) {
+    if ($i == 5) break;      // leave the loop completely
+    echo $i;                 // 1234
+}
+
+for ($i = 1; $i &lt;= 5; $i++) {
+    if ($i == 3) continue;   // skip THIS round only
+    echo $i;                 // 1245
+}</code></pre>
+<h2>6. Nested loops (a loop inside a loop)</h2>
+<pre class="lang-php"><code>for ($row = 1; $row &lt;= 3; $row++) {
+    for ($col = 1; $col &lt;= 3; $col++) {
+        echo &quot;$row$col &quot;;
+    }
+    echo &quot;\n&quot;;
+}
+// 11 12 13
+// 21 22 23
+// 31 32 33</code></pre>
+<p>The inner loop finishes <strong>completely</strong> for every single round of the outer loop. This is how you print tables, grids, and pyramids.</p>
+<hr>
+<h2>Watch out ⚠️</h2>
+<div class="tablewrap"><table><thead><tr><th>Mistake</th><th>Result</th></tr></thead><tbody><tr><td>forgetting <code>$i++</code> in <code>while</code></td><td>infinite loop 💀</td></tr><tr><td><code>$i &lt; 5</code> vs <code>$i &lt;= 5</code></td><td>one round missing (off-by-one)</td></tr><tr><td>using <code>,</code> instead of <code>;</code> inside <code>for()</code></td><td>parse error</td></tr><tr><td>changing <code>$i</code> inside the body by accident</td><td>chaos</td></tr></tbody></table></div>
+<hr>
+<p>➡️ <code>examples.php</code> → <code>exercises.php</code> → then play <code>games/guess-number.php</code></p>
+<hr>
+<h2>💡 Did you know</h2>
+<p>There is a tiny exercise called <strong>FizzBuzz</strong> that has been used in real job interviews for twenty years. Count to 100: say &quot;Fizz&quot; for multiples of 3, &quot;Buzz&quot; for multiples of 5, &quot;FizzBuzz&quot; for both, otherwise the number.</p>
+<p>It sounds trivial. It became famous because a surprising number of people who <em>called</em> themselves programmers couldn&#x27;t write it. Everything it needs is in this lesson: a loop, <code>%</code>, and conditions in the right order.</p>
+<p>It&#x27;s exercise 11 in your <code>exercises.php</code>. Do it, and you&#x27;ve passed a test that real job candidates have failed.</p>
+<h2>🎮 Play with it</h2>
+<ol><li><strong>The countdown.</strong> 10 down to 1, then <code>LIFT OFF</code>. Then make it count down in 2s.</li><li><strong>Times tables.</strong> Print the 7 times table. Then put the number in a variable and try 13. You wrote one loop and got every table there is.</li><li><strong>Draw something.</strong> A square of stars. Then a triangle. Then a pyramid. Then a <strong>diamond</strong> — which is just a pyramid with an upside-down one underneath.</li><li><strong>Guess first.</strong> Before running a loop to 1,000,000, guess how long it will take. Then measure it: <code>$t = microtime(true);</code> before, <code>echo microtime(true) - $t;</code> after. Computers are faster than your intuition.</li></ol>
+<h2>🏆 Boss challenge</h2>
+<p>Print a <strong>calendar month</strong> — the numbers 1 to 30 in 7 columns, lined up:</p>
+<pre><code> 1  2  3  4  5  6  7
+ 8  9 10 11 12 13 14
+15 16 17 18 19 20 21
+...</code></pre>
+<p>One loop, <code>printf(&quot;%3d&quot;, $i)</code> for the spacing, and a line break every time <code>$i % 7 == 0</code>. Tiny program, real-looking result.</p>
+<h2>▶ Practise this lesson</h2>
+<p><code>games/php-arcade.html</code> → <strong>Code Builder</strong> · <code>games/guess-number.php</code> (binary search) · <code>flashcards.html</code> → deck 4 <em>Loops &amp; conditions</em> · <code>quizzes/mini-quizzes/lesson-05.md</code></p>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="conditions.html"><span>Previous</span>Making decisions</a>
+<a class="next" href="arrays.html"><span>Next lesson</span>Arrays</a>
+</nav>
+<script src="../embed.js"></script>

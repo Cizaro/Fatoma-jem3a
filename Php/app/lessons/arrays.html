@@ -1,0 +1,107 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Arrays</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css">
+<body class="reader">
+<article class="prose">
+<h1>Lesson 6 — Arrays</h1>
+<p>One variable holds one value. An <strong>array</strong> holds many values under one name.</p>
+<p>Instead of:</p>
+<pre class="lang-php"><code>$student1 = &quot;Fatima&quot;;
+$student2 = &quot;Sara&quot;;
+$student3 = &quot;Lina&quot;;      // ...and if there are 200 students?</code></pre>
+<p>You write:</p>
+<pre class="lang-php"><code>$students = [&quot;Fatima&quot;, &quot;Sara&quot;, &quot;Lina&quot;];</code></pre>
+<h2>1. Indexed arrays (a numbered list)</h2>
+<pre class="lang-php"><code>$students = [&quot;Fatima&quot;, &quot;Sara&quot;, &quot;Lina&quot;];
+//              0         1       2        &lt;- the INDEX</code></pre>
+<p><strong>Counting starts at 0.</strong> Always. Forever.</p>
+<pre class="lang-php"><code>echo $students[0];       // Fatima
+echo $students[2];       // Lina
+echo count($students);   // 3   - how many items</code></pre>
+<p>The <strong>last</strong> item is always at index <code>count - 1</code>. Here: index 2.</p>
+<h3>Change / add / remove</h3>
+<pre class="lang-php"><code>$students[1] = &quot;Maya&quot;;       // change
+$students[] = &quot;Nour&quot;;        // add at the end (no index needed!)
+unset($students[0]);         // remove</code></pre>
+<h2>2. Associative arrays (key =&gt; value)</h2>
+<p>Instead of numbers, use your own names as keys:</p>
+<pre class="lang-php"><code>$student = [
+    &quot;name&quot;  =&gt; &quot;Fatima&quot;,
+    &quot;age&quot;   =&gt; 20,
+    &quot;major&quot; =&gt; &quot;Computer Science&quot;
+];
+
+echo $student[&quot;name&quot;];    // Fatima</code></pre>
+<p>This is the shape of nearly all real data: a user, a product, a row from a database. The <code>=&gt;</code> is read as &quot;points to&quot;.</p>
+<h2>3. Looping through arrays with foreach</h2>
+<p><strong>Indexed:</strong></p>
+<pre class="lang-php"><code>foreach ($students as $student) {
+    echo $student;
+}</code></pre>
+<p><strong>With the key too:</strong></p>
+<pre class="lang-php"><code>foreach ($student as $key =&gt; $value) {
+    echo &quot;$key: $value\n&quot;;
+}</code></pre>
+<p>Read it as: <em>&quot;for each item in the array, call it <code>$value</code>, and call its key <code>$key</code>&quot;</em>.</p>
+<h2>4. Multidimensional arrays (an array of arrays)</h2>
+<pre class="lang-php"><code>$students = [
+    [&quot;name&quot; =&gt; &quot;Fatima&quot;, &quot;grade&quot; =&gt; 18],
+    [&quot;name&quot; =&gt; &quot;Sara&quot;,   &quot;grade&quot; =&gt; 14],
+];
+
+echo $students[0][&quot;name&quot;];    // Fatima
+
+foreach ($students as $s) {
+    echo $s[&quot;name&quot;] . &quot; got &quot; . $s[&quot;grade&quot;] . &quot;\n&quot;;
+}</code></pre>
+<p>This is exactly what a database table looks like. Get comfortable here and the MySQL chapters become easy.</p>
+<h2>5. Useful array functions</h2>
+<pre class="lang-php"><code>count($a)                 // number of items
+in_array(&quot;Sara&quot;, $a)      // true/false - is it inside?
+array_search(&quot;Sara&quot;, $a)  // gives its index
+sort($a)                  // sort small-&gt;big / A-&gt;Z (renumbers keys)
+rsort($a)                 // reverse sort
+asort($a) / ksort($a)     // sort assoc by value / by key
+array_push($a, &quot;x&quot;)       // add to the end
+array_pop($a)             // remove the LAST and return it
+array_shift($a)           // remove the FIRST
+array_unshift($a, &quot;x&quot;)    // add at the beginning
+array_keys($a)            // all the keys
+array_values($a)          // all the values
+array_sum($a)             // total of numbers
+array_reverse($a)         // flip the order
+implode(&quot;, &quot;, $a)         // array  -&gt; string
+explode(&quot;,&quot;, &quot;a,b,c&quot;)     // string -&gt; array
+array_unique($a)          // remove duplicates
+print_r($a)               // print the array nicely (for debugging)</code></pre>
+<p><code>print_r()</code> and <code>var_dump()</code> are how you look inside an array. Use them constantly.</p>
+<hr>
+<h2>Watch out</h2>
+<div class="tablewrap"><table><thead><tr><th>Mistake</th><th>Result</th></tr></thead><tbody><tr><td><code>$a[3]</code> when there are 3 items</td><td>Warning: undefined key (the last one is <code>[2]</code>)</td></tr><tr><td><code>echo $array;</code></td><td>&quot;Array to string conversion&quot; - use <code>print_r()</code></td></tr><tr><td>forgetting quotes in <code>$a[name]</code></td><td>error - write <code>$a[&quot;name&quot;]</code></td></tr><tr><td><code>sort()</code> on an associative array</td><td>your keys are destroyed</td></tr></tbody></table></div>
+<hr>
+<p>Next: <code>examples.php</code> then <code>exercises.php</code> then quiz-03</p>
+<hr>
+<h2>💡 Did you know</h2>
+<p>In most languages, a <em>list</em> (numbered items) and a <em>dictionary</em> (key → value) are two completely different things you have to choose between.</p>
+<p>PHP has one structure that is both. An &quot;array&quot; in PHP is really an <strong>ordered map</strong> — which is why <code>[&quot;a&quot;, &quot;b&quot;]</code> and <code>[&quot;name&quot; =&gt; &quot;Rana&quot;]</code> are the same kind of thing, and why you can mix them in one array if you want to.</p>
+<p>It&#x27;s unusual, occasionally confusing, and it&#x27;s the reason PHP arrays feel so easy once they click.</p>
+<h2>🎮 Play with it</h2>
+<ol><li><strong>Your top five.</strong> An array of your five favourite songs. Print them numbered. Then <code>shuffle()</code> it and print again. Congratulations, you wrote a playlist shuffler.</li><li><strong>The word counter.</strong> Take a sentence, <code>explode(&quot; &quot;, $sentence)</code>, and print how many words. Then find the longest one with a loop.</li><li><strong>Random picker.</strong> <code>$names = [...]; echo $names[array_rand($names)];</code> One line that decides who pays for coffee.</li><li><strong>Break it deliberately.</strong> Print <code>$a[99]</code> on a 3-item array and read the warning. Then <code>echo $a;</code> and read that one too. Both are errors you will meet again.</li></ol>
+<h2>🏆 Boss challenge</h2>
+<p>Build a <strong>mini phone book</strong>: an associative array of <code>name =&gt; number</code>. Then: print everybody, look one person up by name, add a new person, remove someone, and print how many contacts are left.</p>
+<p>That is the entire idea behind a database table — which is exactly where lesson 9 goes.</p>
+<h2>🧠 One thing worth saying out loud</h2>
+<p>This is the lesson people get stuck on, and getting stuck here is <em>normal</em>. Boxes with numbers on them is a genuinely new way of thinking. If it feels slow, it&#x27;s because it&#x27;s the first properly abstract idea in the course — not because you&#x27;re behind.</p>
+<p>Draw the boxes on paper. Number them starting at 0. It clicks.</p>
+<h2>▶ Practise this lesson</h2>
+<p><code>games/php-arcade.html</code> → <strong>Fill the Blank</strong> · <code>games/hangman.php</code> (it&#x27;s arrays all the way down) · <code>flashcards.html</code> → deck 3 <em>Array functions</em> · <code>quizzes/mini-quizzes/lesson-06.md</code></p>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="loops.html"><span>Previous</span>Loops</a>
+<a class="next" href="functions.html"><span>Next lesson</span>Functions</a>
+</nav>
+<script src="../embed.js"></script>

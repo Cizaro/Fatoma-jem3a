@@ -1,0 +1,84 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>echo, variables, comments</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css">
+<body class="reader">
+<article class="prose">
+<h1>Lesson 1 — echo, Variables, Comments</h1>
+<h2>1. <code>echo</code> — how PHP talks</h2>
+<p><code>echo</code> means &quot;print this out&quot;.</p>
+<pre class="lang-php"><code>&lt;?php
+echo &quot;Hello world&quot;;</code></pre>
+<p>Two small things that matter:</p>
+<ul><li><code>&quot;Hello world&quot;</code> is a <strong>string</strong> — text wrapped in quotes.</li><li>The <code>;</code> at the end ends the statement. Like a full stop in a sentence.</li></ul>
+<p><code>\n</code> inside double quotes means &quot;new line&quot;:</p>
+<pre class="lang-php"><code>echo &quot;Line one\n&quot;;
+echo &quot;Line two\n&quot;;</code></pre>
+<h2>2. Variables — boxes with names</h2>
+<p>A variable stores a value so you can use it later.</p>
+<pre class="lang-php"><code>$name = &quot;Fatima&quot;;
+$age  = 20;</code></pre>
+<p>Rules for variable names:</p>
+<div class="tablewrap"><table><thead><tr><th>Rule</th><th>Good</th><th>Bad</th></tr></thead><tbody><tr><td>Must start with <code>$</code></td><td><code>$name</code></td><td><code>name</code></td></tr><tr><td>After <code>$</code>: letter or <code>_</code></td><td><code>$age</code>, <code>$_id</code></td><td><code>$2days</code></td></tr><tr><td>No spaces</td><td><code>$first_name</code></td><td><code>$first name</code></td></tr><tr><td><strong>Case sensitive</strong></td><td><code>$name</code> and <code>$Name</code> are two <em>different</em> variables</td><td></td></tr></tbody></table></div>
+<p><code>=</code> means <strong>&quot;put into&quot;</strong>, not &quot;equals&quot;. Read <code>$age = 20;</code> as <em>&quot;put 20 into age&quot;</em>.</p>
+<h2>3. Printing variables</h2>
+<p>Three ways, all correct:</p>
+<pre class="lang-php"><code>$name = &quot;Fatima&quot;;
+
+echo $name;                      // just the variable
+echo &quot;Hello &quot; . $name;           // . glues strings together (concatenation)
+echo &quot;Hello $name&quot;;              // inside DOUBLE quotes, PHP reads the variable</code></pre>
+<p>⚠️ <strong>Single quotes don&#x27;t read variables:</strong></p>
+<pre class="lang-php"><code>echo &quot;Hello $name&quot;;   // Hello Fatima
+echo &#x27;Hello $name&#x27;;   // Hello $name      &lt;- literally!</code></pre>
+<p>Remember: <strong>double quotes = smart, single quotes = literal.</strong></p>
+<h2>4. Comments — notes for humans</h2>
+<p>PHP ignores these. They&#x27;re for you and your teacher.</p>
+<pre class="lang-php"><code>// one-line comment
+
+# also a one-line comment
+
+/*
+   multi-line
+   comment
+*/</code></pre>
+<p>Use them to explain <strong>why</strong>, not what. <code>// add 1 to i</code> is useless. <code>// skip the header row</code> is useful.</p>
+<h2>5. Changing a variable</h2>
+<p>A variable holds the <strong>last</strong> thing you put in it:</p>
+<pre class="lang-php"><code>$x = 5;
+$x = 9;
+echo $x;   // 9   — the 5 is gone forever</code></pre>
+<hr>
+<h2>Watch out ⚠️</h2>
+<div class="tablewrap"><table><thead><tr><th>Mistake</th><th>What happens</th></tr></thead><tbody><tr><td>Forgetting <code>;</code></td><td><code>Parse error</code> — whole page dies</td></tr><tr><td>Forgetting <code>$</code></td><td><code>Undefined constant</code> error</td></tr><tr><td><code>echo &#x27;Hi $name&#x27;</code></td><td>prints <code>$name</code> literally</td></tr><tr><td><code>$Name</code> vs <code>$name</code></td><td>two different boxes</td></tr></tbody></table></div>
+<hr>
+<p>➡️ Run <code>examples.php</code>, then do <code>exercises.php</code>.</p>
+<hr>
+<h2>💡 Did you know</h2>
+<p>PHP was not designed to be a language. In 1994 a man called <strong>Rasmus Lerdorf</strong> wrote a few small tools to count who was visiting his online CV. He called them <em>Personal Home Page Tools</em> — that is what the P, H and P originally stood for.</p>
+<p>Thirty years later, roughly <strong>three quarters</strong> of all websites whose server language is known are running PHP. Wikipedia runs on it. WordPress runs on it. Facebook was built on it.</p>
+<p>Every one of them starts with the same <code>echo</code> you just typed.</p>
+<h2>🎮 Play with it</h2>
+<ol><li><strong>Break it on purpose.</strong> Delete one <code>;</code> and run the file. Read the error. Put it back. Now you have seen the error you will meet a hundred more times — and you met it on your terms.</li><li><strong>The quote experiment.</strong> Make <code>$food = &quot;manakish&quot;;</code> then print it four ways: <code>echo $food;</code> · <code>echo &quot;I want $food&quot;;</code> · <code>echo &#x27;I want $food&#x27;;</code> · <code>echo &quot;I want &quot; . $food;</code> Three of them do what you expect. One does not. That&#x27;s the lesson.</li><li><strong>ASCII art.</strong> Use <code>echo</code> and <code>str_repeat()</code> to draw your initials out of <code>#</code> characters. Silly, but you will never forget <code>str_repeat</code> again.</li></ol>
+<h2>🏆 Boss challenge</h2>
+<p>Make a <strong>receipt</strong> that prints like this, using only variables and <code>echo</code>:</p>
+<pre><code>==============================
+  CAFE PHP
+==============================
+  Coffee        x2     6.00
+  Manakish      x1     4.50
+------------------------------
+  TOTAL               10.50
+==============================</code></pre>
+<p>Everything must come from variables — no typing the numbers into the text.</p>
+<h2>▶ Practise this lesson</h2>
+<p><code>games/php-arcade.html</code> → <strong>Match the Words</strong> · <code>flashcards.html</code> → deck 1 <em>Syntax &amp; symbols</em> · <code>quizzes/mini-quizzes/lesson-01.md</code></p>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="algorithms.html"><span>Previous</span>Algorithms, flowcharts, pseudocode</a>
+<a class="next" href="datatypes.html"><span>Next lesson</span>Data types and strings</a>
+</nav>
+<script src="../embed.js"></script>
