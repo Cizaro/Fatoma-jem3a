@@ -1,5 +1,15 @@
 # Instructor Guide (for you, not for her)
 
+> **Run `00-algorithms/` as session 0A, before anything else.** Her module is
+> **MIT320 Information Systems Development**, and the lecturer's Lesson 1 is algorithms,
+> flowcharts and pseudocode with no code in it. Teaching PHP first leaves her behind in
+> her own class from week one, and those are the cheapest marks on the paper: a flowchart
+> cannot fail to compile.
+>
+> Teach it with a pen and paper on camera, not an editor. Make her draw the GCD trace table
+> herself. If she can trace Euclid by hand, she can trace a loop, and that is the skill the
+> whole of lesson 5 rests on.
+
 PHP 8.2 CLI is already installed on this machine, so lessons 1–7 run with `php file.php` —
 no XAMPP needed. Lessons 8–10 need a server: `php -S localhost:8000` from the `Php` folder,
 or XAMPP if you want her on the same setup as her uni lab.
@@ -36,6 +46,7 @@ Same shape every time:
 
 | Session | Lesson | Arcade round | Quiz |
 |---|---|---|---|
+| 0A | 00-algorithms | Match the words (flowchart set) | lesson-00-algorithms |
 | 1 | 00-setup + 01-basics | Match the words | — |
 | 2 | 02-datatypes | Guess the output | quiz-01 |
 | 3 | 03-operators | Guess the output | — |

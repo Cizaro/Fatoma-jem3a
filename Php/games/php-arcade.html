@@ -318,6 +318,22 @@ const BUG_Q = [
 ];
 
 const MATCH_SETS = [
+  { title:'Flowchart symbols', pairs:[
+    ['oval','start or end of the program'],
+    ['parallelogram','an input or an output'],
+    ['rectangle','a process, like working out a total'],
+    ['diamond','a decision with two ways out'],
+    ['flow line','the direction the logic travels'],
+    ['algorithm','step-by-step procedure for solving a problem']
+  ]},
+  { title:'Algorithms and pseudocode', pairs:[
+    ['pseudocode','fake code, no syntax rules, never run'],
+    ['&lt;--','puts a value into a variable'],
+    ['[ ]','holds a comment in pseudocode'],
+    ['PDLC','the six phases of building a program'],
+    ['GCD','the biggest number that divides both'],
+    ['terminate','an algorithm must stop after finite steps']
+  ]},
   { title:'The very basics', pairs:[
     ['echo','prints something on the page'],
     ['$name','a variable called name'],
@@ -427,6 +443,12 @@ const BLANK_Q = [
 ];
 
 const SPEED_Q = [
+  ['An algorithm must stop after a finite number of steps.', true],
+  ['A flowchart can end without a Stop symbol.', false],
+  ['A decision in a flowchart is drawn as a diamond.', true],
+  ['Pseudocode has to be compiled before it runs.', false],
+  ['In pseudocode, <code>&lt;--</code> means "put this value in here".', true],
+  ['Coding is the first phase of the PDLC.', false],
   ['PHP runs on the server, not in the browser.', true],
   ['Every PHP statement ends with a semicolon.', true],
   ['<code>$name</code> and <code>$Name</code> are the same variable.', false],

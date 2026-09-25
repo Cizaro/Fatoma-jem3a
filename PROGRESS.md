@@ -1,6 +1,6 @@
 # PROGRESS — read this first
 
-**Last updated:** 2026-09-25
+**Last updated:** 2026-09-25 (seventh session)
 **Update this file at the end of every session.** It is the handoff between machines and
 between agent sessions. If it is stale, the next session wastes an hour re-deriving context.
 
@@ -11,6 +11,12 @@ between agent sessions. If it is stale, the next session wastes an hour re-deriv
 I (the repo owner) am teaching my girlfriend **Fatima** her university web-development
 material over **Zoom**. I explain, she shares her screen and writes the code herself.
 
+- **Her module is `MIT320 — Information Systems Development`, lecturer Rabih Tarraf.**
+  His slide decks are the real spec: they are what the exam is written from. We have
+  **Lesson 01, Introduction to Algorithms** (flowcharts, pseudocode, PDLC, Euclid's GCD).
+  **Ask him for the rest of the decks** — each one we get, we map to material the same way.
+  The decks themselves are his copyright and are deliberately **not committed** to this
+  public repo; only our own material derived from the topics is.
 - Her textbook: **Web Development Full Stack** (Cengage)
 - Relevant chapters: 8 CMS overview · 9 WordPress security/themes/plug-ins ·
   **10 Dynamic Webpages with PHP** · **11 Database Basics with MySQL** ·
@@ -27,7 +33,7 @@ material over **Zoom**. I explain, she shares her screen and writes the code her
 | | |
 |---|---|
 | **Phase** | PHP course material is fully built. Teaching has not started yet. |
-| **Next action** | Run Zoom **Session 1** (setup + lesson 1) |
+| **Next action** | Run Zoom **Session 0A** (`00-algorithms/`, her lecturer's Lesson 1) |
 | **Blocked on** | nothing |
 
 ### Sessions delivered
@@ -42,12 +48,14 @@ material over **Zoom**. I explain, she shares her screen and writes the code her
 
 ## 3. What is already done ✅
 
-The whole `Php/` folder — 99 files, every `.php` file passes `php -l`, examples verified by
+The whole `Php/` folder — 104 files, every `.php` file passes `php -l`, examples verified by
 actually running them.
 
 ```
 Php/
-├── index.html                HER ENTRY POINT: course home, 5 levels, 66 tickable steps
+├── index.html                HER ENTRY POINT: course home, 5 levels, 74 tickable steps
+├── 00-algorithms/            MIT320 LESSON 1: algorithms, flowcharts, pseudocode, PDLC,
+│                             Euclid's GCD. No PHP in it. Start here.
 ├── README.md                 the same in text, for GitHub
 ├── INSTRUCTOR-GUIDE.md       MY guide: 10-session Zoom plan, teaching notes, the walls she'll hit
 ├── 00-setup/                 SETUP.md + hello.php
@@ -73,7 +81,7 @@ Php/
 ├── projects/                 3 projects with starter files and checklists
 ├── roadmap.html              interactive A-Z map, 26 steps, progress saved in localStorage
 ├── exam-simulator.html       the final exam, timed and self-marking (see the session log)
-├── quizzes/                  20 files: quiz-00 intro, 10 mini-quizzes, 4 unit quizzes,
+├── quizzes/                  21 files: quiz-00 intro, 11 mini-quizzes, 4 unit quizzes,
 │                             final exam, README index, 3 answer keys
 └── resources/                cheatsheet.md, common-errors.md, youtube.md
 ```
@@ -96,10 +104,6 @@ renders inline.
 - Flashcards: https://claude.ai/artifact/WDYShUSe2eV7Yu19XxYJZn
 - Exam simulator: https://claude.ai/artifact/H3Ca9oVaXidqa51D5hesYc
 
-(All private - each has to be shared from its own Share menu before she can open it.)
-**Republishing any of them must pass its URL**, or you create a second Artifact and orphan
-the link she already has.
-
 (All private — each has to be shared from its own Share menu before she can open it.)
 
 **Publishing an update:** republishing a changed page creates a *new* Artifact unless the
@@ -112,7 +116,8 @@ and say "update this artifact", rather than letting it publish fresh.
 
 ### Immediate — run the course
 
-Follow the session map in `Php/INSTRUCTOR-GUIDE.md`. 10 sessions, ~60–75 min each.
+Follow the session map in `Php/INSTRUCTOR-GUIDE.md`. **Session 0A first** (algorithms, pen
+and paper), then 10 sessions of ~60–75 min each.
 
 Quiz cadence: a **mini-quiz at the end of every single call** (5 min, `quizzes/mini-quizzes/`),
 a **unit quiz** after sessions 2, 4, 7 and 10, and the **final exam** during revision week.
@@ -122,6 +127,16 @@ Each mini-quiz ends with a line saying whether to move on or redo something — 
 
 **Do not advance past a failed loops (L5) or arrays (L6) quiz.** Everything afterwards depends
 on them, and pushing on makes lessons 8–10 collapse.
+
+### The real gap, now that we have a lecture deck
+
+We had been building from the **textbook** and guessing the syllabus. The MIT320 Lesson 1
+deck shows the lecturer opens with **algorithms, flowcharts and pseudocode**, which this
+repo did not cover at all. `00-algorithms/` now does.
+
+**The same check has not been done for lessons 2 onwards, because we do not have those
+decks.** Ask her for them. Until they arrive, assume the mapping below is incomplete rather
+than done, and do not let the roadmap's confidence fool the next session.
 
 ### Asked for but not built yet
 
@@ -227,6 +242,32 @@ No `gh` CLI installed — use plain `git` for pushes.
 ## 7. Session log
 
 *(newest first — one short entry per working session, so the next agent knows what changed and why)*
+
+### 2026-09-25 (seventh) — Her lecturer's actual syllabus turned up
+- Worked from the **MIT320 Lesson 01 slide deck** (Rabih Tarraf, "Introduction to Algorithms").
+  It changes the picture: the module opens with **algorithms, flowcharts and pseudocode**,
+  and this repo had none of it. We had been building from the textbook and inferring.
+- **New `Php/00-algorithms/`** (lesson.md, examples.php, exercises.php) covering the whole
+  deck: the three rules an algorithm must satisfy, the six PDLC phases, natural-language
+  algorithms, **the lecturer's own pseudocode conventions** (CAPITAL variables, `<--`,
+  `[comments in brackets]`, `if-then-else` / `endif`), the five flowchart symbols and the
+  two rules that cost marks, relational operators, and Euclid's GCD traced by hand.
+- `examples.php` runs all of it, including a **printed GCD trace table** for (48, 18) that
+  matches the table in the lesson line for line. Verified against real PHP 8.2.
+- `exercises.php` is **his five end-of-deck exercises**, each wanting algorithm, pseudocode
+  and flowchart, plus a Euclid-from-memory challenge. Nothing solved, per the house rule.
+- New mini-quiz `lesson-00-algorithms.md` with collapsed answers, in the same shape as the
+  other ten. Arcade gained two match sets and six Speed Round questions on this topic,
+  which is the house rule for a new topic.
+- **Two numbers clash on purpose:** MIT320's grade example marks out of 100 and fails below
+  60, while the rest of our material marks out of 20 and passes at 10. Both are flagged in
+  the lesson and in the examples rather than silently reconciled. Do not "fix" one to match
+  the other; the exam question decides.
+- `index.html` gained the lesson in level 0. Its data model now takes `pre` (title prefix)
+  and `quiz` (explicit quiz filename), because the id is `alg` rather than a number. The
+  hero's lesson count is now computed too, so neither number in the headline can drift.
+- Tidied a merge collision in this file: the artifact note had been pasted twice.
+- **Still missing: every other MIT320 deck.** See "The real gap" above.
 
 ### 2026-09-22 (fifth) — The course got a front door
 - **New `Php/index.html`, now her entry point.** The material was always there; what was missing

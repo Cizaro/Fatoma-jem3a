@@ -8,8 +8,13 @@ Welcome! This folder is your full PHP course. You don't need to know anything be
 > each one tickable, with a **Continue** button that always knows which step you're on. Everything
 > in this folder is reachable from it, so you never have to go looking for a file again.
 
-It follows your textbook — **Web Development Full Stack** (Cengage) — so the work you do here
-is the work your exam will ask about:
+Your module is **MIT320 — Information Systems Development**, and its Lesson 1 is
+**algorithms, flowcharts and pseudocode**, with no PHP in it at all. That lesson lives in
+[`00-algorithms/`](00-algorithms/) and it is where you should start, because everything
+after it is easier once you can design a solution before typing it.
+
+It also follows your textbook — **Web Development Full Stack** (Cengage) — so the work you do
+here is the work your exam will ask about:
 
 | Your textbook | This folder |
 |---|---|
@@ -76,6 +81,7 @@ Every lesson folder has three things:
 | # | Folder | What you learn | Time |
 |---|---|---|---|
 | — | `stages/` | **pure syntax, 30 tiny stages** (optional, but do it if you're new) | 2–3 h |
+| 0A | `00-algorithms/` | **algorithms, flowcharts, pseudocode** — your MIT320 Lesson 1, no PHP at all | 1 h |
 | 0 | `00-setup/` | Run your first PHP file | 20 min |
 | 1 | `01-basics/` | `echo`, variables, comments | 45 min |
 | 2 | `02-datatypes/` | string, int, float, bool, string functions | 45 min |

@@ -207,7 +207,7 @@ footer a{text-decoration:none}
 <main class="wrap">
   <section class="hero">
     <div>
-      <h1>Ten lessons.<br><span id="heroN">66</span> small <i>steps</i>.</h1>
+      <h1><span id="heroL">12</span> lessons.<br><span id="heroN">74</span> small <i>steps</i>.</h1>
       <p class="sub">Every lesson is broken into steps you can finish in a few minutes.
          Tick one, and the course remembers where you are.</p>
       <div class="cta">
@@ -308,6 +308,15 @@ footer a{text-decoration:none}
 --------------------------------------------------------------- */
 const COURSE = [
 {lv:"Getting ready", sub:"One evening of setup, so nothing later fails for a boring reason.", lessons:[
+  {id:"alg", pre:"Lesson 0A. ", dir:"00-algorithms", quiz:"lesson-00-algorithms",
+   name:"Algorithms, flowcharts, pseudocode",
+   can:"Design the solution on paper before you write a line of code. This is MIT320 Lesson 1.",
+   steps:["What an algorithm is, and the three rules","The six phases of the PDLC",
+          "Writing an algorithm in plain English","Pseudocode, and your lecturer's notation",
+          "The five flowchart symbols","Decisions, and the relational operators",
+          "Euclid's GCD, traced by hand","Turning pseudocode into PHP"],
+   arcade:"Match the Words",
+   wall:"There is no PHP in this lesson and that is deliberate. It is also the part of the exam where marks are cheapest, because a flowchart cannot fail to compile."},
   {id:"0", dir:"00-setup", file:"SETUP.md", name:"Setup", can:"Run a PHP file, and know why you cannot just double-click one.",
    steps:["What PHP actually is","The two ways to run it","The rules of a .php file","Write and run hello.php","Pick an editor"]}
 ]},
@@ -406,6 +415,7 @@ const TOTAL = ALL.reduce((a, l) => a + l.steps.length, 0);
 // the headline counts the steps rather than claiming a number, so adding
 // a step to a lesson can never leave the hero quietly lying
 $("heroN").textContent = TOTAL;
+$("heroL").textContent = ALL.length;
 const sid = (les, i) => les.id + "." + i;
 
 function toolRow(les){
@@ -414,7 +424,8 @@ function toolRow(les){
   if (!les.file){
     t.push(`<a class="tool" href="${link(les.dir + "/examples.php")}">Examples</a>`);
     t.push(`<a class="tool" href="${link(les.dir + "/exercises." + (les.id === "8" ? "md" : "php"))}">Exercises</a>`);
-    t.push(`<a class="tool" href="${link("quizzes/mini-quizzes/lesson-" + String(les.id).padStart(2,"0") + ".md")}">Mini quiz</a>`);
+    const quiz = les.quiz || ("lesson-" + String(les.id).padStart(2,"0"));
+    t.push(`<a class="tool" href="${link("quizzes/mini-quizzes/" + quiz + ".md")}">Mini quiz</a>`);
   }
   if (les.arcade) t.push(`<a class="tool" href="${link("games/php-arcade.html")}">Arcade, ${esc(les.arcade)}</a>`);
   if (les.deck)   t.push(`<a class="tool" href="${link("flashcards.html")}">Cards, ${esc(les.deck)}</a>`);
@@ -435,7 +446,7 @@ $("ladder").innerHTML = COURSE.map((lv, li) => `
         <details class="lesson" id="l${les.id}">
           <summary>
             <span class="tick" aria-hidden="true">&#10003;</span>
-            <span class="ltitle">${les.file ? "" : "Lesson " + les.id + ". "}${esc(les.name)}</span>
+            <span class="ltitle">${les.pre !== undefined ? les.pre : (les.file ? "" : "Lesson " + les.id + ". ")}${esc(les.name)}</span>
             <span class="lmeta" id="m${les.id}"></span>
             <span class="lcan">${esc(les.can)}</span>
           </summary>
@@ -504,7 +515,7 @@ function paint(){
     btn.textContent = started ? "Continue" : "Start the first step";
     btn.href = "#l" + next.les.id;
     txt.innerHTML = (started ? "Next up: " : "Begins with: ")
-      + "<b>" + esc(next.les.file ? next.les.name : "Lesson " + next.les.id)
+      + "<b>" + esc(next.les.pre ? next.les.pre.replace(/\.\s*$/,"") : (next.les.file ? next.les.name : "Lesson " + next.les.id))
       + ", step " + (next.i + 1) + "</b>. " + esc(next.les.steps[next.i]) + ".";
   }
   btn.onclick = () => {
