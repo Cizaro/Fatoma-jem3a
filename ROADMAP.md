@@ -2,6 +2,10 @@
 
 26 steps, one per letter. **A** is installing PHP. **Z** is a live website on the internet.
 
+> 🎮 **Never written code before?** Do [`Php/stages.html`](Php/stages.html) first —
+> 30 tiny syntax stages that get you from nothing to typing PHP without thinking about it.
+> That's step A below, broken into 30 pieces.
+>
 > **Interactive version with tick-boxes:** [`Php/roadmap.html`](Php/roadmap.html) — open it in a browser.
 > **Drill the words:** [`Php/flashcards.html`](Php/flashcards.html) — 102 cards, 6 decks.
 > **Play instead of revising:** [`Php/games/`](Php/games/) — 6 arcade games, an escape room, hangman.

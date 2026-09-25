@@ -6,8 +6,11 @@ across my two machines and so any Claude Code session can pick up exactly where 
 **👉 If you are an AI agent starting a session here, read [`PROGRESS.md`](PROGRESS.md) first.**
 It holds the current state, what's done, what's next, and the long-term plan.
 
-**👉 If you are Fatima:** start with [`ROADMAP.md`](ROADMAP.md) — the whole path from A to Z
-on one page. There's a clickable version with tick-boxes at [`Php/roadmap.html`](Php/roadmap.html).
+**👉 If you are Fatima:**
+- Never written code before? Open [`Php/stages.html`](Php/stages.html) — 30 tiny syntax
+  stages, 3 minutes each. Or read them at [`Php/stages/`](Php/stages/).
+- Otherwise start with [`ROADMAP.md`](ROADMAP.md) — the whole path from A to Z on one page,
+  with a clickable version at [`Php/roadmap.html`](Php/roadmap.html).
 
 ---
 
@@ -15,7 +18,7 @@ on one page. There's a clickable version with tick-boxes at [`Php/roadmap.html`]
 
 | Folder | Subject | Status |
 |---|---|---|
-| [`Php/`](Php/) | Intro to PHP + MySQL (10 lessons, games, quizzes, 3 projects) | ✅ built, teaching in progress |
+| [`Php/`](Php/) | Intro to PHP + MySQL — a 30-stage syntax track, 10 lessons, 5 games, 20 quizzes, 3 projects | ✅ built, teaching in progress |
 
 Her textbook is **Web Development Full Stack** (Cengage) — PHP is Ch. 10, MySQL is Ch. 11–12.
 

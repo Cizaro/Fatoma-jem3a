@@ -20,6 +20,20 @@ is the work your exam will ask about:
 
 ---
 
+## 🎮 Never written code before? Start here
+
+**[`stages.html`](stages.html)** — 30 tiny syntax stages in 6 worlds, each one 3 minutes.
+Type the line, clear the stage, unlock the next. Six boss stages. Stars for clearing
+without hints. Double-click it, no server needed.
+
+The written version with full explanations is in **[`stages/`](stages/)**, with a practice
+`.php` file per world.
+
+> The lessons below teach you **ideas**. The stages teach you **the typing** — where the
+> `$` and the `;` and the brackets go. If a lesson ever feels too fast, come back here.
+
+---
+
 ## The map
 
 Open **[`roadmap.html`](roadmap.html)** in your browser — 26 steps from A to Z, with tick-boxes
@@ -46,6 +60,7 @@ Every lesson folder has three things:
 
 | # | Folder | What you learn | Time |
 |---|---|---|---|
+| — | `stages/` | **pure syntax, 30 tiny stages** (optional, but do it if you're new) | 2–3 h |
 | 0 | `00-setup/` | Run your first PHP file | 20 min |
 | 1 | `01-basics/` | `echo`, variables, comments | 45 min |
 | 2 | `02-datatypes/` | string, int, float, bool, string functions | 45 min |
@@ -74,6 +89,7 @@ Full details in [`games/README.md`](games/README.md).
 | 💀 **[games/hangman.php](games/hangman.php)** | needs server | programming words, written in PHP |
 | 🃏 **[flashcards.html](flashcards.html)** | double-click | 102 cards, 6 decks, the ones you miss come back |
 | ⏱ **[exam-simulator.html](exam-simulator.html)** | double-click | the final exam on a 90-minute clock, marked for you |
+| 🎮 **[stages.html](stages.html)** | double-click | 30 syntax stages + 6 bosses, for a pure beginner |
 
 **Quizzes** — `quizzes/` has three sizes: a 5-minute **mini-quiz after every lesson**, a bigger
 **unit quiz** every few lessons, and a **final exam** for revision week. Every one of them ends

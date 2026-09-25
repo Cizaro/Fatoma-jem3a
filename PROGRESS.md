@@ -1,6 +1,6 @@
 # PROGRESS — read this first
 
-**Last updated:** 2026-09-22 (fifth session)
+**Last updated:** 2026-09-25
 **Update this file at the end of every session.** It is the handoff between machines and
 between agent sessions. If it is stale, the next session wastes an hour re-deriving context.
 
@@ -42,7 +42,7 @@ material over **Zoom**. I explain, she shares her screen and writes the code her
 
 ## 3. What is already done ✅
 
-The whole `Php/` folder — 84 files, every `.php` file passes `php -l`, examples verified by
+The whole `Php/` folder — FILECOUNT files, every `.php` file passes `php -l`, examples verified by
 actually running them.
 
 ```
@@ -61,6 +61,9 @@ Php/
 ├── 08-forms/                 $_POST/$_GET, validation, htmlspecialchars, register.php
 ├── 09-mysql/                 SQL, mysqli, prepared statements, school.sql, full CRUD page
 ├── 10-dynamic-page/          complete mini site: includes/, search, detail.php, admin.php
+├── stages/                   PURE BEGINNER SYNTAX TRACK: 6 world .md files + a
+│                             practice .php per world. 30 stages, 6 bosses.
+├── stages.html               the clickable version - type the line, clear the stage
 ├── flashcards.html           102 cards, 6 decks, missed cards repeat until known twice
 ├── games/                    php-arcade.html (6 games, 133 questions, XP + 8 badges),
 │                             php-quest.php (7-door escape room), guess-number.php,
@@ -82,12 +85,17 @@ Php/
 `ROADMAP.md` at the repo root is the same 26-step map as a Mermaid diagram, which GitHub
 renders inline.
 
-**Five pages are published as private Claude Artifacts** so she can use them on her phone:
+**Six pages are published as private Claude Artifacts** so she can use them on her phone:
 - Course home: https://claude.ai/artifact/GyRYKwKisjEBU5wkBanfAe
+- Syntax Stages: https://claude.ai/artifact/Gqn7w4oMjEMCoC8CePNvk4
 - Arcade: https://claude.ai/artifact/JYBuyUAnizeyXzAT9tXMu2
 - Roadmap: https://claude.ai/artifact/EDpJwwwvaoGwGHnjeAXdPb
 - Flashcards: https://claude.ai/artifact/WDYShUSe2eV7Yu19XxYJZn
 - Exam simulator: https://claude.ai/artifact/H3Ca9oVaXidqa51D5hesYc
+
+(All private - each has to be shared from its own Share menu before she can open it.)
+**Republishing any of them must pass its URL**, or you create a second Artifact and orphan
+the link she already has.
 
 (All private — each has to be shared from its own Share menu before she can open it.)
 
@@ -269,6 +277,26 @@ No `gh` CLI installed — use plain `git` for pushes.
   same version as the main machine, plus MySQL and phpMyAdmin), `C:\xampp\php` added to the
   user PATH. All 35 PHP files lint clean on it. `.claude-flow/` is a local tool folder and is
   now gitignored.
+
+### 2026-09-25 — Pure-beginner syntax track ("stages")
+- **New `Php/stages/`**: a syntax-only course for someone who has never typed code.
+  **6 worlds x 5 stages = 30 stages**, plus a boss per world. Each stage has exactly four
+  parts: 🎯 Goal (ONE thing), ⌨️ The syntax, ✅ Clear the stage, 💀 If it breaks.
+  Worlds: 1 The Tag · 2 Boxes · 3 Numbers · 4 Decisions · 5 Repeats · 6 Containers.
+  One runnable practice `.php` per world in `stages/practice/`.
+- **New `Php/stages.html`**: the clickable level map. Stages unlock in order, bosses unlock
+  when their world's 5 stages are cleared, 1-3 stars depending on hints and wrong tries,
+  progress in localStorage.
+- **The code checker is the interesting part.** `norm()` walks the typed string and
+  normalises whitespace **only outside string literals** - so `echo"Hello";` passes but
+  `echo "HelloWorld";` does NOT match `echo "Hello World";`. Forgiving about spacing,
+  strict about output. Verified with a spacing test matrix.
+- Several deliberate "break it on purpose" steps: delete a semicolon and read the error
+  (stage 3), delete the `$i++` and meet the infinite loop (stage 23), move a condition to the
+  wrong place and watch grading break (stage 17). Meeting these on purpose beats meeting them
+  at 2am.
+- Positioned as *before / alongside* the lessons, not instead of them: stages teach the
+  typing, lessons teach the ideas.
 
 ### 2026-09-22 (third) — Made it fun, and much deeper
 - **Arcade rebuilt**: 4 games -> 6 (added **Speed Round**, 45s true/false, and

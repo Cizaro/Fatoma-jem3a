@@ -1,0 +1,540 @@
+<meta charset="utf-8">
+<title>PHP Syntax Stages</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#FBF9F6; --surface:#FFFFFF; --surface-2:#F1EEE9; --code-bg:#1E2030; --code-ink:#E8EAF6;
+  --ink:#1B1D22; --ink-2:#585D66; --ink-3:#8B9099; --line:#E5E0D8;
+  --w1:#2F8F4E; --w2:#2B6CB0; --w3:#B08000; --w4:#C2601C; --w5:#C33C4A; --w6:#7A4FB5;
+  --good:#2F8F4E; --good-soft:#E6F3EA; --bad:#C33C4A; --bad-soft:#FBEAEC;
+  --gold:#C08A18; --gold-soft:#FAF1DD;
+  --shadow:0 1px 2px rgba(27,29,34,.06), 0 10px 26px -14px rgba(27,29,34,.3);
+  --display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#15161C; --surface:#1E2028; --surface-2:#282B34; --code-bg:#0E0F16; --code-ink:#E8EAF6;
+    --ink:#EDEEF2; --ink-2:#A6AAB4; --ink-3:#787D87; --line:#31343E;
+    --w1:#5FC583; --w2:#6BA6E8; --w3:#DDB44A; --w4:#E89158; --w5:#E8737F; --w6:#B08BE0;
+    --good:#5FC583; --good-soft:#182C20; --bad:#E8737F; --bad-soft:#2E1B1F;
+    --gold:#DDB44A; --gold-soft:#2C2416;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#15161C; --surface:#1E2028; --surface-2:#282B34; --code-bg:#0E0F16; --code-ink:#E8EAF6;
+  --ink:#EDEEF2; --ink-2:#A6AAB4; --ink-3:#787D87; --line:#31343E;
+  --w1:#5FC583; --w2:#6BA6E8; --w3:#DDB44A; --w4:#E89158; --w5:#E8737F; --w6:#B08BE0;
+  --good:#5FC583; --good-soft:#182C20; --bad:#E8737F; --bad-soft:#2E1B1F;
+  --gold:#DDB44A; --gold-soft:#2C2416;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px -14px rgba(0,0,0,.8);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
+
+header{padding-block:32px 8px;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,7vw,42px);
+  letter-spacing:-.02em;line-height:1.05}
+h1 em{font-style:normal;color:var(--w4)}
+.lede{color:var(--ink-2);font-size:14.5px;margin-top:3px;max-width:52ch}
+.theme-btn{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid var(--line);
+  color:var(--ink-3);border-radius:999px;padding:5px 12px;cursor:pointer}
+.theme-btn:hover{color:var(--ink);border-color:var(--w4)}
+
+.status{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:16px 20px;margin-block:22px 26px;box-shadow:var(--shadow);display:grid;gap:12px}
+.status-top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.count{font-family:var(--display);font-weight:700;font-size:24px}
+.count span{color:var(--ink-3);font-weight:500;font-size:15px}
+.stars{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--gold);font-weight:700}
+.meter{height:7px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;border-radius:99px;transition:width .45s;
+  background:linear-gradient(90deg,var(--w1),var(--w3),var(--w5),var(--w6))}
+.status-foot{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  font-size:12.5px;color:var(--ink-3)}
+.reset{background:none;border:0;color:var(--ink-3);font-family:var(--body);font-size:12.5px;
+  cursor:pointer;text-decoration:underline;padding:0}
+.reset:hover{color:var(--bad)}
+
+/* world bands */
+.world{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--wc);
+  border-radius:13px;padding:16px 18px;margin-bottom:13px;box-shadow:var(--shadow)}
+.world h2{font-family:var(--display);font-size:18px;letter-spacing:-.01em;display:flex;
+  align-items:baseline;gap:9px;flex-wrap:wrap}
+.world h2 b{color:var(--wc);font-family:var(--mono);font-size:12px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase}
+.world p{font-size:13.5px;color:var(--ink-2);margin:3px 0 12px}
+.nodes{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.node{width:46px;height:46px;border-radius:12px;border:2px solid var(--line);
+  background:var(--surface-2);color:var(--ink-3);font-family:var(--mono);font-weight:700;
+  font-size:14px;cursor:pointer;display:grid;place-items:center;position:relative;
+  transition:transform .12s,border-color .12s;padding:0}
+.node:hover:not(:disabled){transform:translateY(-3px);border-color:var(--wc)}
+.node:disabled{cursor:not-allowed;opacity:.45}
+.node.done{background:var(--wc);border-color:var(--wc);color:#fff}
+.node.next{border-color:var(--wc);color:var(--wc);background:var(--surface);
+  box-shadow:0 0 0 4px color-mix(in srgb, var(--wc) 18%, transparent)}
+.node .st{position:absolute;bottom:-9px;font-size:9px;color:var(--gold);letter-spacing:-1px}
+.node.boss{width:52px;font-size:17px;border-radius:14px}
+.wlink{font-size:12.5px;margin-top:13px}
+.wlink a{color:var(--wc);text-decoration:none;font-weight:600}
+.wlink a:hover{text-decoration:underline}
+
+/* drill view */
+.drill{background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--wc);
+  border-radius:14px;padding:22px;box-shadow:var(--shadow)}
+.crumb{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.crumb .tag{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--wc)}
+.crumb .btn{margin-left:auto}
+.drill h2{font-family:var(--display);font-size:22px;letter-spacing:-.01em;margin-bottom:4px}
+.teach{background:var(--surface-2);border-radius:10px;padding:13px 15px;margin:12px 0 16px;
+  font-size:14px;color:var(--ink-2)}
+.teach code{font-family:var(--mono);background:var(--code-bg);color:var(--code-ink);
+  padding:2px 6px;border-radius:4px;font-size:13px}
+.ask{font-size:16.5px;font-weight:600;margin-bottom:6px}
+.sub{font-size:13px;color:var(--ink-3);margin-bottom:12px}
+pre.ctx{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:13px 15px;
+  font-family:var(--mono);font-size:13.5px;line-height:1.65;overflow-x:auto;margin-bottom:13px}
+textarea{width:100%;min-height:96px;padding:13px 15px;border:2px solid var(--line);
+  border-radius:11px;background:var(--code-bg);color:var(--code-ink);
+  font-family:var(--mono);font-size:14.5px;line-height:1.7;resize:vertical}
+textarea:focus{outline:none;border-color:var(--wc)}
+textarea.ok{border-color:var(--good)}
+textarea.no{border-color:var(--bad)}
+.row{display:flex;gap:10px;margin-top:13px;flex-wrap:wrap;align-items:center}
+.btn{background:var(--wc,var(--ink));color:#fff;border:0;border-radius:9px;padding:11px 22px;
+  font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{filter:brightness(1.1)}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink-2)}
+.fb{margin-top:14px;padding:13px 16px;border-radius:10px;font-size:14.5px;display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--good-soft);border-left:4px solid var(--good)}
+.fb.no{background:var(--bad-soft);border-left:4px solid var(--bad)}
+.fb b{display:block;margin-bottom:3px}
+.fb code{font-family:var(--mono);background:var(--code-bg);color:var(--code-ink);
+  padding:2px 6px;border-radius:4px;font-size:13px}
+.dots{display:flex;gap:6px;margin-left:auto}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.dot.on{background:var(--wc)}
+.cleared{text-align:center;padding:26px 18px}
+.cleared .big{font-size:44px}
+.cleared h3{font-family:var(--display);font-size:22px;margin:6px 0 4px}
+.cleared p{color:var(--ink-2)}
+.starline{font-size:26px;color:var(--gold);letter-spacing:4px;margin:10px 0}
+footer{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--ink-3);text-align:center}
+footer a{color:var(--w2);text-decoration:none;margin:0 7px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:460px){ .node{width:42px;height:42px} }
+</style>
+
+<div class="wrap">
+<header>
+  <div>
+    <h1>Syntax <em>Stages</em></h1>
+    <p class="lede">30 tiny stages. Type the line, clear the stage, unlock the next one.
+      You're learning where the brackets go — understanding comes after.</p>
+  </div>
+  <button class="theme-btn" id="themeBtn" type="button">theme</button>
+</header>
+
+<div id="app"></div>
+
+<footer>
+  <a href="stages/README.md">the written course</a><a href="roadmap.html">roadmap</a>
+  <a href="flashcards.html">flashcards</a><a href="games/php-arcade.html">arcade</a>
+  <br><br>Progress is saved in this browser only.
+</footer>
+</div>
+
+<script>
+/* ===========================================================
+   THE STAGES
+   Each stage: 2 drills. Each drill: what to type + what counts.
+   =========================================================== */
+const WORLDS = [
+  { n:1, name:"The Tag",   colour:"var(--w1)", note:"Where things go: the tag, the quotes, the semicolon.", file:"stages/world-1-the-tag.md" },
+  { n:2, name:"Boxes",     colour:"var(--w2)", note:"Variables, quotes and joining text together.",          file:"stages/world-2-boxes.md" },
+  { n:3, name:"Numbers",   colour:"var(--w3)", note:"Maths, remainders and the shortcuts.",                  file:"stages/world-3-numbers.md" },
+  { n:4, name:"Decisions", colour:"var(--w4)", note:"if, else, comparing, and combining conditions.",        file:"stages/world-4-decisions.md" },
+  { n:5, name:"Repeats",   colour:"var(--w5)", note:"for, while, foreach, and loops inside loops.",          file:"stages/world-5-repeats.md" },
+  { n:6, name:"Containers",colour:"var(--w6)", note:"Arrays and your own functions. The big two.",           file:"stages/world-6-containers.md" }
+];
+
+const S = (w,n,title,teach,drills) => ({w,n,title,teach,drills});
+const D = (ask,accept,hint,ctx,sub) => ({ask,accept,hint,ctx,sub});
+
+const STAGES = [
+S(1,1,"Open the door","Every PHP file starts with <code>&lt;?php</code>. Anything before it is sent out as plain text.",[
+  D("Type the tag that opens PHP",["<?php"],"Five characters. Lowercase. No space after the ?"),
+  D("Type the closing tag (the one you usually leave off)",["?>"],"It's the opening tag, backwards-ish.")]),
+S(1,2,"Make it speak","<code>echo</code> prints. The text goes in quotes, and the line ends with a semicolon.",[
+  D("Print the word Hello",['echo "Hello";',"echo 'Hello';"],'echo, a space, "Hello", then a semicolon.'),
+  D("Print the word Fatima",['echo "Fatima";',"echo 'Fatima';"],"Same shape as the last one.")]),
+S(1,3,"The full stop","Every statement ends with <code>;</code>. Forget one and the whole file refuses to run.",[
+  D("This line is broken. Type it correctly.",['echo "hi";',"echo 'hi';"],"Something is missing at the very end.",'echo "hi"'),
+  D("Print one and two on two separate statements",['echo "one";\necho "two";',"echo 'one';\necho 'two';"],"Two lines. Two semicolons.")]),
+S(1,4,"New lines","<code>\\n</code> means new line. It only works inside <b>double</b> quotes.",[
+  D("Print one, followed by a new line",['echo "one\\n";'],"The \\n goes inside the quotes, at the end."),
+  D("Print  Name: Fatima  with a new line at the end",['echo "Name: Fatima\\n";'],"All of it inside one pair of double quotes.")]),
+S(1,5,"Notes to yourself","Comments are for humans. PHP skips them completely.",[
+  D("Write a one-line comment that says: my first file",["// my first file","# my first file"],"Two slashes, then your text."),
+  D("Switch this line off without deleting it",['// echo "test";',"# echo \"test\";"],"Put a comment marker in front of it.",'echo "test";')]),
+
+S(2,6,"Your first box","<code>$name = \"Fatima\";</code> — read it as <b>put</b> Fatima <b>into</b> name.",[
+  D("Put the text Fatima into a variable called name",['$name = "Fatima";',"$name = 'Fatima';"],"Dollar sign, name, equals, the value in quotes, semicolon."),
+  D("Print that variable",["echo $name;"],"No quotes needed — you want the value, not the word.")]),
+S(2,7,"Naming the box","Variables start with <code>$</code>, never a digit, no spaces. Capitals matter.",[
+  D("Put Sara into a variable called firstName",['$firstName = "Sara";',"$firstName = 'Sara';"],"Capital N in the middle, no space."),
+  D("Put the number 20 into a variable called my_age",["$my_age = 20;"],"A number needs no quotes.")]),
+S(2,8,"Quotes matter","Double quotes read variables. Single quotes print them literally.",[
+  D("Print  I live in  followed by the variable city, using double quotes",['echo "I live in $city";'],"The variable goes inside the quotes."),
+  D("Print the literal text $city — the dollar sign and all",["echo '$city';"],"Use single quotes so PHP doesn't read it.")]),
+S(2,9,"Joining text","The dot glues pieces together. You supply the space yourself.",[
+  D("Print first and last with a space between, using dots",['echo $first . " " . $last;',"echo $first . ' ' . $last;"],"variable dot space-in-quotes dot variable"),
+  D("Add the text  world  onto the end of $msg using the shortcut",['$msg .= " world";',"$msg .= ' world';"],"It's the dot and the equals, together.")]),
+S(2,10,"Boxes change","A variable holds only the last thing you put in it — and it can be built from itself.",[
+  D("Add 5 to $score, written out the long way",["$score = $score + 5;"],"Put (score plus 5) back into score."),
+  D("The same thing, using the shortcut",["$score += 5;"],"Plus and equals, stuck together.")]),
+
+S(3,11,"Maths","Maths doesn't happen inside quotes. Do it outside, in brackets.",[
+  D("Print $a plus $b",["echo $a + $b;"],"No quotes anywhere."),
+  D('Print the text  sum:  then the total of $a and $b',['echo "sum: " . ($a + $b);',"echo 'sum: ' . ($a + $b);"],"Text in quotes, dot, then the maths in brackets.")]),
+S(3,12,"The remainder","<code>%</code> gives what's left over after dividing. It's how you test for even.",[
+  D("Print the remainder of 10 divided by 3",["echo 10 % 3;"],"One symbol between the two numbers."),
+  D("Write the condition that checks $n is even (not a whole if, just the condition)",["$n % 2 == 0"],"Remainder of 2 is zero.")]),
+S(3,13,"Shortcuts","<code>+=</code> <code>*=</code> <code>++</code> save you writing the variable twice.",[
+  D("Add 1 to $i, the short way",["$i++;","++$i;"],"Two plus signs."),
+  D("Double $x using a shortcut",["$x *= 2;"],"Times and equals, together.")]),
+S(3,14,"Rounding and tidying","A name, then brackets, then what you give it. That shape is a function call.",[
+  D("Round $price to 2 decimal places (just the expression)",["round($price, 2)"],"The 2 is the second thing you hand it."),
+  D("Print a random number between 1 and 6",["echo rand(1, 6);"],"Two numbers, comma between them.")]),
+S(3,15,"Numbers that are secretly text","<code>var_dump()</code> tells you the truth about a value: type as well as value.",[
+  D("Show the type and value of $x",["var_dump($x);"],"One function, one argument."),
+  D('Turn the text "20" into a real whole number (just the expression)',['(int) "20"','(int)"20'+'"'],"The type in brackets, in front of the value.")]),
+
+S(4,16,"The shape of an if","Round brackets hold the question. Curly brackets hold the code. No semicolon after the <code>)</code>.",[
+  D("Write the opening line of an if that checks $age is 18 or more",["if ($age >= 18) {"],"if, space, round brackets, then the curly brace."),
+  D("Write the whole thing: if age is 18 or more, print adult",['if ($age >= 18) {\necho "adult";\n}',"if ($age >= 18) {\necho 'adult';\n}"],"Three lines: the if, the echo, the closing brace.")]),
+S(4,17,"The other path","<code>else</code> has no condition. <code>elseif</code> does. Strictest condition first.",[
+  D("Write the else line that sits between the two blocks",["} else {"],"Close the first block, else, open the next."),
+  D("Write the elseif line that checks $mark is 14 or more",["} elseif ($mark >= 14) {","} else if ($mark >= 14) {"],"Like the else, but with a question.")]),
+S(4,18,"Comparing","One <code>=</code> puts a value in. Two <code>==</code> ask a question.",[
+  D("Write the condition: $x is equal to 10 (value only)",["$x == 10"],"Two equals signs."),
+  D("Write the condition: $x is equal to 10 in value AND type",["$x === 10"],"One more equals sign than last time.")]),
+S(4,19,"Two conditions at once","<code>&&</code> means both. <code>||</code> means at least one.",[
+  D("Condition: $age is 18 or more AND $hasCard is true",["$age >= 18 && $hasCard"],"Two ampersands between the two parts."),
+  D('Condition: $day is "Sat" OR $day is "Sun"',['$day == "Sat" || $day == "Sun"',"$day == 'Sat' || $day == 'Sun'"],"Two pipe characters between two full comparisons.")]),
+S(4,20,"switch and the tiny if","switch compares one variable to exact values. The ternary is a one-line if/else.",[
+  D('Write the case line for "Mon" (just the case line)',['case "Mon":',"case 'Mon':"],"The word case, the value, then a colon."),
+  D('Put Pass or Fail into $r depending on whether $mark is 10 or more, using the ternary',['$r = ($mark >= 10) ? "Pass" : "Fail";','$r = $mark >= 10 ? "Pass" : "Fail";',"$r = ($mark >= 10) ? 'Pass' : 'Fail';"],"condition, question mark, if-true, colon, if-false.")]),
+
+S(5,21,"The three parts","start; check; step — separated by semicolons, not commas.",[
+  D("Write the opening line of a for loop that counts 1 to 5 using $i",["for ($i = 1; $i <= 5; $i++) {"],"Start at 1, check <= 5, step $i++."),
+  D("Write the whole loop, printing $i each round",["for ($i = 1; $i <= 5; $i++) {\necho $i;\n}"],"Three lines.")]),
+S(5,22,"Backwards and in steps","Counting down flips the check too.",[
+  D("Opening line of a loop counting 10 down to 1",["for ($i = 10; $i >= 1; $i--) {"],"Start high, check >=, step $i--."),
+  D("Opening line of a loop going 0 to 20 in steps of 5",["for ($i = 0; $i <= 20; $i += 5) {"],"The step can be += 5.")]),
+S(5,23,"while, and the frozen laptop","A while loop's step is your job, inside the body. Forget it and it never ends.",[
+  D("Write the opening line of a while loop that runs while $i is 3 or less",["while ($i <= 3) {"],"while, the condition in brackets, curly brace."),
+  D("Write the line that stops it running forever",["$i++;","$i = $i + 1;","$i += 1;"],"Something has to change $i.")]),
+S(5,24,"Skip and stop","<code>break</code> leaves the loop. <code>continue</code> skips one round.",[
+  D("Leave the loop completely when $i is 5, on one line",["if ($i == 5) break;"],"An if with break after it, no braces needed."),
+  D("Skip just this round when $i is 3, on one line",["if ($i == 3) continue;"],"Same shape, different word.")]),
+S(5,25,"A loop inside a loop","The inner loop finishes completely for every round of the outer one.",[
+  D("Opening line of the inner loop, counting $col from 1 to 3",["for ($col = 1; $col <= 3; $col++) {"],"Same shape as always, just a different variable name."),
+  D("The line that ends each row — it goes after the inner loop closes",['echo "\\n";'],"A new line, on its own.")]),
+
+S(6,26,"Many in one","A list in one variable. Counting starts at 0.",[
+  D("Make an array called colors holding red, green and blue",['$colors = ["red", "green", "blue"];',"$colors = ['red', 'green', 'blue'];"],"Square brackets, values in quotes, commas between."),
+  D("Print the FIRST colour from it",["echo $colors[0];"],"Remember where counting starts.")]),
+S(6,27,"Names instead of numbers","<code>=&gt;</code> points a key at its value. This is the shape of a database row.",[
+  D('Make an array called student with the key name pointing at "Fatima"',['$student = ["name" => "Fatima"];',"$student = ['name' => 'Fatima'];"],"key, arrow, value — inside square brackets."),
+  D("Print the name out of it",['echo $student["name"];',"echo $student['name'];"],"The key needs its quotes.")]),
+S(6,28,"Walking through","<code>foreach</code> is the loop built for arrays. No counter needed.",[
+  D("Opening line of a foreach over $colors, calling each one $color",["foreach ($colors as $color) {"],"array, as, the name for one item."),
+  D("Opening line of a foreach over $student giving you the key AND the value",["foreach ($student as $key => $value) {"],"Same arrow you used to build it.")]),
+S(6,29,"Your own command","Writing a function runs nothing. You have to call it.",[
+  D("Write the opening line of a function called greet that takes $name",["function greet($name) {"],"the word function, the name, the parameter in brackets."),
+  D('Call that function with the value "Fatima"',['greet("Fatima");',"greet('Fatima');"],"Just the name and the brackets. No 'function' this time.")]),
+S(6,30,"Giving an answer back","<code>return</code> hands the value back so you can use it. It also ends the function.",[
+  D("Inside a function, hand back the total of $a and $b",["return $a + $b;"],"One word, then the maths."),
+  D("Call add(2, 3) and store what comes back in $result",["$result = add(2, 3);"],"The variable, equals, the call.")])
+];
+
+const BOSSES = {
+  1:{ ask:'Print these two lines, each ending with a new line:\nName: Fatima\nCity: Beirut',
+      accept:['echo "Name: Fatima\\n";\necho "City: Beirut\\n";'],
+      hint:'Two echo lines. Each one has \\n at the end, inside the double quotes.' },
+  2:{ ask:'Put Fatima in $first, Hassan in $last, then print them with a space between using dots.',
+      accept:['$first = "Fatima";\n$last = "Hassan";\necho $first . " " . $last;',
+              "$first = 'Fatima';\n$last = 'Hassan';\necho $first . ' ' . $last;"],
+      hint:'Three lines: two variables, then the echo with two dots in it.' },
+  3:{ ask:'Work out $price times $quantity into $total, then print it rounded to 2 decimals.',
+      accept:['$total = $price * $quantity;\necho round($total, 2);'],
+      hint:'Two lines. The rounding happens when you print.' },
+  4:{ ask:'If $mark is 18 or more print A, otherwise print F.',
+      accept:['if ($mark >= 18) {\necho "A";\n} else {\necho "F";\n}',
+              "if ($mark >= 18) {\necho 'A';\n} else {\necho 'F';\n}"],
+      hint:'Five lines: if, echo, the else line, echo, closing brace.' },
+  5:{ ask:'Loop $i from 1 to 10. Skip the even numbers. Print the rest.',
+      accept:['for ($i = 1; $i <= 10; $i++) {\nif ($i % 2 == 0) continue;\necho $i;\n}'],
+      hint:'The for line, then a one-line if with continue, then the echo, then the brace.' },
+  6:{ ask:'Write a function square that returns $n times itself, then print square(5).',
+      accept:['function square($n) {\nreturn $n * $n;\n}\necho square(5);'],
+      hint:'Four lines: the function line, the return, the closing brace, then the call.' }
+};
+
+/* ---------- normaliser: tidy code OUTSIDE strings, leave strings alone ---------- */
+function norm(src){
+  const out = [];
+  for (let raw of String(src).replace(/\r/g,"").split("\n")){
+    let line = raw.trim(), res = "", q = null, i = 0;
+    while (i < line.length){
+      const c = line[i];
+      if (q){
+        res += c;
+        if (c === "\\" && i + 1 < line.length){ res += line[i+1]; i += 2; continue; }
+        if (c === q) q = null;
+        i++; continue;
+      }
+      if (c === '"' || c === "'"){ q = c; res += c; i++; continue; }
+      if (c === " " || c === "\t"){
+        const prev = res[res.length-1] || "";
+        let j = i; while (j < line.length && (line[j] === " " || line[j] === "\t")) j++;
+        const next = line[j] || "";
+        // keep a space only when it separates two word-ish characters
+        if (/[\w$]/.test(prev) && /[\w$]/.test(next)) res += " ";
+        i = j; continue;
+      }
+      res += c; i++;
+    }
+    line = res.replace(/\s*;\s*$/, ";");
+    if (line !== "") out.push(line);
+  }
+  return out.join("\n");
+}
+function matches(typed, accept){
+  const t = norm(typed);
+  return accept.some(a => norm(a) === t);
+}
+
+/* ---------- save ---------- */
+const KEY = "php_stages_v1";
+let save_ = { cleared:{}, stars:{}, bosses:{} };
+function load(){ try{ const r=localStorage.getItem(KEY); if(r) save_=Object.assign(save_,JSON.parse(r)); }catch(e){} }
+function commit(){ try{ localStorage.setItem(KEY, JSON.stringify(save_)); }catch(e){} }
+
+const totalStages = STAGES.length + Object.keys(BOSSES).length;
+function clearedCount(){ return Object.keys(save_.cleared).length + Object.keys(save_.bosses).length; }
+function starCount(){ let s=0; for (const k in save_.stars) s += save_.stars[k]; return s; }
+function stageDone(n){ return !!save_.cleared[n]; }
+function bossDone(w){ return !!save_.bosses[w]; }
+function bossUnlocked(w){ return STAGES.filter(s=>s.w===w).every(s=>stageDone(s.n)); }
+function nextStage(){ const s = STAGES.find(s=>!stageDone(s.n)); return s ? s.n : null; }
+function unlocked(n){
+  if (n === 1) return true;
+  return stageDone(n-1) || stageDone(n);
+}
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+const app = document.getElementById("app");
+
+/* ---------- map ---------- */
+function map(){
+  const done = clearedCount(), next = nextStage();
+  let html = `<section class="status">
+    <div class="status-top">
+      <div class="count">${done} <span>of ${totalStages} stages cleared</span></div>
+      <div class="stars">${starCount()} ★</div>
+    </div>
+    <div class="meter"><i style="width:${done/totalStages*100}%"></i></div>
+    <div class="status-foot">
+      <span>${done === 0 ? "Start at stage 1. Type it, don't paste it."
+        : done >= totalStages ? "Every stage cleared. Go and do the real lessons."
+        : "Each stage is 3 minutes. Clear one, unlock the next."}</span>
+      <button class="reset" id="reset">reset progress</button>
+    </div>
+  </section>`;
+
+  WORLDS.forEach(w => {
+    const mine = STAGES.filter(s => s.w === w.n);
+    html += `<section class="world" style="--wc:${w.colour}">
+      <h2><b>World ${w.n}</b> ${esc(w.name)}</h2>
+      <p>${esc(w.note)}</p>
+      <div class="nodes">`;
+    mine.forEach(s => {
+      const dn = stageDone(s.n), un = unlocked(s.n), nx = s.n === next;
+      const st = save_.stars[s.n] || 0;
+      html += `<button class="node${dn?" done":""}${nx?" next":""}" data-s="${s.n}"
+        ${un?"":"disabled"} title="${esc(s.title)}">${dn ? "&#10003;" : s.n}
+        ${dn && st ? `<span class="st">${"★".repeat(st)}</span>` : ""}</button>`;
+    });
+    const bu = bossUnlocked(w.n), bd = bossDone(w.n);
+    html += `<button class="node boss${bd?" done":""}" data-b="${w.n}" ${bu?"":"disabled"}
+      title="World ${w.n} boss">${bd ? "&#128081;" : "&#128274;"}</button>`;
+    html += `</div><div class="wlink"><a href="${w.file}">read World ${w.n} &rarr;</a></div></section>`;
+  });
+
+  app.innerHTML = html;
+  app.querySelectorAll("[data-s]").forEach(b => b.onclick = () => openStage(+b.dataset.s));
+  app.querySelectorAll("[data-b]").forEach(b => b.onclick = () => openBoss(+b.dataset.b));
+  document.getElementById("reset").onclick = () => {
+    if (!confirm("Lock every stage again and lose your stars?")) return;
+    save_ = { cleared:{}, stars:{}, bosses:{} }; commit(); map();
+  };
+}
+
+/* ---------- a stage ---------- */
+let cur = null;
+function openStage(n){
+  const st = STAGES.find(s => s.n === n);
+  cur = { st, i:0, slips:0, boss:null };
+  drawDrill();
+}
+function drawDrill(){
+  const { st, i } = cur;
+  const w = WORLDS.find(x => x.n === st.w);
+  const d = st.drills[i];
+  app.innerHTML = `<section class="drill" style="--wc:${w.colour}">
+    <div class="crumb">
+      <span class="tag">World ${st.w} &middot; Stage ${st.n}</span>
+      <span class="dots">${st.drills.map((_,k)=>`<span class="dot${k<=i?" on":""}"></span>`).join("")}</span>
+      <button class="btn ghost" id="back">map</button>
+    </div>
+    <h2>${esc(st.title)}</h2>
+    <div class="teach">${st.teach}</div>
+    <p class="ask">${esc(d.ask)}</p>
+    ${d.sub ? `<p class="sub">${esc(d.sub)}</p>` : ""}
+    ${d.ctx ? `<pre class="ctx">${esc(d.ctx)}</pre>` : ""}
+    <textarea id="inp" spellcheck="false" autocapitalize="off" autocomplete="off"
+      placeholder="type it here..."></textarea>
+    <div class="row">
+      <button class="btn" id="check">check</button>
+      <button class="btn ghost" id="hint">hint</button>
+      <span style="flex:1"></span>
+      <span class="sub" style="margin:0">Enter to check &middot; Shift+Enter for a new line</span>
+    </div>
+    <div class="fb" id="fb"></div>
+  </section>`;
+  wire(d, () => {
+    if (cur.i + 1 < st.drills.length){ cur.i++; drawDrill(); }
+    else stageCleared();
+  });
+}
+function wire(d, onPass){
+  const inp = document.getElementById("inp");
+  const fb  = document.getElementById("fb");
+  inp.focus();
+  document.getElementById("back").onclick = map;
+  document.getElementById("hint").onclick = () => {
+    cur.slips++;
+    fb.className = "fb show"; fb.style.background = "var(--gold-soft)";
+    fb.innerHTML = `<b>Hint</b>${esc(d.hint)}`;
+  };
+  const go = () => {
+    const ok = matches(inp.value, d.accept);
+    inp.classList.toggle("ok", ok); inp.classList.toggle("no", !ok);
+    fb.style.background = "";
+    if (ok){
+      fb.className = "fb show ok";
+      fb.innerHTML = "<b>&#9989; That's it</b>Next one.";
+      setTimeout(onPass, 550);
+    } else {
+      cur.slips++;
+      fb.className = "fb show no";
+      fb.innerHTML = cur.slips >= 3
+        ? `<b>&#10060; Not yet</b>The answer is: <code>${esc(d.accept[0].split("\n")[0])}${d.accept[0].includes("\n")?" …":""}</code> — type it out, don't paste.`
+        : `<b>&#10060; Not yet</b>Look at it character by character. Press <b>hint</b> if you want one.`;
+    }
+  };
+  document.getElementById("check").onclick = go;
+  inp.onkeydown = e => { if (e.key === "Enter" && !e.shiftKey){ e.preventDefault(); go(); } };
+}
+function stageCleared(){
+  const st = cur.st;
+  const stars = cur.slips === 0 ? 3 : cur.slips <= 2 ? 2 : 1;
+  save_.cleared[st.n] = 1;
+  save_.stars[st.n] = Math.max(save_.stars[st.n] || 0, stars);
+  commit();
+  const w = WORLDS.find(x => x.n === st.w);
+  const nxt = STAGES.find(s => !stageDone(s.n));
+  const bossNow = bossUnlocked(st.w) && !bossDone(st.w);
+  app.innerHTML = `<section class="drill cleared" style="--wc:${w.colour}">
+    <div class="big">&#127881;</div>
+    <h3>Stage ${st.n} cleared</h3>
+    <div class="starline">${"★".repeat(stars)}${"☆".repeat(3-stars)}</div>
+    <p>${stars === 3 ? "Straight through, no hints." : stars === 2 ? "Got there." : "Got there in the end — that still counts."}</p>
+    <div class="row" style="justify-content:center">
+      ${bossNow ? `<button class="btn" id="boss">&#128081; World ${st.w} BOSS</button>` : ""}
+      ${nxt ? `<button class="btn${bossNow?" ghost":""}" id="next">stage ${nxt.n} &rarr;</button>` : ""}
+      <button class="btn ghost" id="back">the map</button>
+    </div>
+  </section>`;
+  document.getElementById("back").onclick = map;
+  if (nxt) document.getElementById("next").onclick = () => openStage(nxt.n);
+  if (bossNow) document.getElementById("boss").onclick = () => openBoss(st.w);
+}
+
+/* ---------- a boss ---------- */
+function openBoss(wn){
+  const w = WORLDS.find(x => x.n === wn), b = BOSSES[wn];
+  cur = { st:null, i:0, slips:0, boss:wn };
+  app.innerHTML = `<section class="drill" style="--wc:${w.colour}">
+    <div class="crumb">
+      <span class="tag">&#128081; World ${wn} Boss &middot; ${esc(w.name)}</span>
+      <button class="btn ghost" id="back">map</button>
+    </div>
+    <h2>The ${esc(w.name)} boss</h2>
+    <div class="teach">Several lines this time. Everything from World ${wn} at once.</div>
+    <p class="ask">${esc(b.ask).replace(/\n/g,"<br>")}</p>
+    <textarea id="inp" style="min-height:150px" spellcheck="false" autocapitalize="off"
+      autocomplete="off" placeholder="type the whole thing here..."></textarea>
+    <div class="row">
+      <button class="btn" id="check">check</button>
+      <button class="btn ghost" id="hint">hint</button>
+      <span style="flex:1"></span>
+      <span class="sub" style="margin:0">Shift+Enter for a new line</span>
+    </div>
+    <div class="fb" id="fb"></div>
+  </section>`;
+  wire(b, () => bossCleared(wn));
+}
+function bossCleared(wn){
+  const w = WORLDS.find(x => x.n === wn);
+  save_.bosses[wn] = 1; commit();
+  const all = clearedCount() >= totalStages;
+  app.innerHTML = `<section class="drill cleared" style="--wc:${w.colour}">
+    <div class="big">&#128081;</div>
+    <h3>World ${wn} complete</h3>
+    <p>${all ? "That was the last one. All 30 stages and all 6 bosses."
+       : `${esc(w.name)} is done. On to World ${wn+1}.`}</p>
+    ${all ? `<p style="margin-top:10px">You have the syntax now — tags, variables, quotes, maths,
+      conditions, loops, arrays and functions. Go and open <b>01-basics/</b>; it'll read like revision.</p>` : ""}
+    <div class="row" style="justify-content:center">
+      <button class="btn" id="back">the map</button>
+    </div>
+  </section>`;
+  document.getElementById("back").onclick = map;
+}
+
+/* ---------- theme ---------- */
+document.getElementById("themeBtn").onclick = () => {
+  const cur_ = document.documentElement.getAttribute("data-theme");
+  const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+  const next = cur_ ? (cur_ === "dark" ? "light" : "dark") : (dark ? "light" : "dark");
+  document.documentElement.setAttribute("data-theme", next);
+  try{ localStorage.setItem("php_stages_theme", next); }catch(e){}
+};
+try{ const t = localStorage.getItem("php_stages_theme"); if (t) document.documentElement.setAttribute("data-theme", t); }catch(e){}
+
+load();
+map();
+</script>
