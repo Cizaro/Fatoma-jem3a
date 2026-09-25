@@ -42,7 +42,7 @@ material over **Zoom**. I explain, she shares her screen and writes the code her
 
 ## 3. What is already done ✅
 
-The whole `Php/` folder — FILECOUNT files, every `.php` file passes `php -l`, examples verified by
+The whole `Php/` folder — 98 files, every `.php` file passes `php -l`, examples verified by
 actually running them.
 
 ```

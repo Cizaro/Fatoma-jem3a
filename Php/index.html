@@ -5,8 +5,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
 <style>
-/* Tokens are shared with flashcards.html, roadmap.html, php-arcade.html and
-   exam-simulator.html on purpose: five pages, one course, one visual system. */
+/* Tokens are shared with flashcards.html, roadmap.html, php-arcade.html,
+   stages.html and exam-simulator.html on purpose: one course, one visual system. */
 :root{
   --paper:#F7F6F3; --surface:#FFFFFF; --surface-2:#EFEDE8;
   --ink:#1A1D21; --ink-2:#5C6168; --ink-3:#8D939B;
@@ -229,7 +229,7 @@ footer a{text-decoration:none}
 
   <section class="practice">
     <h2>When you have had enough of reading</h2>
-    <p class="lvsub">Four ways to practise the same material. Pick whichever one you can face today.</p>
+    <p class="lvsub">Five ways to practise the same material. Pick whichever one you can face today.</p>
     <div class="pgrid">
       <a class="big" data-path="games/php-arcade.html">
         <div>
@@ -247,6 +247,11 @@ footer a{text-decoration:none}
         <a class="small" data-path="exam-simulator.html">
           <h3>Exam simulator</h3>
           <p>The real paper on a 90 minute clock, marked for you at the end.</p>
+        </a>
+        <a class="small" data-path="stages.html">
+          <h3>Syntax stages</h3>
+          <p>30 tiny stages that teach the typing, not the ideas. Where to go if a lesson
+             moved too fast.</p>
         </a>
         <a class="small" data-path="roadmap.html">
           <h3>The A to Z map</h3>
@@ -360,7 +365,8 @@ const PUBLISHED = {
   "flashcards.html":       "https://claude.ai/artifact/WDYShUSe2eV7Yu19XxYJZn",
   "roadmap.html":          "https://claude.ai/artifact/EDpJwwwvaoGwGHnjeAXdPb",
   "games/php-arcade.html": "https://claude.ai/artifact/JYBuyUAnizeyXzAT9tXMu2",
-  "exam-simulator.html":   "https://claude.ai/artifact/H3Ca9oVaXidqa51D5hesYc"
+  "exam-simulator.html":   "https://claude.ai/artifact/H3Ca9oVaXidqa51D5hesYc",
+  "stages.html":           "https://claude.ai/artifact/Gqn7w4oMjEMCoC8CePNvk4"
 };
 const link = p => LOCAL ? p : (PUBLISHED[p] || REPO + p);
 
