@@ -80,9 +80,13 @@ const ROUTES = [
   ["practice", "exam",       "⏱", "Exam simulator","../exam-simulator.html", "exam-simulator.html"]
 ];
 
-const LOCAL = location.protocol === "file:"
-  || ["localhost","127.0.0.1",""].indexOf(location.hostname) !== -1;
-const pathOf = r => LOCAL ? r[4] : (r[5] || r[4]);
+/* Which layout are we in? Decide from where this file sits, not from the
+   hostname: in the repo the shell is Php/app/index.html, so the path ends
+   in /app/. Published as one artifact it sits at the root. That test is
+   right on a file://, on localhost, and on GitHub Pages alike, which a
+   hostname check is not. */
+const REPO_LAYOUT = /\/app\/([^\/]*)?$/.test(location.pathname);
+const pathOf = r => REPO_LAYOUT ? r[4] : (r[5] || r[4]);
 
 const $ = id => document.getElementById(id);
 const stage = $("stage");

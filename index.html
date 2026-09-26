@@ -1,0 +1,30 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PHP Course</title>
+<!-- The site root exists so the published URL opens the course itself
+     rather than a folder listing. The app lives in Php/app/. -->
+<link rel="canonical" href="Php/app/index.html">
+<meta http-equiv="refresh" content="0; url=Php/app/index.html">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@600;700&family=Public+Sans:wght@400;500&display=swap">
+<style>
+  :root{ --paper:#F7F6F3; --ink:#1A1D21; --ink-2:#5C6168; --accent:#0F7B6C; }
+  @media (prefers-color-scheme: dark){
+    :root{ --paper:#14161A; --ink:#ECEEF1; --ink-2:#A3A9B2; --accent:#4FC2AE; }
+  }
+  html,body{margin:0;height:100%}
+  body{background:var(--paper);color:var(--ink);display:grid;place-items:center;
+    font-family:"Public Sans",system-ui,sans-serif;text-align:center;padding:24px}
+  h1{font-family:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;font-weight:700;
+    font-size:30px;letter-spacing:-.02em;margin:0 0 6px}
+  p{color:var(--ink-2);margin:0 0 20px}
+  a{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;
+    border-radius:11px;padding:12px 24px;font-weight:600}
+</style>
+<div>
+  <h1>PHP Course</h1>
+  <p>Taking you to the course&hellip;</p>
+  <a href="Php/app/index.html">Open it now</a>
+</div>
+<script>location.replace("Php/app/index.html");</script>
