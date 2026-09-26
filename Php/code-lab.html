@@ -352,8 +352,8 @@ function lex(src){
     }
 
     // operators, longest first
-    const ops = ["===","!==","<=>","**=","...","<<=",">>=","==","!=","<>","<=",">=","&&","||","**",
-                 "++","--","+=","-=","*=","/=",".=","%=","=>","->","::","?:"];
+    const ops = ["===","!==","<=>","**=","...","<<=",">>=","??=","==","!=","<>","<=",">=","&&","||","**",
+                 "++","--","+=","-=","*=","/=",".=","%=","=>","->","::","??","?:"];
     const three = code.substr(i,3), two = code.substr(i,2);
     const found = ops.find(o => code.startsWith(o, i));
     if (found){ push("op", found); i += found.length; continue; }
@@ -464,14 +464,17 @@ function parse(tokens){
 
   function assign(){
     const left = ternary();
-    const ops = ["=","+=","-=","*=","/=",".=","%="];
+    const ops = ["=","+=","-=","*=","/=",".=","%=","??="];
     for (const o of ops){
       if (atOp(o)){ p++; const right = assign(); return {t:"assign", op:o, target:left, value:right}; }
     }
     return left;
   }
   function ternary(){
-    let c = orE();
+    let c = coalesce();
+    // "?:" arrives as one token, so it needs its own branch or the parser
+    // stops dead on $a ?: $b
+    if (atOp("?:")){ p++; return {t:"ternary", cond:c, a:null, b:assign()}; }
     if (atOp("?")){ p++;
       if (opt(":")) return {t:"ternary", cond:c, a:null, b:assign()};
       const a = assign(); eat("op",":"); const b = assign();
@@ -479,16 +482,28 @@ function parse(tokens){
     }
     return c;
   }
+  // ?? binds looser than || and tighter than the ternary, and is
+  // right-associative: $a ?? $b ?? $c is $a ?? ($b ?? $c)
+  function coalesce(){
+    const l = orE();
+    if (atOp("??")){ p++; return {t:"coalesce", l, r:coalesce()}; }
+    return l;
+  }
   function orE(){ let l = andE(); while (atOp("||") || at("or")){ p++; l = {t:"bin", op:"||", l, r:andE()}; } return l; }
   function andE(){ let l = eqE(); while (atOp("&&") || at("and")){ p++; l = {t:"bin", op:"&&", l, r:eqE()}; } return l; }
   function eqE(){ let l = relE();
     while (atOp("==")||atOp("!=")||atOp("===")||atOp("!==")||atOp("<>")){
       const o = next().value; l = {t:"bin", op:o === "<>" ? "!=" : o, l, r:relE()}; } return l; }
-  function relE(){ let l = addE();
+  function relE(){ let l = concatE();
     while (atOp("<")||atOp(">")||atOp("<=")||atOp(">=")||atOp("<=>")){
-      const o = next().value; l = {t:"bin", op:o, l, r:addE()}; } return l; }
+      const o = next().value; l = {t:"bin", op:o, l, r:concatE()}; } return l; }
+  // PHP 8 moved "." BELOW "+" and "-": echo "x" . $a + 2 is "x" . ($a + 2).
+  // Under PHP 7 rules it was ("x" . $a) + 2, which is a different answer and
+  // no error, so getting this wrong teaches her something untrue.
+  function concatE(){ let l = addE();
+    while (atOp(".")){ p++; l = {t:"bin", op:".", l, r:addE()}; } return l; }
   function addE(){ let l = mulE();
-    while (atOp("+")||atOp("-")||atOp(".")){ const o = next().value; l = {t:"bin", op:o, l, r:mulE()}; } return l; }
+    while (atOp("+")||atOp("-")){ const o = next().value; l = {t:"bin", op:o, l, r:mulE()}; } return l; }
   function mulE(){ let l = powE();
     while (atOp("*")||atOp("/")||atOp("%")){ const o = next().value; l = {t:"bin", op:o, l, r:powE()}; } return l; }
   function powE(){ const l = unary(); if (atOp("**")){ p++; return {t:"bin", op:"**", l, r:powE()}; } return l; }
@@ -738,6 +753,16 @@ function run(src, opts){
       }
       case "assign": {
         const box = container(n.target, scope, true);
+        if (n.op === "??="){
+          // only assigns when there is nothing there, and only then does it
+          // bother working out the right-hand side
+          const cur = box.get();
+          if (cur !== null && cur !== undefined) return cur;
+          let nv = ev(n.value, scope);
+          if (nv instanceof PhpArray) nv = nv.clone();
+          box.set(nv);
+          return nv;
+        }
         let v = ev(n.value, scope);
         if (n.op !== "="){
           const cur = box.get();
@@ -785,6 +810,18 @@ function run(src, opts){
         const c = ev(n.cond, scope);
         if (n.a === null) return truthy(c) ? c : ev(n.b, scope);
         return truthy(c) ? ev(n.a, scope) : ev(n.b, scope);
+      }
+      case "coalesce": {
+        // ?? asks "is this null or missing", and unlike anything else it
+        // stays quiet about a missing variable or key. That silence is the
+        // whole reason she will use it on $_POST, so mute the warning here.
+        const warn = opts.warn;
+        opts.warn = null;
+        let left;
+        try { left = ev(n.l, scope); }
+        catch(e){ opts.warn = warn; throw e; }
+        opts.warn = warn;
+        return (left === null || left === undefined) ? ev(n.r, scope) : left;
       }
       case "preinc": { const box = container(n.e, scope, true);
         const v = toNum(box.get()) + n.by; box.set(v); return v; }
