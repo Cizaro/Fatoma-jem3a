@@ -1,6 +1,6 @@
 # PROGRESS — read this first
 
-**Last updated:** 2026-09-25 (seventh session)
+**Last updated:** 2026-09-26 (eighth session)
 **Update this file at the end of every session.** It is the handoff between machines and
 between agent sessions. If it is stale, the next session wastes an hour re-deriving context.
 
@@ -250,6 +250,32 @@ No `gh` CLI installed — use plain `git` for pushes.
 ## 7. Session log
 
 *(newest first — one short entry per working session, so the next agent knows what changed and why)*
+
+### 2026-09-26 (eighth) - Made it live, and fixed what that exposed
+
+- **The course is live at https://cizaro.github.io/Fatoma-jem3a/** (Pages, `main`, repo root;
+  the root `index.html` redirects into `Php/app/`). Every push redeploys in about a minute.
+  Nothing to publish by hand any more, and nothing for her to be granted access to.
+- **`Php/app/` is the one-link app**: a rail with progress, the twelve lessons as rendered
+  pages, and the five practice tools, each shown in a frame. `scripts/build-lessons.py`
+  converts every `lesson.md` into a page under `app/lessons/`; the `.md` stays the source,
+  so edit it and re-run the script.
+- **The phone was broken and it was the bad kind of broken.** iOS Safari does not give an
+  iframe its own scrollbar, so the fixed-height shell cut every page off at the first screen
+  with no way to scroll. Under 820px the shell now grows and the page scrolls, with the frame
+  sized to its contents. Sizing it from `body.scrollHeight` runs away (taller frame, taller
+  body, repeat, 25000px); it measures the lowest bottom edge of the body's children instead.
+- **The code lab was teaching PHP 7.** `.` was parsed at the same precedence as `+` and `-`,
+  so `echo "x" . $a + 2;` printed `2` where real PHP 8 prints `x5`. Silent, no error, in
+  lesson 1 territory. Fixed, and `??`, `?:` and `??=` now work. 27 probes and all 33 exercise
+  solutions verified against real PHP 8.2 on this machine.
+- **One palette everywhere.** The roadmap was purple, the code lab blue-violet, the stages a
+  six-colour rainbow. `scripts/unify-palette.py` re-points token VALUES in each page's `:root`
+  blocks and leaves the names alone, so no component CSS had to change. 202 values.
+- The arcade was rebuilt on the system too: a featured game chosen from what she has played,
+  badges behind a button instead of a wall of padlocks.
+- **Lecture PDFs are gitignored.** The repo is public *and* a public website now, so a
+  committed deck would be published. Drop his decks in the folder freely; they stay local.
 
 ### 2026-09-25 (seventh) — Her lecturer's actual syllabus turned up
 - Worked from the **MIT320 Lesson 01 slide deck** (Rabih Tarraf, "Introduction to Algorithms").
