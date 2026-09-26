@@ -31,3 +31,7 @@ dump-*.sql
 
 # empty files shell redirects leave behind
 Php/LOCAL
+
+# Her lecturer's slide decks. His copyright, and this repo is a public
+# website now, so they stay local. Our own material derived from them is tracked.
+*.pdf
