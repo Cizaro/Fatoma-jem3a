@@ -1,5 +1,12 @@
 # Fatoma jem3a
 
+### 👉 The course is live: **https://cizaro.github.io/Fatoma-jem3a/**
+
+One link, the whole thing: 12 lessons, the syntax stages, the code lab, the arcade, the
+flashcards and the timed exam, behind one navigation rail. Nothing to install, works on a
+phone. **Every push to `main` redeploys it within a minute.**
+
+
 Teaching material I build for Fatima's university courses. Kept in git so it stays in sync
 across my two machines and so any Claude Code session can pick up exactly where the last one left off.
 

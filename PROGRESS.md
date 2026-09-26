@@ -95,6 +95,14 @@ Php/
 `ROADMAP.md` at the repo root is the same 26-step map as a Mermaid diagram, which GitHub
 renders inline.
 
+## THE LIVE SITE
+
+**https://cizaro.github.io/Fatoma-jem3a/** - the whole course, public, no sign-in, no sharing
+step. GitHub Pages serves `main` from the repo root; the root `index.html` redirects into
+`Php/app/`. **Every push to main redeploys it within a minute.** Nothing to publish by hand.
+
+This is the link to give her. The Artifacts below still work but are now the old way of doing it.
+
 **Seven pages are published as private Claude Artifacts** so she can use them on her phone:
 - Course home: https://claude.ai/artifact/GyRYKwKisjEBU5wkBanfAe
 - Syntax Stages: https://claude.ai/artifact/Gqn7w4oMjEMCoC8CePNvk4
