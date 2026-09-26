@@ -154,7 +154,51 @@ addEventListener("message", e => {
   if (!d || !d.course) return;
   if (d.go) location.hash = "#/" + d.go;
 });
-stage.addEventListener("load", () => { tellFrame(); paintProgress(); });
+/* ---------- keep the frame as tall as its contents on a phone ----------
+   Desktop lets the frame scroll itself. A phone cannot, so the frame is
+   grown to fit and the page scrolls instead. The observer matters because
+   these pages change height constantly: a lesson opens, feedback appears,
+   the editor grows. */
+let frameWatch = null;
+function fitFrame(){
+  const small = window.innerWidth <= 820;
+  if (!small){ stage.style.height = ""; return; }
+  let doc = null;
+  try { doc = stage.contentDocument; } catch(e) {}
+  if (!doc || !doc.body) return;
+
+  /* Measuring body.scrollHeight here runs away: growing the frame makes the
+     body fill the taller frame, which reports taller still. So measure where
+     the content actually ends - the lowest bottom edge among the body's own
+     children - which does not move when the frame grows. */
+  let h = 0;
+  for (const el of doc.body.children){
+    if (el.tagName === "SCRIPT" || el.tagName === "STYLE") continue;
+    const r = el.getBoundingClientRect();
+    if (r.height) h = Math.max(h, r.bottom);
+  }
+  if (!h) h = doc.body.scrollHeight;
+  h = Math.round(h) + 28;
+
+  const now = parseInt(stage.style.height, 10) || 0;
+  if (Math.abs(h - now) > 2) stage.style.height = h + "px";
+}
+function watchFrame(){
+  if (frameWatch){ frameWatch.disconnect(); frameWatch = null; }
+  let doc = null;
+  try { doc = stage.contentDocument; } catch(e) {}
+  if (!doc || !doc.body || typeof ResizeObserver === "undefined") return;
+  frameWatch = new ResizeObserver(fitFrame);
+  frameWatch.observe(doc.body);
+  doc.addEventListener("click", () => setTimeout(fitFrame, 60), true);
+}
+addEventListener("resize", fitFrame);
+
+stage.addEventListener("load", () => {
+  tellFrame(); paintProgress(); fitFrame(); watchFrame();
+  setTimeout(fitFrame, 250);            // webfonts land late and change height
+  if (window.innerWidth <= 820) window.scrollTo(0, 0);
+});
 
 /* ---------- progress, read from the course map's own store ---------- */
 function paintProgress(){

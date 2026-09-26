@@ -418,9 +418,26 @@ $("heroN").textContent = TOTAL;
 $("heroL").textContent = ALL.length;
 const sid = (les, i) => les.id + "." + i;
 
+/* Every lesson.md now has a rendered page under app/lessons/. That path is
+   relative and correct from here whether this file is opened from the repo
+   folder or served as the live site, so the lesson never has to be read as
+   raw markdown again. Folders map to the slugs scripts/build-lessons.py uses. */
+const LESSON_PAGE = {
+  "00-algorithms":"algorithms", "01-basics":"basics", "02-datatypes":"datatypes",
+  "03-operators":"operators", "04-conditions":"conditions", "05-loops":"loops",
+  "06-arrays":"arrays", "07-functions":"functions", "08-forms":"forms",
+  "09-mysql":"mysql", "10-dynamic-page":"dynamic"
+};
+
 function toolRow(les){
   const t = [];
-  t.push(`<a class="tool key" href="${link(les.dir + "/" + (les.file || "lesson.md"))}">Read the lesson</a>`);
+  const page = LESSON_PAGE[les.dir];
+  if (page && !les.file){
+    t.push(`<a class="tool key" data-path="app/lessons/${page}.html"
+              href="app/lessons/${page}.html">Read the lesson</a>`);
+  } else {
+    t.push(`<a class="tool key" href="${link(les.dir + "/" + (les.file || "lesson.md"))}">Read the lesson</a>`);
+  }
   if (!les.file){
     t.push(`<a class="tool" href="${link(les.dir + "/examples.php")}">Examples</a>`);
     t.push(`<a class="tool" href="${link(les.dir + "/exercises." + (les.id === "8" ? "md" : "php"))}">Exercises</a>`);

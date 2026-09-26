@@ -43,6 +43,10 @@
     ".embedded html, .embedded body { height: auto; }";
   document.head.appendChild(css);
 
+  // a lesson link becomes a rail move, so the shell stays in charge of
+  // where you are instead of a page loading inside a page
+  var LESSON = /(?:^|\/)app\/lessons\/([a-z]+)\.html$/;
+
   // links that leave this page should move the shell, not nest a frame
   var MAP = {
     "index.html": "home", "../index.html": "home",
@@ -57,7 +61,8 @@
     var a = e.target.closest ? e.target.closest("a") : null;
     if (!a) return;
     var raw = a.getAttribute("data-path") || a.getAttribute("href") || "";
-    var id = MAP[raw];
+    var lesson = LESSON.exec(raw);
+    var id = lesson ? lesson[1] : MAP[raw];
     if (!id) return;
     e.preventDefault();
     parent.postMessage({ course: true, go: id }, "*");
