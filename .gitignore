@@ -26,15 +26,12 @@ dump-*.sql
 # Local agent tooling (not part of the course)
 .claude-flow/
 
-# Local agent tooling (not part of the course)
-.claude-flow/
+# Ahmad's own practice scratch folder. His, not course material, and it
+# keeps getting swept in by "git add -A".
+/My project/
 
 # empty files shell redirects leave behind
 Php/LOCAL
-
-# Her lecturer's slide decks. His copyright, and this repo is a public
-# website now, so they stay local. Our own material derived from them is tracked.
-*.pdf
 
 # Her lecturer's slide decks. His copyright, and this repo is a public
 # website now, so they stay local. Our own material derived from them is tracked.
