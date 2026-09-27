@@ -241,9 +241,34 @@ find Php -name "*.php" -exec php -l {} \;  # lint everything
 ```
 
 **Environment:** Windows 11, Git Bash available. **Both machines run XAMPP 8.2** — PHP 8.2.12,
-MySQL and phpMyAdmin, the same stack as her uni lab. If `php` isn't on PATH on a machine it's at
-`C:\xampp\php\php.exe`; add `C:\xampp\php` to PATH to get the short command.
-No `gh` CLI installed — use plain `git` for pushes.
+MariaDB 10.4.32 and phpMyAdmin, the same stack as her uni lab. If `php` isn't on PATH on a
+machine it's at `C:\xampp\php\php.exe`; add `C:\xampp\php` to PATH to get the short command.
+`gh` **is** installed and logged in as Cizaro, which is how Pages was enabled.
+
+### This machine is fully wired up (2026-09-27) — don't redo it
+
+| | |
+|---|---|
+| Course over Apache | `http://localhost/Php/` and `http://localhost/Php/app/index.html` |
+| phpMyAdmin | `http://localhost/phpmyadmin` (user `root`, no password) |
+| Databases imported | `school` (5 students) · `mini_site` (6 courses) |
+
+`C:\xampp\htdocs\Php` is a **directory junction** pointing at this repo's `Php/` folder, not a
+copy, so editing a file here changes what localhost serves immediately. Made with `mklink /J`,
+which needs no admin rights.
+
+Apache and MySQL are **running but not installed as Windows services**, so they will not come
+back after a reboot. Start them from the XAMPP control panel, or run `C:\xampp\apache\bin\httpd.exe`
+and `C:\xampp\mysql\bin\mysqld.exe`. To re-import the databases after a wipe:
+
+```bash
+C:/xampp/mysql/bin/mysql.exe -u root < Php/09-mysql/school.sql
+C:/xampp/mysql/bin/mysql.exe -u root < Php/10-dynamic-page/courses.sql
+```
+
+**Verified end to end, not merely started:** all six database-backed pages
+(`09-mysql/01-connect`, `02-select`, `04-crud`, `10-dynamic-page/index`, `detail.php?id=1`,
+`admin`) return HTTP 200 with real rows and no connection errors, over both `php -S` and Apache.
 
 ---
 
