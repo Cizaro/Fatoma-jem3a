@@ -1,0 +1,404 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Whiteboard</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="app/app.css?v=3">
+<style>
+html,body{height:100%}
+body{display:flex;flex-direction:column;overflow:hidden;min-height:100dvh}
+.bar{display:flex;align-items:center;gap:14px;padding:10px 14px;background:var(--surface);
+  border-bottom:1px solid var(--line);flex-wrap:wrap;flex:none}
+.grp{display:flex;align-items:center;gap:4px}
+.grp + .grp{padding-left:14px;border-left:1px solid var(--line)}
+.t{width:36px;height:34px;border:1px solid transparent;background:none;border-radius:9px;
+  cursor:pointer;color:var(--ink-2);display:grid;place-items:center;padding:0}
+.t:hover{background:var(--surface-2);color:var(--ink)}
+.t.on{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.t svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.t[disabled]{opacity:.32;cursor:default}
+.t[disabled]:hover{background:none;color:var(--ink-2)}
+
+.sw{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0}
+.sw.on{box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--ink-3)}
+.wt{width:30px;height:30px;border:1px solid transparent;background:none;border-radius:8px;
+  cursor:pointer;display:grid;place-items:center;padding:0}
+.wt:hover{background:var(--surface-2)}
+.wt.on{background:var(--surface-2);border-color:var(--line)}
+.wt i{display:block;background:var(--ink);border-radius:99px}
+.lbl{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-3);margin-right:2px}
+.spacer{flex:1}
+.txtbtn{background:none;border:1px solid var(--line);color:var(--ink-2);border-radius:999px;
+  padding:6px 13px;font:inherit;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;
+  text-transform:uppercase;cursor:pointer}
+.txtbtn:hover{color:var(--ink);border-color:var(--accent)}
+
+.wrap{flex:1;position:relative;min-height:0;background:var(--paper)}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+#typing{position:absolute;display:none;border:1px solid var(--accent);border-radius:6px;
+  background:var(--surface);color:var(--ink);font-family:var(--body);padding:3px 7px;
+  outline:none;min-width:130px}
+.hint{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);pointer-events:none;
+  font-size:12px;color:var(--ink-3);background:var(--surface);border:1px solid var(--line);
+  border-radius:999px;padding:5px 14px;opacity:.92}
+@media (max-width:820px){ .grp + .grp{padding-left:8px} .hint{display:none} }
+</style>
+
+<div class="bar">
+  <div class="grp" id="tools"></div>
+
+  <div class="grp" id="colors"></div>
+
+  <div class="grp" id="widths"></div>
+
+  <div class="grp">
+    <button class="t" id="undo" title="Undo (Ctrl+Z)"><svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
+    <button class="t" id="redo" title="Redo (Ctrl+Shift+Z)"><svg viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/></svg></button>
+  </div>
+
+  <span class="spacer"></span>
+  <button class="txtbtn" id="save">save png</button>
+  <button class="txtbtn" id="clear">clear</button>
+</div>
+
+<div class="wrap" id="wrap">
+  <canvas id="cv"></canvas>
+  <input id="typing" spellcheck="false">
+  <div class="hint" id="hint">Pen 1&ndash;7 to switch tool &middot; hold Shift for straight lines &middot; Ctrl+Z undoes</div>
+</div>
+
+<script>
+/* ---------------------------------------------------------------
+   A whiteboard for explaining things on a call.
+
+   Everything drawn is kept as an OBJECT in one list, not painted
+   straight onto pixels. That is what makes undo, redo and rubbing
+   out one wrong box (while leaving the rest) possible at all - a
+   pixel canvas can only be wiped. The canvas is redrawn from the
+   list whenever the list changes.
+--------------------------------------------------------------- */
+const cv = document.getElementById("cv");
+const ctx = cv.getContext("2d");
+const wrap = document.getElementById("wrap");
+const typing = document.getElementById("typing");
+
+let shapes = [];          // everything on the board, in draw order
+let redoStack = [];
+let tool = "pen";
+/* The default ink is whatever the theme calls "ink", so the pen is dark on
+   the light board and light on the dark one. A hard-coded near-black pen
+   is invisible the moment she switches theme. */
+const INK = (getComputedStyle(document.documentElement)
+  .getPropertyValue("--ink") || "#1A1D21").trim();
+let color = INK;
+let width = 3;
+let drawing = null;       // the shape being drawn right now
+
+const TOOLS = [
+  ["pen",     "Pen (1)",      '<path d="M4 20s1-4 2-5l9-9a2.1 2.1 0 0 1 3 3l-9 9c-1 1-5 2-5 2Z"/><path d="m13.5 5.5 5 5"/>'],
+  ["line",    "Line (2)",     '<path d="M5 19 19 5"/>'],
+  ["arrow",   "Arrow (3)",    '<path d="M5 19 19 5"/><path d="M12 5h7v7"/>'],
+  ["rect",    "Box (4)",      '<rect x="4" y="6" width="16" height="12" rx="1.5"/>'],
+  ["ellipse", "Circle (5)",   '<ellipse cx="12" cy="12" rx="8" ry="6.5"/>'],
+  ["diamond", "Decision (6)", '<path d="M12 4 20 12 12 20 4 12Z"/>'],
+  ["text",    "Text (7)",     '<path d="M5 6h14"/><path d="M12 6v13"/>'],
+  ["erase",   "Rub out (8)",  '<path d="M8 20h12"/><path d="m4.5 15.5 5-5 7 7-3 3H7.5Z"/><path d="m9.5 10.5 5-5 7 7-5 5"/>']
+];
+const COLORS = [INK, "#B5541F", "#0F7B6C", "#2F62B8", "#A57C1B"];
+const WIDTHS = [2, 3, 6];
+
+/* ---------- toolbar ---------- */
+const tw = document.getElementById("tools");
+TOOLS.forEach(([id, title, path]) => {
+  const b = document.createElement("button");
+  b.className = "t" + (id === tool ? " on" : "");
+  b.title = title;
+  b.dataset.tool = id;
+  b.innerHTML = `<svg viewBox="0 0 24 24">${path}</svg>`;
+  b.onclick = () => setTool(id);
+  tw.appendChild(b);
+});
+const cw = document.getElementById("colors");
+cw.innerHTML = `<span class="lbl">ink</span>`;
+COLORS.forEach(c => {
+  const b = document.createElement("button");
+  b.className = "sw" + (c === color ? " on" : "");
+  b.style.background = c;
+  b.dataset.c = c;
+  b.title = c;
+  b.onclick = () => {
+    color = c;
+    cw.querySelectorAll(".sw").forEach(s => s.classList.toggle("on", s.dataset.c === c));
+  };
+  cw.appendChild(b);
+});
+const ww = document.getElementById("widths");
+WIDTHS.forEach(w => {
+  const b = document.createElement("button");
+  b.className = "wt" + (w === width ? " on" : "");
+  b.dataset.w = w;
+  b.innerHTML = `<i style="width:${w + 5}px;height:${w + 5}px"></i>`;
+  b.onclick = () => {
+    width = w;
+    ww.querySelectorAll(".wt").forEach(s => s.classList.toggle("on", +s.dataset.w === w));
+  };
+  ww.appendChild(b);
+});
+
+function setTool(id){
+  tool = id;
+  tw.querySelectorAll(".t").forEach(b => b.classList.toggle("on", b.dataset.tool === id));
+  cv.style.cursor = id === "text" ? "text" : id === "erase" ? "cell" : "crosshair";
+}
+
+/* ---------- canvas sizing ----------
+   Backing store at device resolution, or every line looks soft. */
+function resize(){
+  const r = wrap.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = Math.round(r.width * dpr);
+  cv.height = Math.round(r.height * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  paint();
+}
+addEventListener("resize", resize);
+
+/* ---------- drawing one shape ---------- */
+function stroke(s){
+  ctx.strokeStyle = s.c;
+  ctx.fillStyle = s.c;
+  ctx.lineWidth = s.w;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+}
+
+function drawShape(s){
+  stroke(s);
+  if (s.t === "pen"){
+    const p = s.pts;
+    if (p.length < 2){
+      ctx.beginPath(); ctx.arc(p[0].x, p[0].y, s.w / 2, 0, 7); ctx.fill(); return;
+    }
+    /* Through the midpoints with quadratic curves. Joining the raw
+       points instead gives the visible hand-shake that makes a board
+       look amateur; this is what "smooth" actually means here. */
+    ctx.beginPath();
+    ctx.moveTo(p[0].x, p[0].y);
+    for (let i = 1; i < p.length - 1; i++){
+      const mx = (p[i].x + p[i + 1].x) / 2, my = (p[i].y + p[i + 1].y) / 2;
+      ctx.quadraticCurveTo(p[i].x, p[i].y, mx, my);
+    }
+    ctx.lineTo(p[p.length - 1].x, p[p.length - 1].y);
+    ctx.stroke();
+    return;
+  }
+  if (s.t === "text"){
+    ctx.font = `${s.size}px "Public Sans", system-ui, sans-serif`;
+    ctx.textBaseline = "top";
+    ctx.fillText(s.s, s.x, s.y);
+    return;
+  }
+  const { x0, y0, x1, y1 } = s;
+  ctx.beginPath();
+  if (s.t === "line" || s.t === "arrow"){
+    ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    if (s.t === "arrow"){
+      const a = Math.atan2(y1 - y0, x1 - x0), h = Math.max(11, s.w * 3.4);
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x1 - h * Math.cos(a - 0.42), y1 - h * Math.sin(a - 0.42));
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x1 - h * Math.cos(a + 0.42), y1 - h * Math.sin(a + 0.42));
+      ctx.stroke();
+    }
+    return;
+  }
+  if (s.t === "rect"){
+    const r = Math.min(7, Math.abs(x1 - x0) / 4, Math.abs(y1 - y0) / 4);
+    if (ctx.roundRect) ctx.roundRect(x0, y0, x1 - x0, y1 - y0, r);
+    else ctx.rect(x0, y0, x1 - x0, y1 - y0);
+  } else if (s.t === "ellipse"){
+    ctx.ellipse((x0 + x1) / 2, (y0 + y1) / 2,
+      Math.abs(x1 - x0) / 2, Math.abs(y1 - y0) / 2, 0, 0, 7);
+  } else if (s.t === "diamond"){
+    const mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
+    ctx.moveTo(mx, y0); ctx.lineTo(x1, my); ctx.lineTo(mx, y1); ctx.lineTo(x0, my);
+    ctx.closePath();
+  }
+  ctx.stroke();
+}
+
+function paint(){
+  const r = wrap.getBoundingClientRect();
+  ctx.clearRect(0, 0, r.width, r.height);
+  shapes.forEach(drawShape);
+  if (drawing) drawShape(drawing);
+  document.getElementById("undo").disabled = !shapes.length;
+  document.getElementById("redo").disabled = !redoStack.length;
+}
+
+/* ---------- hit testing, for the rubber ---------- */
+function box(s){
+  if (s.t === "pen"){
+    const xs = s.pts.map(p => p.x), ys = s.pts.map(p => p.y);
+    return [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
+  }
+  if (s.t === "text"){
+    ctx.font = `${s.size}px "Public Sans", system-ui, sans-serif`;
+    return [s.x, s.y, s.x + ctx.measureText(s.s).width, s.y + s.size * 1.2];
+  }
+  return [Math.min(s.x0, s.x1), Math.min(s.y0, s.y1),
+          Math.max(s.x0, s.x1), Math.max(s.y0, s.y1)];
+}
+function hit(s, x, y){
+  const pad = Math.max(8, s.w || 3);
+  if (s.t === "pen") return s.pts.some(p => Math.hypot(p.x - x, p.y - y) < pad);
+  const [a, b, c, d] = box(s);
+  return x > a - pad && x < c + pad && y > b - pad && y < d + pad;
+}
+
+/* ---------- history ---------- */
+function commit(s){ shapes.push(s); redoStack = []; paint(); }
+function undo(){ if (shapes.length){ redoStack.push(shapes.pop()); paint(); } }
+function redo(){ if (redoStack.length){ shapes.push(redoStack.pop()); paint(); } }
+document.getElementById("undo").onclick = undo;
+document.getElementById("redo").onclick = redo;
+document.getElementById("clear").onclick = () => {
+  if (!shapes.length) return;
+  if (confirm("Wipe the whole board?")){ shapes = []; redoStack = []; paint(); }
+};
+
+/* ---------- pointer ---------- */
+function at(e){
+  const r = cv.getBoundingClientRect();
+  return { x: e.clientX - r.left, y: e.clientY - r.top };
+}
+let erasing = false;
+
+cv.addEventListener("pointerdown", e => {
+  if (typing.style.display === "block") return placeText();
+  cv.setPointerCapture(e.pointerId);
+  const p = at(e);
+
+  if (tool === "erase"){
+    erasing = true;
+    rubOut(p);
+    return;
+  }
+  if (tool === "text"){
+    typing.style.display = "block";
+    typing.style.left = p.x + "px";
+    typing.style.top = p.y + "px";
+    typing.style.fontSize = (width * 5 + 8) + "px";
+    typing.style.color = color;
+    typing.value = "";
+    typing.dataset.x = p.x; typing.dataset.y = p.y;
+    setTimeout(() => typing.focus(), 0);
+    return;
+  }
+  drawing = tool === "pen"
+    ? { t: "pen", pts: [p], c: color, w: width }
+    : { t: tool, x0: p.x, y0: p.y, x1: p.x, y1: p.y, c: color, w: width };
+});
+
+cv.addEventListener("pointermove", e => {
+  const p = at(e);
+  if (erasing){ rubOut(p); return; }
+  if (!drawing) return;
+  if (drawing.t === "pen"){
+    const last = drawing.pts[drawing.pts.length - 1];
+    /* drop near-duplicate points: fewer, further-apart points curve better */
+    if (Math.hypot(p.x - last.x, p.y - last.y) > 1.6) drawing.pts.push(p);
+  } else {
+    drawing.x1 = p.x; drawing.y1 = p.y;
+    if (e.shiftKey){
+      // square / circle / perfectly flat line
+      if (drawing.t === "line" || drawing.t === "arrow"){
+        if (Math.abs(p.x - drawing.x0) > Math.abs(p.y - drawing.y0)) drawing.y1 = drawing.y0;
+        else drawing.x1 = drawing.x0;
+      } else {
+        const d = Math.max(Math.abs(p.x - drawing.x0), Math.abs(p.y - drawing.y0));
+        drawing.x1 = drawing.x0 + Math.sign(p.x - drawing.x0 || 1) * d;
+        drawing.y1 = drawing.y0 + Math.sign(p.y - drawing.y0 || 1) * d;
+      }
+    }
+  }
+  paint();
+});
+
+function end(){
+  erasing = false;
+  if (!drawing) return;
+  const s = drawing;
+  drawing = null;
+  // ignore an accidental tap that drew nothing
+  const tiny = s.t !== "pen" && Math.hypot(s.x1 - s.x0, s.y1 - s.y0) < 4;
+  if (tiny) return paint();
+  commit(s);
+}
+cv.addEventListener("pointerup", end);
+cv.addEventListener("pointercancel", end);
+cv.addEventListener("pointerleave", () => { erasing = false; });
+
+function rubOut(p){
+  for (let i = shapes.length - 1; i >= 0; i--){
+    if (hit(shapes[i], p.x, p.y)){ shapes.splice(i, 1); redoStack = []; paint(); return; }
+  }
+}
+
+/* ---------- text ---------- */
+function placeText(){
+  const s = typing.value.trim();
+  const size = parseFloat(typing.style.fontSize);
+  if (s) commit({ t: "text", x: +typing.dataset.x + 4, y: +typing.dataset.y + 3,
+                  s, c: typing.style.color || color, size, w: 3 });
+  typing.style.display = "none";
+  typing.value = "";
+}
+typing.addEventListener("keydown", e => {
+  if (e.key === "Enter"){ e.preventDefault(); placeText(); }
+  if (e.key === "Escape"){ typing.style.display = "none"; typing.value = ""; }
+  e.stopPropagation();
+});
+typing.addEventListener("blur", placeText);
+
+/* ---------- keyboard ---------- */
+addEventListener("keydown", e => {
+  if (e.target === typing) return;
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z"){
+    e.preventDefault();
+    e.shiftKey ? redo() : undo();
+    return;
+  }
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= TOOLS.length) setTool(TOOLS[n - 1][0]);
+});
+
+/* ---------- save ----------
+   Flatten onto the paper colour first: a transparent PNG looks empty
+   when it lands in WhatsApp on a dark theme. */
+document.getElementById("save").onclick = () => {
+  const r = wrap.getBoundingClientRect();
+  const out = document.createElement("canvas");
+  const dpr = window.devicePixelRatio || 1;
+  out.width = Math.round(r.width * dpr);
+  out.height = Math.round(r.height * dpr);
+  const o = out.getContext("2d");
+  o.setTransform(dpr, 0, 0, dpr, 0, 0);
+  o.fillStyle = getComputedStyle(document.body).backgroundColor || "#fff";
+  o.fillRect(0, 0, r.width, r.height);
+  o.drawImage(cv, 0, 0, r.width, r.height);
+  const a = document.createElement("a");
+  a.download = "whiteboard-" + new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-") + ".png";
+  a.href = out.toDataURL("image/png");
+  a.click();
+};
+
+setTool("pen");
+resize();
+setTimeout(() => { document.getElementById("hint").style.display = "none"; }, 9000);
+</script>
+<script src="app/embed.js?v=3"></script>

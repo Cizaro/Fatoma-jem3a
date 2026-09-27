@@ -417,5 +417,16 @@ try{ const t = localStorage.getItem("php_flash_theme"); if (t) document.document
 
 load();
 menu();
+
+/* The roadmap links straight at one deck: flashcards.html?deck=arrays.
+   Without this every one of those links dumps her on the deck picker and
+   she has to find the right one herself. */
+(function openRequestedDeck(){
+  const want = new URLSearchParams(location.search).get("deck");
+  if (!want) return;
+  const d = DECKS.find(x => x.id === want);
+  if (!d) return;
+  startSession(d.cards.map((c, i) => ({ c, deck: d.id, idx: i })), d.name);
+})();
 </script>
-<script src="app/embed.js"></script>
+<script src="app/embed.js?v=3"></script>

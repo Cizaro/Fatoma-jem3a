@@ -195,6 +195,24 @@ h1 em{font-style:normal; color:var(--accent)}
   padding:10px 13px; font-size:13.5px; margin-bottom:14px;
 }
 .warn b{font-weight:600}
+/* ---------- the launcher ----------
+   The point of a card. Everything this step has, one click away, so the
+   map is somewhere to start a session from and not just something to
+   read and then go hunting through folders. */
+.hub{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 16px}
+.hl{
+  display:inline-flex; align-items:center; gap:7px; text-decoration:none;
+  background:var(--surface); border:1px solid var(--line); border-radius:10px;
+  padding:9px 13px; font-size:13.5px; font-weight:600; color:var(--ink);
+  transition:border-color .12s, transform .12s, background .12s;
+}
+.hl:hover{border-color:var(--accent); transform:translateY(-1px)}
+.hl i{font-style:normal; font-size:14px; opacity:.85}
+.hl.main{background:var(--accent); border-color:var(--accent); color:#fff}
+.hl.main:hover{filter:brightness(1.08)}
+.hl.run{font-family:var(--mono); font-size:12px; font-weight:500; color:var(--ink-2)}
+.runnote{font-size:12px; color:var(--ink-3); margin:-8px 0 16px}
+
 .tick{
   display:inline-flex; align-items:center; gap:8px; cursor:pointer;
   font-size:13.5px; color:var(--ink-2); font-weight:500; user-select:none;
@@ -429,6 +447,70 @@ const NODES = [
            "Putting it on a real host with a real URL"] }
 ];
 
+/* ---------------------------------------------------------------
+   Folder -> everywhere that step can take her. A node knows which
+   folder it lives in from its own files[], so this is the only table
+   that has to be kept in step with the course.
+
+   game: the arcade round the instructor guide pairs with that lesson.
+   The arcade's rounds are question TYPES, not topics, so this is the
+   recommended round, not an arrays-only round - there isn't one.
+--------------------------------------------------------------- */
+const HUB = {
+  "00-algorithms":  { lesson:"algorithms", game:"match" },
+  "00-setup":       { lesson:"setup" },
+  "01-basics":      { lesson:"basics",     run:1, deck:"syntax",  game:"match"  },
+  "02-datatypes":   { lesson:"datatypes",  run:1, deck:"strings", game:"output" },
+  "03-operators":   { lesson:"operators",  run:1, deck:"syntax",  game:"output" },
+  "04-conditions":  { lesson:"conditions", run:1, deck:"control", game:"bug"    },
+  "05-loops":       { lesson:"loops",      run:1, deck:"control", game:"blank"  },
+  "06-arrays":      { lesson:"arrays",     run:1, deck:"arrays",  game:"blank"  },
+  "07-functions":   { lesson:"functions",  run:1, deck:"syntax",  game:"bug"    },
+  "08-forms":       { lesson:"forms",      run:1, deck:"web",     game:"order"  },
+  "09-mysql":       { lesson:"mysql",      run:1, deck:"sql",     game:"match"  },
+  "10-dynamic-page":{ lesson:"dynamic",    run:1, deck:"sql",     game:"order"  }
+};
+const DECKNAME = { syntax:"Syntax & symbols", strings:"String functions",
+  arrays:"Array functions", control:"Loops & conditions", web:"Forms & security",
+  sql:"SQL & MySQL" };
+const GAMENAME = { match:"Match the Words", output:"Guess the Output",
+  bug:"Fix the Bug", blank:"Fill the Blank", order:"Code Builder" };
+
+/* examples.php and exercises.php have to be executed, so they are only
+   offered when something is actually serving PHP. On GitHub Pages they
+   would download as text, which teaches her the wrong lesson twice. */
+const SERVED = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+
+function hubFor(n){
+  if (!n.files || !n.files.length) return null;
+  return HUB[n.files[0].split("/")[0]] || null;
+}
+
+function launcher(n){
+  const h = hubFor(n);
+  if (!h) return "";
+  const b = [];
+  b.push(`<a class="hl main" href="app/lessons/${h.lesson}.html"><i>&#9654;</i>Read the lesson</a>`);
+  if (h.run) b.push(`<a class="hl" href="code-lab.html"><i>&#9000;</i>Write it in the code lab</a>`);
+  if (h.deck) b.push(`<a class="hl" href="flashcards.html?deck=${h.deck}"><i>&#9632;</i>${DECKNAME[h.deck]}</a>`);
+  if (h.game) b.push(`<a class="hl" href="games/php-arcade.html?game=${h.game}"><i>&#9679;</i>${GAMENAME[h.game]}</a>`);
+
+  let runRow = "", note = "";
+  if (h.run){
+    const folder = n.files[0].split("/")[0];
+    if (SERVED){
+      runRow = `<div class="hub">
+        <a class="hl run" href="${folder}/examples.php" target="_blank" rel="noopener">${folder}/examples.php</a>
+        <a class="hl run" href="${folder}/exercises.php" target="_blank" rel="noopener">${folder}/exercises.php</a>
+      </div>`;
+    } else {
+      note = `<p class="runnote">To run <code>examples.php</code> and <code>exercises.php</code>
+        you need a server — open this page from <code>localhost</code> and the links appear here.</p>`;
+    }
+  }
+  return `<h4>Everything for this step</h4><div class="hub">${b.join("")}</div>${runRow}${note}`;
+}
+
 const KEY = "php_roadmap_done_v1";
 let done = new Set();
 
@@ -482,10 +564,11 @@ function render(){
           ${n.warn ? `<div class="warn">${n.warn}</div>` : ""}
           <h4>What you can do after it</h4>
           <ul>${n.learn.map(x => `<li>${x}</li>`).join("")}</ul>
+          ${launcher(n)}
           ${n.files ? `<h4>Where</h4><div>${n.files.map(f => `<span class="path">${esc(f)}</span>`).join("")}</div>` : ""}
           <label class="tick" style="margin-top:14px">
             <input type="checkbox" id="chk-${n.l}"${isDone ? " checked" : ""}>
-            <span>${isDone ? "Done" : "Mark " + n.l + " as done"}</span>
+            <span>${isDone ? "Done" : "Mark &ldquo;" + esc(n.t) + "&rdquo; as done"}</span>
           </label>
         </div>
       </div>
@@ -568,4 +651,4 @@ try{
 load();
 render();
 </script>
-<script src="app/embed.js"></script>
+<script src="app/embed.js?v=3"></script>

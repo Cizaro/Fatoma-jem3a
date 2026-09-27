@@ -4,7 +4,7 @@
 <title>PHP Course</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="app.css?v=3">
 
 <div class="shell">
   <div class="scrim" id="scrim"></div>
@@ -74,6 +74,7 @@ const ROUTES = [
   ["lesson",   "mysql",      "9",  "MySQL",                      "lessons/mysql.html", "lessons/mysql.html"],
   ["lesson",   "dynamic",    "10", "Dynamic pages",              "lessons/dynamic.html", "lessons/dynamic.html"],
 
+  ["practice", "board",      "✎", "Whiteboard",    "../whiteboard.html", "whiteboard.html"],
   ["practice", "stages",     "▸", "Syntax stages", "../stages.html", "stages.html"],
   ["practice", "lab",        "⌨", "Code lab",      "../code-lab.html", "code-lab.html"],
   ["practice", "arcade",     "●", "Arcade",        "../games/php-arcade.html", "games/php-arcade.html"],
@@ -108,20 +109,26 @@ function paintNav(){
   });
 }
 
-function go(id, push){
+/* A view can carry a query, so the rail can send her to one flashcard deck
+   or one arcade round rather than to the picker: #/cards?deck=arrays */
+function go(id, push, q){
   const r = byId[id] || byId.algorithms;
-  const want = pathOf(r);
+  const want = pathOf(r) + (q ? "?" + q : "");
   if (stage.getAttribute("src") !== want) stage.setAttribute("src", want);
   document.querySelectorAll(".nav a").forEach(a => a.classList.toggle("on", a.dataset.id === r[1]));
   $("topTitle").innerHTML = r[3];
   document.title = r[3].replace(/&amp;/g, "&") + " · PHP Course";
   closeRail();
-  if (push && location.hash !== "#/" + id) location.hash = "#/" + id;
+  const hash = "#/" + id + (q ? "?" + q : "");
+  if (push && location.hash !== hash) location.hash = hash;
 }
 
 function fromHash(){
-  const id = (location.hash || "").replace(/^#\/?/, "") || "algorithms";
-  go(id, false);
+  const raw = (location.hash || "").replace(/^#\/?/, "");
+  const cut = raw.indexOf("?");
+  const id = (cut === -1 ? raw : raw.slice(0, cut)) || "algorithms";
+  const q = cut === -1 ? "" : raw.slice(cut + 1);
+  go(id, false, q);
 }
 addEventListener("hashchange", fromHash);
 
@@ -153,7 +160,7 @@ $("themeBtn").onclick = () => {
 addEventListener("message", e => {
   const d = e.data;
   if (!d || !d.course) return;
-  if (d.go) location.hash = "#/" + d.go;
+  if (d.go) location.hash = "#/" + d.go + (d.q ? "?" + d.q : "");
 });
 /* ---------- keep the frame as tall as its contents on a phone ----------
    Desktop lets the frame scroll itself. A phone cannot, so the frame is

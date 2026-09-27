@@ -1083,7 +1083,14 @@ document.querySelectorAll("footer a[data-path]").forEach(a => {
 
 loadSave();
 menu();
+
+/* php-arcade.html?game=blank drops her straight into that round, which is
+   how the roadmap sends her here - one click from the lesson she is on. */
+(function openRequestedGame(){
+  const want = new URLSearchParams(location.search).get("game");
+  if (want && GAMES[want]) start(want);
+})();
 </script>
 </body>
 </html>
-<script src="../app/embed.js"></script>
+<script src="../app/embed.js?v=3"></script>

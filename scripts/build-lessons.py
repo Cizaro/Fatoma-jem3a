@@ -190,7 +190,7 @@ PAGE = """<!doctype html>
 <title>{title}</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="../app.css">
+<link rel="stylesheet" href="../app.css?v=3">
 <body class="reader">
 <article class="prose">
 {body}
@@ -198,7 +198,7 @@ PAGE = """<!doctype html>
 <nav class="lessonnav">
 {nav}
 </nav>
-<script src="../embed.js"></script>
+<script src="../embed.js?v=3"></script>
 """
 
 
