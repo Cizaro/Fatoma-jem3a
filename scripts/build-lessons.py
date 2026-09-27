@@ -61,8 +61,8 @@ PRACTISE = {
     "arrays":     dict(quiz="lesson-06", deck="arrays",  game="blank",  run="06-arrays"),
     "functions":  dict(quiz="lesson-07", deck="syntax",  game="bug",    run="07-functions"),
     "forms":      dict(quiz="lesson-08", deck="web",     game="order",  run="08-forms"),
-    "mysql":      dict(quiz="lesson-09", deck="sql",     game="match",  run="09-mysql"),
-    "dynamic":    dict(quiz="lesson-10", deck="sql",     game="order",  run="10-dynamic-page"),
+    "mysql":      dict(quiz="lesson-09", deck="sql",     game="match",  run="09-mysql", sqllab=True),
+    "dynamic":    dict(quiz="lesson-10", deck="sql",     game="order",  run="10-dynamic-page", sqllab=True),
 }
 DECKNAME = {"syntax": "Syntax &amp; symbols", "strings": "String functions",
             "arrays": "Array functions", "control": "Loops &amp; conditions",
@@ -83,7 +83,11 @@ def practise_block(slug):
         # the interactive runner, not a printed worksheet: she types an
         # answer and it is marked
         out.append('<a class="pl main" href="../quiz.html?q=%s">Mini-quiz</a>' % p["quiz"])
-    if p.get("run"):
+    if p.get("sqllab"):
+        # lessons 9 and 10 need a database, so they get the SQL lab rather
+        # than the PHP one
+        out.append('<a class="pl" href="../../sql-lab.html">SQL lab</a>')
+    elif p.get("run"):
         out.append('<a class="pl" href="../../code-lab.html">Code lab</a>')
     if p.get("deck"):
         out.append('<a class="pl" href="../../flashcards.html?deck=%s">%s</a>'
