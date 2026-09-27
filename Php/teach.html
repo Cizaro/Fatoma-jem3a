@@ -1,0 +1,234 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Teaching Plan</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="app/app.css">
+<style>
+/* ---- this page only. Everything else comes from the design system. ---- */
+.page{max-width:900px;margin:0 auto;padding:44px 22px 80px}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--warm);font-weight:600;margin-bottom:10px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,5.5vw,44px);letter-spacing:-.03em;
+  line-height:1.03;margin:0 0 14px}
+.sub{font-size:17px;color:var(--ink-2);max-width:62ch;margin:0 0 30px}
+
+h2{font-family:var(--display);font-weight:700;font-size:25px;letter-spacing:-.02em;
+  margin:52px 0 8px;padding-top:26px;border-top:1px solid var(--line)}
+h3{font-family:var(--display);font-size:18px;margin:26px 0 8px}
+p{margin:0 0 14px;max-width:66ch}
+.lede{color:var(--ink-2);margin:0 0 22px;max-width:66ch}
+
+/* the four-move pattern */
+.moves{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:20px 0 8px}
+.move{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 17px;
+  box-shadow:var(--shadow)}
+.move b{display:block;font-family:var(--display);font-size:16px;margin-bottom:5px}
+.move .n{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--warm);font-weight:600;display:block;margin-bottom:8px}
+.move p{font-size:13.5px;color:var(--ink-2);margin:0}
+
+/* zoom cheat rows */
+.zoom{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin:18px 0 6px}
+.zoom div{display:grid;grid-template-columns:190px 1fr;gap:16px;padding:13px 16px;
+  border-bottom:1px solid var(--line);font-size:14px}
+.zoom div:last-child{border-bottom:0}
+.zoom b{font-family:var(--mono);font-size:12px;color:var(--ink);font-weight:600}
+.zoom span{color:var(--ink-2)}
+@media (max-width:640px){.zoom div{grid-template-columns:1fr;gap:3px}}
+
+/* session cards */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:0;
+  margin:18px 0;box-shadow:var(--shadow);overflow:hidden}
+.card > summary{list-style:none;cursor:pointer;padding:18px 22px;display:flex;align-items:baseline;
+  gap:14px;flex-wrap:wrap}
+.card > summary::-webkit-details-marker{display:none}
+.card > summary:hover{background:var(--surface-2)}
+.card .id{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--warm);font-weight:600;flex:none}
+.card .ttl{font-family:var(--display);font-size:19px;letter-spacing:-.015em;flex:1;min-width:200px}
+.card .mins{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);flex:none}
+.body{padding:2px 22px 24px;border-top:1px solid var(--line)}
+
+.goal{background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;
+  padding:13px 16px;margin:18px 0 12px}
+.goal b{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--accent);display:block;margin-bottom:4px}
+.goal p{margin:0;font-size:14.5px}
+.why{font-size:14px;color:var(--ink-2);margin:0 0 6px}
+
+.beat{display:grid;grid-template-columns:78px 1fr;gap:16px;padding:15px 0;border-top:1px solid var(--line)}
+.beat .t{font-family:var(--mono);font-size:12px;color:var(--warm);font-weight:600;padding-top:2px}
+.beat h4{font-family:var(--display);font-size:15.5px;margin:0 0 7px}
+.beat ul{margin:0 0 8px;padding-left:19px}
+.beat li{font-size:14px;margin-bottom:5px;color:var(--ink-2)}
+.beat li.say{color:var(--ink)}
+.beat .lab{font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600;margin:0 0 4px}
+@media (max-width:640px){.beat{grid-template-columns:1fr;gap:4px}}
+
+.board{margin:18px 0;padding:14px;background:var(--paper);border:1px solid var(--line);border-radius:12px}
+.board svg{display:block;width:100%;height:auto}
+.foot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px}
+@media (max-width:640px){.foot{grid-template-columns:1fr}}
+.foot > div{border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.foot b{font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;
+  display:block;margin-bottom:7px}
+.foot.x b{color:var(--warm)}
+.foot ul{margin:0;padding-left:18px}
+.foot li{font-size:13.5px;color:var(--ink-2);margin-bottom:5px}
+.foot p{font-size:13.5px;color:var(--ink-2);margin:0}
+.warn b{color:var(--warm)}
+.hwb b{color:var(--gold)}
+
+/* diagram vocabulary, shared by every sketch */
+svg .bx{fill:var(--surface);stroke:var(--ink);stroke-width:1.8}
+svg .bx.hot{fill:var(--warm-soft);stroke:var(--warm)}
+svg .bx.thin{stroke-width:1.2;fill:var(--surface-2)}
+svg .ar{fill:none;stroke:var(--ink-2);stroke-width:1.8;marker-end:url(#arw)}
+svg .rule{stroke:var(--line);stroke-width:1.5}
+svg text{font-family:var(--body);fill:var(--ink);text-anchor:middle}
+svg .lb{font-size:15px;font-weight:600}
+svg .sm{font-size:13px}
+svg .note{font-size:11.5px;fill:var(--ink-3)}
+svg .tag{font-size:11.5px;fill:var(--ink-2);font-family:var(--mono)}
+svg .a{text-anchor:start}
+svg .s{font-family:var(--mono);font-size:12px;fill:var(--ink-3)}
+svg .hi{fill:var(--warm);font-weight:600}
+
+@media print{
+  .card > summary{background:none}
+  .body{display:block!important}
+  .card{break-inside:avoid;box-shadow:none}
+  h2{break-after:avoid}
+}
+</style>
+
+<!-- one arrowhead, shared by every sketch on the page -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6"
+          orient="auto-start-reverse">
+    <path d="M0 0 L10 5 L0 10 z" fill="var(--ink-2)"/>
+  </marker>
+</defs></svg>
+
+<div class="page">
+  <div class="kicker">For Ahmad &middot; not for Fatima</div>
+  <h1>How to teach this course</h1>
+  <p class="sub">Eleven sessions, each one with the minutes, the sketches to draw, and the
+  sentences worth saying exactly. Open the session before the call, keep it on your second
+  screen during it.</p>
+
+  <h2>The four moves</h2>
+  <p class="lede">Every single concept, all course long, in this order. Never start at step 3,
+  which is what most people do and why explanations stop landing.</p>
+  <div class="moves">
+    <div class="move"><span class="n">Move 1</span><b>Name it</b>
+      <p>One sentence, plain words, no code on screen. &ldquo;An array is a row of numbered boxes.&rdquo;</p></div>
+    <div class="move"><span class="n">Move 2</span><b>Draw it</b>
+      <p>On the whiteboard, by hand, while she watches it appear. The drawing is the explanation; the words are the caption.</p></div>
+    <div class="move"><span class="n">Move 3</span><b>Show it</b>
+      <p>Now the editor. Type it live, slowly, with the drawing still visible. Point back at the drawing as you type each part.</p></div>
+    <div class="move"><span class="n">Move 4</span><b>She does it</b>
+      <p>Her screen, her hands, you silent. If you skip this one she will nod at everything and be able to do none of it.</p></div>
+  </div>
+  <p style="margin-top:18px"><b>The one habit that matters most:</b> before you ever press run,
+  ask <i>&ldquo;what will this print?&rdquo;</i> and wait for an answer. The gap between her guess
+  and the real output is the entire lesson. Running it first throws that away.</p>
+
+  <h2>Running the board on Zoom</h2>
+  <p class="lede">Zoom&rsquo;s own whiteboard, not a PowerPoint you flick through. The drawing
+  appearing in real time is what holds attention; a finished slide does not.</p>
+
+  <div class="zoom">
+    <div><b>Share &rarr; Whiteboard</b><span>Your default for anything conceptual. Sessions 0A, and the first ten minutes of 5, 6 and 8.</span></div>
+    <div><b>Share &rarr; Screen &rarr; Annotate</b><span>Share the slide or the code, then press <b>Annotate</b> in the toolbar to draw straight over it. This is how you circle a line of code mid-explanation.</span></div>
+    <div><b>Pen, red</b><span>New idea being introduced.</span></div>
+    <div><b>Pen, blue</b><span>Her answer, her guess, her words. Keeping her ideas in a different colour is a small thing that makes her feel like a participant.</span></div>
+    <div><b>Eraser, not Clear</b><span>Rub out one wrong bit and leave the rest. <b>Clear &rarr; All Drawings</b> wipes everything &mdash; only at a real topic change.</span></div>
+    <div><b>Undo (Ctrl+Z)</b><span>Works on the whiteboard. Use it instead of scribbling over a mistake.</span></div>
+    <div><b>Save</b><span>The whiteboard toolbar has a Save button &mdash; it writes a PNG. Press it at the end of every session and send it to her. Her notes, in your handwriting, free.</span></div>
+    <div><b>Give her the pen</b><span>Once per session, minimum. <b>Share &rarr; Annotate</b> works for her too &mdash; make her draw the flowchart while you watch. Nothing exposes a gap faster.</span></div>
+    <div><b>Stop Share to talk</b><span>When something goes wrong emotionally, come off the screen share and be two faces talking. Do not debug frustration through a shared editor.</span></div>
+  </div>
+
+  <h3>When to wipe the board</h3>
+  <p>Erase the working, <b>keep the conclusion.</b> At the end of each block you should be left
+  with one box, one definition or one rule still on screen &mdash; the thing you want her to
+  remember. Wipe the rest. A board that still has everything on it at minute 50 teaches nothing,
+  because she cannot tell which part mattered.</p>
+
+  <h3>The shape of every call</h3>
+  <p>Warm-up (she explains one line of last week&rsquo;s work out loud) &rarr; you explain the new
+  idea with the four moves &rarr; she drives for twenty minutes while you stay quiet &rarr; one
+  arcade round &rarr; homework. Same order every week. Predictability is not boring here; it is
+  what lets her stop worrying about the format and think about the content.</p>
+
+  <h2>The eleven sessions</h2>
+  <p class="lede">Click one to open it. Session 0A comes first &mdash; that is her lecturer&rsquo;s
+  own Lesson 1, and it has no code in it at all.</p>
+  <div id="sessions"></div>
+</div>
+
+<script src="app/teach-data.js"></script>
+<script>
+/* Render the plan. The page is only a renderer - every word lives in
+   teach-data.js, so rewording a session never touches this file. */
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+function list(items, cls){
+  if (!items || !items.length) return "";
+  return `<ul>${items.map(i => `<li class="${cls}">${esc(i)}</li>`).join("")}</ul>`;
+}
+
+function beat(b){
+  /* "say" is printed as-is because it is what comes out of your mouth;
+     "do" and "ask" are stage directions. Different weight, same block. */
+  return `<div class="beat">
+    <div class="t">${esc(b.t)}</div>
+    <div>
+      <h4>${esc(b.h)}</h4>
+      ${b.say ? `<p class="lab">Say</p>${list(b.say, "say")}` : ""}
+      ${b.ask ? `<p class="lab">Ask</p>${list(b.ask, "say")}` : ""}
+      ${b.do  ? `<p class="lab">Do</p>${list(b.do, "")}` : ""}
+    </div>
+  </div>`;
+}
+
+function card(s){
+  const boards = (s.boards || []).map(k => `<div class="board">${D[k] || ""}</div>`).join("");
+  return `<details class="card" id="s${s.id}">
+    <summary>
+      <span class="id">${esc(s.tag)}</span>
+      <span class="ttl">${esc(s.title)}</span>
+      <span class="mins">${esc(s.mins)}</span>
+    </summary>
+    <div class="body">
+      <div class="goal"><b>By the end she can</b><p>${esc(s.goal)}</p></div>
+      <p class="why">${esc(s.why)}</p>
+      ${boards}
+      ${s.beats.map(beat).join("")}
+      <div class="foot">
+        <div class="warn"><b>Watch for</b>${list(s.watch, "")}</div>
+        <div class="hwb"><b>Homework</b><p>${esc(s.hw)}</p></div>
+      </div>
+      <p style="margin-top:16px;font-size:13px;color:var(--ink-3)">
+        Material: <code>${esc(s.lesson)}/lesson.md</code>,
+        <code>examples.php</code>, <code>exercises.php</code>${s.deck
+          ? ` &middot; <a href="resources/session-0A-algorithms.pptx">slide deck</a>
+              (every slide has your script in the speaker notes)` : ""}
+      </p>
+    </div>
+  </details>`;
+}
+
+document.getElementById("sessions").innerHTML = SESSIONS.map(card).join("");
+
+/* open whichever session the link points at, e.g. teach.html#s6 */
+if (location.hash){
+  const el = document.querySelector(location.hash);
+  if (el && el.tagName === "DETAILS"){ el.open = true; el.scrollIntoView(); }
+}
+</script>
+<script src="app/embed.js"></script>
