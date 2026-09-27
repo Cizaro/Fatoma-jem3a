@@ -4,36 +4,13 @@
 <title>PHP Step by Step</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="app/app.css?v=4">
 <style>
 /* Tokens are shared with flashcards.html, roadmap.html, php-arcade.html,
    stages.html and exam-simulator.html on purpose: one course, one visual system. */
-:root{
-  --paper:#F7F6F3; --surface:#FFFFFF; --surface-2:#EFEDE8;
-  --ink:#1A1D21; --ink-2:#5C6168; --ink-3:#8D939B;
-  --line:#E2DFD8; --accent:#0F7B6C; --accent-soft:#E3F1EE;
-  --warm:#B5541F; --warm-soft:#FBEDE4; --gold:#A57C1B;
-  --shadow:0 1px 2px rgba(26,29,33,.06), 0 10px 28px -14px rgba(26,29,33,.28);
-  --display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
-  --body:"Public Sans",system-ui,-apple-system,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
-  --r:14px;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
-    --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
-    --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
-    --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B;
-    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
-  }
-}
-:root[data-theme="dark"]{
-  --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
-  --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
-  --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
-  --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
-}
+
+
+
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;
@@ -47,11 +24,11 @@ a{color:var(--accent)}
 .bar .wrap{display:flex;align-items:center;gap:14px;height:64px}
 .mark{font-family:var(--display);font-weight:700;font-size:16px;letter-spacing:-.01em;white-space:nowrap}
 .mark i{font-style:normal;color:var(--accent)}
-.barbar{flex:1;height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;min-width:60px}
-.barbar i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .5s cubic-bezier(.16,1,.3,1)}
+.barbar{flex:1;height:6px;background:var(--surface-2);border-radius:var(--r-pill);overflow:hidden;min-width:60px}
+.barbar i{display:block;height:100%;width:0;background:var(--accent);border-radius:var(--r-pill);transition:width .5s cubic-bezier(.16,1,.3,1)}
 .barpct{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
 .tbtn{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
-  background:none;border:1px solid var(--line);color:var(--ink-3);border-radius:99px;padding:6px 12px;cursor:pointer}
+  background:none;border:1px solid var(--line);color:var(--ink-3);border-radius:var(--r-pill);padding:6px 12px;cursor:pointer}
 .tbtn:hover{color:var(--ink);border-color:var(--accent)}
 .tbtn:focus-visible,a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
@@ -63,7 +40,7 @@ h1{font-family:var(--display);font-weight:700;font-size:clamp(34px,6.4vw,58px);l
 h1 i{font-style:normal;color:var(--accent)}
 .sub{color:var(--ink-2);font-size:17px;max-width:46ch;margin:14px 0 0}
 .cta{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:24px}
-.btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:13px 24px;font-size:15px;
+.btn{background:var(--accent);color:#fff;border:0;border-radius:var(--r);padding:13px 24px;font-size:15px;
   font-weight:600;font-family:inherit;cursor:pointer;text-decoration:none;display:inline-block;white-space:nowrap;
   transition:transform .12s,filter .12s}
 .btn:hover{filter:brightness(1.08)}
@@ -118,17 +95,17 @@ summary::-webkit-details-marker{display:none}
   font-variant-numeric:tabular-nums;white-space:nowrap}
 .body{padding:0 18px 18px 58px;border-top:1px solid var(--line);margin-top:2px;padding-top:15px}
 .steps{list-style:none;margin:0;padding:0;display:grid;gap:2px}
-.steps li label{display:flex;gap:11px;align-items:flex-start;padding:8px 10px;border-radius:9px;cursor:pointer;font-size:14.5px}
+.steps li label{display:flex;gap:11px;align-items:flex-start;padding:8px 10px;border-radius:var(--r-sm);cursor:pointer;font-size:14.5px}
 .steps li label:hover{background:var(--surface-2)}
 .steps input{margin:4px 0 0;width:17px;height:17px;accent-color:var(--accent);flex:none}
 .steps .n{font-family:var(--mono);font-size:11.5px;color:var(--ink-3);min-width:18px;padding-top:2px}
 .steps input:checked ~ .stxt{color:var(--ink-3);text-decoration:line-through}
 .tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
 .tool{font-size:13px;text-decoration:none;color:var(--ink-2);border:1px solid var(--line);
-  border-radius:99px;padding:6px 13px;background:var(--paper);transition:border-color .12s,color .12s}
+  border-radius:var(--r-pill);padding:6px 13px;background:var(--paper);transition:border-color .12s,color .12s}
 .tool:hover{border-color:var(--accent);color:var(--accent)}
 .tool.key{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
-.warnbox{background:var(--warm-soft);border-radius:11px;padding:13px 15px;margin-top:14px;font-size:14px;color:var(--ink-2)}
+.warnbox{background:var(--warm-soft);border-radius:var(--r);padding:13px 15px;margin-top:14px;font-size:14px;color:var(--ink-2)}
 .warnbox b{color:var(--warm);display:block;font-family:var(--mono);font-size:11px;letter-spacing:.09em;
   text-transform:uppercase;margin-bottom:4px}
 
@@ -166,7 +143,7 @@ summary::-webkit-details-marker{display:none}
 .runs{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
 .runs h4{margin:0 0 4px;font-size:14.5px}
 .runs p{margin:0 0 7px;color:var(--ink-2);font-size:13.5px}
-code{font-family:var(--mono);font-size:12.8px;background:var(--surface-2);padding:3px 7px;border-radius:6px;
+code{font-family:var(--mono);font-size:12.8px;background:var(--surface-2);padding:3px 7px;border-radius:var(--r-sm);
   display:inline-block;word-break:break-all}
 footer{padding-block:26px 46px;color:var(--ink-3);font-size:12.5px;display:flex;gap:16px;flex-wrap:wrap;
   align-items:center;border-top:1px solid var(--line);margin-top:26px}
@@ -566,4 +543,4 @@ $("resetBtn").onclick = () => {
 
 paint();
 </script>
-<script src="app/embed.js?v=3"></script>
+<script src="app/embed.js?v=4"></script>

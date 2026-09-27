@@ -3,39 +3,15 @@
 <title>PHP Code Lab</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="app/app.css?v=4">
 <style>
-:root{
-  --paper:#F7F6F3; --surface:#FFFFFF; --surface-2:#EFEDE8; --line:#E2DFD8;
-  --ink:#1A1D21; --ink-2:#5C6168; --ink-3:#8D939B;
-  --editor:#15181C; --editor-ink:#F2F1EE; --gutter:#6E757E;
-  --accent:#0F7B6C; --accent-soft:#E3F1EE;
-  --good:#0F7B6C; --good-soft:#E3F1EE; --bad:#B5541F; --bad-soft:#FBEDE4;
-  --warm:#B5541F; --warm-soft:#FBEDE4;
-  --shadow:0 1px 2px rgba(25,26,34,.06), 0 12px 28px -16px rgba(25,26,34,.34);
-  --display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
-  --body:"Public Sans",system-ui,-apple-system,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --paper:#F7F6F3; --surface:#FFFFFF; --surface-2:#EFEDE8; --line:#E2DFD8;
-    --ink:#1A1D21; --ink-2:#5C6168; --ink-3:#8D939B;
-    --editor:#15181C; --editor-ink:#F2F1EE; --gutter:#6E757E;
-    --accent:#0F7B6C; --accent-soft:#E3F1EE;
-    --good:#0F7B6C; --good-soft:#E3F1EE; --bad:#B5541F; --bad-soft:#FBEDE4;
-    --warm:#B5541F; --warm-soft:#FBEDE4;
-    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 28px -16px rgba(0,0,0,.8);
-  }
-}
-:root[data-theme="dark"]{
-  --paper:#14161A; --surface:#1D2126; --surface-2:#262B31; --line:#30353C;
-  --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
-  --editor:#0E1013; --editor-ink:#F2F1EE; --gutter:#6E757E;
-  --accent:#4FC2AE; --accent-soft:#16302C;
-  --good:#4FC2AE; --good-soft:#16302C; --bad:#E08B5A; --bad-soft:#2E211A;
-  --warm:#E08B5A; --warm-soft:#2E211A;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 28px -16px rgba(0,0,0,.8);
-}
+/* Editor chrome only. These stay on this page rather than in the shared
+   file because nothing else has a code gutter. --editor follows the
+   cabinet colour so the editor matches every code block on the site. */
+:root{ --editor-ink:#F2F1EE; --gutter:#6E757E; }
+
+
+
 *{box-sizing:border-box}
 html,body{height:100%}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
@@ -49,14 +25,14 @@ h1 em{font-style:normal;color:var(--accent)}
 .hbtns{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .chip{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;
   text-transform:uppercase;background:none;border:1px solid var(--line);color:var(--ink-3);
-  border-radius:999px;padding:5px 12px;cursor:pointer}
+  border-radius:var(--r-pill);padding:5px 12px;cursor:pointer}
 .chip:hover{color:var(--ink);border-color:var(--accent)}
 .chip.solved{border-color:var(--good);color:var(--good)}
 
 /* layout */
 .lab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:14px;margin-top:14px}
 @media (max-width:860px){ .lab{grid-template-columns:minmax(0,1fr)} }
-.pane{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+.pane{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
   box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
 .pane > header{padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface-2);
   display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -72,15 +48,15 @@ h1 em{font-style:normal;color:var(--accent)}
 .brief ul,.brief ol{margin:0 0 12px 20px;color:var(--ink-2)}
 .brief li{margin-bottom:4px}
 .brief code{font-family:var(--mono);font-size:13px;background:var(--surface-2);
-  padding:2px 6px;border-radius:4px;color:var(--ink)}
-.brief pre{background:var(--editor);color:var(--editor-ink);padding:12px 14px;border-radius:9px;
+  padding:2px 6px;border-radius:var(--r-sm);color:var(--ink)}
+.brief pre{background:var(--editor);color:var(--editor-ink);padding:12px 14px;border-radius:var(--r-sm);
   font-family:var(--mono);font-size:13px;line-height:1.65;overflow-x:auto;margin-bottom:12px}
-.want{background:var(--accent-soft);border-radius:10px;padding:12px 14px;margin-bottom:12px}
+.want{background:var(--accent-soft);border-radius:var(--r);padding:12px 14px;margin-bottom:12px}
 .want b{display:block;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;
   color:var(--accent);margin-bottom:6px}
 .want pre{background:var(--surface);color:var(--ink);margin:0;font-size:13px;
   border:1px solid var(--line)}
-.tip{background:var(--warm-soft);color:var(--warm);border-radius:9px;padding:10px 13px;
+.tip{background:var(--warm-soft);color:var(--warm);border-radius:var(--r-sm);padding:10px 13px;
   font-size:13.5px;margin-bottom:10px}
 
 /* editor */
@@ -92,7 +68,7 @@ h1 em{font-style:normal;color:var(--accent)}
   white-space:pre;overflow-wrap:normal;overflow-x:auto;tab-size:4}
 .bar{padding:11px 14px;border-top:1px solid var(--line);display:flex;gap:9px;
   align-items:center;flex-wrap:wrap;background:var(--surface-2)}
-.btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:10px 20px;
+.btn{background:var(--accent);color:#fff;border:0;border-radius:var(--r-sm);padding:10px 20px;
   font-size:14.5px;font-weight:600;cursor:pointer;font-family:inherit}
 .btn:hover{filter:brightness(1.1)}
 .btn.run{background:var(--good)}
@@ -112,7 +88,7 @@ h1 em{font-style:normal;color:var(--accent)}
 .verdict ul{margin:6px 0 0 18px}
 .diff{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
 @media (max-width:560px){ .diff{grid-template-columns:1fr} }
-.diff div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px}
+.diff div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:10px}
 .diff b{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
 .diff pre{font-family:var(--mono);font-size:12.5px;white-space:pre-wrap;margin-top:5px;color:var(--ink)}
 
@@ -120,7 +96,7 @@ h1 em{font-style:normal;color:var(--accent)}
 .picker{position:fixed;inset:0;background:rgba(10,11,16,.55);display:none;
   align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto;z-index:50}
 .picker.show{display:flex}
-.pcard{background:var(--surface);border-radius:16px;max-width:660px;width:100%;
+.pcard{background:var(--surface);border-radius:var(--r-lg);max-width:660px;width:100%;
   box-shadow:var(--shadow);padding:22px}
 .pcard h2{font-family:var(--display);font-size:21px;margin-bottom:3px}
 .pcard .psub{color:var(--ink-2);font-size:13.5px;margin-bottom:14px}
@@ -128,7 +104,7 @@ h1 em{font-style:normal;color:var(--accent)}
 .pgroup{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.11em;
   text-transform:uppercase;color:var(--ink-3);margin-top:10px}
 .pitem{display:flex;gap:10px;align-items:center;background:var(--surface-2);border:1px solid transparent;
-  border-radius:9px;padding:9px 12px;cursor:pointer;text-align:left;font-family:inherit;
+  border-radius:var(--r-sm);padding:9px 12px;cursor:pointer;text-align:left;font-family:inherit;
   color:inherit;font-size:14px;width:100%}
 .pitem:hover{border-color:var(--accent)}
 .pitem.cur{border-color:var(--accent);background:var(--accent-soft)}
@@ -1688,4 +1664,4 @@ try { const t = localStorage.getItem("phplab_theme"); if (t) document.documentEl
 
 load(state.i);
 </script>
-<script src="app/embed.js?v=3"></script>
+<script src="app/embed.js?v=4"></script>

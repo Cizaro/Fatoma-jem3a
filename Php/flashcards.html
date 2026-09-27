@@ -2,33 +2,11 @@
 <title>PHP Flashcards</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="app/app.css?v=4">
 <style>
-:root{
-  --paper:#F7F6F3; --surface:#FFFFFF; --surface-2:#EFEDE8;
-  --ink:#1A1D21; --ink-2:#5C6168; --ink-3:#8D939B;
-  --line:#E2DFD8; --accent:#0F7B6C; --accent-soft:#E3F1EE;
-  --warm:#B5541F; --warm-soft:#FBEDE4; --gold:#A57C1B;
-  --shadow:0 1px 2px rgba(26,29,33,.06), 0 10px 28px -14px rgba(26,29,33,.28);
-  --display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
-  --body:"Public Sans",system-ui,-apple-system,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
-    --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
-    --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
-    --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B;
-    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
-  }
-}
-:root[data-theme="dark"]{
-  --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
-  --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
-  --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
-  --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
-}
+
+
+
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
      font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
@@ -40,12 +18,12 @@ h1 em{font-style:normal;color:var(--accent)}
 .lede{color:var(--ink-2);font-size:14.5px;margin-top:2px}
 .theme-btn{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:600;
   letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid var(--line);
-  color:var(--ink-3);border-radius:999px;padding:5px 12px;cursor:pointer}
+  color:var(--ink-3);border-radius:var(--r-pill);padding:5px 12px;cursor:pointer}
 .theme-btn:hover{color:var(--ink);border-color:var(--accent)}
 
 /* deck picker */
 .decks{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
-.deck{background:var(--surface);border:1px solid var(--line);border-radius:13px;
+.deck{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
   padding:17px;text-align:left;font-family:inherit;color:inherit;cursor:pointer;
   box-shadow:var(--shadow);transition:transform .12s,border-color .12s}
 .deck:hover{transform:translateY(-3px);border-color:var(--accent)}
@@ -53,12 +31,12 @@ h1 em{font-style:normal;color:var(--accent)}
   text-transform:uppercase;color:var(--ink-3)}
 .deck h3{font-family:var(--display);font-size:18px;margin:6px 0 3px;letter-spacing:-.01em}
 .deck p{font-size:13px;color:var(--ink-2);line-height:1.45}
-.deckbar{height:5px;background:var(--surface-2);border-radius:99px;margin-top:11px;overflow:hidden}
+.deckbar{height:5px;background:var(--surface-2);border-radius:var(--r-pill);margin-top:11px;overflow:hidden}
 .deckbar i{display:block;height:100%;background:var(--accent);width:0;transition:width .4s}
 .deck .pct{font-size:11.5px;color:var(--ink-3);margin-top:5px;font-family:var(--mono)}
 
 .allbtn{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.btn{background:var(--accent);color:#fff;border:0;border-radius:9px;padding:11px 22px;
+.btn{background:var(--accent);color:#fff;border:0;border-radius:var(--r-sm);padding:11px 22px;
   font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
 .btn:hover{filter:brightness(1.08)}
 .btn.ghost{background:none;border:1px solid var(--line);color:var(--ink-2)}
@@ -66,11 +44,11 @@ h1 em{font-style:normal;color:var(--accent)}
 
 /* study view */
 .hud{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
-.pill{background:var(--surface);border:1px solid var(--line);border-radius:20px;
+.pill{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
   padding:5px 14px;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
 .pill.left{color:var(--warm)}
 .pill.got{color:var(--accent)}
-.bar{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-bottom:22px}
+.bar{height:6px;background:var(--surface-2);border-radius:var(--r-pill);overflow:hidden;margin-bottom:22px}
 .bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .35s}
 
 .card{perspective:1400px;margin-bottom:18px}
@@ -78,7 +56,7 @@ h1 em{font-style:normal;color:var(--accent)}
   transform-style:preserve-3d;cursor:pointer}
 .card.flipped .inner{transform:rotateY(180deg)}
 .face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
-  background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
   box-shadow:var(--shadow);padding:28px 24px;display:flex;flex-direction:column;
   align-items:center;justify-content:center;text-align:center;gap:10px}
 .face.back{transform:rotateY(180deg);background:var(--accent-soft);border-color:var(--accent)}
@@ -88,21 +66,21 @@ h1 em{font-style:normal;color:var(--accent)}
   word-break:break-word;line-height:1.3}
 .mean{font-size:17px;line-height:1.5;max-width:42ch}
 .extra{font-family:var(--mono);font-size:13px;color:var(--ink-2);background:var(--surface);
-  border-radius:8px;padding:8px 12px;max-width:100%;overflow-x:auto;white-space:pre}
+  border-radius:var(--r-sm);padding:8px 12px;max-width:100%;overflow-x:auto;white-space:pre}
 .flip-hint{font-size:12.5px;color:var(--ink-3);text-align:center;margin-bottom:16px}
 .judge{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.judge button{padding:15px;border-radius:11px;border:2px solid var(--line);background:var(--surface);
+.judge button{padding:15px;border-radius:var(--r);border:2px solid var(--line);background:var(--surface);
   font-size:15px;font-weight:700;cursor:pointer;color:inherit;font-family:inherit}
 .judge .no:hover{border-color:var(--warm);background:var(--warm-soft);color:var(--warm)}
 .judge .yes:hover{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
 .judge button small{display:block;font-weight:400;font-size:11.5px;color:var(--ink-3);margin-top:2px}
 
-.done{background:var(--surface);border:1px solid var(--line);border-radius:16px;
+.done{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
   padding:34px 24px;text-align:center;box-shadow:var(--shadow)}
 .done .big{font-family:var(--display);font-size:46px;font-weight:700;color:var(--accent);line-height:1.1}
 .done h2{font-family:var(--display);font-size:21px;margin:6px 0 5px}
 .done p{color:var(--ink-2)}
-.missed{text-align:left;margin-top:18px;background:var(--warm-soft);border-radius:11px;padding:14px 16px}
+.missed{text-align:left;margin-top:18px;background:var(--warm-soft);border-radius:var(--r);padding:14px 16px}
 .missed b{color:var(--warm);font-size:12px;text-transform:uppercase;letter-spacing:.08em;
   display:block;margin-bottom:6px}
 .missed ul{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2)}
@@ -429,4 +407,4 @@ menu();
   startSession(d.cards.map((c, i) => ({ c, deck: d.id, idx: i })), d.name);
 })();
 </script>
-<script src="app/embed.js?v=3"></script>
+<script src="app/embed.js?v=4"></script>

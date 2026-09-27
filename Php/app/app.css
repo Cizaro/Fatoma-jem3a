@@ -14,7 +14,25 @@
   --display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
   --body:"Public Sans",system-ui,-apple-system,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
-  --r:14px; --rail:250px;
+
+  /* One corner-radius scale for the whole course. Before this there were
+     thirteen different radii across the pages, which is what makes a site
+     look like it has no system behind it. Small things, panels, big
+     containers, and anything pill-shaped. Nothing else. */
+  --r-sm:8px; --r:12px; --r-lg:18px; --r-pill:999px;
+  --rail:250px;
+
+  /* Names the older pages use. They are aliases, not new colours, so that
+     every page can share this one file instead of carrying its own copy
+     of the palette - which is how three pages quietly lost dark mode. */
+  --marker:var(--warm); --marker-soft:var(--warm-soft);
+  --done:var(--accent);  --done-soft:var(--accent-soft);
+  --good:var(--accent);  --good-soft:var(--accent-soft);
+  --bad:var(--warm);     --bad-soft:var(--warm-soft);
+  --code-bg:var(--cabinet); --code-ink:var(--cabinet-ink); --editor:var(--cabinet);
+
+  /* the six stage worlds */
+  --w1:#0F7B6C; --w2:#3E6B8A; --w3:#A57C1B; --w4:#B5541F; --w5:#94413A; --w6:#5C5470;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -25,6 +43,7 @@
     --cabinet:#0E1013; --cabinet-ink:#F2F1EE;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
     --lift:0 2px 4px rgba(0,0,0,.5), 0 18px 40px -20px rgba(0,0,0,.9);
+    --w1:#4FC2AE; --w2:#6E9CC4; --w3:#D8B45B; --w4:#E08B5A; --w5:#C97F77; --w6:#9A90C4;
   }
 }
 :root[data-theme="dark"]{
@@ -35,6 +54,7 @@
   --cabinet:#0E1013; --cabinet-ink:#F2F1EE;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
   --lift:0 2px 4px rgba(0,0,0,.5), 0 18px 40px -20px rgba(0,0,0,.9);
+  --w1:#4FC2AE; --w2:#6E9CC4; --w3:#D8B45B; --w4:#E08B5A; --w5:#C97F77; --w6:#9A90C4;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
@@ -53,24 +73,24 @@ a{color:var(--accent)}
   flex-direction:column;overflow-y:auto;padding-bottom:16px}
 .brand{display:flex;align-items:center;gap:10px;padding:20px 18px 16px;
   position:sticky;top:0;background:var(--surface);z-index:2}
-.brand .dot{width:30px;height:30px;border-radius:9px;background:var(--accent);color:#fff;
+.brand .dot{width:30px;height:30px;border-radius:var(--r-sm);background:var(--accent);color:#fff;
   display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:15px;flex:none}
 .brand b{font-family:var(--display);font-size:16px;letter-spacing:-.015em;line-height:1.15}
 .brand span{display:block;font-size:11.5px;color:var(--ink-3);font-weight:400;font-family:var(--body)}
 
 .railprog{margin:0 18px 16px;padding:13px 14px;background:var(--paper);
-  border:1px solid var(--line);border-radius:12px}
+  border:1px solid var(--line);border-radius:var(--r)}
 .railprog .t{display:flex;justify-content:space-between;align-items:baseline;
   font-size:12px;color:var(--ink-3);font-family:var(--mono);margin-bottom:7px}
 .railprog .t b{color:var(--ink);font-size:14px}
-.railprog .b{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden}
-.railprog .b i{display:block;height:100%;background:var(--accent);border-radius:99px;
+.railprog .b{height:6px;background:var(--surface-2);border-radius:var(--r-pill);overflow:hidden}
+.railprog .b i{display:block;height:100%;background:var(--accent);border-radius:var(--r-pill);
   width:0;transition:width .5s cubic-bezier(.16,1,.3,1)}
 
 .navsec{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.13em;
   text-transform:uppercase;color:var(--ink-3);padding:14px 20px 7px}
 .nav{display:flex;flex-direction:column;gap:1px;padding:0 10px}
-.nav a{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;
+.nav a{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:var(--r-sm);
   text-decoration:none;color:var(--ink-2);font-size:14.5px;line-height:1.3}
 .nav a:hover{background:var(--surface-2);color:var(--ink)}
 .nav a.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
@@ -83,7 +103,7 @@ a{color:var(--accent)}
 .railfoot{margin-top:auto;padding:16px 20px 0;font-size:11.5px;color:var(--ink-3);
   border-top:1px solid var(--line);margin-inline:10px}
 .railfoot button{background:none;border:1px solid var(--line);color:var(--ink-3);
-  border-radius:999px;padding:5px 12px;font:inherit;font-family:var(--mono);font-size:10.5px;
+  border-radius:var(--r-pill);padding:5px 12px;font:inherit;font-family:var(--mono);font-size:10.5px;
   letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:8px}
 .railfoot button:hover{color:var(--ink);border-color:var(--accent)}
 
@@ -98,7 +118,7 @@ a{color:var(--accent)}
 .topbar{display:none;align-items:center;gap:12px;padding:10px 14px;
   background:var(--surface);border-bottom:1px solid var(--line);
   padding-top:calc(10px + env(safe-area-inset-top,0px))}
-.burger{background:none;border:1px solid var(--line);color:var(--ink-2);border-radius:9px;
+.burger{background:none;border:1px solid var(--line);color:var(--ink-2);border-radius:var(--r-sm);
   padding:7px 11px;cursor:pointer;font-size:15px;line-height:1}
 .topbar .title{font-family:var(--display);font-size:16px;letter-spacing:-.01em}
 
@@ -135,15 +155,15 @@ body.reader{padding:0}
 .prose li{margin-bottom:7px}
 .prose strong{font-weight:600}
 .prose code{font-family:var(--mono);font-size:.9em;background:var(--surface-2);
-  padding:2px 6px;border-radius:5px;word-break:break-word}
+  padding:2px 6px;border-radius:var(--r-sm);word-break:break-word}
 .prose pre{background:var(--cabinet);color:var(--cabinet-ink);padding:18px 20px;
-  border-radius:12px;overflow-x:auto;margin:0 0 18px;line-height:1.7}
+  border-radius:var(--r);overflow-x:auto;margin:0 0 18px;line-height:1.7}
 .prose pre code{background:none;padding:0;font-size:13.5px;color:inherit}
 .prose blockquote{margin:0 0 18px;padding:15px 18px;background:var(--accent-soft);
-  border-left:3px solid var(--accent);border-radius:0 11px 11px 0}
+  border-left:3px solid var(--accent);border-radius:0 var(--r) var(--r) 0}
 .prose blockquote p:last-child{margin-bottom:0}
 .prose hr{border:0;border-top:1px solid var(--line);margin:30px 0}
-.tablewrap{overflow-x:auto;margin:0 0 18px;border:1px solid var(--line);border-radius:11px}
+.tablewrap{overflow-x:auto;margin:0 0 18px;border:1px solid var(--line);border-radius:var(--r)}
 .prose table{border-collapse:collapse;width:100%;font-size:14px}
 .prose th,.prose td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--line);
   vertical-align:top}
@@ -155,7 +175,7 @@ body.reader{padding:0}
 .lessonnav{max-width:760px;margin:0 auto;padding:10px 22px 60px;display:flex;gap:12px;
   flex-wrap:wrap}
 .lessonnav a{flex:1;min-width:210px;text-decoration:none;background:var(--surface);
-  border:1px solid var(--line);border-radius:12px;padding:14px 16px;color:var(--ink);
+  border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;color:var(--ink);
   font-weight:600;box-shadow:var(--shadow);transition:border-color .12s,transform .12s}
 .lessonnav a:hover{border-color:var(--accent);transform:translateY(-2px)}
 .lessonnav a span{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.11em;
@@ -165,7 +185,7 @@ body.reader{padding:0}
 /* ============================================================
    SHARED BITS the embedded pages borrow
    ============================================================ */
-.btn{background:var(--accent);color:#fff;border:0;border-radius:11px;padding:12px 24px;
+.btn{background:var(--accent);color:#fff;border:0;border-radius:var(--r);padding:12px 24px;
   font-size:15px;font-weight:600;font-family:inherit;cursor:pointer}
 .btn:hover{filter:brightness(1.08)}
 .btn.ghost{background:none;border:1px solid var(--line);color:var(--ink-2)}

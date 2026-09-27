@@ -2,60 +2,11 @@
 <title>PHP A to Z</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="app/app.css?v=4">
 <style>
-:root{
-  --paper:#F7F6F3;
-  --surface:#FFFFFF;
-  --surface-2:#EFEDE8;
-  --ink:#1A1D21;
-  --ink-2:#5C6168;
-  --ink-3:#8D939B;
-  --line:#E2DFD8;
-  --accent:#0F7B6C;
-  --accent-soft:#E3F1EE;
-  --marker:#B5541F;
-  --marker-soft:#FBEDE4;
-  --done:#0F7B6C;
-  --done-soft:#E3F1EE;
-  --shadow:0 1px 2px rgba(20,22,43,.05), 0 8px 24px -12px rgba(20,22,43,.18);
-  --display:"Familjen Grotesk", "Segoe UI", system-ui, sans-serif;
-  --body:"Public Sans", system-ui, -apple-system, sans-serif;
-  --mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --paper:#F7F6F3;
-    --surface:#FFFFFF;
-    --surface-2:#EFEDE8;
-    --ink:#1A1D21;
-    --ink-2:#5C6168;
-    --ink-3:#8D939B;
-    --line:#E2DFD8;
-    --accent:#0F7B6C;
-    --accent-soft:#E3F1EE;
-    --marker:#B5541F;
-    --marker-soft:#FBEDE4;
-    --done:#0F7B6C;
-    --done-soft:#E3F1EE;
-    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
-  }
-}
-:root[data-theme="dark"]{
-  --paper:#14161A;
-  --surface:#1D2126;
-  --surface-2:#262B31;
-  --ink:#ECEEF1;
-  --ink-2:#A3A9B2;
-  --ink-3:#787E88;
-  --line:#30353C;
-  --accent:#4FC2AE;
-  --accent-soft:#16302C;
-  --marker:#E08B5A;
-  --marker-soft:#2E211A;
-  --done:#4FC2AE;
-  --done-soft:#16302C;
-  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
-}
+
+
+
 
 *{box-sizing:border-box}
 body{
@@ -83,13 +34,13 @@ h1 em{font-style:normal; color:var(--accent)}
   margin-left:auto; font-family:var(--mono); font-size:11px; font-weight:600;
   letter-spacing:.1em; text-transform:uppercase;
   background:none; border:1px solid var(--line); color:var(--ink-3);
-  border-radius:999px; padding:5px 12px; cursor:pointer;
+  border-radius:var(--r-pill); padding:5px 12px; cursor:pointer;
 }
 .theme-btn:hover{color:var(--ink); border-color:var(--accent)}
 
 /* ---------- progress ---------- */
 .status{
-  background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
   padding:18px 20px; margin-block:26px 34px; box-shadow:var(--shadow);
   display:grid; gap:14px;
 }
@@ -99,11 +50,11 @@ h1 em{font-style:normal; color:var(--accent)}
 .next{
   margin-left:auto; font-family:var(--mono); font-size:12px; font-weight:600;
   background:var(--marker-soft); color:var(--marker);
-  border-radius:999px; padding:5px 13px; white-space:nowrap;
+  border-radius:var(--r-pill); padding:5px 13px; white-space:nowrap;
 }
-.meter{height:7px; background:var(--surface-2); border-radius:99px; overflow:hidden}
+.meter{height:7px; background:var(--surface-2); border-radius:var(--r-pill); overflow:hidden}
 .meter i{
-  display:block; height:100%; width:0; border-radius:99px;
+  display:block; height:100%; width:0; border-radius:var(--r-pill);
   background:linear-gradient(90deg,var(--accent),var(--marker));
   transition:width .45s cubic-bezier(.4,0,.2,1);
 }
@@ -146,7 +97,7 @@ h1 em{font-style:normal; color:var(--accent)}
 .node.is-next .badge{border-color:var(--marker); color:var(--marker); background:var(--marker-soft)}
 
 .card{
-  background:var(--surface); border:1px solid var(--line); border-radius:12px;
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
   margin:8px 0 8px 6px; overflow:hidden;
 }
 .node.is-next .card{border-color:var(--marker); box-shadow:var(--shadow)}
@@ -170,7 +121,7 @@ h1 em{font-style:normal; color:var(--accent)}
 
 .tag{
   display:inline-block; font-family:var(--mono); font-size:10px; font-weight:700;
-  letter-spacing:.09em; text-transform:uppercase; padding:2px 7px; border-radius:4px;
+  letter-spacing:.09em; text-transform:uppercase; padding:2px 7px; border-radius:var(--r-sm);
   vertical-align:2px; margin-left:7px;
 }
 .tag.project{background:var(--done-soft); color:var(--done)}
@@ -187,11 +138,11 @@ h1 em{font-style:normal; color:var(--accent)}
 .body li::marker{color:var(--accent)}
 .path{
   font-family:var(--mono); font-size:12.5px; background:var(--surface-2);
-  color:var(--ink-2); padding:3px 8px; border-radius:5px;
+  color:var(--ink-2); padding:3px 8px; border-radius:var(--r-sm);
   display:inline-block; margin:0 5px 5px 0; word-break:break-all;
 }
 .warn{
-  background:var(--marker-soft); color:var(--marker); border-radius:8px;
+  background:var(--marker-soft); color:var(--marker); border-radius:var(--r-sm);
   padding:10px 13px; font-size:13.5px; margin-bottom:14px;
 }
 .warn b{font-weight:600}
@@ -202,7 +153,7 @@ h1 em{font-style:normal; color:var(--accent)}
 .hub{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 16px}
 .hl{
   display:inline-flex; align-items:center; gap:7px; text-decoration:none;
-  background:var(--surface); border:1px solid var(--line); border-radius:10px;
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
   padding:9px 13px; font-size:13.5px; font-weight:600; color:var(--ink);
   transition:border-color .12s, transform .12s, background .12s;
 }
@@ -225,7 +176,7 @@ h1 em{font-style:normal; color:var(--accent)}
 }
 .finish .gutter::before{bottom:auto; height:22px}
 .finish .flag{
-  margin:6px 0 0 6px; padding:20px 22px; border-radius:12px;
+  margin:6px 0 0 6px; padding:20px 22px; border-radius:var(--r);
   background:var(--accent-soft); border:1px solid var(--accent);
 }
 .finish h3{font-family:var(--display); font-size:20px; margin:0 0 4px; letter-spacing:-.01em}
@@ -651,4 +602,4 @@ try{
 load();
 render();
 </script>
-<script src="app/embed.js?v=3"></script>
+<script src="app/embed.js?v=4"></script>
