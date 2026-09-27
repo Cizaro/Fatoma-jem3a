@@ -45,7 +45,9 @@
 
   // a lesson link becomes a rail move, so the shell stays in charge of
   // where you are instead of a page loading inside a page
-  var LESSON = /(?:^|\/)app\/lessons\/([a-z]+)\.html$/;
+  // "app/lessons/arrays.html" from the repo pages, "lessons/arrays.html"
+  // from quiz.html which already sits inside app/
+  var LESSON = /(?:^|\/)(?:app\/)?lessons\/([a-z]+)\.html$/;
 
   // links that leave this page should move the shell, not nest a frame
   var MAP = {

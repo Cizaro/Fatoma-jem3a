@@ -80,7 +80,9 @@ def practise_block(slug):
         return ""
     out = []
     if p.get("quiz"):
-        out.append('<a class="pl main" href="../quizzes/%s.html">Mini-quiz</a>' % p["quiz"])
+        # the interactive runner, not a printed worksheet: she types an
+        # answer and it is marked
+        out.append('<a class="pl main" href="../quiz.html?q=%s">Mini-quiz</a>' % p["quiz"])
     if p.get("run"):
         out.append('<a class="pl" href="../../code-lab.html">Code lab</a>')
     if p.get("deck"):
@@ -327,11 +329,13 @@ def main():
 
 
 def build_quizzes():
-    """The mini-quizzes get pages too.
+    """A readable copy of each mini-quiz.
 
-    Each lesson links to its quiz, and a link to a .md file shows the raw
-    markdown - hashes, backticks and all. Same converter, so the quizzes
-    look like the rest of the course instead of like a text file.
+    The quiz she actually sits is app/quiz.html, which marks her answers.
+    These pages are the whole worksheet on one screen - useful for you to
+    read before a call, and the place the answers are written out in full.
+    Nothing links to them from the course, so they cannot be mistaken for
+    the real thing.
     """
     src_dir = os.path.join(PHP, "quizzes", "mini-quizzes")
     out_dir = os.path.join(PHP, "app", "quizzes")

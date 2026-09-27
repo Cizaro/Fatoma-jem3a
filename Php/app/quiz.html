@@ -1,0 +1,337 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mini-quiz</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="app.css?v=4">
+<style>
+.wrap{max-width:760px;margin:0 auto;padding:34px 22px 80px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(25px,4.6vw,34px);
+  letter-spacing:-.025em;line-height:1.08;margin:0 0 8px}
+.sub{color:var(--ink-2);font-size:14.5px;margin:0 0 6px}
+.note{background:var(--warm-soft);color:var(--warm);border-radius:var(--r-sm);
+  padding:10px 14px;font-size:13.5px;margin:14px 0 0}
+
+.scorebar{position:sticky;top:0;z-index:5;background:var(--paper);
+  padding:12px 0 10px;margin:18px 0 6px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;gap:14px}
+.scorebar b{font-family:var(--mono);font-size:13px;color:var(--ink)}
+.track{flex:1;height:6px;background:var(--surface-2);border-radius:var(--r-pill);overflow:hidden}
+.track i{display:block;height:100%;width:0;background:var(--accent);
+  border-radius:var(--r-pill);transition:width .35s cubic-bezier(.16,1,.3,1)}
+
+.q{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px 20px;margin:14px 0;box-shadow:var(--shadow)}
+.q.right{border-color:var(--accent)}
+.q.wrong{border-color:var(--warm)}
+.qn{font-family:var(--mono);font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600;margin-bottom:7px}
+.qt{font-size:15.5px;font-weight:600;margin:0 0 12px;line-height:1.45}
+pre.code{background:var(--cabinet);color:var(--cabinet-ink);padding:13px 15px;
+  border-radius:var(--r-sm);overflow-x:auto;margin:0 0 13px;font-family:var(--mono);
+  font-size:13px;line-height:1.6}
+
+.row{display:grid;grid-template-columns:minmax(120px,.7fr) 1fr;gap:10px;
+  align-items:center;margin-bottom:8px}
+.row .lab{font-size:13.5px;color:var(--ink-2)}
+.row .lab code{font-family:var(--mono);font-size:12.5px}
+@media (max-width:560px){.row{grid-template-columns:1fr;gap:4px}}
+
+input[type=text],textarea{width:100%;font:inherit;font-size:14.5px;color:var(--ink);
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:9px 12px;outline:none}
+input[type=text]:focus,textarea:focus{border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-soft)}
+.mono input,textarea.mono{font-family:var(--mono);font-size:13.5px}
+textarea{resize:vertical;line-height:1.6}
+input.ok,textarea.ok{border-color:var(--accent);background:var(--accent-soft)}
+input.no,textarea.no{border-color:var(--warm);background:var(--warm-soft)}
+
+.opt{display:flex;align-items:flex-start;gap:10px;padding:8px 11px;border-radius:var(--r-sm);
+  cursor:pointer;font-size:14.5px;border:1px solid transparent}
+.opt:hover{background:var(--surface-2)}
+.opt input{margin:3px 0 0;accent-color:var(--accent);width:16px;height:16px;flex:none}
+.opt code{font-family:var(--mono);font-size:13.5px}
+.opt.ok{border-color:var(--accent);background:var(--accent-soft)}
+.opt.no{border-color:var(--warm);background:var(--warm-soft)}
+
+.acts{display:flex;align-items:center;gap:9px;margin-top:12px;flex-wrap:wrap}
+button{font:inherit;cursor:pointer;border-radius:var(--r-sm);padding:8px 16px;
+  font-size:13.5px;font-weight:600;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink-2)}
+button:hover{border-color:var(--accent);color:var(--ink)}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.primary:hover{filter:brightness(1.08);color:#fff}
+button:active{transform:translateY(1px)}
+
+.verdict{margin-top:12px;padding:12px 14px;border-radius:var(--r-sm);font-size:14px;line-height:1.55}
+.verdict.ok{background:var(--accent-soft);color:var(--accent)}
+.verdict.no{background:var(--warm-soft);color:var(--warm)}
+.verdict b{display:block;margin-bottom:4px}
+.verdict pre{font-family:var(--mono);font-size:13px;margin:7px 0 0;white-space:pre-wrap;
+  color:inherit;background:none;padding:0}
+.verdict ul{margin:6px 0 0;padding-left:18px}
+.selfmark{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+
+.done{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:24px;margin-top:26px;text-align:center;box-shadow:var(--shadow)}
+.done h2{font-family:var(--display);font-size:24px;margin:0 0 6px}
+.done p{color:var(--ink-2);font-size:14.5px;margin:0 0 14px;max-width:52ch;
+  margin-inline:auto}
+.big{font-family:var(--display);font-size:46px;font-weight:700;line-height:1;
+  letter-spacing:-.03em;margin-bottom:6px}
+@media (prefers-reduced-motion:reduce){.track i{transition:none}button:active{transform:none}}
+</style>
+
+<div class="wrap" id="wrap"></div>
+
+<script src="quiz-data-a.js?v=4"></script>
+<script src="quiz-data-b.js?v=4"></script>
+<script>
+/* ---------------------------------------------------------------
+   The quiz runner.
+
+   The quizzes used to be printed worksheets rendered on a screen:
+   rows of underscores with nowhere to type and no way to find out
+   whether an answer was right. This marks what a machine can mark
+   honestly, and for the handful of questions where a correct answer
+   can be written twenty different ways it shows the model answer and
+   lets her mark herself, which is what the exam simulator already
+   does for the written sections.
+--------------------------------------------------------------- */
+const params = new URLSearchParams(location.search);
+const id = params.get("q") || "lesson-00-algorithms";
+const quiz = (window.QUIZZES || {})[id];
+const wrap = document.getElementById("wrap");
+const KEY = "php_quiz_" + id;
+
+/* answers are compared loosely: this is recall, not spelling */
+function norm(s){
+  return String(s == null ? "" : s)
+    .toLowerCase()
+    .replace(/[‘’]/g, "'").replace(/[“”]/g, '"')
+    .replace(/\s+/g, " ")
+    .replace(/[;.]+$/, "")
+    .trim();
+}
+function matches(val, rule){
+  const v = norm(val);
+  if (!v) return false;
+  /* A rule that normalises to nothing - ";" loses its semicolon and ends up
+     empty - would match every answer ever typed, because "".includes("") is
+     true. Drop those rather than silently marking rubbish correct. */
+  const clean = list => (list || []).map(norm).filter(Boolean);
+  const a = clean(rule.a), must = clean(rule.must), any = clean(rule.any);
+  if (a.length && a.some(x => x === v)) return true;
+  if (must.length && must.every(x => v.includes(x))) return true;
+  if (any.length && any.some(x => v.includes(x))) return true;
+  return false;
+}
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+/* her marks for this quiz, remembered between visits.
+   This has to exist before render() runs - paintScore reads it. */
+let marks = {};           // question index -> true/false
+try { marks = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){ marks = {}; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch(e){} }
+
+if (!quiz){
+  wrap.innerHTML = "<h1>Quiz not found</h1><p class='sub'>No quiz called <code>"
+    + esc(id) + "</code>.</p>";
+} else {
+  render();
+}
+
+function render(){
+  const total = quiz.qs.length;
+  wrap.innerHTML = `
+    <h1>${esc(quiz.title)}</h1>
+    <p class="sub">${total} questions &middot; about 5 minutes &middot; close the lesson first</p>
+    ${quiz.note ? `<div class="note">${esc(quiz.note)}</div>` : ""}
+    <div class="scorebar">
+      <b id="score">0 / ${total}</b>
+      <span class="track"><i id="bar"></i></span>
+      <button id="reset">start again</button>
+    </div>
+    <div id="qs"></div>
+    <div id="end"></div>`;
+
+  const qs = document.getElementById("qs");
+  quiz.qs.forEach((q, i) => qs.appendChild(question(q, i)));
+
+  document.getElementById("reset").onclick = () => {
+    marks = {}; save(); render();
+  };
+  paintScore();
+}
+
+function question(q, i){
+  const el = document.createElement("section");
+  el.className = "q";
+  let inner = `<div class="qn">Question ${i + 1}</div><p class="qt">${esc(q.q)}</p>`;
+  if (q.code) inner += `<pre class="code">${esc(q.code)}</pre>`;
+
+  if (q.t === "choice" || q.t === "multi"){
+    inner += q.opts.map((o, n) => `
+      <label class="opt" data-n="${n}">
+        <input type="${q.t === "choice" ? "radio" : "checkbox"}" name="q${i}" value="${n}">
+        <code>${esc(o)}</code>
+      </label>`).join("");
+  } else if (q.t === "fields"){
+    inner += q.rows.map((r, n) => `
+      <div class="row${q.mono ? " mono" : ""}">
+        <span class="lab"><code>${esc(r.label)}</code></span>
+        <input type="text" data-n="${n}" autocomplete="off" spellcheck="false">
+      </div>`).join("");
+  } else if (q.t === "set"){
+    inner += q.groups.map((g, n) => `
+      <div class="row">
+        <span class="lab">${n + 1}.</span>
+        <input type="text" data-n="${n}" autocomplete="off" spellcheck="false">
+      </div>`).join("");
+  } else if (q.t === "open"){
+    inner += `<textarea class="mono" rows="${q.rows || 4}" spellcheck="false"></textarea>`;
+  } else {
+    inner += q.mono
+      ? `<div class="mono"><input type="text" autocomplete="off" spellcheck="false"></div>`
+      : `<input type="text" autocomplete="off" spellcheck="false">`;
+  }
+
+  inner += `<div class="acts">
+      <button class="primary" data-check>Check</button>
+      <button data-show>Show the answer</button>
+    </div><div class="out"></div>`;
+  el.innerHTML = inner;
+
+  const out = el.querySelector(".out");
+  el.querySelector("[data-check]").onclick = () => check(q, i, el, out);
+  el.querySelector("[data-show]").onclick  = () => reveal(q, i, el, out, true);
+  el.querySelectorAll("input[type=text], textarea").forEach(inp => {
+    inp.addEventListener("keydown", e => {
+      if (e.key === "Enter" && q.t !== "open"){ e.preventDefault(); check(q, i, el, out); }
+    });
+  });
+  return el;
+}
+
+function check(q, i, el, out){
+  let right = false, detail = "";
+
+  if (q.t === "choice"){
+    const picked = el.querySelector("input:checked");
+    right = picked && +picked.value === q.correct;
+    el.querySelectorAll(".opt").forEach(o => {
+      const n = +o.dataset.n;
+      o.classList.toggle("ok", n === q.correct);
+      o.classList.toggle("no", picked && +picked.value === n && n !== q.correct);
+    });
+  } else if (q.t === "multi"){
+    const picked = [...el.querySelectorAll("input:checked")].map(x => +x.value).sort();
+    const want = [...q.correct].sort();
+    right = picked.length === want.length && picked.every((v, k) => v === want[k]);
+    el.querySelectorAll(".opt").forEach(o => {
+      const n = +o.dataset.n, isWanted = q.correct.includes(n), isPicked = picked.includes(n);
+      o.classList.toggle("ok", isWanted);
+      o.classList.toggle("no", isPicked && !isWanted);
+    });
+  } else if (q.t === "fields"){
+    right = true;
+    q.rows.forEach((r, n) => {
+      const inp = el.querySelector(`input[data-n="${n}"]`);
+      const ok = matches(inp.value, r);
+      inp.classList.toggle("ok", ok); inp.classList.toggle("no", !ok);
+      if (!ok) right = false;
+    });
+  } else if (q.t === "set"){
+    /* any order: each box must claim a different group */
+    const taken = new Set();
+    right = true;
+    const inputs = [...el.querySelectorAll("input[data-n]")];
+    inputs.forEach(inp => {
+      let hit = -1;
+      q.groups.forEach((g, gi) => {
+        if (hit === -1 && !taken.has(gi) && matches(inp.value, g)){ hit = gi; taken.add(gi); }
+      });
+      const ok = hit !== -1;
+      inp.classList.toggle("ok", ok); inp.classList.toggle("no", !ok);
+      if (!ok) right = false;
+    });
+  } else if (q.t === "open"){
+    return reveal(q, i, el, out, false);      // she marks this one herself
+  } else {
+    const inp = el.querySelector("input");
+    right = matches(inp.value, q);
+    inp.classList.toggle("ok", right); inp.classList.toggle("no", !right);
+  }
+
+  marks[i] = right; save(); paintScore();
+  el.classList.toggle("right", right); el.classList.toggle("wrong", !right);
+
+  out.innerHTML = `<div class="verdict ${right ? "ok" : "no"}">
+    <b>${right ? "Right." : "Not yet."}</b>
+    ${right ? (q.explain ? esc(q.explain) : "") : "Try once more, or press Show the answer."}
+  </div>`;
+  if (!right) setTimeout(() => {}, 0);
+}
+
+function reveal(q, i, el, out, alsoMarkWrong){
+  const model = q.model || (q.a && q.a[0]) ||
+    (q.t === "choice" ? q.opts[q.correct] : "") ||
+    (q.t === "multi" ? q.correct.map(n => q.opts[n]).join(" · ") : "");
+  let body = "";
+  if (q.t === "fields") body = q.rows.map(r =>
+    `<li><b>${esc(r.label)}</b> — ${esc((r.a || r.any || r.must || []).join(" / "))}</li>`).join("");
+  else if (q.t === "set") body = q.groups.map(g => `<li>${esc(g.label)}</li>`).join("");
+
+  out.innerHTML = `<div class="verdict no">
+      <b>The answer</b>
+      ${model ? `<pre>${esc(model)}</pre>` : ""}
+      ${body ? `<ul>${body}</ul>` : ""}
+      ${q.explain ? `<div style="margin-top:7px">${esc(q.explain)}</div>` : ""}
+      ${q.criteria ? `<div style="margin-top:7px">Marks are for:<ul>${
+          q.criteria.map(c => `<li>${esc(c)}</li>`).join("")}</ul></div>` : ""}
+      <div class="selfmark">
+        <button data-self="1">I got this right</button>
+        <button data-self="0">I didn't</button>
+      </div>
+    </div>`;
+
+  out.querySelectorAll("[data-self]").forEach(b => b.onclick = () => {
+    const got = b.dataset.self === "1";
+    marks[i] = got; save(); paintScore();
+    el.classList.toggle("right", got); el.classList.toggle("wrong", !got);
+    out.querySelector(".selfmark").innerHTML =
+      `<span style="font-size:13px">Marked as ${got ? "right" : "wrong"}.</span>`;
+  });
+
+  if (alsoMarkWrong && marks[i] === undefined){ marks[i] = false; save(); paintScore(); }
+}
+
+function paintScore(){
+  const total = quiz.qs.length;
+  const got = Object.values(marks).filter(Boolean).length;
+  const answered = Object.keys(marks).length;
+  const s = document.getElementById("score");
+  if (s){
+    s.textContent = got + " / " + total;
+    document.getElementById("bar").style.width = Math.round(got / total * 100) + "%";
+  }
+  const end = document.getElementById("end");
+  if (!end) return;
+  if (answered < total){ end.innerHTML = ""; return; }
+
+  const verdict = got >= 7
+    ? ["Move on.", "Straight to the next lesson."]
+    : got >= 5
+      ? ["Nearly.", "Go back over the two you missed, then move on."]
+      : ["Do this lesson again.", "Not a failure - this is what the quiz is for. Redo the lesson with a pen, then come back."];
+  end.innerHTML = `<div class="done">
+      <div class="big">${got}<span style="color:var(--ink-3);font-size:24px"> / ${total}</span></div>
+      <h2>${esc(verdict[0])}</h2>
+      <p>${esc(verdict[1])}</p>
+      <a class="pl main" href="lessons/${esc(quiz.lesson)}.html">Back to the lesson</a>
+    </div>`;
+}
+</script>
+<script src="embed.js?v=4"></script>
