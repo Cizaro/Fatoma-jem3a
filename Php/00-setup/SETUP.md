@@ -73,4 +73,4 @@ Install the extension called **PHP Intelephense** — it will underline your mis
 
 ---
 
-➡️ Next: `01-basics/lesson.md`
+➡️ Next: **Lesson 1 — echo, variables, comments**, in the rail on the left.

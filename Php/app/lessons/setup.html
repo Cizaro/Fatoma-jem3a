@@ -1,0 +1,45 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Getting PHP running</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css">
+<body class="reader">
+<article class="prose">
+<h1>Lesson 0 — Setup (20 minutes)</h1>
+<h2>What is PHP, in one paragraph?</h2>
+<p>PHP is a language that runs <strong>on the server</strong>, not in your browser. When you open a <code>.php</code> page, the server runs the PHP code first, the code produces HTML, and only that HTML travels to your browser. So the visitor never sees your PHP — they see the result. That&#x27;s why PHP is used for logins, databases, shopping carts: the secret work happens where the user can&#x27;t touch it.</p>
+<p>HTML = the skeleton. CSS = the clothes. <strong>PHP = the brain.</strong></p>
+<h2>Two ways to run PHP</h2>
+<h3>Way 1 — Terminal (we use this for lessons 1–7) ✅</h3>
+<p>PHP is already installed on the computer. Open a terminal in this folder and type:</p>
+<pre class="lang-bash"><code>php 01-basics/examples.php</code></pre>
+<p>The output appears right in the terminal. Fast, simple, no setup.</p>
+<p>To check PHP is there:</p>
+<pre class="lang-bash"><code>php -v</code></pre>
+<p>You should see something like <code>PHP 8.2.12</code>.</p>
+<h3>Way 2 — Browser with a server (we need this for lesson 8 + the games)</h3>
+<p>PHP has a server built in. Run this <strong>inside the Php folder</strong>:</p>
+<pre class="lang-bash"><code>php -S localhost:8000</code></pre>
+<p>Then open your browser at <code>http://localhost:8000</code>. Leave the terminal open while you use it — closing it stops the server. Press <code>Ctrl + C</code> to stop.</p>
+<blockquote><p>If your teacher at uni asks for XAMPP, it&#x27;s the same idea: XAMPP just gives you Apache + PHP + MySQL together in one install. Everything you learn here works there too — you put your files in <code>xampp/htdocs/</code> and open <code>http://localhost/yourfile.php</code>.</p></blockquote>
+<h2>The rules of a PHP file</h2>
+<ol><li>The file must end with <strong><code>.php</code></strong> — not <code>.txt</code>, not <code>.html</code>.</li><li>PHP code lives between <code>&lt;?php</code> and <code>?&gt;</code>. Anything outside those tags is sent out as plain text.</li><li>Every statement ends with a <strong>semicolon <code>;</code></strong>. Forgetting it is error #1 for beginners.</li></ol>
+<pre class="lang-php"><code>&lt;?php
+echo &quot;Hello&quot;;   // &lt;- this semicolon is not optional
+?&gt;</code></pre>
+<h2>Your first file</h2>
+<p>Run it now:</p>
+<pre class="lang-bash"><code>php 00-setup/hello.php</code></pre>
+<p>If you see a greeting — you are officially a PHP developer. 🎉</p>
+<h2>Which editor?</h2>
+<p><strong>VS Code</strong> (free). Open the whole <code>Php</code> folder in it (File → Open Folder), not one file at a time. Install the extension called <strong>PHP Intelephense</strong> — it will underline your mistakes before you even run.</p>
+<hr>
+<p>➡️ Next: <strong>Lesson 1 — echo, variables, comments</strong>, in the rail on the left.</p>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="algorithms.html"><span>Previous</span>Algorithms, flowcharts, pseudocode</a>
+<a class="next" href="basics.html"><span>Next lesson</span>echo, variables, comments</a>
+</nav>
+<script src="../embed.js"></script>

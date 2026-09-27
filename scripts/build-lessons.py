@@ -22,6 +22,7 @@ OUT = os.path.join(PHP, "app", "lessons")
 # folder -> (id used in the app, title shown in the header)
 LESSONS = [
     ("00-algorithms", "algorithms", "Algorithms, flowcharts, pseudocode"),
+    ("00-setup", "setup", "Getting PHP running"),
     ("01-basics", "basics", "echo, variables, comments"),
     ("02-datatypes", "datatypes", "Data types and strings"),
     ("03-operators", "operators", "Operators"),
@@ -33,6 +34,10 @@ LESSONS = [
     ("09-mysql", "mysql", "Database basics with MySQL"),
     ("10-dynamic-page", "dynamic", "A dynamic page with a database"),
 ]
+
+# Folders whose source file is not called lesson.md. The setup notes were
+# written before the app existed, so they kept their own name.
+SOURCE = {"00-setup": "SETUP.md"}
 
 
 def inline(text):
@@ -201,7 +206,7 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     built = []
     for idx, (folder, slug, title) in enumerate(LESSONS):
-        src = os.path.join(PHP, folder, "lesson.md")
+        src = os.path.join(PHP, folder, SOURCE.get(folder, "lesson.md"))
         if not os.path.exists(src):
             print("  skip (missing):", folder)
             continue
