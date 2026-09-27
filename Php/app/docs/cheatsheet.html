@@ -1,0 +1,138 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PHP Cheat Sheet — print this and keep it next to you</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>PHP Cheat Sheet — print this and keep it next to you</h1>
+<h2>The tags</h2>
+<pre class="lang-php"><code>&lt;?php  ... ?&gt;        // a block of PHP
+&lt;?= $name ?&gt;         // short for &lt;?php echo $name; ?&gt;</code></pre>
+<h2>Output</h2>
+<pre class="lang-php"><code>echo &quot;text&quot;;              print_r($array);        // arrays, readable
+echo $a . &quot; &quot; . $b;       var_dump($x);           // value + type
+echo &quot;Hello $name&quot;;       printf(&quot;%-10s %d\n&quot;, $name, $age);</code></pre>
+<h2>Variables &amp; types</h2>
+<pre class="lang-php"><code>$name   = &quot;Fatima&quot;;   // string      &quot;20&quot; is a STRING, 20 is an INT
+$age    = 20;         // int
+$grade  = 15.5;       // float
+$passed = true;       // bool        echo true -&gt; 1, echo false -&gt; nothing
+$list   = [1, 2, 3];  // array</code></pre>
+<h2>Strings</h2>
+<pre class="lang-php"><code>strlen($s)              strtoupper($s)          trim($s)
+strtolower($s)          ucfirst($s)             strrev($s)
+substr($s, 0, 3)        strpos($s, &quot;a&quot;)         str_replace(&quot;a&quot;,&quot;b&quot;,$s)
+str_repeat(&quot;-&quot;, 10)     str_split($s)           nl2br($s)
+&quot;double quotes read $variables&quot;     &#x27;single quotes do not&#x27;</code></pre>
+<h2>Numbers</h2>
+<pre class="lang-php"><code>+  -  *  /  %  **        // % = remainder, ** = power
+round(3.7)  floor(3.7)  ceil(3.2)  abs(-5)
+max(1,2)  min(1,2)  rand(1,6)  intdiv(7,2)  number_format(1234.5, 2)
+$n % 2 == 0              // &lt;- the &quot;is it even&quot; trick</code></pre>
+<h2>Comparison &amp; logic</h2>
+<pre class="lang-php"><code>==   equal value            ===  equal value AND type
+!=   not equal              !==  not identical
+&gt;  &lt;  &gt;=  &lt;=
+&amp;&amp;   and          ||   or          !   not</code></pre>
+<h2>Conditions</h2>
+<pre class="lang-php"><code>if ($a &gt; $b) {
+    ...
+} elseif ($a == $b) {      // strictest condition FIRST
+    ...
+} else {
+    ...
+}
+
+$x = ($age &gt;= 18) ? &quot;adult&quot; : &quot;child&quot;;     // ternary
+
+switch ($day) {
+    case &quot;Mon&quot;: echo &quot;...&quot;; break;         // don&#x27;t forget break
+    default:    echo &quot;...&quot;;
+}</code></pre>
+<p><strong>Falsy in PHP:</strong> <code>false 0 0.0 &quot;&quot; &quot;0&quot; [] null</code> — everything else is true.</p>
+<h2>Loops</h2>
+<pre class="lang-php"><code>for ($i = 0; $i &lt; 5; $i++) { }         // known number of times
+while ($i &lt; 5) { $i++; }               // must change $i or it&#x27;s infinite
+do { } while ($i &lt; 5);                 // runs at least once
+foreach ($array as $item) { }          // for arrays
+foreach ($array as $key =&gt; $value) { }
+
+break;      // leave the loop
+continue;   // skip this round only</code></pre>
+<h2>Arrays</h2>
+<pre class="lang-php"><code>$a = [&quot;x&quot;, &quot;y&quot;];                       // indexed, starts at 0
+$a = [&quot;name&quot; =&gt; &quot;Fatima&quot;];             // associative
+$a[] = &quot;z&quot;;                            // add to the end
+$a[&quot;age&quot;] = 20;                        // add/change a key
+unset($a[0]);                          // remove
+
+count($a)        in_array(&quot;x&quot;, $a)     array_search(&quot;x&quot;, $a)
+sort($a)         rsort($a)             asort($a)      ksort($a)
+array_push()     array_pop()           array_shift()  array_unshift()
+array_keys($a)   array_values($a)      array_sum($a)  array_reverse($a)
+implode(&quot;, &quot;,$a) explode(&quot;,&quot;, $s)      array_unique($a)</code></pre>
+<h2>Functions</h2>
+<pre class="lang-php"><code>function name($param, $optional = &quot;default&quot;) {
+    return $value;          // return ENDS the function
+}
+$x = name(&quot;hello&quot;);
+
+// variables inside a function cannot see variables outside. Pass them in.</code></pre>
+<h2>Forms</h2>
+<pre class="lang-php"><code>$_POST[&quot;field&quot;]        // from method=&quot;post&quot;
+$_GET[&quot;field&quot;]         // from method=&quot;get&quot; / the URL
+$_SESSION[&quot;key&quot;]       // needs session_start() at the very top
+$_SERVER[&quot;REQUEST_METHOD&quot;] === &quot;POST&quot;
+
+$v = $_POST[&quot;x&quot;] ?? &quot;&quot;;        // or &quot;&quot; if missing
+isset($_POST[&quot;x&quot;])             // does it exist?
+empty($_POST[&quot;x&quot;])             // missing, &quot;&quot;, 0, or null?
+trim()                         // cut the spaces at the edges
+filter_var($e, FILTER_VALIDATE_EMAIL)
+is_numeric($n)
+htmlspecialchars($v)           // ALWAYS before printing user text
+
+header(&quot;Location: page.php&quot;);  exit;    // redirect, then always exit</code></pre>
+<h2>MySQL</h2>
+<pre class="lang-php"><code>$conn = mysqli_connect(&quot;localhost&quot;, &quot;root&quot;, &quot;&quot;, &quot;dbname&quot;);
+
+$result = mysqli_query($conn, &quot;SELECT * FROM students&quot;);
+while ($row = mysqli_fetch_assoc($result)) {
+    echo $row[&quot;name&quot;];
+}
+mysqli_num_rows($result)    mysqli_affected_rows($conn)    mysqli_insert_id($conn)
+mysqli_close($conn);
+
+// ALWAYS use this for anything a user typed:
+$stmt = mysqli_prepare($conn, &quot;SELECT * FROM students WHERE id = ?&quot;);
+mysqli_stmt_bind_param($stmt, &quot;i&quot;, $id);       // i int, s string, d decimal
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);</code></pre>
+<h2>SQL</h2>
+<pre class="lang-sql"><code>SELECT * FROM t;                      SELECT name, grade FROM t;
+SELECT * FROM t WHERE grade &gt;= 10;    SELECT * FROM t WHERE name LIKE &#x27;F%&#x27;;
+SELECT * FROM t ORDER BY grade DESC;  SELECT * FROM t LIMIT 5;
+SELECT COUNT(*), AVG(grade), MAX(grade) FROM t;
+
+INSERT INTO t (name, grade) VALUES (&#x27;Sara&#x27;, 14);
+UPDATE t SET grade = 19 WHERE id = 1;     -- never forget WHERE
+DELETE FROM t WHERE id = 3;               -- never forget WHERE</code></pre>
+<h2>Including files</h2>
+<pre class="lang-php"><code>require &quot;includes/db.php&quot;;      // fatal error if missing
+include &quot;sidebar.php&quot;;          // warning only
+require_once &quot;config.php&quot;;      // never loads twice</code></pre>
+<h2>Run it</h2>
+<pre class="lang-bash"><code>php file.php                 # terminal
+php -S localhost:8000        # a web server in this folder
+php -l file.php              # check the syntax without running</code></pre>
+<hr>
+<h2>The 8 mistakes you will make (everyone does)</h2>
+<ol><li>Missing <code>;</code> at the end of a line</li><li>Missing <code>$</code> on a variable</li><li><code>=</code> instead of <code>==</code> in an <code>if</code></li><li>Forgetting <code>$i++</code> in a <code>while</code> → infinite loop</li><li><code>$array[3]</code> when the array only has 3 items (last index is 2)</li><li>Single quotes when you wanted the variable to be read</li><li><code>echo</code> instead of <code>return</code> inside a function</li><li>Forgetting <code>break</code> in a <code>switch</code></li></ol>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=4"></script>

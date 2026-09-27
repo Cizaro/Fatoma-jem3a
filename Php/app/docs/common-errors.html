@@ -1,0 +1,97 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>When PHP Shouts At You</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>When PHP Shouts At You</h1>
+<p>Errors are not a punishment. They are PHP telling you exactly where to look. Read them like this:</p>
+<pre><code>Parse error: syntax error, unexpected token &quot;echo&quot; in C:\...\test.php on line 7
+   ^ the type        ^ what confused it                              ^ THE LINE NUMBER</code></pre>
+<p><strong>Always go to the line number first.</strong> And a tip that saves hours: when line 7 looks perfect, <strong>the mistake is usually on line 6</strong> — a missing <code>;</code> or <code>}</code> only becomes a problem on the next line.</p>
+<hr>
+<h2>Parse error: syntax error, unexpected ...</h2>
+<p><strong>Meaning:</strong> PHP couldn&#x27;t even read your file. Nothing ran at all.</p>
+<p><strong>Causes, in order of likelihood:</strong></p>
+<ol><li>Missing <code>;</code> at the end of the previous line</li><li>Missing <code>}</code> to close an <code>if</code>, loop or function</li><li>Missing a closing quote <code>&quot;</code> or bracket <code>)</code></li><li>A stray character you typed by accident</li></ol>
+<p><strong>Fix:</strong> look at the line number and the line <strong>above</strong> it. Count your brackets.</p>
+<hr>
+<h2>Warning: Undefined variable $name</h2>
+<p><strong>Meaning:</strong> you used a variable that was never given a value.</p>
+<pre class="lang-php"><code>echo $nmae;      // typo - you defined $name</code></pre>
+<p><strong>Causes:</strong> a typo, wrong capitals (<code>$Name</code> ≠ <code>$name</code>), or using a variable from outside a function without passing it in.</p>
+<hr>
+<h2>Warning: Undefined array key &quot;name&quot;</h2>
+<p><strong>Meaning:</strong> that key isn&#x27;t in the array.</p>
+<pre class="lang-php"><code>$a = [&quot;title&quot; =&gt; &quot;x&quot;];
+echo $a[&quot;name&quot;];              // there is no &quot;name&quot;</code></pre>
+<p><strong>Fix:</strong> <code>print_r($a)</code> and look at what keys actually exist. Guard it:</p>
+<pre class="lang-php"><code>echo $a[&quot;name&quot;] ?? &quot;not set&quot;;</code></pre>
+<hr>
+<h2>Warning: Undefined array key &quot;email&quot; (on a form)</h2>
+<p><strong>Meaning:</strong> the form field didn&#x27;t arrive.</p>
+<p><strong>Check:</strong></p>
+<ol><li>Does the input have <code>name=&quot;email&quot;</code>? (<code>id</code> is not enough!)</li><li>Is the form <code>method=&quot;post&quot;</code> and are you reading <code>$_POST</code>? They must match.</li><li>Did you open the page directly instead of submitting the form?</li></ol>
+<p><strong>Fix:</strong> <code>$email = $_POST[&quot;email&quot;] ?? &quot;&quot;;</code></p>
+<hr>
+<h2>Fatal error: Uncaught Error: Call to undefined function</h2>
+<p><strong>Meaning:</strong> you called a function that doesn&#x27;t exist.</p>
+<p><strong>Causes:</strong> a spelling mistake (<code>strlenght</code> instead of <code>strlen</code>), or you forgot to <code>require</code> the file where you wrote it, or you defined it <em>after</em> trying to use it in another file.</p>
+<hr>
+<h2>Fatal error: Cannot redeclare function</h2>
+<p><strong>Meaning:</strong> two functions have the same name — often because you used <code>include</code> twice.</p>
+<p><strong>Fix:</strong> rename one, or use <code>require_once</code>.</p>
+<hr>
+<h2>Warning: Cannot modify header information — headers already sent</h2>
+<p><strong>Meaning:</strong> you called <code>header(&quot;Location: ...&quot;)</code> <strong>after</strong> something was already printed.</p>
+<p><strong>Causes:</strong> an <code>echo</code> before it, HTML above the <code>&lt;?php</code>, or — the sneaky one — a blank line or a single space <strong>before</strong> <code>&lt;?php</code> at the top of the file.</p>
+<p><strong>Fix:</strong> move all <code>header()</code> calls to the very top, before any output.</p>
+<hr>
+<h2>The page is blank / white</h2>
+<p><strong>Meaning:</strong> a fatal error happened but errors are hidden.</p>
+<p><strong>Fix:</strong> put this at the top of the file while you&#x27;re developing:</p>
+<pre class="lang-php"><code>ini_set(&#x27;display_errors&#x27;, 1);
+error_reporting(E_ALL);</code></pre>
+<p>Then the real error appears. (Remove it before handing in.)</p>
+<hr>
+<h2>The browser shows my PHP code as text</h2>
+<p><strong>Meaning:</strong> the file wasn&#x27;t run by PHP.</p>
+<p><strong>Causes:</strong></p>
+<ol><li>You double-clicked the file instead of using a server → use <code>php -S localhost:8000</code> or XAMPP</li><li>The file is <code>.html</code> instead of <code>.php</code></li><li>You opened <code>file:///C:/...</code> instead of <code>http://localhost/...</code></li></ol>
+<hr>
+<h2>The page freezes / never finishes</h2>
+<p><strong>Meaning:</strong> infinite loop.</p>
+<pre class="lang-php"><code>$i = 1;
+while ($i &lt; 5) {
+    echo $i;      // nothing ever changes $i
+}</code></pre>
+<p><strong>Fix:</strong> <code>Ctrl + C</code> in the terminal. Then make sure something inside the loop moves the condition toward false.</p>
+<hr>
+<h2>Connection failed / Access denied for user &#x27;root&#x27;</h2>
+<p><strong>Meaning:</strong> PHP can&#x27;t reach MySQL.</p>
+<p><strong>Check, in this order:</strong></p>
+<ol><li>Is <strong>MySQL</strong> started in the XAMPP control panel? (Apache alone is not enough)</li><li>Is the database name spelled right in <code>db.php</code>?</li><li>Did you import the <code>.sql</code> file in phpMyAdmin?</li><li>On XAMPP the user is <code>root</code> with an <strong>empty</strong> password.</li></ol>
+<hr>
+<h2>Unknown column &#x27;x&#x27; in &#x27;field list&#x27;</h2>
+<p><strong>Meaning:</strong> your SQL names a column that isn&#x27;t in the table.</p>
+<p><strong>Fix:</strong> open the table in phpMyAdmin and read the real column names. Watch for <code>grade</code> vs <code>grades</code>, and for capital letters.</p>
+<hr>
+<h2>My INSERT runs but nothing appears in the table</h2>
+<p><strong>Check:</strong></p>
+<ol><li>Are you looking at the right database? (you may have two)</li><li>Did you <code>mysqli_query()</code> the string, or just build it and never send it?</li><li>Print the error: <code>echo mysqli_error($conn);</code> right after the query.</li></ol>
+<hr>
+<h2>Array to string conversion</h2>
+<p><strong>Meaning:</strong> you tried to <code>echo</code> a whole array.</p>
+<p><strong>Fix:</strong> use <code>print_r($a)</code> to inspect it, <code>implode(&quot;, &quot;, $a)</code> to print it, or a <code>foreach</code> to go item by item.</p>
+<hr>
+<h1>The debugging method (use this, not guessing)</h1>
+<ol><li><strong>Read the error.</strong> Type, message, line number.</li><li><strong>Go to that line.</strong> Then check the line above it.</li><li><strong>Print what you actually have</strong>, not what you think you have: <code></code><code>php var_dump($variable);   die(); </code><code></code> <code>die()</code> stops everything there so you can see the value.</li><li><strong>Cut the problem in half.</strong> Comment out the second half of the file. Still broken? The bug is in the first half. Repeat.</li><li><strong>Copy the exact error message into Google.</strong> Someone had it in 2013.</li><li><strong>Explain the code out loud, line by line</strong>, to the wall, to me on Zoom, to anyone. You will very often find it yourself halfway through the sentence. This genuinely works and professional developers do it every day.</li></ol>
+<blockquote><p>Never sit stuck for more than 20 minutes without either changing your approach or asking. Being stuck is normal. Staying stuck silently is the only real mistake.</p></blockquote>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=4"></script>

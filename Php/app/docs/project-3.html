@@ -1,0 +1,41 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Project 3 — Student Management System</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>Project 3 — Student Management System</h1>
+<p>This is the big one. Build it yourself, in this folder.</p>
+<h2>Before you write any PHP</h2>
+<ol><li>Start XAMPP: <strong>Apache</strong> + <strong>MySQL</strong></li><li>Open <code>http://localhost/phpmyadmin</code></li><li>Import <code>../../09-mysql/school.sql</code> — that creates the <code>school</code> database with 5 students</li><li>Click through the table in phpMyAdmin so you can <em>see</em> the data you are about to code against</li></ol>
+<h2>Build it in this order</h2>
+<p>Do <strong>not</strong> try to build everything at once. Each step must work before you start the next one.</p>
+<div class="tablewrap"><table><thead><tr><th>Step</th><th>File</th><th>Goal</th><th>Stop when</th></tr></thead><tbody><tr><td>1</td><td><code>includes/db.php</code></td><td>connect</td><td>a page prints &quot;connected&quot;</td></tr><tr><td>2</td><td><code>index.php</code></td><td>list all students in a table</td><td>you see 5 rows</td></tr><tr><td>3</td><td><code>includes/header.php</code> + <code>footer.php</code></td><td>shared layout</td><td>both pages use them</td></tr><tr><td>4</td><td><code>add.php</code></td><td>a form that inserts</td><td>a new student appears in the list</td></tr><tr><td>5</td><td><code>add.php</code></td><td>validation + error messages</td><td>an empty form shows errors, not a crash</td></tr><tr><td>6</td><td><code>edit.php</code></td><td>load one student, save changes</td><td>you can change a grade</td></tr><tr><td>7</td><td><code>delete.php</code></td><td>delete with a confirm</td><td>a student disappears</td></tr><tr><td>8</td><td><code>index.php</code></td><td>search box</td><td>searching &quot;Fat&quot; finds Fatima</td></tr><tr><td>9</td><td><code>index.php</code></td><td>statistics box</td><td>total / average / passed</td></tr></tbody></table></div>
+<p>Copy nothing. When you are stuck, open <code>../../09-mysql/04-crud.php</code>, understand the line you need, close it, and write your own.</p>
+<h2>The rules you may not break</h2>
+<pre class="lang-php"><code>// every user value -&gt; prepared statement
+$stmt = mysqli_prepare($conn, &quot;SELECT * FROM students WHERE id = ?&quot;);
+mysqli_stmt_bind_param($stmt, &quot;i&quot;, $id);
+
+// every printed value -&gt; escaped
+echo htmlspecialchars($row[&quot;name&quot;]);
+
+// every id from a URL -&gt; forced to a number
+$id = (int)($_GET[&quot;id&quot;] ?? 0);
+
+// after every save -&gt; redirect then exit
+header(&quot;Location: index.php?saved=1&quot;);
+exit;</code></pre>
+<h2>When you think you are done</h2>
+<p>Go through the hand-in checklist in <code>../README.md</code>. Then try to break your own site: empty forms, <code>?id=99999</code>, <code>?id=abc</code>, a name of 500 characters, <code>&lt;script&gt;alert(1)&lt;/script&gt;</code>. Anything that crashes is a bug you still have to fix.</p>
+<h2>Then write NOTES.md</h2>
+<p>Three questions, honest answers:</p>
+<ol><li>What was the hardest part?</li><li>Which error took you longest, and what was it in the end?</li><li>What would you add with another week?</li></ol>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=4"></script>

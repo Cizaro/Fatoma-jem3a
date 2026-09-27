@@ -1,0 +1,90 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>🟢 World 1 — The Tag</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>🟢 World 1 — The Tag</h1>
+<h3>Stages 1–5 · about 20 minutes</h3>
+<p>You will not learn <em>programming</em> in this world. You&#x27;ll learn <strong>where things go</strong>: the tag, the quotes, the semicolon. Boring. Also the reason most beginners give up, so we do it first and slowly.</p>
+<p>Practice file: <code>stages/practice/world-1.php</code> — run it with <code>php stages/practice/world-1.php</code></p>
+<hr>
+<h2>🟢 Stage 1 — Open the door</h2>
+<p><strong>🎯 Goal:</strong> get PHP to notice your file at all.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>&lt;?php</code></pre>
+<p>That&#x27;s it. That&#x27;s the whole stage. Every PHP file starts with those five characters. Anything you write <em>before</em> it gets sent out as plain text; anything after it is code.</p>
+<p>You don&#x27;t need a closing <code>?&gt;</code> if the file is only PHP. Leaving it off is actually the professional habit — a stray blank line after <code>?&gt;</code> causes a real bug you&#x27;ll meet in lesson 8.</p>
+<p><strong>✅ Clear the stage</strong> Open <code>practice/world-1.php</code>. Check the very first line is <code>&lt;?php</code>. Run the file. Nothing happens — <strong>and that&#x27;s a pass.</strong> No error means PHP read your file happily.</p>
+<p><strong>💀 If it breaks</strong> Seeing your code printed in the terminal like text? Your <code>&lt;?php</code> is missing or misspelled. It is lowercase. There is no space between <code>&lt;?</code> and <code>php</code>.</p>
+<hr>
+<h2>🟢 Stage 2 — Make it speak</h2>
+<p><strong>🎯 Goal:</strong> print something.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>echo &quot;Hello&quot;;</code></pre>
+<p>Four pieces, and every one matters:</p>
+<div class="tablewrap"><table><thead><tr><th>Piece</th><th>What it is</th></tr></thead><tbody><tr><td><code>echo</code></td><td>the command — &quot;print this&quot;</td></tr><tr><td>a space</td><td>between the command and what you&#x27;re printing</td></tr><tr><td><code>&quot;Hello&quot;</code></td><td>the text, <strong>in double quotes</strong></td></tr><tr><td><code>;</code></td><td>the full stop</td></tr></tbody></table></div>
+<p><strong>✅ Clear the stage</strong> Print your own name. One line.</p>
+<p><strong>💀 If it breaks</strong> <code>Parse error: syntax error, unexpected ...</code> → you lost a quote or the semicolon. Look at the line number, then look at the <em>end</em> of that line.</p>
+<hr>
+<h2>🟢 Stage 3 — The full stop</h2>
+<p><strong>🎯 Goal:</strong> understand why one missing character kills the whole page.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>echo &quot;one&quot;;
+echo &quot;two&quot;;
+echo &quot;three&quot;;</code></pre>
+<p>Three statements. Three semicolons. PHP reads <code>;</code> as &quot;this instruction is finished&quot;. Without it, PHP glues your two lines into one nonsense instruction and refuses to run — <strong>and it refuses to run the whole file</strong>, not just that line.</p>
+<p>That&#x27;s why a blank page usually means a missing <code>;</code>.</p>
+<p><strong>✅ Clear the stage</strong> Write three <code>echo</code> lines. Run it — they all print, stuck together on one line. Now <strong>delete the semicolon on line 2</strong> and run it again. Read the error carefully. Notice it points at line <strong>3</strong>, not line 2 — because that&#x27;s where PHP got confused. Put it back.</p>
+<blockquote><p>That trick — &quot;the error says line 3, so look at line 2&quot; — will save you hours this year.</p></blockquote>
+<p><strong>💀 If it breaks</strong> It&#x27;s <em>supposed</em> to break in the middle of this stage. That&#x27;s the point.</p>
+<hr>
+<h2>🟢 Stage 4 — New lines</h2>
+<p><strong>🎯 Goal:</strong> stop everything printing on one line.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>echo &quot;one\n&quot;;
+echo &quot;two\n&quot;;</code></pre>
+<p><code>\n</code> means &quot;new line&quot;. It only works inside <strong>double</strong> quotes. Inside single quotes it prints the characters <code>\</code> and <code>n</code> literally.</p>
+<p><strong>✅ Clear the stage</strong> Print three lines that each appear on their own row:</p>
+<pre><code>Name: &lt;your name&gt;
+City: &lt;your city&gt;
+Year: 2026</code></pre>
+<p><strong>💀 If it breaks</strong> Seeing a literal <code>\n</code> in your output? You used single quotes. Swap to <code>&quot;</code> and it works.</p>
+<hr>
+<h2>🟢 Stage 5 — Notes to yourself</h2>
+<p><strong>🎯 Goal:</strong> write something PHP ignores.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>// this is a comment
+
+# this is also a comment
+
+/*
+   this comment
+   covers several lines
+*/</code></pre>
+<p>Comments are for humans. PHP skips them completely. You&#x27;ll use them to label your work, and — more often — to <strong>switch a line off</strong> without deleting it:</p>
+<pre class="lang-php"><code>echo &quot;this runs&quot;;
+// echo &quot;this does not&quot;;</code></pre>
+<p><strong>✅ Clear the stage</strong> Add a comment at the top of your practice file with your name and today&#x27;s date. Then comment out one of your <code>echo</code> lines, run it, and check it disappeared.</p>
+<p><strong>💀 If it breaks</strong> A comment can&#x27;t break. If something broke, it&#x27;s a leftover <code>;</code> or quote from an earlier stage.</p>
+<hr>
+<h2>👑 WORLD 1 BOSS</h2>
+<p>Using <strong>only</strong> what&#x27;s in this world — <code>&lt;?php</code>, <code>echo</code>, <code>&quot;...&quot;</code>, <code>\n</code>, <code>;</code>, <code>//</code> — produce exactly this output:</p>
+<pre><code>==============================
+        MY FIRST PHP
+==============================
+Name : &lt;your name&gt;
+City : &lt;your city&gt;
+==============================</code></pre>
+<p>Rules: one comment at the top saying what the file does, and every line of output must come from its own <code>echo</code>.</p>
+<p><strong>Cleared it?</strong> Tick World 1 in <code>../stages.html</code> and go to World 2.</p>
+<hr>
+<p>◀ [back to the map](README.md) · ▶ [World 2 — Boxes](world-2-boxes.md)</p>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=4"></script>

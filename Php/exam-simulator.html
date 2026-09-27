@@ -208,7 +208,7 @@ footer a{color:var(--accent);text-decoration:none;margin:0 7px}
 
 <footer>
   <a data-path="index.html">course home</a>·
-  <a data-path="quizzes/final-exam.md">paper version</a>·
+  <a data-path="app/docs/final-exam.html">paper version</a>·
   <a data-path="flashcards.html">flashcards</a>·
   <a data-path="games/php-arcade.html">arcade</a>·
   <a data-path="roadmap.html">roadmap</a>
@@ -375,6 +375,16 @@ const PUBLISHED = {
 };
 const link = path => LOCAL ? path : (PUBLISHED[path] || REPO + path);
 const linkAttrs = path => LOCAL ? "" : ' target="_blank" rel="noopener"';
+
+/* Every lesson folder has a built page now, so the weak-section diagnosis
+   links to that instead of to the raw lesson.md a browser would print. */
+const LESSON_PAGE = {
+  "00-algorithms":"algorithms", "00-setup":"setup", "01-basics":"basics",
+  "02-datatypes":"datatypes", "03-operators":"operators", "04-conditions":"conditions",
+  "05-loops":"loops", "06-arrays":"arrays", "07-functions":"functions",
+  "08-forms":"forms", "09-mysql":"mysql", "10-dynamic-page":"dynamic"
+};
+const lessonHref = dir => LESSON_PAGE[dir] ? "app/lessons/" + LESSON_PAGE[dir] + ".html" : link(dir + "/");
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -660,7 +670,7 @@ function paintResults(){
         <ul>${lost.map(q => `<li>
           <b style="color:var(--ink);font-family:var(--mono)">Q${q.n}</b> — ${q.label}
           <span style="color:var(--ink-3)">(${round(awarded[q.n] || 0)}/${q.marks})</span>
-          → <a href="${link(q.lesson + "/lesson.md")}"${linkAttrs()}>${q.lesson}/</a></li>`).join("")}</ul>`
+          → <a href="${lessonHref(q.lesson)}"${linkAttrs()}>${q.lesson}/</a></li>`).join("")}</ul>`
       : `<p style="margin:9px 0 0;color:var(--accent);font-weight:600">
           Full marks. Nothing to revise — go and do something else.</p>`}
     </div>

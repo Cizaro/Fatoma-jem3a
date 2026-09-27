@@ -1,0 +1,109 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>🔴 World 5 — Repeats</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>🔴 World 5 — Repeats</h1>
+<h3>Stages 21–25 · about 30 minutes</h3>
+<p>You will never write the same line 100 times. You&#x27;ll write it once and tell PHP how many times to do it. That&#x27;s a loop, and it&#x27;s the point where your code starts doing more than you typed.</p>
+<p>Practice file: <code>stages/practice/world-5.php</code></p>
+<hr>
+<h2>🔴 Stage 21 — The three parts</h2>
+<p><strong>🎯 Goal:</strong> read a <code>for</code> loop out loud.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>for ($i = 1; $i &lt;= 5; $i++) {
+    echo $i;
+}
+// 12345</code></pre>
+<p>Three things inside the round brackets, separated by <strong>semicolons</strong> (not commas):</p>
+<div class="tablewrap"><table><thead><tr><th>Part</th><th>Code</th><th>Runs</th></tr></thead><tbody><tr><td>1. start</td><td><code>$i = 1</code></td><td><strong>once</strong>, at the very beginning</td></tr><tr><td>2. check</td><td><code>$i &lt;= 5</code></td><td><strong>before every round</strong>. False → stop.</td></tr><tr><td>3. step</td><td><code>$i++</code></td><td><strong>after every round</strong></td></tr></tbody></table></div>
+<p>Trace it out loud, slowly, once:</p>
+<blockquote><p>i is 1 · is 1 ≤ 5? yes · print 1 · i becomes 2 · is 2 ≤ 5? yes · print 2 · i becomes 3 · … · i becomes 6 · is 6 ≤ 5? <strong>no</strong> · stop.</p></blockquote>
+<p>Do that out loud once and you&#x27;ll never be confused by a <code>for</code> loop again.</p>
+<p><code>$i</code> is just a variable name — <code>i</code> for &quot;index&quot;. You could call it <code>$row</code>.</p>
+<p><strong>✅ Clear the stage</strong> Print 1 to 10, each on its own line. Then change <code>&lt;=</code> to <code>&lt;</code> and see what you lose.</p>
+<p><strong>💀 If it breaks</strong> Commas instead of semicolons inside <code>for(...)</code> is a parse error. It&#x27;s <code>;</code> between the parts.</p>
+<hr>
+<h2>🔴 Stage 22 — Backwards and in steps</h2>
+<p><strong>🎯 Goal:</strong> the loop doesn&#x27;t have to go up by one.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>for ($i = 10; $i &gt;= 1; $i--) { }    // 10 down to 1
+for ($i = 0; $i &lt;= 20; $i += 5) { } // 0, 5, 10, 15, 20
+for ($i = 2; $i &lt;= 10; $i += 2) { } // even numbers</code></pre>
+<p>When you count down, the <strong>check flips too</strong> — <code>$i &gt;= 1</code>, not <code>&lt;=</code>. Forgetting that gives you a loop that never runs at all (which looks like your code did nothing).</p>
+<p><strong>✅ Clear the stage</strong> Print a countdown from 5 to 1 on one line, then <code>LIFT OFF</code>. Then print every multiple of 3 from 3 to 30.</p>
+<p><strong>💀 If it breaks</strong> Nothing printing? Your start and check disagree — you&#x27;re counting down with <code>&lt;=</code>, or up with <code>&gt;=</code>.</p>
+<hr>
+<h2>🔴 Stage 23 — while, and the frozen laptop</h2>
+<p><strong>🎯 Goal:</strong> loop when you don&#x27;t know how many times.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>$i = 1;
+while ($i &lt;= 3) {
+    echo $i;
+    $i++;          // ← IF YOU FORGET THIS, IT NEVER STOPS
+}</code></pre>
+<p>A <code>for</code> loop keeps its three parts together where you can see them. A <code>while</code> loop scatters them: the start is above, the check is in the brackets, and <strong>the step is your job</strong>, inside the body.</p>
+<p>🚨 If nothing inside the loop changes the condition, it runs <strong>forever</strong>. The terminal hangs, or the page never loads.</p>
+<p><strong>Press <code>Ctrl + C</code> in the terminal to kill it.</strong> Every single programmer has done this. You&#x27;ll do it today, on purpose, in this stage.</p>
+<p><strong>✅ Clear the stage</strong></p>
+<ol><li>Write the loop above and check it prints <code>123</code>.</li><li>Now <strong>delete the <code>$i++</code></strong> and run it. Watch it spin. Press <code>Ctrl + C</code>.</li><li>Put it back.</li></ol>
+<p>Meeting the infinite loop deliberately, once, is much better than meeting it by accident at 2am before a deadline.</p>
+<p><strong>💀 If it breaks</strong> It&#x27;s supposed to. That&#x27;s step 2.</p>
+<hr>
+<h2>🔴 Stage 24 — Skip and stop</h2>
+<p><strong>🎯 Goal:</strong> two words that control the loop from inside.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>for ($i = 1; $i &lt;= 10; $i++) {
+    if ($i == 5) break;      // leave the loop completely
+    echo $i;                 // 1234
+}
+
+for ($i = 1; $i &lt;= 5; $i++) {
+    if ($i == 3) continue;   // skip THIS round only
+    echo $i;                 // 1245
+}</code></pre>
+<div class="tablewrap"><table><thead><tr><th>Word</th><th>Means</th></tr></thead><tbody><tr><td><code>break</code></td><td>done, get me out of this loop</td></tr><tr><td><code>continue</code></td><td>skip the rest of this round, go to the next one</td></tr></tbody></table></div>
+<p><strong>✅ Clear the stage</strong> Print 1 to 20, but skip 13 (<code>continue</code>) and stop completely at 18 (<code>break</code>). Expected: <code>1 2 ... 12 14 15 16 17</code>.</p>
+<p><strong>💀 If it breaks</strong> <code>break</code> inside a <code>switch</code> inside a loop breaks the <em>switch</em>, not the loop. Worth knowing before it confuses you later.</p>
+<hr>
+<h2>🔴 Stage 25 — A loop inside a loop</h2>
+<p><strong>🎯 Goal:</strong> draw something two-dimensional.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>for ($row = 1; $row &lt;= 3; $row++) {
+    for ($col = 1; $col &lt;= 3; $col++) {
+        echo &quot;*&quot;;
+    }
+    echo &quot;\n&quot;;        // ← note: OUTSIDE the inner loop
+}</code></pre>
+<pre><code>***
+***
+***</code></pre>
+<p>The key idea: <strong>the inner loop finishes completely for every single round of the outer one.</strong> Outer round 1 → inner runs 3 times → newline. Outer round 2 → inner runs 3 times again.</p>
+<p>Where you put that <code>echo &quot;\n&quot;</code> decides whether you get a square or one long line. That is the whole trick, and it&#x27;s worth moving it around once to see both results.</p>
+<p><strong>✅ Clear the stage</strong></p>
+<ol><li>A 5×5 square of stars.</li><li>Then a triangle:</li></ol>
+<pre><code>*
+**
+***
+****
+*****</code></pre>
+<p>(hint: make the inner loop run <code>$row</code> times instead of a fixed number — or use <code>str_repeat</code>)</p>
+<p><strong>💀 If it breaks</strong> Everything on one line? Your <code>\n</code> is inside the inner loop, or missing.</p>
+<hr>
+<h2>👑 WORLD 5 BOSS</h2>
+<p><strong>Part 1 — the times table.</strong> Print the full 9×9 multiplication table, lined up in columns. <code>printf(&quot;%4d&quot;, $row * $col)</code> handles the spacing.</p>
+<p><strong>Part 2 — FizzBuzz.</strong> For the numbers 1 to 30:</p>
+<ul><li>divisible by 3 <strong>and</strong> 5 → <code>FizzBuzz</code></li><li>divisible by 3 → <code>Fizz</code></li><li>divisible by 5 → <code>Buzz</code></li><li>otherwise → the number</li></ul>
+<p>⚠️ Think hard about the <strong>order</strong> of those conditions. Get it wrong and <code>15</code> prints <code>Fizz</code>. This exact question has been used in real job interviews for twenty years.</p>
+<p><strong>Cleared both?</strong> ▶ [World 6 — Containers](world-6-containers.md)</p>
+<hr>
+<p>◀ [World 4](world-4-decisions.md) · [the map](README.md)</p>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=4"></script>

@@ -1,0 +1,31 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lesson 8 — YOUR TURN</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>Lesson 8 — YOUR TURN</h1>
+<p>Start the server first:</p>
+<pre class="lang-bash"><code>php -S localhost:8000</code></pre>
+<h3>Exercise 1 — a greeting form</h3>
+<p>Make a new file <code>my-form.php</code>. It asks for a <strong>first name</strong> and a <strong>country</strong>, and when you press the button it prints: <code>Hello &lt;name&gt;, so you are from &lt;country&gt;!</code> Use one file (self-submitting).</p>
+<h3>Exercise 2 — a calculator</h3>
+<p><code>calculator.php</code>: two number inputs and a <code>&lt;select&gt;</code> with <code>+ - * /</code>. When submitted, show the result. Handle division by zero with a clear message instead of an error.</p>
+<h3>Exercise 3 — validation</h3>
+<p>Add validation to Exercise 1: both fields are required, and the name must be at least 2 letters. Show the errors in a red box, like <code>register.php</code> does.</p>
+<h3>Exercise 4 — GET instead of POST</h3>
+<p>Copy Exercise 1 into <code>my-form-get.php</code>, change the method to <code>get</code>, and watch the URL. Then answer in a comment: why is POST better for a password?</p>
+<h3>Exercise 5 — keep the values</h3>
+<p>Make sure that when there is an error, whatever the user typed is still in the inputs. (hint: <code>value=&quot;&lt;?= htmlspecialchars($name) ?&gt;&quot;</code>)</p>
+<h3>Exercise 6 (challenge) — a grade form</h3>
+<p>A form takes a student name and 3 marks. On submit it shows: the average (2 decimals), the letter grade, and Pass/Fail. Use <strong>functions</strong> from Lesson 7 for the average and the grade — do not put the logic in the HTML.</p>
+<h3>Exercise 7 (challenge) — a quiz page</h3>
+<p>5 multiple-choice PHP questions with radio buttons. On submit, show the score out of 5 and which ones were wrong. Store the correct answers in an <strong>array</strong> (Lesson 6).</p>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=4"></script>

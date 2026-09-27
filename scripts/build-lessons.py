@@ -330,6 +330,53 @@ def main():
         print("  built %-12s from %s" % (slug + ".html", folder))
     print("\n%d lesson pages in %s" % (len(built), OUT))
     build_quizzes()
+    build_docs()
+    build_docs()
+
+
+# Every other .md the site links to. A link to markdown shows the raw file
+# in a browser - hashes, backticks and all - which has now been reported
+# three times. Anything linked from a page gets built.
+DOCS = [
+    ("stages/world-1-the-tag.md",    "world-1-the-tag"),
+    ("stages/world-2-boxes.md",      "world-2-boxes"),
+    ("stages/world-3-numbers.md",    "world-3-numbers"),
+    ("stages/world-4-decisions.md",  "world-4-decisions"),
+    ("stages/world-5-repeats.md",    "world-5-repeats"),
+    ("stages/world-6-containers.md", "world-6-containers"),
+    ("stages/README.md",             "stages-guide"),
+    ("resources/cheatsheet.md",      "cheatsheet"),
+    ("resources/common-errors.md",   "common-errors"),
+    ("resources/youtube.md",         "videos"),
+    ("quizzes/final-exam.md",        "final-exam"),
+    ("quizzes/README.md",            "quizzes-guide"),
+    ("projects/README.md",           "projects-guide"),
+    ("README.md",                    "course-readme"),
+    ("08-forms/exercises.md",        "forms-exercises"),
+    ("projects/project-3-students/START-HERE.md", "project-3"),
+]
+
+
+def build_docs():
+    """Build every other linked .md into a page of the course."""
+    out_dir = os.path.join(PHP, "app", "docs")
+    os.makedirs(out_dir, exist_ok=True)
+    n = 0
+    for rel, slug in DOCS:
+        src = os.path.join(PHP, rel.replace("/", os.sep))
+        if not os.path.exists(src):
+            print("  skip (missing):", rel)
+            continue
+        md = io.open(src, encoding="utf-8").read()
+        title = slug.replace("-", " ").title()
+        for line in md.splitlines():
+            if line.startswith("# "):
+                title = line[2:].strip()
+                break
+        page = QUIZ_PAGE.format(title=html.escape(title), body=convert(md), nav="")
+        io.open(os.path.join(out_dir, slug + ".html"), "w", encoding="utf-8").write(page)
+        n += 1
+    print("%d doc pages in %s" % (n, out_dir))
 
 
 def build_quizzes():

@@ -263,16 +263,16 @@ footer a{text-decoration:none}
       <div>
         <h4>Lessons 9 and 10</h4>
         <p>Start MySQL in the XAMPP control panel, then import the .sql files through phpMyAdmin.</p>
-        <a data-path="00-setup/SETUP.md">Full setup</a>
+        <a data-path="app/lessons/setup.html">Full setup</a>
       </div>
     </div>
   </section>
 
   <footer>
-    <a data-path="README.md">Course README</a>
-    <a data-path="quizzes/README.md">Quizzes</a>
-    <a data-path="projects/README.md">Projects</a>
-    <a data-path="resources/cheatsheet.md">Cheat sheet</a>
+    <a data-path="app/docs/course-readme.html">Course README</a>
+    <a data-path="app/docs/quizzes-guide.html">Quizzes</a>
+    <a data-path="app/docs/projects-guide.html">Projects</a>
+    <a data-path="app/docs/cheatsheet.html">Cheat sheet</a>
     <button class="reset" id="resetBtn">Clear my progress</button>
   </footer>
 </main>
@@ -294,7 +294,7 @@ const COURSE = [
           "Euclid's GCD, traced by hand","Turning pseudocode into PHP"],
    arcade:"Match the Words",
    wall:"There is no PHP in this lesson and that is deliberate. It is also the part of the exam where marks are cheapest, because a flowchart cannot fail to compile."},
-  {id:"0", dir:"00-setup", file:"SETUP.md", name:"Setup", can:"Run a PHP file, and know why you cannot just double-click one.",
+  {id:"0", dir:"00-setup", file:"app/lessons/setup.html", name:"Setup", can:"Run a PHP file, and know why you cannot just double-click one.",
    steps:["What PHP actually is","The two ways to run it","The rules of a .php file","Write and run hello.php","Pick an editor"]}
 ]},
 
@@ -344,7 +344,7 @@ milestone:{name:"Project 2, To-Do List", path:"projects/project-2-todo/index.php
    steps:["The shape of a real PHP site","include and require","Passing data through the URL","Search, with LIKE and a prepared statement","No results, never an empty page","Redirect after saving","The checklist of a good page"],
    arcade:"Code Builder", deck:"deck 6, Forms and security"}
 ],
-milestone:{name:"Project 3, Student Manager", path:"projects/project-3-students/START-HERE.md",
+milestone:{name:"Project 3, Student Manager", path:"app/docs/project-3.html",
   desc:"The finish line. A complete database driven site, built start to finish by you."}}
 ];
 
@@ -400,7 +400,7 @@ const sid = (les, i) => les.id + "." + i;
    folder or served as the live site, so the lesson never has to be read as
    raw markdown again. Folders map to the slugs scripts/build-lessons.py uses. */
 const LESSON_PAGE = {
-  "00-algorithms":"algorithms", "01-basics":"basics", "02-datatypes":"datatypes",
+  "00-algorithms":"algorithms", "00-setup":"setup", "01-basics":"basics", "02-datatypes":"datatypes",
   "03-operators":"operators", "04-conditions":"conditions", "05-loops":"loops",
   "06-arrays":"arrays", "07-functions":"functions", "08-forms":"forms",
   "09-mysql":"mysql", "10-dynamic-page":"dynamic"
@@ -409,17 +409,21 @@ const LESSON_PAGE = {
 function toolRow(les){
   const t = [];
   const page = LESSON_PAGE[les.dir];
-  if (page && !les.file){
+  if (page){
     t.push(`<a class="tool key" data-path="app/lessons/${page}.html"
               href="app/lessons/${page}.html">Read the lesson</a>`);
   } else {
-    t.push(`<a class="tool key" href="${link(les.dir + "/" + (les.file || "lesson.md"))}">Read the lesson</a>`);
+    t.push(`<a class="tool key" href="${link(les.dir + "/")}">Read the lesson</a>`);
   }
   if (!les.file){
     t.push(`<a class="tool" href="${link(les.dir + "/examples.php")}">Examples</a>`);
-    t.push(`<a class="tool" href="${link(les.dir + "/exercises." + (les.id === "8" ? "md" : "php"))}">Exercises</a>`);
+    /* lesson 8's exercises are written up rather than coded, so they have a
+       built page; everything else runs as PHP */
+    t.push(les.id === "8"
+      ? `<a class="tool" href="app/docs/forms-exercises.html">Exercises</a>`
+      : `<a class="tool" href="${link(les.dir + "/exercises.php")}">Exercises</a>`);
     const quiz = les.quiz || ("lesson-" + String(les.id).padStart(2,"0"));
-    t.push(`<a class="tool" href="${link("quizzes/mini-quizzes/" + quiz + ".md")}">Mini quiz</a>`);
+    t.push(`<a class="tool" href="app/quiz.html?q=${quiz}">Mini quiz</a>`);
   }
   if (les.arcade) t.push(`<a class="tool" href="${link("games/php-arcade.html")}">Arcade, ${esc(les.arcade)}</a>`);
   if (les.deck)   t.push(`<a class="tool" href="${link("flashcards.html")}">Cards, ${esc(les.deck)}</a>`);

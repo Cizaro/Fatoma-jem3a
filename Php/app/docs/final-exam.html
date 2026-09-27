@@ -1,0 +1,134 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Final Exam — PHP &amp; MySQL</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>Final Exam — PHP &amp; MySQL</h1>
+<p><strong>Covers everything · 40 marks · 90 minutes · closed book</strong></p>
+<p>Do this under real exam conditions: no lesson files, no internet, no phone. Set a timer. Doing it &quot;roughly&quot; tells you nothing; doing it properly tells you exactly what to revise.</p>
+<blockquote><p><strong>Don&#x27;t want to set a timer?</strong> [<code>../exam-simulator.html</code>](../exam-simulator.html) is this exact paper with a 90-minute countdown built in, and it marks itself. Do this one on paper first with your instructor; use the simulator for your second run.</p></blockquote>
+<p>Name: ______________  Time started: ______  Score: ____ / 40</p>
+<hr>
+<h2>Section A — Multiple choice (10 marks, 1 each)</h2>
+<p><strong>1.</strong> PHP code is executed on: a) the browser b) the server c) the database d) the router</p>
+<p><strong>2.</strong> Which is <strong>not</strong> a valid variable name? a) <code>$_id</code> b) <code>$myAge</code> c) <code>$2nd</code> d) <code>$total_price</code></p>
+<p><strong>3.</strong> <code>var_dump(5 === &quot;5&quot;)</code> outputs: a) <code>bool(true)</code> b) <code>bool(false)</code> c) <code>int(5)</code> d) an error</p>
+<p><strong>4.</strong> <code>echo 15 % 4;</code> outputs: a) <code>3.75</code> b) <code>3</code> c) <code>4</code> d) <code>60</code></p>
+<p><strong>5.</strong> Which loop is designed for arrays? a) <code>for</code> b) <code>while</code> c) <code>foreach</code> d) <code>do...while</code></p>
+<p><strong>6.</strong> In <code>$a = [&quot;x&quot;,&quot;y&quot;,&quot;z&quot;]</code>, the value <code>&quot;z&quot;</code> is at index: a) 0 b) 1 c) 2 d) 3</p>
+<p><strong>7.</strong> Which sends form data invisibly? a) <code>GET</code> b) <code>POST</code> c) <code>PUT</code> d) both the same</p>
+<p><strong>8.</strong> Which SQL command changes existing rows? a) <code>SELECT</code> b) <code>INSERT</code> c) <code>UPDATE</code> d) <code>ALTER</code></p>
+<p><strong>9.</strong> <code>htmlspecialchars()</code> protects against: a) SQL injection b) XSS c) slow queries d) wrong passwords</p>
+<p><strong>10.</strong> A prepared statement protects against: a) XSS b) SQL injection c) infinite loops d) parse errors</p>
+<hr>
+<h2>Section B — What does it print? (8 marks, 2 each)</h2>
+<p><strong>11.</strong></p>
+<pre class="lang-php"><code>$a = 4;
+$b = &quot;4&quot;;
+if ($a == $b) echo &quot;same &quot;;
+if ($a === $b) echo &quot;identical&quot;;</code></pre>
+<p>Output: ______________________</p>
+<p><strong>12.</strong></p>
+<pre class="lang-php"><code>for ($i = 1; $i &lt;= 6; $i++) {
+    if ($i % 2 != 0) continue;
+    echo $i;
+}</code></pre>
+<p>Output: ______________________</p>
+<p><strong>13.</strong></p>
+<pre class="lang-php"><code>$marks = [12, 18, 6];
+echo count($marks) . &quot;-&quot; . array_sum($marks) . &quot;-&quot; . max($marks);</code></pre>
+<p>Output: ______________________</p>
+<p><strong>14.</strong></p>
+<pre class="lang-php"><code>function f($n) {
+    if ($n &gt; 10) return &quot;big&quot;;
+    return &quot;small&quot;;
+    echo &quot;never&quot;;
+}
+echo f(11) . f(2);</code></pre>
+<p>Output: ______________________</p>
+<hr>
+<h2>Section C — Find and fix the errors (6 marks, 2 each)</h2>
+<p><strong>15.</strong> Two errors. Circle them and write the corrected code.</p>
+<pre class="lang-php"><code>$name = &quot;Rana&quot;
+echo &quot;Hello $Name&quot;;</code></pre>
+<p>Corrected: <code>_________________________________</code></p>
+<p><strong>16.</strong> One error, and the code runs forever. What and why?</p>
+<pre class="lang-php"><code>$i = 0;
+while ($i &lt; 5) {
+    echo $i;
+}</code></pre>
+<p>Answer: ______________________________________</p>
+<p><strong>17.</strong> One security error. What is it, and what is the fix?</p>
+<pre class="lang-php"><code>$id = $_GET[&quot;id&quot;];
+$result = mysqli_query($conn, &quot;SELECT * FROM users WHERE id = $id&quot;);</code></pre>
+<p>Answer: ______________________________________</p>
+<hr>
+<h2>Section D — Write the code (10 marks)</h2>
+<p><strong>18.</strong> <em>(3 marks)</em> Write a function <code>letterGrade($mark)</code> that returns: <code>A</code> for 18+, <code>B</code> for 16+, <code>C</code> for 14+, <code>D</code> for 10+, and <code>F</code> otherwise.</p>
+<pre class="lang-php"><code>_________________________________
+_________________________________
+_________________________________
+_________________________________
+_________________________________</code></pre>
+<p><strong>19.</strong> <em>(3 marks)</em> Given the array below, write a <code>foreach</code> that prints each student&#x27;s name, their grade, and <code>Pass</code> or <code>Fail</code> (pass = 10 or more).</p>
+<pre class="lang-php"><code>$class = [
+    [&quot;name&quot; =&gt; &quot;Rana&quot;, &quot;grade&quot; =&gt; 17],
+    [&quot;name&quot; =&gt; &quot;Sara&quot;, &quot;grade&quot; =&gt; 8],
+];</code></pre>
+<pre class="lang-php"><code>_________________________________
+_________________________________
+_________________________________
+_________________________________</code></pre>
+<p><strong>20.</strong> <em>(4 marks)</em> Write a complete self-submitting form page that: asks for a name, checks it is not empty, and prints <code>Welcome &lt;name&gt;</code> safely.</p>
+<pre class="lang-php"><code>_________________________________
+_________________________________
+_________________________________
+_________________________________
+_________________________________
+_________________________________
+_________________________________</code></pre>
+<hr>
+<h2>Section E — Database (6 marks)</h2>
+<p><strong>21.</strong> <em>(2 marks)</em> Write the SQL that creates a table <code>books</code> with: an auto id, a title (max 120 chars), an author, and a year.</p>
+<pre class="lang-sql"><code>_________________________________
+_________________________________
+_________________________________
+_________________________________</code></pre>
+<p><strong>22.</strong> <em>(2 marks)</em> Write the SQL that finds every book published after 2020, newest first.</p>
+<pre class="lang-sql"><code>_________________________________</code></pre>
+<p><strong>23.</strong> <em>(2 marks)</em> Write the PHP that connects to a database called <code>library</code> and prints every book title, using a prepared statement is not required here.</p>
+<pre class="lang-php"><code>_________________________________
+_________________________________
+_________________________________
+_________________________________</code></pre>
+<hr>
+<h2>Marking</h2>
+<div class="tablewrap"><table><thead><tr><th></th><th></th></tr></thead><tbody><tr><td>34–40</td><td>Excellent — you&#x27;re ready</td></tr><tr><td>27–33</td><td>Good — revise the sections you lost marks in</td></tr><tr><td>20–26</td><td>Pass, but shaky — redo the mini-quizzes for the weak lessons</td></tr><tr><td>under 20</td><td>Don&#x27;t panic. Find which <em>section</em> you lost marks in and redo that lesson only.</td></tr></tbody></table></div>
+<p><strong>Write down which question numbers you got wrong.</strong> That list, not the score, is your revision plan.</p>
+<hr>
+<details>
+<summary><b>✅ Check your answers</b> — after your instructor has marked it</summary>
+<br>
+<p><strong>Mark it with your instructor the first time.</strong> Open this only for your second run, during revision week.</p>
+<p><strong>Section A</strong> — 1-b · 2-c · 3-b · 4-b · 5-c · 6-c · 7-b · 8-c · 9-b · 10-b</p>
+<p>Questions 9 and 10 sit together on purpose: <code>htmlspecialchars()</code> protects what you <strong>print</strong> (XSS). Prepared statements protect what goes <strong>into a query</strong> (SQL injection). If you swapped them, re-read lesson 8 and lesson 9.</p>
+<p><strong>Section B</strong></p>
+<ul><li><strong>11</strong> — <code>same </code> only. <code>4 === &quot;4&quot;</code> is false, so the second <code>if</code> never fires.</li><li><strong>12</strong> — <code>246</code>. <code>continue</code> skips the odd numbers.</li><li><strong>13</strong> — <code>3-36-18</code></li><li><strong>14</strong> — <code>bigsmall</code>. The <code>echo &quot;never&quot;</code> after <code>return</code> can never run.</li></ul>
+<p><strong>Section C</strong></p>
+<ul><li><strong>15</strong> — missing <code>;</code> after <code>&quot;Rana&quot;</code>, and <code>$Name</code> should be <code>$name</code> (case sensitive).</li><li><strong>16</strong> — nothing changes <code>$i</code>, so <code>$i &lt; 5</code> stays true forever: an infinite loop. Add <code>$i++;</code> inside the braces.</li><li><strong>17</strong> — the <code>$_GET</code> value goes straight into the SQL: <strong>SQL injection</strong>. <code></code><code>php $stmt = mysqli_prepare($conn, &quot;SELECT * FROM users WHERE id = ?&quot;); mysqli_stmt_bind_param($stmt, &quot;i&quot;, $id); mysqli_stmt_execute($stmt); </code><code></code></li></ul>
+<p><strong>Section D</strong></p>
+<ul><li><strong>18</strong> <code></code><code>php function letterGrade($mark) { if ($mark &gt;= 18) return &quot;A&quot;; if ($mark &gt;= 16) return &quot;B&quot;; if ($mark &gt;= 14) return &quot;C&quot;; if ($mark &gt;= 10) return &quot;D&quot;; return &quot;F&quot;; } </code><code></code> The order is part of the answer. Reversed, every mark comes back as <code>D</code>.</li><li><strong>19</strong> <code></code><code>php foreach ($class as $student) { $result = $student[&quot;grade&quot;] &gt;= 10 ? &quot;Pass&quot; : &quot;Fail&quot;; echo $student[&quot;name&quot;] . &quot; - &quot; . $student[&quot;grade&quot;] . &quot; - &quot; . $result . &quot;\n&quot;; } </code><code></code></li><li><strong>20</strong> — four things had to be there: a form whose input has a <code>name</code>, the <code>REQUEST_METHOD</code> check, an empty check, and <code>htmlspecialchars()</code> on the output. <code></code><code>php &lt;?php $name = &quot;&quot;; $error = &quot;&quot;; if ($_SERVER[&quot;REQUEST_METHOD&quot;] === &quot;POST&quot;) { $name = trim($_POST[&quot;name&quot;] ?? &quot;&quot;); if ($name === &quot;&quot;) $error = &quot;Name is required&quot;; } ?&gt; &lt;form method=&quot;post&quot;&gt; &lt;input type=&quot;text&quot; name=&quot;name&quot;&gt; &lt;button type=&quot;submit&quot;&gt;Send&lt;/button&gt; &lt;/form&gt; &lt;?php if ($error) echo $error; elseif ($name) echo &quot;Welcome &quot; . htmlspecialchars($name); </code><code></code> Any working shape counts. The marks are for the four ideas, not for matching this layout.</li></ul>
+<p><strong>Section E</strong></p>
+<ul><li><strong>21</strong> <code></code><code>sql CREATE TABLE books ( id     INT AUTO_INCREMENT PRIMARY KEY, title  VARCHAR(120) NOT NULL, author VARCHAR(100), year   INT ); </code><code></code></li><li><strong>22</strong> — <code>SELECT * FROM books WHERE year &gt; 2020 ORDER BY year DESC;</code></li><li><strong>23</strong> <code></code><code>php $conn = mysqli_connect(&quot;localhost&quot;, &quot;root&quot;, &quot;&quot;, &quot;library&quot;); $result = mysqli_query($conn, &quot;SELECT title FROM books&quot;); while ($row = mysqli_fetch_assoc($result)) { echo $row[&quot;title&quot;] . &quot;&lt;br&gt;&quot;; } </code><code></code></li></ul>
+<hr>
+<p><strong>Now do the part that matters:</strong> write down the numbers you got wrong, and look at which <strong>section</strong> they came from. That list is your revision plan — much more useful than the score.</p>
+</details>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=4"></script>

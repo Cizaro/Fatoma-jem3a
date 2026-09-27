@@ -1,0 +1,51 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Projects</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>Projects</h1>
+<p>Three projects, getting harder. Each one is something you could actually show someone.</p>
+<div class="tablewrap"><table><thead><tr><th>#</th><th>Project</th><th>Needs</th><th>Time</th></tr></thead><tbody><tr><td>1</td><td>Grade Calculator</td><td>Lessons 1–7 (terminal only)</td><td>2–3 h</td></tr><tr><td>2</td><td>To-Do List</td><td>Lesson 8 (forms + sessions)</td><td>3–4 h</td></tr><tr><td>3</td><td>Student Management System</td><td>Lessons 9–10 (MySQL)</td><td>6–8 h</td></tr></tbody></table></div>
+<p><strong>Rule: no copying from the lesson files while you build.</strong> Look at them if you&#x27;re stuck, close them, then write it yourself. The looking-up is fine; the copy-pasting is what stops you learning.</p>
+<hr>
+<h2>Project 1 — Grade Calculator</h2>
+<p>📁 <code>project-1-grades/</code></p>
+<p>A terminal program that takes a class of students and produces a full report.</p>
+<p><strong>It must:</strong></p>
+<ul><li>[ ] Store at least 5 students with a name and 3 marks each (multidimensional array)</li><li>[ ] Use a <strong>function</strong> to calculate each student&#x27;s average</li><li>[ ] Use a <strong>function</strong> to turn an average into a letter grade (A/B/C/D/F)</li><li>[ ] Print a neat table: name, the 3 marks, the average, the letter, Pass/Fail</li><li>[ ] Print class statistics: class average, highest, lowest, how many passed</li><li>[ ] Show the name of the best student</li></ul>
+<p><strong>Stretch goals:</strong></p>
+<ul><li>Sort the table by average, best first</li><li>Add a <code>$weights</code> array so the 3 marks count differently (e.g. 20%, 30%, 50%)</li><li>Draw a little bar of <code>#</code> next to each average, one <code>#</code> per point</li></ul>
+<p>Run it with <code>php project-1-grades/grades.php</code>.</p>
+<hr>
+<h2>Project 2 — To-Do List</h2>
+<p>📁 <code>project-2-todo/</code></p>
+<p>A web page where you add tasks, tick them off, and delete them. No database yet — it uses <code>$_SESSION</code>, which remembers things while your browser is open.</p>
+<p><strong>It must:</strong></p>
+<ul><li>[ ] A form to add a task</li><li>[ ] Show all the tasks in a list</li><li>[ ] A &quot;done&quot; button that crosses a task out</li><li>[ ] A &quot;delete&quot; button that removes it</li><li>[ ] Show a counter: &quot;3 of 7 done&quot;</li><li>[ ] Refuse to add an empty task (with an error message)</li><li>[ ] Escape every task with <code>htmlspecialchars()</code> — try adding <code>&lt;b&gt;test&lt;/b&gt;</code> to prove it</li></ul>
+<p><strong>Stretch goals:</strong></p>
+<ul><li>A &quot;clear all done&quot; button</li><li>Filter buttons: all / active / done</li><li>A priority (low/normal/high) with a different colour each</li></ul>
+<p>Run the server (<code>php -S localhost:8000</code>) and open <code>project-2-todo/index.php</code>.</p>
+<hr>
+<h2>Project 3 — Student Management System ⭐</h2>
+<p>📁 <code>project-3-students/</code></p>
+<p>The real one. This is the shape of the project your teacher will ask for, and it covers chapters 10, 11 and 12 of your textbook in one go.</p>
+<p><strong>It must:</strong></p>
+<ul><li>[ ] A MySQL table <code>students</code> (id, name, email, major, grade)</li><li>[ ] A list page showing every student from the database</li><li>[ ] Add a student through a form, with validation</li><li>[ ] Edit an existing student</li><li>[ ] Delete a student, with a confirmation</li><li>[ ] Search by name</li><li>[ ] A statistics box: total students, class average, how many passed</li><li>[ ] <strong>Every</strong> query uses a prepared statement</li><li>[ ] <strong>Every</strong> printed value uses <code>htmlspecialchars()</code></li><li>[ ] A shared header and footer with <code>require</code></li></ul>
+<p><strong>Stretch goals:</strong></p>
+<ul><li>Filter by major with a <code>&lt;select&gt;</code></li><li>Sort by clicking a column heading</li><li>A simple login page before the admin part</li><li>Pagination: 5 students per page</li></ul>
+<p><strong>Hand-in checklist</strong> (read this before you say you&#x27;re finished):</p>
+<ul><li>[ ] Nothing crashes when a field is left empty</li><li>[ ] Nothing crashes on <code>detail.php?id=999999</code> or <code>?id=abc</code></li><li>[ ] The search finds nothing gracefully — a message, not a blank page</li><li>[ ] Refreshing after adding a student does not add it twice</li><li>[ ] <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> as a name shows as text, not a popup</li><li>[ ] The code has comments explaining the tricky parts</li><li>[ ] The file names are sensible and lowercase</li></ul>
+<hr>
+<h2>How to show your work</h2>
+<p>For each project, write a short <code>NOTES.md</code> in its folder answering:</p>
+<ol><li>What was the hardest part?</li><li>What error took you longest to fix, and what was it in the end?</li><li>What would you add if you had another week?</li></ol>
+<p>That&#x27;s not busywork — explaining your own code is exactly what an exam asks for.</p>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=4"></script>

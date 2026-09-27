@@ -1,0 +1,125 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>🟠 World 4 — Decisions</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>🟠 World 4 — Decisions</h1>
+<h3>Stages 16–20 · about 30 minutes</h3>
+<p>Everything so far ran top to bottom, every time. From here your code can <strong>choose</strong>. This is where programming actually starts.</p>
+<p>Practice file: <code>stages/practice/world-4.php</code></p>
+<hr>
+<h2>🟠 Stage 16 — The shape of an if</h2>
+<p><strong>🎯 Goal:</strong> get the brackets in the right places.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>if ($age &gt;= 18) {
+    echo &quot;adult&quot;;
+}</code></pre>
+<p>Learn the <strong>shape</strong> before the meaning:</p>
+<pre><code>if  ( condition )  {  code  }
+    └─ round ──┘      └ curly ┘</code></pre>
+<ul><li>Round brackets <code>( )</code> hold the <strong>question</strong></li><li>Curly brackets <code>{ }</code> hold the <strong>code that runs if the answer is yes</strong></li><li><strong>No semicolon after the <code>)</code></strong> — the block is the statement</li></ul>
+<p><strong>✅ Clear the stage</strong> Set <code>$age = 20;</code> and print &quot;adult&quot; only if they&#x27;re 18 or over. Then change it to <code>15</code> and run again — nothing prints, which is correct.</p>
+<p><strong>💀 If it breaks</strong> <code>if ($age &gt;= 18);</code> with a semicolon → the block detaches and <strong>always</strong> runs. This is a silent bug: no error, just wrong behaviour. Watch for it.</p>
+<hr>
+<h2>🟠 Stage 17 — The other path</h2>
+<p><strong>🎯 Goal:</strong> do something when the answer is no.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>if ($age &gt;= 18) {
+    echo &quot;adult&quot;;
+} else {
+    echo &quot;child&quot;;
+}</code></pre>
+<p><code>else</code> has no condition of its own — it means &quot;in every other case&quot;. The <code>}</code> of the <code>if</code> and the <code>else</code> sit on the same line. That&#x27;s convention, but matching everyone else&#x27;s convention is how your code stays readable.</p>
+<p>For more than two paths:</p>
+<pre class="lang-php"><code>if ($mark &gt;= 18) {
+    echo &quot;A&quot;;
+} elseif ($mark &gt;= 14) {
+    echo &quot;B&quot;;
+} elseif ($mark &gt;= 10) {
+    echo &quot;C&quot;;
+} else {
+    echo &quot;F&quot;;
+}</code></pre>
+<p>🚨 <strong>Order is everything.</strong> PHP checks top to bottom and <strong>stops at the first true one</strong>. Put <code>&gt;= 10</code> first and a mark of 19 prints &quot;C&quot; — because 19 <em>is</em> ≥ 10, and PHP never looks any further. <strong>Strictest condition first.</strong></p>
+<p><strong>✅ Clear the stage</strong> Write the grade chain above and test it with 19, 15, 11 and 4. Then deliberately move <code>&gt;= 10</code> to the top, run it with 19, and watch it break. Put it back.</p>
+<p><strong>💀 If it breaks</strong> Everything getting the same answer? Your conditions are in the wrong order.</p>
+<hr>
+<h2>🟠 Stage 18 — Comparing</h2>
+<p><strong>🎯 Goal:</strong> ask the right question.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<div class="tablewrap"><table><thead><tr><th>Symbol</th><th>Asks</th></tr></thead><tbody><tr><td><code>==</code></td><td>are these the same value?</td></tr><tr><td><code>===</code></td><td>same value <strong>and</strong> same type?</td></tr><tr><td><code>!=</code></td><td>are they different?</td></tr><tr><td><code>&gt;</code> <code>&lt;</code></td><td>bigger / smaller</td></tr><tr><td><code>&gt;=</code> <code>&lt;=</code></td><td>bigger or equal / smaller or equal</td></tr></tbody></table></div>
+<p>🚨 <strong>The single most common beginner bug in any language:</strong></p>
+<pre class="lang-php"><code>$x = 5;      // PUT 5 into x
+$x == 5;     // IS x equal to 5?</code></pre>
+<p>One <code>=</code> <strong>changes</strong> the variable. Two <code>==</code> <strong>ask a question</strong>. And this runs fine:</p>
+<pre class="lang-php"><code>if ($x = 100) {      // ← assigns 100, then treats 100 as &quot;true&quot;
+    echo &quot;always prints&quot;;
+}</code></pre>
+<p>No error. Just permanently wrong. When an <code>if</code> behaves insanely, check this first.</p>
+<p>And the <code>===</code> difference:</p>
+<pre class="lang-php"><code>var_dump(5 == &quot;5&quot;);    // true  — same value
+var_dump(5 === &quot;5&quot;);   // false — int vs string</code></pre>
+<p><strong>✅ Clear the stage</strong> <code>var_dump()</code> each of these, predicting first: <code>5 == 5</code> · <code>5 == &quot;5&quot;</code> · <code>5 === &quot;5&quot;</code> · <code>5 != 4</code> · <code>&quot;abc&quot; == &quot;ABC&quot;</code> · <code>0 == false</code></p>
+<p><strong>💀 If it breaks</strong> Nothing here errors — which is exactly why these bugs are dangerous.</p>
+<hr>
+<h2>🟠 Stage 19 — Two conditions at once</h2>
+<p><strong>🎯 Goal:</strong> combine questions.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>if ($age &gt;= 18 &amp;&amp; $hasCard) {           // BOTH must be true
+    echo &quot;come in&quot;;
+}
+
+if ($day == &quot;Sat&quot; || $day == &quot;Sun&quot;) {   // AT LEAST ONE must be true
+    echo &quot;weekend&quot;;
+}
+
+if (!$isBanned) {                       // NOT — flips true and false
+    echo &quot;allowed&quot;;
+}</code></pre>
+<p>Read them as English: <em>&quot;if the age is 18 or more </em><em>and</em><em> they have a card&quot;</em>. That&#x27;s exactly how the code reads, which is the point.</p>
+<p><strong>✅ Clear the stage</strong> A student passes if the grade is 10 or more <strong>AND</strong> attendance is 75 or more. Write it, then test all four combinations: pass/pass, pass/fail, fail/pass, fail/fail.</p>
+<p><strong>💀 If it breaks</strong> <code>and</code> and <code>or</code> also exist as words in PHP, but they behave differently in edge cases. Stick to <code>&amp;&amp;</code> and <code>||</code>.</p>
+<hr>
+<h2>🟠 Stage 20 — switch, and the tiny if</h2>
+<p><strong>🎯 Goal:</strong> two shortcuts worth knowing.</p>
+<p><strong>⌨️ The syntax — switch</strong></p>
+<pre class="lang-php"><code>switch ($day) {
+    case &quot;Mon&quot;:
+        echo &quot;Start of the week&quot;;
+        break;
+    case &quot;Sat&quot;:
+    case &quot;Sun&quot;:
+        echo &quot;Weekend!&quot;;
+        break;
+    default:
+        echo &quot;A normal day&quot;;
+}</code></pre>
+<ul><li>Use <code>switch</code> when you&#x27;re comparing <strong>one variable</strong> against <strong>exact values</strong></li><li>Use <code>if</code> for ranges (<code>&gt;= 10</code>)</li><li>🚨 <strong><code>break</code> is not optional.</strong> Leave it out and PHP carries on into the next case. (Stacking <code>&quot;Sat&quot;</code> and <code>&quot;Sun&quot;</code> above uses that on purpose — the one time it&#x27;s deliberate.)</li></ul>
+<p><strong>⌨️ The syntax — the ternary</strong></p>
+<pre class="lang-php"><code>$result = ($mark &gt;= 10) ? &quot;Pass&quot; : &quot;Fail&quot;;</code></pre>
+<p>Read it: <em>condition</em> <code>?</code> <em>if true</em> <code>:</code> <em>if false</em>. A whole if/else on one line. Great for short things, terrible for long ones.</p>
+<p><strong>✅ Clear the stage</strong> Write a switch on <code>$fruit</code> for apple / banana / grape with a default. Then write a ternary that prints &quot;Even&quot; or &quot;Odd&quot; for <code>$n</code>.</p>
+<p><strong>💀 If it breaks</strong> Two cases both printing? Missing <code>break;</code>.</p>
+<hr>
+<h2>👑 WORLD 4 BOSS</h2>
+<p>Build a <strong>login and access checker</strong>:</p>
+<pre class="lang-php"><code>$username = &quot;fatima&quot;;
+$password = &quot;php2026&quot;;
+$isAdmin  = false;
+$attempts = 1;</code></pre>
+<p>Rules to implement:</p>
+<ol><li>If the account is locked (<code>$attempts</code> over 3) → <code>Account locked</code> and nothing else.</li><li>Wrong username <strong>or</strong> wrong password → <code>Wrong username or password</code>.</li><li>Correct, and admin → <code>Welcome boss</code>.</li><li>Correct, not admin → <code>Welcome fatima</code>.</li></ol>
+<p>Then test all four paths by changing the variables.</p>
+<p><strong>Extra:</strong> add a grade chain that prints a letter grade from <code>$mark</code> — and make sure a mark of 19 gets an A, not a C.</p>
+<p><strong>Cleared it?</strong> ▶ [World 5 — Repeats](world-5-repeats.md)</p>
+<hr>
+<p>◀ [World 3](world-3-numbers.md) · [the map](README.md)</p>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=4"></script>

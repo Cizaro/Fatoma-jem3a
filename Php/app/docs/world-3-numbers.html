@@ -1,0 +1,128 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>🟡 World 3 — Numbers</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>🟡 World 3 — Numbers</h1>
+<h3>Stages 11–15 · about 25 minutes</h3>
+<p>Text was World 2. Now the other half of everything: numbers, and the symbols that push them around. Nothing here is harder than school maths — the only new things are <code>%</code> and the shortcuts.</p>
+<p>Practice file: <code>stages/practice/world-3.php</code></p>
+<hr>
+<h2>🟡 Stage 11 — Maths</h2>
+<p><strong>🎯 Goal:</strong> do arithmetic and print the answer.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>echo 10 + 3;     // 13
+echo 10 - 3;     // 7
+echo 10 * 3;     // 30
+echo 10 / 3;     // 3.3333333333333
+echo 10 ** 3;    // 1000   (10 to the power of 3)</code></pre>
+<p>Two things that trip people up:</p>
+<pre class="lang-php"><code>$a = 5;
+$b = 3;
+echo &quot;$a + $b&quot;;        // 5 + 3      ← prints the text, doesn&#x27;t do the maths!
+echo $a + $b;          // 8
+echo &quot;sum: &quot; . ($a + $b);   // sum: 8  ← brackets, or the dot grabs it wrong</code></pre>
+<p>Inside quotes, maths doesn&#x27;t happen. <strong>Do the maths outside, in brackets.</strong></p>
+<p><strong>✅ Clear the stage</strong> Make <code>$a = 24</code> and <code>$b = 7</code>. Print all five operations, each on its own line, labelled:</p>
+<pre><code>24 + 7 = 31
+24 - 7 = 17
+...</code></pre>
+<p><strong>💀 If it breaks</strong> Getting <code>5 + 3</code> printed as text? Your maths is inside the quotes. Pull it out and wrap it in <code>( )</code>.</p>
+<hr>
+<h2>🟡 Stage 12 — The remainder</h2>
+<p><strong>🎯 Goal:</strong> learn <code>%</code>, the most useful symbol you&#x27;ve never used.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>echo 10 % 3;     // 1   — 3 goes into 10 three times, 1 left over
+echo 10 % 5;     // 0   — nothing left over
+echo 7 % 2;      // 1
+echo 8 % 2;      // 0</code></pre>
+<p><code>%</code> is not percent. It&#x27;s <strong>what&#x27;s left over after dividing</strong>.</p>
+<p>Why you&#x27;ll use it constantly:</p>
+<pre class="lang-php"><code>$n % 2 == 0     // $n is EVEN
+$n % 2 == 1     // $n is ODD
+$i % 3 == 0     // every third one
+(21 + 7) % 24   // what time is it 7 hours after 21:00?  → 4</code></pre>
+<p><strong>✅ Clear the stage</strong> Print <code>$n % 2</code> for the numbers 1 to 8, each on its own line. Look at the pattern: <code>1 0 1 0 1 0 1 0</code>. That alternating pattern is how websites stripe their table rows.</p>
+<p><strong>💀 If it breaks</strong> <code>%</code> on decimals behaves oddly — it&#x27;s built for whole numbers. Keep it to integers for now.</p>
+<hr>
+<h2>🟡 Stage 13 — Shortcuts</h2>
+<p><strong>🎯 Goal:</strong> stop writing <code>$x = $x + 1</code>.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>$x = 10;
+
+$x += 5;    // same as  $x = $x + 5    → 15
+$x -= 3;    // same as  $x = $x - 3    → 12
+$x *= 2;    // same as  $x = $x * 2    → 24
+$x /= 4;    // same as  $x = $x / 4    → 6</code></pre>
+<p>And the two you&#x27;ll see in every loop you ever write:</p>
+<pre class="lang-php"><code>$i = 5;
+$i++;       // add 1     → 6
+$i--;       // minus 1   → 5</code></pre>
+<p><code>$i++</code> is so common that it&#x27;s basically part of the <code>for</code> loop&#x27;s grammar. You&#x27;ll meet it properly in World 5.</p>
+<p><strong>✅ Clear the stage</strong> Start at <code>$score = 50</code>. Use <strong>only</strong> shortcut operators to reach exactly <code>100</code>, printing after each step. There&#x27;s more than one right answer.</p>
+<p><strong>💀 If it breaks</strong> <code>$x =+ 5</code> is not the same as <code>$x += 5</code>. The first one just puts 5 into <code>$x</code>. The order of those two characters matters and this typo is genuinely hard to spot.</p>
+<hr>
+<h2>🟡 Stage 14 — Rounding and tidying</h2>
+<p><strong>🎯 Goal:</strong> make ugly numbers look like real numbers.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>echo round(3.7);        // 4
+echo round(3.2);        // 3
+echo round(3.14159, 2); // 3.14   ← 2 decimal places
+echo floor(3.9);        // 3      ← always down
+echo ceil(3.1);         // 4      ← always up
+echo abs(-5);           // 5      ← no minus sign
+echo intdiv(17, 5);     // 3      ← whole division
+echo max(4, 9, 2);      // 9
+echo min(4, 9, 2);      // 2
+echo rand(1, 6);        // a random number, like a dice</code></pre>
+<p>Notice the shape: <strong>a name, then brackets, then what you&#x27;re giving it</strong>. That shape is called calling a function, and it&#x27;s the same shape for all thousand-odd built-in PHP functions.</p>
+<p><strong>✅ Clear the stage</strong> <code>$price = 19.9876;</code> — print it rounded to 2 decimal places. Then roll two dice with <code>rand(1, 6)</code> and print the total.</p>
+<p><strong>💀 If it breaks</strong> <code>round 3.7</code> without brackets is an error. Functions always need their <code>( )</code>.</p>
+<hr>
+<h2>🟡 Stage 15 — Numbers that are secretly text</h2>
+<p><strong>🎯 Goal:</strong> see the difference between <code>20</code> and <code>&quot;20&quot;</code>.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>$real = 20;
+$fake = &quot;20&quot;;
+
+var_dump($real);    // int(20)
+var_dump($fake);    // string(2) &quot;20&quot;</code></pre>
+<p><code>var_dump()</code> is the tool that tells you the <strong>truth</strong> about a value — what it is, not just what it looks like. You&#x27;ll use it every time something behaves strangely.</p>
+<p>PHP is usually helpful about this:</p>
+<pre class="lang-php"><code>echo &quot;20&quot; + 5;      // 25  — PHP converts the text to a number</code></pre>
+<p>But when you want to be sure, cast it yourself:</p>
+<pre class="lang-php"><code>$n = (int) &quot;20&quot;;        // a real integer 20
+$f = (float) &quot;9.99&quot;;    // a real 9.99
+$s = (string) 100;      // the text &quot;100&quot;</code></pre>
+<p><strong>✅ Clear the stage</strong> <code>var_dump()</code> these five, one per line, predicting each first: <code>20</code> · <code>&quot;20&quot;</code> · <code>20.5</code> · <code>&quot;20&quot; + 5</code> · <code>(int) &quot;20&quot;</code></p>
+<p><strong>💀 If it breaks</strong> <code>var_dump</code> prints extra detail like <code>int(20)</code> — that&#x27;s not an error, that&#x27;s the whole point of it.</p>
+<hr>
+<h2>👑 WORLD 3 BOSS</h2>
+<p>Build a <strong>shop receipt calculator</strong>. Given:</p>
+<pre class="lang-php"><code>$item     = &quot;Notebook&quot;;
+$price    = 4.75;
+$quantity = 3;
+$discount = 10;      // percent
+$taxRate  = 11;      // percent</code></pre>
+<p>Print:</p>
+<pre><code>Item      : Notebook
+Price     : 4.75
+Quantity  : 3
+Subtotal  : 14.25
+Discount  : -1.43
+Tax       : 1.41
+------------------------
+TOTAL     : 14.23</code></pre>
+<p>Every number must be <strong>calculated</strong>, rounded to 2 decimal places, and printed from a variable. Change <code>$quantity</code> to 7 and check every line updates on its own — if one doesn&#x27;t, you typed a number where a calculation should be.</p>
+<p><strong>Cleared it?</strong> ▶ [World 4 — Decisions](world-4-decisions.md)</p>
+<hr>
+<p>◀ [World 2](world-2-boxes.md) · [the map](README.md)</p>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=4"></script>

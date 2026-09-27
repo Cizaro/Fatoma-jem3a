@@ -1,0 +1,147 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>🟣 World 6 — Containers &amp; Commands</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>🟣 World 6 — Containers &amp; Commands</h1>
+<h3>Stages 26–30 · about 35 minutes</h3>
+<p>The last world, and the two biggest ideas: <strong>arrays</strong> (many values in one box) and <strong>functions</strong> (your own commands). Everything in the real lessons is built on these two.</p>
+<p>Take this world slowly. It&#x27;s the one that decides whether the rest feels easy or impossible.</p>
+<p>Practice file: <code>stages/practice/world-6.php</code></p>
+<hr>
+<h2>🟣 Stage 26 — Many in one</h2>
+<p><strong>🎯 Goal:</strong> put a list in a single variable.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>$colors = [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;];
+//            0        1        2      ← the INDEX</code></pre>
+<p>Getting things out:</p>
+<pre class="lang-php"><code>echo $colors[0];        // red
+echo $colors[2];        // blue
+echo count($colors);    // 3</code></pre>
+<p>🚨 <strong>Counting starts at 0.</strong> Always. So a list of 3 things has indexes <strong>0, 1, 2</strong> — and the last index is always <code>count - 1</code>.</p>
+<p>That single fact causes more beginner errors than anything else in this world. Draw it on paper once:</p>
+<pre><code>  [  &quot;red&quot;  ][ &quot;green&quot; ][  &quot;blue&quot;  ]
+      0          1           2</code></pre>
+<p>Changing and adding:</p>
+<pre class="lang-php"><code>$colors[1] = &quot;yellow&quot;;     // replace item 1
+$colors[]  = &quot;purple&quot;;     // add to the end — no index needed</code></pre>
+<p><strong>✅ Clear the stage</strong> Make an array of your 5 favourite foods. Print the first, the last (using <code>count</code>), and how many there are. Then add a sixth and print the count again.</p>
+<p><strong>💀 If it breaks</strong> <code>Undefined array key 3</code> on a 3-item array → you asked for the 4th. The last one is <code>[2]</code>.</p>
+<hr>
+<h2>🟣 Stage 27 — Names instead of numbers</h2>
+<p><strong>🎯 Goal:</strong> use your own labels as keys.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>$student = [
+    &quot;name&quot;  =&gt; &quot;Fatima&quot;,
+    &quot;age&quot;   =&gt; 20,
+    &quot;major&quot; =&gt; &quot;Computer Science&quot;
+];
+
+echo $student[&quot;name&quot;];     // Fatima</code></pre>
+<p><code>=&gt;</code> means &quot;points at&quot;. Instead of <code>[0]</code> and <code>[1]</code> you use <code>[&quot;name&quot;]</code> and <code>[&quot;age&quot;]</code> — which you can actually read six months later.</p>
+<p>This shape — a set of <code>key =&gt; value</code> pairs describing one thing — is what <strong>every</strong> row in a database looks like. Get comfortable here and lesson 9 costs you nothing.</p>
+<p>🚨 The keys need <strong>quotes</strong>: <code>$student[&quot;name&quot;]</code>, never <code>$student[name]</code>.</p>
+<p><strong>✅ Clear the stage</strong> Make an associative array about yourself with keys <code>name</code>, <code>age</code>, <code>university</code>, <code>city</code>. Print each one on its own labelled line.</p>
+<p><strong>💀 If it breaks</strong> <code>Undefined constant &quot;name&quot;</code> → you left the quotes off the key.</p>
+<hr>
+<h2>🟣 Stage 28 — Walking through</h2>
+<p><strong>🎯 Goal:</strong> do something to every item without counting anything.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>foreach ($colors as $color) {
+    echo $color . &quot;\n&quot;;
+}</code></pre>
+<p>Read it: <em>&quot;for each item in <code>$colors</code>, call it <code>$color</code>, and do this&quot;</em>.</p>
+<p>No counter, no <code>$i</code>, no chance of going one too far. For arrays, <code>foreach</code> is almost always the right choice over <code>for</code>.</p>
+<p>With the key as well:</p>
+<pre class="lang-php"><code>foreach ($student as $key =&gt; $value) {
+    echo &quot;$key: $value\n&quot;;
+}</code></pre>
+<p><strong>✅ Clear the stage</strong></p>
+<ol><li><code>foreach</code> your foods array and print each one on its own line.</li><li><code>foreach</code> your associative array with <code>$key =&gt; $value</code> and print both.</li><li>Sum an array of numbers with a <code>foreach</code> and a running total (start it at 0 <strong>before</strong> the loop — a classic slip is starting it inside).</li></ol>
+<p><strong>💀 If it breaks</strong> <code>foreach</code> only works on arrays. On a plain string or number you&#x27;ll get a warning.</p>
+<hr>
+<h2>🟣 Stage 29 — Your own command</h2>
+<p><strong>🎯 Goal:</strong> write something once and use it many times.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>function greet($name) {
+    echo &quot;Hello $name&quot;;
+}
+
+greet(&quot;Fatima&quot;);     // ← calling it. Nothing happens until you do this.
+greet(&quot;Sara&quot;);</code></pre>
+<p>The shape:</p>
+<pre><code>function  name ( what it needs )  {  what it does  }</code></pre>
+<p>🚨 <strong>Writing a function runs nothing.</strong> It&#x27;s a recipe sitting on a shelf. It only happens when you <em>call</em> it. &quot;My function doesn&#x27;t work&quot; almost always means &quot;I never called it&quot;.</p>
+<p><strong>✅ Clear the stage</strong></p>
+<ol><li>Write <code>sayHello()</code> with no parameters and call it 3 times.</li><li>Write <code>greet($name)</code> and call it with three different names.</li><li>Write <code>add($a, $b)</code> that <strong>echoes</strong> the sum, and call it twice.</li></ol>
+<p><strong>💀 If it breaks</strong> Nothing happening at all? You defined it and never called it. Add the call.</p>
+<hr>
+<h2>🟣 Stage 30 — Giving an answer back</h2>
+<p><strong>🎯 Goal:</strong> the difference between <code>echo</code> and <code>return</code>, which is the last big idea in this track.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>function addAndPrint($a, $b) {
+    echo $a + $b;           // prints it. Hands back nothing.
+}
+
+function addAndReturn($a, $b) {
+    return $a + $b;         // hands the value back to you.
+}
+
+addAndPrint(2, 3);              // prints 5
+$result = addAndReturn(2, 3);   // $result is now 5
+echo $result * 10;              // 50 — you can keep using it</code></pre>
+<p><code>echo</code> puts it on the screen and it&#x27;s gone. <code>return</code> <strong>gives it to you</strong>, so you can store it, do maths with it, or pass it into another function.</p>
+<p>🚨 <code>return</code> also <strong>ends the function immediately</strong>:</p>
+<pre class="lang-php"><code>function test() {
+    return &quot;done&quot;;
+    echo &quot;this never prints&quot;;
+}</code></pre>
+<p><strong>Rule of thumb:</strong> make functions <code>return</code>, and <code>echo</code> outside. That&#x27;s what makes them reusable.</p>
+<p>And one more thing to know exists — <strong>scope</strong>:</p>
+<pre class="lang-php"><code>$x = 10;
+function show() {
+    echo $x;      // ❌ ERROR - a function can&#x27;t see outside itself
+}</code></pre>
+<p>The fix is to pass it in: <code>function show($x)</code> then <code>show(10);</code>. Functions are sealed boxes, on purpose, so they can&#x27;t break each other.</p>
+<p><strong>✅ Clear the stage</strong></p>
+<ol><li>Write <code>square($n)</code> that <strong>returns</strong> <code>$n * $n</code>. Print <code>square(4)</code>, <code>square(7)</code>, <code>square(12)</code>.</li><li>Then print <code>square(3) + square(4)</code> — that only works because it returns.</li><li>Write <code>isEven($n)</code> that returns <code>true</code> or <code>false</code>, and test it with <code>var_dump</code>.</li></ol>
+<p><strong>💀 If it breaks</strong> <code>echo square(4);</code> printing nothing? Your function <code>echo</code>s instead of <code>return</code>s.</p>
+<hr>
+<h2>👑 WORLD 6 BOSS — and the end of the track</h2>
+<p>Build a <strong>class report</strong>, using everything from all six worlds:</p>
+<pre class="lang-php"><code>$class = [
+    [&quot;name&quot; =&gt; &quot;Fatima&quot;, &quot;mark&quot; =&gt; 17],
+    [&quot;name&quot; =&gt; &quot;Sara&quot;,   &quot;mark&quot; =&gt; 8],
+    [&quot;name&quot; =&gt; &quot;Lina&quot;,   &quot;mark&quot; =&gt; 12],
+    [&quot;name&quot; =&gt; &quot;Nour&quot;,   &quot;mark&quot; =&gt; 19],
+];</code></pre>
+<p>Write <strong>two functions</strong>:</p>
+<ul><li><code>letterGrade($mark)</code> — returns A (18+), B (16+), C (14+), D (10+), F otherwise</li><li><code>hasPassed($mark)</code> — returns true or false</li></ul>
+<p>Then <code>foreach</code> the class and print a lined-up table:</p>
+<pre><code>NAME       MARK  GRADE  RESULT
+------------------------------
+Fatima      17     B     Pass
+Sara         8     F     Fail
+Lina        12     D     Pass
+Nour        19     A     Pass
+------------------------------
+Average: 14   Passed: 3 of 4</code></pre>
+<p>The average and the pass count must be <strong>calculated</strong>, not typed.</p>
+<hr>
+<h2>🎓 Track complete</h2>
+<p>If you can do that boss, you have the syntax. All of it — tags, variables, quotes, maths, conditions, loops, arrays and functions.</p>
+<p>That&#x27;s lessons 1 to 7 of the real course, in your hands rather than in your head.</p>
+<p><strong>Where to go now:</strong></p>
+<ul><li>Go back to <code>../01-basics/</code> and work through the real lessons — they&#x27;ll feel like revision now</li><li>Or jump straight to <code>../08-forms/</code> and put your syntax on an actual web page</li><li>Tick World 6 in <code>../stages.html</code> and see the whole map lit up</li></ul>
+<p>You didn&#x27;t learn to code by understanding it. You learned by typing it 200 times. That&#x27;s how everyone does it.</p>
+<hr>
+<p>◀ [World 5](world-5-repeats.md) · [the map](README.md)</p>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=4"></script>

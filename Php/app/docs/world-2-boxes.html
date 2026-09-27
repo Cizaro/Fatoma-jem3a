@@ -1,0 +1,107 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>🔵 World 2 — Boxes</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>🔵 World 2 — Boxes</h1>
+<h3>Stages 6–10 · about 25 minutes</h3>
+<p>A variable is a box with a name. You put something in, you take it out later. That&#x27;s the entire idea — everything else in this world is about typing it correctly.</p>
+<p>Practice file: <code>stages/practice/world-2.php</code></p>
+<hr>
+<h2>🔵 Stage 6 — Your first box</h2>
+<p><strong>🎯 Goal:</strong> store a value and print it back.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>$name = &quot;Fatima&quot;;
+echo $name;</code></pre>
+<p>Read <code>$name = &quot;Fatima&quot;;</code> out loud as <strong>&quot;put Fatima into name&quot;</strong>. Not &quot;name equals Fatima&quot;.</p>
+<p>That wording matters more than it looks. In World 4 you&#x27;ll meet <code>==</code>, which really <em>does</em> mean &quot;equals&quot;, and people who learned to read <code>=</code> as &quot;equals&quot; mix the two up for months.</p>
+<div class="tablewrap"><table><thead><tr><th>Piece</th><th>Rule</th></tr></thead><tbody><tr><td><code>$</code></td><td>every variable starts with it. No exceptions.</td></tr><tr><td><code>name</code></td><td>your choice of name</td></tr><tr><td><code>=</code></td><td>&quot;put into&quot;</td></tr><tr><td><code>&quot;Fatima&quot;</code></td><td>the value</td></tr><tr><td><code>;</code></td><td>full stop</td></tr></tbody></table></div>
+<p><strong>✅ Clear the stage</strong> Make a variable with your name in it, then print it.</p>
+<p><strong>💀 If it breaks</strong> <code>Undefined variable $nmae</code> → a typo. PHP doesn&#x27;t guess; the name has to match exactly.</p>
+<hr>
+<h2>🔵 Stage 7 — Naming the box</h2>
+<p><strong>🎯 Goal:</strong> know which names are legal.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>$name      // ✅
+$my_age    // ✅
+$myAge     // ✅
+$_id       // ✅
+$age2      // ✅
+
+age        // ❌ no $
+$2fast     // ❌ can&#x27;t start with a number
+$my age    // ❌ no spaces
+$my-age    // ❌ no dashes (PHP reads that as minus)</code></pre>
+<p>And the one that catches everybody:</p>
+<pre class="lang-php"><code>$name = &quot;Sara&quot;;
+echo $Name;     // ❌ different variable. PHP is case sensitive.</code></pre>
+<p><strong>✅ Clear the stage</strong> Make three variables: <code>$firstName</code>, <code>$age</code>, <code>$city</code>. Print all three. Then deliberately print <code>$City</code> with a capital and read the warning. Fix it.</p>
+<p><strong>💀 If it breaks</strong> <code>Undefined variable</code> almost always means capitals or a typo. Check both.</p>
+<hr>
+<h2>🔵 Stage 8 — Quotes matter</h2>
+<p><strong>🎯 Goal:</strong> understand the single difference between <code>&#x27;</code> and <code>&quot;</code>.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>$city = &quot;Beirut&quot;;
+
+echo &quot;I live in $city&quot;;     // I live in Beirut
+echo &#x27;I live in $city&#x27;;     // I live in $city</code></pre>
+<p><strong>Double quotes are smart</strong> — they look inside for variables and replace them. <strong>Single quotes are literal</strong> — they print exactly what&#x27;s between them.</p>
+<p>That&#x27;s it. That&#x27;s the whole difference. <code>\n</code> follows the same rule: it only works in doubles.</p>
+<p><strong>✅ Clear the stage</strong> Print the same sentence twice, once each way, and look at the two outputs side by side. Write a comment saying which one you&#x27;d use and why.</p>
+<p><strong>💀 If it breaks</strong> Want to print an actual <code>$</code>? Escape it: <code>echo &quot;costs \$5&quot;;</code></p>
+<hr>
+<h2>🔵 Stage 9 — Joining text</h2>
+<p><strong>🎯 Goal:</strong> glue pieces together.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>$first = &quot;Fatima&quot;;
+$last  = &quot;Hassan&quot;;
+
+echo $first . &quot; &quot; . $last;      // Fatima Hassan
+echo &quot;$first $last&quot;;            // Fatima Hassan  (same result)</code></pre>
+<p>The dot <code>.</code> means &quot;stick these together&quot;. Notice the <code>&quot; &quot;</code> in the middle — <strong>you have to supply the space yourself</strong>. <code>$first . $last</code> gives <code>FatimaHassan</code>.</p>
+<p>There&#x27;s also <code>.=</code> which adds onto the end of what&#x27;s already there:</p>
+<pre class="lang-php"><code>$msg = &quot;Hello&quot;;
+$msg .= &quot; world&quot;;
+$msg .= &quot;!&quot;;
+echo $msg;          // Hello world!</code></pre>
+<p><strong>✅ Clear the stage</strong> Build a full sentence from three separate variables using <code>.</code> — and get the spaces right. Then build the same sentence again using <code>.=</code>, one piece at a time.</p>
+<p><strong>💀 If it breaks</strong> Words stuck together? You forgot the <code>&quot; &quot;</code>. <code>+</code> doesn&#x27;t join text — that&#x27;s for numbers, and on strings it&#x27;ll error.</p>
+<hr>
+<h2>🔵 Stage 10 — Boxes change</h2>
+<p><strong>🎯 Goal:</strong> understand that a variable holds only the <em>last</em> thing you put in it.</p>
+<p><strong>⌨️ The syntax</strong></p>
+<pre class="lang-php"><code>$score = 10;
+echo $score;      // 10
+
+$score = 50;
+echo $score;      // 50  - the 10 is gone forever</code></pre>
+<p>And a variable can be built from itself:</p>
+<pre class="lang-php"><code>$score = 10;
+$score = $score + 5;    // read: put (what&#x27;s in score, plus 5) back into score
+echo $score;            // 15</code></pre>
+<p>That line looks impossible in maths — <code>x = x + 5</code> is nonsense. In code it&#x27;s normal, because <code>=</code> is &quot;put into&quot;, not &quot;equals&quot;. This is the moment that wording pays off.</p>
+<p><strong>✅ Clear the stage</strong> Start <code>$money = 100;</code>. Change it four times (add, subtract, double, halve), printing after each change. Predict each number <em>before</em> you run it.</p>
+<p><strong>💀 If it breaks</strong> Getting the old value? Check you actually saved the file before running.</p>
+<hr>
+<h2>👑 WORLD 2 BOSS</h2>
+<p>Build a <strong>student ID card</strong> using only variables, <code>echo</code>, <code>.</code> and <code>\n</code>:</p>
+<pre><code>+----------------------------+
+| NAME  : Fatima Hassan      |
+| AGE   : 20                 |
+| CITY  : Beirut             |
+| MAJOR : Computer Science   |
++----------------------------+</code></pre>
+<p>Rules:</p>
+<ul><li>Every value comes from a variable — no typing the words into the output text.</li><li>The full name must be built from <code>$firstName</code> and <code>$lastName</code> with a <code>.</code></li><li>Add a line at the end that prints their age next year, worked out from <code>$age</code>.</li></ul>
+<p><strong>Cleared it?</strong> ▶ [World 3 — Numbers](world-3-numbers.md)</p>
+<hr>
+<p>◀ [World 1](world-1-the-tag.md) · [the map](README.md)</p>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=4"></script>
