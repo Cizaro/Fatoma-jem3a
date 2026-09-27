@@ -52,6 +52,32 @@ Another way to say the same thing, which your slides also use: programming has a
 a language). Design is the most important part, because a program built on a wrong design is
 wrong no matter how neatly it is typed.
 
+### The program development cycle
+
+The PDLC is the whole life of a piece of software. Inside it sits a shorter loop, the one you
+personally go round every time you write a program. Your slides list it as five steps:
+
+1. **Design the program**
+2. **Write the code**
+3. **Correct the syntax errors**
+4. **Test the program**
+5. **Correct the logic errors**
+
+Steps 3 and 5 are two different jobs and it is worth knowing why.
+
+A **syntax error** means PHP cannot read what you typed: a missing semicolon, an unclosed
+quote. The program refuses to run and tells you the line. Annoying, but honest.
+
+A **logic error** means PHP understood you perfectly and did exactly what you said, which was
+not what you meant. It runs, it prints something, and the something is wrong. Nothing tells
+you. `if ($grade > 60)` when you meant `>= 60` is a logic error, and the only way to find it
+is to test with a grade of exactly 60.
+
+> **Designing it means asking first.** Before any of that: understand the task, work with
+> whoever wants the program until you know what it is supposed to do, ask about the details,
+> and write the requirements down. Then break the task into a series of steps. That list of
+> steps is your algorithm.
+
 ---
 
 ## 3. Writing an algorithm in plain English
@@ -73,7 +99,32 @@ Example, the one from your slides:
 4. Print sum
 ```
 
-Four lines, each doing one thing, in order. That is a complete algorithm.
+Four lines, each doing one thing, in order. That is a complete algorithm. On the slide it is
+the problem *add 10 and 20*, and its flowchart is Start → `sum = 0` → `Enter 10, 20` →
+`sum = 10 + 20` → `Print sum` → Stop. Six boxes, one of them an oval at each end.
+
+### An algorithm does not have to be about numbers
+
+Your lecturer's third example is this one, and it catches people out because there is no
+maths in it at all:
+
+> **Write an algorithm to log in to your school email account.**
+
+```
+1. Go to the school website
+2. Click the Office 365 for Students and Teachers link
+3. Enter the email ID and the password
+4. Click Sign in
+```
+
+That is a complete, correct answer. Four steps, in order, each doing one thing, and it
+terminates. If a question like this comes up, do not go hunting for a formula: write the
+steps you would actually perform, in the order you would actually perform them, and stop
+when the task is done.
+
+The trap is being too vague. "Log into the website" is one step to a human and about nine to
+a computer. Break it down until each line is a single action somebody could follow without
+asking you a question.
 
 ---
 
@@ -127,11 +178,16 @@ steps, and how they connect.
 
 | Symbol | Shape | What it means |
 |---|---|---|
-| **Oval** | rounded box | start or end of the program (a *terminal*) |
-| **Parallelogram** | leaning box | input or output. `Input M1` or `Print SUM` |
-| **Rectangle** | plain box | a process. Doing maths, assigning a value |
-| **Diamond** | turned square | a decision. Two ways out: yes and no |
-| **Flow line** | arrow | the direction the logic travels |
+| **Oval** | rounded box | the beginning or the end of the program (a *terminal*) |
+| **Parallelogram** | leaning box | an **input** operation. `Input M1` |
+| **Parallelogram** | leaning box | an **output** operation. `Print SUM` |
+| **Rectangle** | plain box | a process to be carried out: addition, subtraction, division, assigning a value |
+| **Diamond** | turned square | a decision, or branch. The program continues along one of two routes |
+| **Flow line** | arrow | the direction the logic flows |
+
+Input and output are listed separately on your lecturer's slide even though they
+share the same shape, so if the question asks "how many symbols are there", the
+answer he is looking for counts them as two.
 
 ### The two rules that cost marks
 

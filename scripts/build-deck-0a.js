@@ -247,6 +247,61 @@ s.addText("Coding is phase 4 of 6. Most of the job happens before you type, and 
 s.addNotes("Read them in order, then circle number 4 with the annotate pen and ask: \"where do flowcharts live?\" Answer: phase 3.");
 
 /* ============================================================
+   5b - the program development cycle, and the two kinds of error
+   ============================================================ */
+s = light();
+head(s, "THE LOOP INSIDE THE LIFE CYCLE", "The program development cycle");
+["Design the program", "Write the code", "Correct the syntax errors",
+ "Test the program", "Correct the logic errors"].forEach((t, i) => {
+  const y = 1.72 + i * 0.52;
+  chip(s, M, y, String(i + 1), i === 2 || i === 4 ? WARM : TEAL);
+  s.addText(t, { x: M + 0.62, y, w: 3.6, h: 0.42, isTextBox: true, margin: 0,
+    fontFace: BODY, fontSize: 14.5, color: INK, valign: "middle" });
+});
+card(s, 5.1, 1.72, 4.35, 1.28, SOFT);
+s.addText("Syntax error", { x: 5.42, y: 1.92, w: 3.7, h: 0.28, isTextBox: true, margin: 0,
+  fontFace: BODY, fontSize: 11, bold: true, charSpacing: 1.3, color: TEAL });
+s.addText("PHP cannot read what you typed. It refuses to run, and tells you the line.",
+  { x: 5.42, y: 2.24, w: 3.7, h: 0.62, isTextBox: true, margin: 0,
+    fontFace: BODY, fontSize: 12.5, color: MUTE, lineSpacing: 17 });
+card(s, 5.1, 3.12, 4.35, 1.45, WARMSOFT);
+s.addText("Logic error", { x: 5.42, y: 3.32, w: 3.7, h: 0.28, isTextBox: true, margin: 0,
+  fontFace: BODY, fontSize: 11, bold: true, charSpacing: 1.3, color: WARM });
+s.addText("PHP understood you perfectly and did exactly what you said, which was not what you meant. Nothing warns you.",
+  { x: 5.42, y: 3.64, w: 3.7, h: 0.82, isTextBox: true, margin: 0,
+    fontFace: BODY, fontSize: 12.5, color: INK, lineSpacing: 17 });
+s.addText("Writing >= 60 when you meant > 60 is a logic error. The only way to find it is to test with exactly 60.",
+  { x: M, y: 4.62, w: 8.9, h: 0.4, isTextBox: true, margin: 0,
+    fontFace: BODY, fontSize: 12.5, italic: true, color: FAINT });
+s.addNotes("Ask her which kind of error is worse. The answer is the logic one, because the computer never tells you about it. That is the whole argument for testing.");
+
+/* ============================================================
+   5c - an algorithm does not have to be about numbers
+   ============================================================ */
+s = light();
+head(s, "HER LECTURER'S THIRD EXAMPLE", "An algorithm need not be about numbers");
+s.addText("Write an algorithm to log in to your school email account.", {
+  x: M, y: 1.66, w: 8.9, h: 0.35, isTextBox: true, margin: 0,
+  fontFace: HEAD, fontSize: 18, italic: true, color: WARM
+});
+code(s, [
+  "1.  Go to the school website",
+  "2.  Click the Office 365 for Students and Teachers link",
+  "3.  Enter the email ID and the password",
+  "4.  Click Sign in"
+], M, 2.16, 5.6, 1.7);
+card(s, 6.5, 2.16, 2.95, 1.7, SOFT);
+s.addText("The trap", { x: 6.8, y: 2.38, w: 2.4, h: 0.28, isTextBox: true, margin: 0,
+  fontFace: BODY, fontSize: 11, bold: true, charSpacing: 1.3, color: WARM });
+s.addText("Being too vague. “Log in” is one step to a person and nine to a computer.", {
+  x: 6.8, y: 2.72, w: 2.4, h: 0.95, isTextBox: true, margin: 0,
+  fontFace: BODY, fontSize: 12.5, color: MUTE, lineSpacing: 17 });
+s.addText("Four steps, in order, each one a single action, and it stops. That is a complete and correct answer, with no maths anywhere in it.", {
+  x: M, y: 4.08, w: 8.9, h: 0.45, isTextBox: true, margin: 0,
+  fontFace: BODY, fontSize: 13, color: MUTE, lineSpacing: 19 });
+s.addNotes("Give her a different everyday task and make her do it live: making tea, or withdrawing money from an ATM. Then follow her steps literally and pedantically until it breaks.");
+
+/* ============================================================
    6 - plain english
    ============================================================ */
 s = light();

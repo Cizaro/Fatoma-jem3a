@@ -46,6 +46,19 @@ QUIZZES["lesson-00-algorithms"] = {
       ],
       explain: "Coding is phase 4 of 6. Most of the work happens before you type." },
 
+    { t: "fields", q: "Two kinds of mistake. Which is which?",
+      rows: [
+        { label: "PHP cannot read it and refuses to run", any: ["syntax"] },
+        { label: "It runs fine and gives the wrong answer", any: ["logic"] }
+      ],
+      explain: "A syntax error tells you the line. A logic error tells you nothing, which is why you test." },
+
+    { t: "open", q: "Write an algorithm to log in to your school email account. No maths in this one.",
+      model: "1. Go to the school website\n2. Click the Office 365 for Students and Teachers link\n3. Enter the email ID and the password\n4. Click Sign in",
+      criteria: ["every step is a single action", "they are in the order you would really do them",
+                 "it stops when the task is done", "nothing is so vague that someone would have to ask you a question"],
+      rows: 5 },
+
     { t: "fields", q: "Which flowchart symbol is used for each job?",
       rows: [
         { label: "Start of the program", any: ["oval", "terminal", "rounded"] },

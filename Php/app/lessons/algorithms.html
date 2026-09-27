@@ -23,6 +23,13 @@
 <div class="tablewrap"><table><thead><tr><th>#</th><th>Phase</th><th>What happens</th></tr></thead><tbody><tr><td>1</td><td><strong>Problem definition</strong></td><td>say clearly what problem the software must solve</td></tr><tr><td>2</td><td><strong>Problem analysis</strong></td><td>work out the inputs, the processes and the outputs. Find the constraints</td></tr><tr><td>3</td><td><strong>Algorithm development</strong></td><td>design the steps. This is where flowcharts and pseudocode live</td></tr><tr><td>4</td><td><strong>Coding and documentation</strong></td><td>turn the algorithm into a real language, and write down how it works</td></tr><tr><td>5</td><td><strong>Testing and debugging</strong></td><td>run it, find the bugs, fix them</td></tr><tr><td>6</td><td><strong>Maintenance</strong></td><td>keep fixing and improving it after people are using it</td></tr></tbody></table></div>
 <p>Notice where coding sits: <strong>phase 4 of 6</strong>. Most of the work happens before you type, and a good chunk happens after you think you are finished.</p>
 <p>Another way to say the same thing, which your slides also use: programming has a <strong>problem solving phase</strong> (produce the algorithm) and an <strong>implementation phase</strong> (write it in a language). Design is the most important part, because a program built on a wrong design is wrong no matter how neatly it is typed.</p>
+<h3>The program development cycle</h3>
+<p>The PDLC is the whole life of a piece of software. Inside it sits a shorter loop, the one you personally go round every time you write a program. Your slides list it as five steps:</p>
+<ol><li><strong>Design the program</strong></li><li><strong>Write the code</strong></li><li><strong>Correct the syntax errors</strong></li><li><strong>Test the program</strong></li><li><strong>Correct the logic errors</strong></li></ol>
+<p>Steps 3 and 5 are two different jobs and it is worth knowing why.</p>
+<p>A <strong>syntax error</strong> means PHP cannot read what you typed: a missing semicolon, an unclosed quote. The program refuses to run and tells you the line. Annoying, but honest.</p>
+<p>A <strong>logic error</strong> means PHP understood you perfectly and did exactly what you said, which was not what you meant. It runs, it prints something, and the something is wrong. Nothing tells you. <code>if ($grade &gt; 60)</code> when you meant <code>&gt;= 60</code> is a logic error, and the only way to find it is to test with a grade of exactly 60.</p>
+<blockquote><p><strong>Designing it means asking first.</strong> Before any of that: understand the task, work with whoever wants the program until you know what it is supposed to do, ask about the details, and write the requirements down. Then break the task into a series of steps. That list of steps is your algorithm.</p></blockquote>
 <hr>
 <h2>3. Writing an algorithm in plain English</h2>
 <p>The first way to express an algorithm is ordinary language, using a small set of verbs so each line does exactly one thing:</p>
@@ -32,7 +39,16 @@
 2. Enter the two numbers
 3. Add them and store the result in sum
 4. Print sum</code></pre>
-<p>Four lines, each doing one thing, in order. That is a complete algorithm.</p>
+<p>Four lines, each doing one thing, in order. That is a complete algorithm. On the slide it is the problem <em>add 10 and 20</em>, and its flowchart is Start → <code>sum = 0</code> → <code>Enter 10, 20</code> → <code>sum = 10 + 20</code> → <code>Print sum</code> → Stop. Six boxes, one of them an oval at each end.</p>
+<h3>An algorithm does not have to be about numbers</h3>
+<p>Your lecturer&#x27;s third example is this one, and it catches people out because there is no maths in it at all:</p>
+<blockquote><p><strong>Write an algorithm to log in to your school email account.</strong></p></blockquote>
+<pre><code>1. Go to the school website
+2. Click the Office 365 for Students and Teachers link
+3. Enter the email ID and the password
+4. Click Sign in</code></pre>
+<p>That is a complete, correct answer. Four steps, in order, each doing one thing, and it terminates. If a question like this comes up, do not go hunting for a formula: write the steps you would actually perform, in the order you would actually perform them, and stop when the task is done.</p>
+<p>The trap is being too vague. &quot;Log into the website&quot; is one step to a human and about nine to a computer. Break it down until each line is a single action somebody could follow without asking you a question.</p>
 <hr>
 <h2>4. Pseudocode, and the notation your lecturer uses</h2>
 <p>Plain English gets wordy. <strong>Pseudocode</strong> is the middle ground: part English, part programming notation. It is <em>fake code</em>.</p>
@@ -53,7 +69,8 @@ endif</code></pre>
 <h2>5. Flowcharts</h2>
 <p>A flowchart is the same algorithm drawn as a picture. It shows the logic, the individual steps, and how they connect.</p>
 <h3>The symbols</h3>
-<div class="tablewrap"><table><thead><tr><th>Symbol</th><th>Shape</th><th>What it means</th></tr></thead><tbody><tr><td><strong>Oval</strong></td><td>rounded box</td><td>start or end of the program (a <em>terminal</em>)</td></tr><tr><td><strong>Parallelogram</strong></td><td>leaning box</td><td>input or output. <code>Input M1</code> or <code>Print SUM</code></td></tr><tr><td><strong>Rectangle</strong></td><td>plain box</td><td>a process. Doing maths, assigning a value</td></tr><tr><td><strong>Diamond</strong></td><td>turned square</td><td>a decision. Two ways out: yes and no</td></tr><tr><td><strong>Flow line</strong></td><td>arrow</td><td>the direction the logic travels</td></tr></tbody></table></div>
+<div class="tablewrap"><table><thead><tr><th>Symbol</th><th>Shape</th><th>What it means</th></tr></thead><tbody><tr><td><strong>Oval</strong></td><td>rounded box</td><td>the beginning or the end of the program (a <em>terminal</em>)</td></tr><tr><td><strong>Parallelogram</strong></td><td>leaning box</td><td>an <strong>input</strong> operation. <code>Input M1</code></td></tr><tr><td><strong>Parallelogram</strong></td><td>leaning box</td><td>an <strong>output</strong> operation. <code>Print SUM</code></td></tr><tr><td><strong>Rectangle</strong></td><td>plain box</td><td>a process to be carried out: addition, subtraction, division, assigning a value</td></tr><tr><td><strong>Diamond</strong></td><td>turned square</td><td>a decision, or branch. The program continues along one of two routes</td></tr><tr><td><strong>Flow line</strong></td><td>arrow</td><td>the direction the logic flows</td></tr></tbody></table></div>
+<p>Input and output are listed separately on your lecturer&#x27;s slide even though they share the same shape, so if the question asks &quot;how many symbols are there&quot;, the answer he is looking for counts them as two.</p>
 <h3>The two rules that cost marks</h3>
 <ol><li><strong>A flowchart must have a start and a stop.</strong> Both of them. Ovals.</li><li><strong>Every step must connect.</strong> Nothing left hanging with an arrow going nowhere.</li></ol>
 <p>Those two are easy to check before you hand the paper in, and easy to lose a mark on if you do not.</p>
