@@ -77,10 +77,19 @@ exit;                     // ALWAYS exit after a header redirect</code></pre>
 <h2>🎓 You&#x27;ve arrived</h2>
 <p>If this page works and you understand every line of it, you have finished chapters 10, 11 and 12 of your textbook. The rest of the roadmap — logins, JOINs, OOP, deployment — is all built on what you can already do.</p>
 <p>Go and look at <code>../roadmap.html</code> and tick off Q, R and S. You&#x27;ve earned them.</p>
-<h2>▶ Practise this lesson</h2>
-<p><code>games/php-arcade.html</code> → <strong>Code Builder</strong> · <code>flashcards.html</code> → deck 5 + deck 6 · <code>quizzes/mini-quizzes/lesson-10.md</code> · then <code>quizzes/final-exam.md</code></p>
+<h2>Practise this lesson</h2>
+<div class="practise"><a class="pl main" href="../quizzes/lesson-10.html">Mini-quiz</a><a class="pl" href="../../code-lab.html">Code lab</a><a class="pl" href="../../flashcards.html?deck=sql">SQL &amp; MySQL</a><a class="pl" href="../../games/php-arcade.html?game=order">Code Builder</a></div>
+<div class="practise run" hidden><a class="pl file" href="../../10-dynamic-page/examples.php" target="_blank" rel="noopener">10-dynamic-page/examples.php</a><a class="pl file" href="../../10-dynamic-page/exercises.php" target="_blank" rel="noopener">10-dynamic-page/exercises.php</a></div><p class="runnote">Open this page from <code>localhost</code> to run <code>examples.php</code> and <code>exercises.php</code>.</p>
 </article>
 <nav class="lessonnav">
 <a class="prev" href="mysql.html"><span>Previous</span>Database basics with MySQL</a>
 </nav>
 <script src="../embed.js?v=4"></script>
+<script>
+/* the run-it links only make sense where something is executing PHP.
+   Braces are doubled because this template goes through str.format. */
+if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)){
+  document.querySelectorAll(".practise.run").forEach(function(el){ el.hidden = false; });
+  document.querySelectorAll(".runnote").forEach(function(el){ el.remove(); });
+}
+</script>

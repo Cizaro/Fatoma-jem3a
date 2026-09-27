@@ -39,6 +39,71 @@ LESSONS = [
 # written before the app existed, so they kept their own name.
 SOURCE = {"00-setup": "SETUP.md"}
 
+# ---------------------------------------------------------------
+# "Practise this lesson" used to be a paragraph naming file paths in
+# code chips - unclickable, and one of them pointed at a .md file that
+# a browser shows as raw markdown. Each lesson now ends with real links,
+# generated from this table so all twelve stay in step.
+#
+#   quiz : file in Php/quizzes/mini-quizzes/, built to a page below
+#   deck : a flashcards.html deck id
+#   game : the arcade round the instructor guide pairs with the lesson
+#   run  : the folder holding examples.php / exercises.php
+# ---------------------------------------------------------------
+PRACTISE = {
+    "algorithms": dict(quiz="lesson-00-algorithms", game="match", run="00-algorithms"),
+    "setup":      dict(),
+    "basics":     dict(quiz="lesson-01", deck="syntax",  game="match",  run="01-basics"),
+    "datatypes":  dict(quiz="lesson-02", deck="strings", game="output", run="02-datatypes"),
+    "operators":  dict(quiz="lesson-03", deck="syntax",  game="output", run="03-operators"),
+    "conditions": dict(quiz="lesson-04", deck="control", game="bug",    run="04-conditions"),
+    "loops":      dict(quiz="lesson-05", deck="control", game="blank",  run="05-loops"),
+    "arrays":     dict(quiz="lesson-06", deck="arrays",  game="blank",  run="06-arrays"),
+    "functions":  dict(quiz="lesson-07", deck="syntax",  game="bug",    run="07-functions"),
+    "forms":      dict(quiz="lesson-08", deck="web",     game="order",  run="08-forms"),
+    "mysql":      dict(quiz="lesson-09", deck="sql",     game="match",  run="09-mysql"),
+    "dynamic":    dict(quiz="lesson-10", deck="sql",     game="order",  run="10-dynamic-page"),
+}
+DECKNAME = {"syntax": "Syntax &amp; symbols", "strings": "String functions",
+            "arrays": "Array functions", "control": "Loops &amp; conditions",
+            "web": "Forms &amp; security", "sql": "SQL &amp; MySQL"}
+GAMENAME = {"match": "Match the Words", "output": "Guess the Output",
+            "bug": "Fix the Bug", "blank": "Fill the Blank", "order": "Code Builder"}
+
+PRACTISE_HEADING = "## ▶ Practise this lesson"
+
+
+def practise_block(slug):
+    """The row of real links that closes every lesson."""
+    p = PRACTISE.get(slug)
+    if not p:
+        return ""
+    out = []
+    if p.get("quiz"):
+        out.append('<a class="pl main" href="../quizzes/%s.html">Mini-quiz</a>' % p["quiz"])
+    if p.get("run"):
+        out.append('<a class="pl" href="../../code-lab.html">Code lab</a>')
+    if p.get("deck"):
+        out.append('<a class="pl" href="../../flashcards.html?deck=%s">%s</a>'
+                   % (p["deck"], DECKNAME[p["deck"]]))
+    if p.get("game"):
+        out.append('<a class="pl" href="../../games/php-arcade.html?game=%s">%s</a>'
+                   % (p["game"], GAMENAME[p["game"]]))
+
+    run = ""
+    if p.get("run"):
+        # these have to be executed, so they are hidden unless a server is serving
+        run = ('<div class="practise run" hidden>'
+               '<a class="pl file" href="../../{f}/examples.php" target="_blank" rel="noopener">'
+               '{f}/examples.php</a>'
+               '<a class="pl file" href="../../{f}/exercises.php" target="_blank" rel="noopener">'
+               '{f}/exercises.php</a></div>'
+               '<p class="runnote">Open this page from <code>localhost</code> to run '
+               '<code>examples.php</code> and <code>exercises.php</code>.</p>').format(f=p["run"])
+
+    return ('<h2>Practise this lesson</h2>\n<div class="practise">%s</div>\n%s'
+            % ("".join(out), run))
+
 
 def inline(text):
     """Bold, inline code and escaping, in that order so code stays literal."""
@@ -199,6 +264,32 @@ PAGE = """<!doctype html>
 {nav}
 </nav>
 <script src="../embed.js?v=4"></script>
+<script>
+/* the run-it links only make sense where something is executing PHP.
+   Braces are doubled because this template goes through str.format. */
+if (/^(localhost|127\\.0\\.0\\.1|\\[::1\\])$/.test(location.hostname)){{
+  document.querySelectorAll(".practise.run").forEach(function(el){{ el.hidden = false; }});
+  document.querySelectorAll(".runnote").forEach(function(el){{ el.remove(); }});
+}}
+</script>
+"""
+
+# the quizzes sit one folder over, so their relative paths differ
+QUIZ_PAGE = """<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>{title}</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+{body}
+</article>
+<nav class="lessonnav">
+{nav}
+</nav>
+<script src="../embed.js?v=4"></script>
 """
 
 
@@ -211,7 +302,12 @@ def main():
             print("  skip (missing):", folder)
             continue
         md = io.open(src, encoding="utf-8").read()
-        body = convert(md)
+        # drop the old prose version of the practise section; it is replaced
+        # below with real links rather than unclickable code chips
+        cut = md.find(PRACTISE_HEADING)
+        if cut != -1:
+            md = md[:cut].rstrip() + "\n"
+        body = convert(md) + "\n" + practise_block(slug)
 
         prev_l = LESSONS[idx - 1] if idx > 0 else None
         next_l = LESSONS[idx + 1] if idx + 1 < len(LESSONS) else None
@@ -227,6 +323,42 @@ def main():
         built.append(slug)
         print("  built %-12s from %s" % (slug + ".html", folder))
     print("\n%d lesson pages in %s" % (len(built), OUT))
+    build_quizzes()
+
+
+def build_quizzes():
+    """The mini-quizzes get pages too.
+
+    Each lesson links to its quiz, and a link to a .md file shows the raw
+    markdown - hashes, backticks and all. Same converter, so the quizzes
+    look like the rest of the course instead of like a text file.
+    """
+    src_dir = os.path.join(PHP, "quizzes", "mini-quizzes")
+    out_dir = os.path.join(PHP, "app", "quizzes")
+    if not os.path.isdir(src_dir):
+        return
+    os.makedirs(out_dir, exist_ok=True)
+
+    back = {p["quiz"]: slug for slug, p in PRACTISE.items() if p.get("quiz")}
+    n = 0
+    for name in sorted(os.listdir(src_dir)):
+        if not name.endswith(".md"):
+            continue
+        stem = name[:-3]
+        md = io.open(os.path.join(src_dir, name), encoding="utf-8").read()
+        title = "Mini-quiz"
+        for line in md.splitlines():
+            if line.startswith("# "):
+                title = line[2:].strip()
+                break
+        nav = ""
+        if stem in back:
+            nav = ('<a class="prev" href="../lessons/%s.html">'
+                   '<span>Back to</span>the lesson</a>' % back[stem])
+        page = QUIZ_PAGE.format(title=html.escape(title), body=convert(md), nav=nav)
+        io.open(os.path.join(out_dir, stem + ".html"), "w", encoding="utf-8").write(page)
+        n += 1
+    print("%d quiz pages in %s" % (n, out_dir))
 
 
 if __name__ == "__main__":

@@ -37,9 +37,18 @@ echo &quot;Hello&quot;;   // &lt;- this semicolon is not optional
 <p><strong>VS Code</strong> (free). Open the whole <code>Php</code> folder in it (File → Open Folder), not one file at a time. Install the extension called <strong>PHP Intelephense</strong> — it will underline your mistakes before you even run.</p>
 <hr>
 <p>➡️ Next: <strong>Lesson 1 — echo, variables, comments</strong>, in the rail on the left.</p>
+
 </article>
 <nav class="lessonnav">
 <a class="prev" href="algorithms.html"><span>Previous</span>Algorithms, flowcharts, pseudocode</a>
 <a class="next" href="basics.html"><span>Next lesson</span>echo, variables, comments</a>
 </nav>
 <script src="../embed.js?v=4"></script>
+<script>
+/* the run-it links only make sense where something is executing PHP.
+   Braces are doubled because this template goes through str.format. */
+if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)){
+  document.querySelectorAll(".practise.run").forEach(function(el){ el.hidden = false; });
+  document.querySelectorAll(".runnote").forEach(function(el){ el.remove(); });
+}
+</script>

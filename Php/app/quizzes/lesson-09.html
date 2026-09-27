@@ -1,0 +1,48 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mini-quiz — Lesson 9: MySQL</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>Mini-quiz — Lesson 9: MySQL</h1>
+<p><strong>8 questions · 5 minutes</strong></p>
+<p>Score: ____ / 8</p>
+<hr>
+<p><strong>1.</strong> Match the database word to the Excel word:</p>
+<div class="tablewrap"><table><thead><tr><th>Database</th><th>Excel</th></tr></thead><tbody><tr><td>table</td><td>______</td></tr><tr><td>row</td><td>______</td></tr><tr><td>column</td><td>______</td></tr></tbody></table></div>
+<p><strong>2.</strong> What does <code>AUTO_INCREMENT PRIMARY KEY</code> give you?</p>
+<p>Answer: ______________________________________</p>
+<p><strong>3.</strong> Write the SQL for each:</p>
+<p>Read every student: <code>_________________________________</code></p>
+<p>Read only those with grade 10 or more: <code>_________________________________</code></p>
+<p>Sort by grade, biggest first: <code>_________________________________</code></p>
+<p><strong>4.</strong> Write the SQL that adds a student called Rana with grade 16:</p>
+<pre class="lang-sql"><code>_________________________________</code></pre>
+<p><strong>5.</strong> What is the danger in this line?</p>
+<pre class="lang-sql"><code>DELETE FROM students;</code></pre>
+<p>Answer: ______________________________________</p>
+<p><strong>6.</strong> Write the PHP loop that prints every row&#x27;s name from <code>$result</code>:</p>
+<pre class="lang-php"><code>_________________________________
+_________________________________
+_________________________________</code></pre>
+<p><strong>7.</strong> What is wrong with this, and what should replace it?</p>
+<pre class="lang-php"><code>mysqli_query($conn, &quot;SELECT * FROM users WHERE id = &quot; . $_GET[&quot;id&quot;]);</code></pre>
+<p>Wrong: ______________________  Replace with: ______________________</p>
+<p><strong>8.</strong> In <code>mysqli_stmt_bind_param($stmt, &quot;si&quot;, $name, $age)</code> — what do <code>s</code> and <code>i</code> mean, and what must match?</p>
+<p>Answer: ______________________________________</p>
+<hr>
+<p>✅ 7–8 → lesson 10 · 5–6 → redo <code>03-insert.php</code> from memory · under 5 → practise SQL in phpMyAdmin first, no PHP</p>
+<hr>
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+<br>
+<ol><li>table = sheet · row = a row / one record · column = a column / one field</li><li>MySQL gives every new row the next unused number automatically, and that number is what identifies the row. You never set it yourself.</li><li><code>SELECT * FROM students;</code> <code>SELECT * FROM students WHERE grade &gt;= 10;</code> <code>SELECT * FROM students ORDER BY grade DESC;</code></li><li><code>INSERT INTO students (name, grade) VALUES (&#x27;Rana&#x27;, 16);</code></li><li>There is no <code>WHERE</code>, so it deletes <strong>every row in the table</strong>. There is no undo.</li><li><code></code><code>php while ($row = mysqli_fetch_assoc($result)) { echo $row[&quot;name&quot;] . &quot;&lt;br&gt;&quot;; } </code><code></code></li><li>The value from the URL is glued straight into the SQL — that&#x27;s <strong>SQL injection</strong>. Someone visiting <code>?id=1 OR 1=1</code> gets every row. Replace it with a prepared statement: <code></code><code>php $stmt = mysqli_prepare($conn, &quot;SELECT * FROM users WHERE id = ?&quot;); mysqli_stmt_bind_param($stmt, &quot;i&quot;, $id); </code><code></code></li><li><code>s</code> = string, <code>i</code> = integer. The <strong>number</strong> of letters must match the number of <code>?</code>, and their <strong>order</strong> must match the order of the variables after them.</li></ol>
+</details>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="../lessons/mysql.html"><span>Back to</span>the lesson</a>
+</nav>
+<script src="../embed.js?v=4"></script>

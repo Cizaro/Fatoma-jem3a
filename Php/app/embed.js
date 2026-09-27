@@ -56,7 +56,13 @@
     "code-lab.html": "lab", "../code-lab.html": "lab",
     "whiteboard.html": "board", "../whiteboard.html": "board",
     "exam-simulator.html": "exam", "../exam-simulator.html": "exam",
-    "games/php-arcade.html": "arcade", "../games/php-arcade.html": "arcade"
+    "games/php-arcade.html": "arcade", "../games/php-arcade.html": "arcade",
+    // the lesson and quiz pages live two folders deep, so they reach the
+    // rest of the course with ../../
+    "../../flashcards.html": "cards", "../../code-lab.html": "lab",
+    "../../stages.html": "stages", "../../roadmap.html": "roadmap",
+    "../../exam-simulator.html": "exam", "../../whiteboard.html": "board",
+    "../../games/php-arcade.html": "arcade", "../../index.html": "home"
   };
   document.addEventListener("click", function (e) {
     var a = e.target.closest ? e.target.closest("a") : null;

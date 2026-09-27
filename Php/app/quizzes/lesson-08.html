@@ -1,0 +1,46 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mini-quiz — Lesson 8: Forms</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>Mini-quiz — Lesson 8: Forms</h1>
+<p><strong>8 questions · 5 minutes</strong></p>
+<p>Score: ____ / 8</p>
+<hr>
+<p><strong>1.</strong> Label the three attributes:</p>
+<pre class="lang-html"><code>&lt;form method=&quot;post&quot; action=&quot;save.php&quot;&gt;
+    &lt;input type=&quot;text&quot; name=&quot;email&quot;&gt;
+&lt;/form&gt;</code></pre>
+<p><code>method</code> decides ______________________ <code>action</code> decides ______________________ <code>name</code> decides ______________________</p>
+<p><strong>2.</strong> The form above is submitted. Write the PHP that reads the email:</p>
+<pre class="lang-php"><code>_________________________________</code></pre>
+<p><strong>3.</strong> Fill the table:</p>
+<div class="tablewrap"><table><thead><tr><th></th><th>GET</th><th>POST</th></tr></thead><tbody><tr><td>Where does the data go?</td><td>______</td><td>______</td></tr><tr><td>Can the user see it?</td><td>______</td><td>______</td></tr><tr><td>Use it for a password?</td><td>______</td><td>______</td></tr></tbody></table></div>
+<p><strong>4.</strong> Your form sends but PHP says &quot;Undefined array key&quot;. Name two possible causes.</p>
+<ol><li>______________________  2. ______________________</li></ol>
+<p><strong>5.</strong> What does <code>htmlspecialchars()</code> do, and when must you use it?</p>
+<p>Answer: ______________________________________</p>
+<p><strong>6.</strong> Write the safe way to read a field that might not be there:</p>
+<pre class="lang-php"><code>$name = _________________________________</code></pre>
+<p><strong>7.</strong> Why do we check the data again in PHP when the HTML already had <code>required</code>?</p>
+<p>Answer: ______________________________________</p>
+<p><strong>8.</strong> What is this <code>if</code> for, and what breaks without it?</p>
+<pre class="lang-php"><code>if ($_SERVER[&quot;REQUEST_METHOD&quot;] === &quot;POST&quot;) { ... }</code></pre>
+<p>Answer: ______________________________________</p>
+<hr>
+<p>✅ 7–8 → lesson 9 · 5–6 → redo <code>register.php</code> and try to break it · under 5 → rebuild the simple form from scratch</p>
+<hr>
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+<br>
+<ol><li><code>method</code> = <strong>how</strong> the data travels (POST or GET). <code>action</code> = <strong>which file</strong> receives it. <code>name</code> = <strong>the key you read in PHP</strong>. No <code>name</code>, no data.</li><li><code>$email = $_POST[&quot;email&quot;];</code></li><li>GET: in the URL · visible to everyone · never for a password. POST: in the request body · not visible · yes, use it for passwords.</li><li>Any two of: the input has no <code>name</code> · the form says <code>get</code> but you&#x27;re reading <code>$_POST</code> (or the other way round) · you opened the page directly without submitting · the name is spelled differently in the form and in the PHP.</li><li>It turns <code>&lt;</code> <code>&gt;</code> <code>&quot;</code> <code>&amp;</code> into harmless codes, so text a user typed is <strong>displayed</strong> instead of being run as HTML or JavaScript. Use it every single time you print something a user typed.</li><li><code>$name = $_POST[&quot;name&quot;] ?? &quot;&quot;;</code></li><li>Because HTML validation runs in the <strong>browser</strong>, and the browser is the user&#x27;s. It can be switched off, edited, or skipped completely by sending the request another way. Anything that matters is checked again on the server.</li><li>It stops the handling code running on the first visit, before anything was submitted. Without it you get &quot;undefined array key&quot; warnings the moment the page opens.</li></ol>
+</details>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="../lessons/forms.html"><span>Back to</span>the lesson</a>
+</nav>
+<script src="../embed.js?v=4"></script>

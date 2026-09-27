@@ -1,0 +1,46 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mini-quiz — Lesson 2: Data Types &amp; Strings</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>Mini-quiz — Lesson 2: Data Types &amp; Strings</h1>
+<p><strong>8 questions · 5 minutes</strong></p>
+<p>Score: ____ / 8</p>
+<hr>
+<p><strong>1.</strong> Name the type of each value:</p>
+<div class="tablewrap"><table><thead><tr><th>Value</th><th>Type</th></tr></thead><tbody><tr><td><code>&quot;Rana&quot;</code></td><td>______</td></tr><tr><td><code>19</code></td><td>______</td></tr><tr><td><code>14.5</code></td><td>______</td></tr><tr><td><code>true</code></td><td>______</td></tr><tr><td><code>&quot;19&quot;</code></td><td>______</td></tr></tbody></table></div>
+<p><em>(that last one is the interesting one)</em></p>
+<p><strong>2.</strong> Which function tells you the value <strong>and</strong> the type?</p>
+<ul><li>a) <code>echo</code>  b) <code>print</code>  c) <code>var_dump</code>  d) <code>count</code></li></ul>
+<p><strong>3.</strong> What does <code>strlen(&quot;Beirut&quot;)</code> give?</p>
+<p>Answer: ______</p>
+<p><strong>4.</strong> What does <code>echo false;</code> print?</p>
+<p>Answer: ______</p>
+<p><strong>5.</strong> Predict these:</p>
+<pre class="lang-php"><code>echo 10 % 4;        // ______
+echo &quot;3&quot; + 4;       // ______
+echo &quot;3&quot; . 4;       // ______
+echo round(2.6);    // ______</code></pre>
+<p><strong>6.</strong> Write the code that prints <code>HELLO</code> starting from the variable <code>$word = &quot;hello&quot;;</code></p>
+<pre class="lang-php"><code>_________________________________</code></pre>
+<p><strong>7.</strong> <code>$price = 80;</code> — write the code that prints the price after a 25% discount. (The answer should be 60.)</p>
+<pre class="lang-php"><code>_________________________________</code></pre>
+<p><strong>8.</strong> In the word <code>&quot;Fatima&quot;</code>, what position is the letter <code>t</code>?</p>
+<p>Answer: ______  <em>(careful!)</em></p>
+<hr>
+<p>✅ 7–8 → lesson 3 · 5–6 → redo the string functions · under 5 → re-run <code>examples.php</code> line by line</p>
+<hr>
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+<br>
+<ol><li><code>&quot;Rana&quot;</code> string · <code>19</code> int · <code>14.5</code> float · <code>true</code> bool · <code>&quot;19&quot;</code> <strong>string</strong> — it&#x27;s in quotes, so it&#x27;s text, even though it looks like a number.</li><li><strong>c</strong> — <code>var_dump</code></li><li><code>6</code></li><li>Nothing at all. <code>echo false;</code> prints an empty string — that&#x27;s why we use <code>var_dump()</code>.</li><li><code>2</code> · <code>7</code> · <code>34</code> · <code>3</code></li><li><code>echo strtoupper($word);</code></li><li><code>echo $price - ($price * 25 / 100);</code>  (or <code>$price * 0.75</code>)</li><li><code>2</code> — counting starts at <strong>0</strong>, so F=0, a=1, t=2.</li></ol>
+</details>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="../lessons/datatypes.html"><span>Back to</span>the lesson</a>
+</nav>
+<script src="../embed.js?v=4"></script>

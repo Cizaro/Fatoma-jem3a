@@ -89,11 +89,20 @@ if (count($errors) == 0) {
 <p>Build a <strong>pizza order form</strong>: name, size (a <code>&lt;select&gt;</code>), toppings (checkboxes), and notes (a <code>&lt;textarea&gt;</code>). On submit, print a tidy order summary with a calculated price — base price by size, plus 1.50 per topping.</p>
 <p>Validate everything: the name is required, at least one topping must be chosen. Everything printed goes through <code>htmlspecialchars()</code>.</p>
 <p>This is genuinely the shape of a real e-commerce checkout, minus the payment.</p>
-<h2>▶ Practise this lesson</h2>
-<p><code>games/php-arcade.html</code> → <strong>Speed Round</strong> · <code>games/php-quest.php</code> (the last door) · <code>flashcards.html</code> → deck 5 <em>Forms &amp; security</em> · <code>quizzes/mini-quizzes/lesson-08.md</code></p>
+<h2>Practise this lesson</h2>
+<div class="practise"><a class="pl main" href="../quizzes/lesson-08.html">Mini-quiz</a><a class="pl" href="../../code-lab.html">Code lab</a><a class="pl" href="../../flashcards.html?deck=web">Forms &amp; security</a><a class="pl" href="../../games/php-arcade.html?game=order">Code Builder</a></div>
+<div class="practise run" hidden><a class="pl file" href="../../08-forms/examples.php" target="_blank" rel="noopener">08-forms/examples.php</a><a class="pl file" href="../../08-forms/exercises.php" target="_blank" rel="noopener">08-forms/exercises.php</a></div><p class="runnote">Open this page from <code>localhost</code> to run <code>examples.php</code> and <code>exercises.php</code>.</p>
 </article>
 <nav class="lessonnav">
 <a class="prev" href="functions.html"><span>Previous</span>Functions</a>
 <a class="next" href="mysql.html"><span>Next lesson</span>Database basics with MySQL</a>
 </nav>
 <script src="../embed.js?v=4"></script>
+<script>
+/* the run-it links only make sense where something is executing PHP.
+   Braces are doubled because this template goes through str.format. */
+if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)){
+  document.querySelectorAll(".practise.run").forEach(function(el){ el.hidden = false; });
+  document.querySelectorAll(".runnote").forEach(function(el){ el.remove(); });
+}
+</script>

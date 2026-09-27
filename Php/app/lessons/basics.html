@@ -74,11 +74,20 @@ echo $x;   // 9   — the 5 is gone forever</code></pre>
   TOTAL               10.50
 ==============================</code></pre>
 <p>Everything must come from variables — no typing the numbers into the text.</p>
-<h2>▶ Practise this lesson</h2>
-<p><code>games/php-arcade.html</code> → <strong>Match the Words</strong> · <code>flashcards.html</code> → deck 1 <em>Syntax &amp; symbols</em> · <code>quizzes/mini-quizzes/lesson-01.md</code></p>
+<h2>Practise this lesson</h2>
+<div class="practise"><a class="pl main" href="../quizzes/lesson-01.html">Mini-quiz</a><a class="pl" href="../../code-lab.html">Code lab</a><a class="pl" href="../../flashcards.html?deck=syntax">Syntax &amp; symbols</a><a class="pl" href="../../games/php-arcade.html?game=match">Match the Words</a></div>
+<div class="practise run" hidden><a class="pl file" href="../../01-basics/examples.php" target="_blank" rel="noopener">01-basics/examples.php</a><a class="pl file" href="../../01-basics/exercises.php" target="_blank" rel="noopener">01-basics/exercises.php</a></div><p class="runnote">Open this page from <code>localhost</code> to run <code>examples.php</code> and <code>exercises.php</code>.</p>
 </article>
 <nav class="lessonnav">
 <a class="prev" href="setup.html"><span>Previous</span>Getting PHP running</a>
 <a class="next" href="datatypes.html"><span>Next lesson</span>Data types and strings</a>
 </nav>
 <script src="../embed.js?v=4"></script>
+<script>
+/* the run-it links only make sense where something is executing PHP.
+   Braces are doubled because this template goes through str.format. */
+if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)){
+  document.querySelectorAll(".practise.run").forEach(function(el){ el.hidden = false; });
+  document.querySelectorAll(".runnote").forEach(function(el){ el.remove(); });
+}
+</script>

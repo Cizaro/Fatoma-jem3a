@@ -105,11 +105,20 @@ $result = mysqli_stmt_get_result($stmt);</code></pre>
 <h2>🏆 Boss challenge</h2>
 <p>Add a <strong><code>courses</code> table</strong> to the <code>school</code> database with an id, a title and a teacher. Fill it with five rows using <code>INSERT</code>. Then write a PHP page that shows both tables, side by side, each in its own HTML table.</p>
 <p>You&#x27;ve now got two tables. Joining them is lesson W on the roadmap.</p>
-<h2>▶ Practise this lesson</h2>
-<p><code>games/php-arcade.html</code> → <strong>Match the Words</strong> (SQL set) + <strong>Code Builder</strong> · <code>games/php-quest.php</code> (door 6) · <code>flashcards.html</code> → deck 6 <em>SQL &amp; MySQL</em> · <code>quizzes/mini-quizzes/lesson-09.md</code></p>
+<h2>Practise this lesson</h2>
+<div class="practise"><a class="pl main" href="../quizzes/lesson-09.html">Mini-quiz</a><a class="pl" href="../../code-lab.html">Code lab</a><a class="pl" href="../../flashcards.html?deck=sql">SQL &amp; MySQL</a><a class="pl" href="../../games/php-arcade.html?game=match">Match the Words</a></div>
+<div class="practise run" hidden><a class="pl file" href="../../09-mysql/examples.php" target="_blank" rel="noopener">09-mysql/examples.php</a><a class="pl file" href="../../09-mysql/exercises.php" target="_blank" rel="noopener">09-mysql/exercises.php</a></div><p class="runnote">Open this page from <code>localhost</code> to run <code>examples.php</code> and <code>exercises.php</code>.</p>
 </article>
 <nav class="lessonnav">
 <a class="prev" href="forms.html"><span>Previous</span>Forms: HTML talks to PHP</a>
 <a class="next" href="dynamic.html"><span>Next lesson</span>A dynamic page with a database</a>
 </nav>
 <script src="../embed.js?v=4"></script>
+<script>
+/* the run-it links only make sense where something is executing PHP.
+   Braces are doubled because this template goes through str.format. */
+if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)){
+  document.querySelectorAll(".practise.run").forEach(function(el){ el.hidden = false; });
+  document.querySelectorAll(".runnote").forEach(function(el){ el.remove(); });
+}
+</script>

@@ -82,11 +82,20 @@ for ($i = 1; $i &lt;= 5; $i++) {
 15 16 17 18 19 20 21
 ...</code></pre>
 <p>One loop, <code>printf(&quot;%3d&quot;, $i)</code> for the spacing, and a line break every time <code>$i % 7 == 0</code>. Tiny program, real-looking result.</p>
-<h2>▶ Practise this lesson</h2>
-<p><code>games/php-arcade.html</code> → <strong>Code Builder</strong> · <code>games/guess-number.php</code> (binary search) · <code>flashcards.html</code> → deck 4 <em>Loops &amp; conditions</em> · <code>quizzes/mini-quizzes/lesson-05.md</code></p>
+<h2>Practise this lesson</h2>
+<div class="practise"><a class="pl main" href="../quizzes/lesson-05.html">Mini-quiz</a><a class="pl" href="../../code-lab.html">Code lab</a><a class="pl" href="../../flashcards.html?deck=control">Loops &amp; conditions</a><a class="pl" href="../../games/php-arcade.html?game=blank">Fill the Blank</a></div>
+<div class="practise run" hidden><a class="pl file" href="../../05-loops/examples.php" target="_blank" rel="noopener">05-loops/examples.php</a><a class="pl file" href="../../05-loops/exercises.php" target="_blank" rel="noopener">05-loops/exercises.php</a></div><p class="runnote">Open this page from <code>localhost</code> to run <code>examples.php</code> and <code>exercises.php</code>.</p>
 </article>
 <nav class="lessonnav">
 <a class="prev" href="conditions.html"><span>Previous</span>Making decisions</a>
 <a class="next" href="arrays.html"><span>Next lesson</span>Arrays</a>
 </nav>
 <script src="../embed.js?v=4"></script>
+<script>
+/* the run-it links only make sense where something is executing PHP.
+   Braces are doubled because this template goes through str.format. */
+if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)){
+  document.querySelectorAll(".practise.run").forEach(function(el){ el.hidden = false; });
+  document.querySelectorAll(".runnote").forEach(function(el){ el.remove(); });
+}
+</script>

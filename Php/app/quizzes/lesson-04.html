@@ -1,0 +1,60 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mini-quiz — Lesson 4: Conditions</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>Mini-quiz — Lesson 4: Conditions</h1>
+<p><strong>8 questions · 5 minutes</strong></p>
+<p>Score: ____ / 8</p>
+<hr>
+<p><strong>1.</strong> What goes in the round brackets of an <code>if</code>, and what goes in the curly ones?</p>
+<p>Round <code>( )</code>: ______________________  Curly <code>{ }</code>: ______________________</p>
+<p><strong>2.</strong> What does this print, and why is it a bug?</p>
+<pre class="lang-php"><code>$mark = 19;
+if ($mark &gt;= 10) {
+    echo &quot;Pass&quot;;
+} elseif ($mark &gt;= 18) {
+    echo &quot;Excellent&quot;;
+}</code></pre>
+<p>Prints: ______  The bug: ______________________________________</p>
+<p><strong>3.</strong> Which of these are <strong>false</strong> in PHP? (tick them)</p>
+<ul><li>[ ] <code>0</code></li><li>[ ] <code>&quot;0&quot;</code></li><li>[ ] <code>&quot;hello&quot;</code></li><li>[ ] <code>&quot;&quot;</code></li><li>[ ] <code>-1</code></li><li>[ ] <code>&quot;false&quot;</code></li></ul>
+<p><strong>4.</strong> What is missing here?</p>
+<pre class="lang-php"><code>switch ($fruit) {
+    case &quot;apple&quot;:
+        echo &quot;red&quot;;
+    case &quot;lemon&quot;:
+        echo &quot;yellow&quot;;
+}</code></pre>
+<p>Answer: ______________________  What happens without it: ______________________</p>
+<p><strong>5.</strong> Spot the bug:</p>
+<pre class="lang-php"><code>if ($age &gt; 18);
+{
+    echo &quot;adult&quot;;
+}</code></pre>
+<p>Answer: ______________________________________</p>
+<p><strong>6.</strong> Write an <code>if</code>/<code>else</code> that prints <code>Even</code> or <code>Odd</code> for <code>$n</code>:</p>
+<pre class="lang-php"><code>_________________________________
+_________________________________
+_________________________________</code></pre>
+<p><strong>7.</strong> Put these in the correct order for a grading <code>if</code> chain: <code>&gt;= 10</code> · <code>&gt;= 16</code> · <code>&gt;= 18</code> · <code>&gt;= 14</code></p>
+<p>Answer: ______________________  Why that order: ______________________</p>
+<p><strong>8.</strong> When do you use <code>switch</code> instead of <code>if</code>?</p>
+<p>Answer: ______________________________________</p>
+<hr>
+<p>✅ 7–8 → lesson 5 · 5–6 → redo the BMI exercise · under 5 → stop, we redo conditions next call</p>
+<hr>
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+<br>
+<ol><li>Round <code>( )</code> = the condition, the question being asked. Curly <code>{ }</code> = the code that runs if the answer is yes.</li><li>Prints <code>Pass</code>. <strong>The bug:</strong> PHP stops at the first true branch, and <code>&gt;= 10</code> catches 19 before it ever reaches <code>&gt;= 18</code>. Conditions must go <strong>strictest first</strong>.</li><li>False: <code>0</code>, <code>&quot;0&quot;</code>, <code>&quot;&quot;</code>. True: <code>&quot;hello&quot;</code>, <code>-1</code>, <code>&quot;false&quot;</code> (a non-empty string is true).</li><li><code>break;</code> is missing. Without it PHP falls through and prints <code>redyellow</code>.</li><li>The <code>;</code> straight after <code>if (...)</code> ends the statement, so the <code>{ }</code> block is no longer attached to the <code>if</code> and runs every time.</li><li><code></code><code>php if ($n % 2 == 0) { echo &quot;Even&quot;; } else { echo &quot;Odd&quot;; } </code><code></code></li><li><code>&gt;= 18</code>, <code>&gt;= 16</code>, <code>&gt;= 14</code>, <code>&gt;= 10</code> — biggest first, because PHP takes the first true one.</li><li>Use <code>switch</code> when you compare one variable against several <strong>exact</strong> values. Use <code>if</code> for ranges like <code>&gt;= 10</code>.</li></ol>
+</details>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="../lessons/conditions.html"><span>Back to</span>the lesson</a>
+</nav>
+<script src="../embed.js?v=4"></script>

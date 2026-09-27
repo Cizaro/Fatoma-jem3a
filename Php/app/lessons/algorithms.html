@@ -117,10 +117,19 @@ endif</code></pre>
 <ol><li>the algorithm in plain English</li><li>the pseudocode, using the arrow and CAPITAL variables</li><li>the flowchart, with a proper start, stop and a loop arrow going back up</li></ol>
 <p>Then write it in PHP and check the PHP and the pseudocode agree line for line.</p>
 <p>If your flowchart&#x27;s loop arrow does not go <em>back</em> to an earlier box, you have not drawn a loop. You have drawn five boxes.</p>
-<h2>▶ Practise this lesson</h2>
-<p><code>quizzes/mini-quizzes/lesson-00-algorithms.md</code> · <code>games/php-arcade.html</code> → <strong>Match the Words</strong> (the algorithm set) · then <code>exercises.php</code> in this folder, which is your lecturer&#x27;s own five exercises.</p>
+<h2>Practise this lesson</h2>
+<div class="practise"><a class="pl main" href="../quizzes/lesson-00-algorithms.html">Mini-quiz</a><a class="pl" href="../../code-lab.html">Code lab</a><a class="pl" href="../../games/php-arcade.html?game=match">Match the Words</a></div>
+<div class="practise run" hidden><a class="pl file" href="../../00-algorithms/examples.php" target="_blank" rel="noopener">00-algorithms/examples.php</a><a class="pl file" href="../../00-algorithms/exercises.php" target="_blank" rel="noopener">00-algorithms/exercises.php</a></div><p class="runnote">Open this page from <code>localhost</code> to run <code>examples.php</code> and <code>exercises.php</code>.</p>
 </article>
 <nav class="lessonnav">
 <a class="next" href="setup.html"><span>Next lesson</span>Getting PHP running</a>
 </nav>
 <script src="../embed.js?v=4"></script>
+<script>
+/* the run-it links only make sense where something is executing PHP.
+   Braces are doubled because this template goes through str.format. */
+if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)){
+  document.querySelectorAll(".practise.run").forEach(function(el){ el.hidden = false; });
+  document.querySelectorAll(".runnote").forEach(function(el){ el.remove(); });
+}
+</script>

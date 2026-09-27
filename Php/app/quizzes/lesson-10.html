@@ -1,0 +1,46 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mini-quiz — Lesson 10: Dynamic Pages</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>Mini-quiz — Lesson 10: Dynamic Pages</h1>
+<p><strong>8 questions · 5 minutes · the last one before the project</strong></p>
+<p>Score: ____ / 8</p>
+<hr>
+<p><strong>1.</strong> In one sentence: what is the difference between a static page and a dynamic page?</p>
+<p>Answer: ______________________________________</p>
+<p><strong>2.</strong> Difference between <code>include</code> and <code>require</code>?</p>
+<p>Answer: ______________________________________</p>
+<p><strong>3.</strong> Why do we put the header in its own file?</p>
+<p>Answer: ______________________________________</p>
+<p><strong>4.</strong> This link sends an id to another page. Write the PHP that reads it <strong>safely</strong>:</p>
+<pre class="lang-html"><code>&lt;a href=&quot;detail.php?id=7&quot;&gt;See more&lt;/a&gt;</code></pre>
+<pre class="lang-php"><code>$id = _________________________________</code></pre>
+<p>Why the <code>(int)</code>? ______________________________________</p>
+<p><strong>5.</strong> Where do the <code>%</code> signs go in a LIKE search — in the SQL string or in the PHP variable?</p>
+<p>Answer: ______  Why: ______________________</p>
+<p><strong>6.</strong> The search finds nothing. What must the page show?</p>
+<p>Answer: ______________________________________</p>
+<p><strong>7.</strong> What do these two lines do together, and why is the second one needed?</p>
+<pre class="lang-php"><code>header(&quot;Location: index.php&quot;);
+exit;</code></pre>
+<p>Answer: ______________________________________</p>
+<p><strong>8.</strong> List the four rules from the lesson checklist that protect a dynamic page:</p>
+<ol><li>______________________________________</li><li>______________________________________</li><li>______________________________________</li><li>______________________________________</li></ol>
+<hr>
+<p>✅ 7–8 → start project 3 · 5–6 → rebuild <code>detail.php</code> from scratch first · under 5 → redo lesson 9 + 10 together</p>
+<hr>
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+<br>
+<ol><li>A static page shows everyone the same thing. A dynamic page builds itself from the database every time it&#x27;s opened — change a row, refresh, the page changed.</li><li><code>include</code> gives a warning and carries on if the file is missing. <code>require</code> stops the page completely. Use <code>require</code> for anything the page can&#x27;t live without.</li><li>So it&#x27;s written once and used by every page. Change the menu in one file and every page updates.</li><li><code>$id = (int)($_GET[&quot;id&quot;] ?? 0);</code> The <code>(int)</code> forces it to a number, so <code>?id=abc</code> or an injection attempt becomes a harmless <code>0</code> instead of reaching your query.</li><li>In the <strong>PHP variable</strong>: <code>$term = &quot;%&quot; . $search . &quot;%&quot;;</code> The SQL itself only ever contains <code>?</code> — that&#x27;s what keeps the statement safe.</li><li>A friendly &quot;nothing found&quot; message. A blank page makes the user think the site is broken.</li><li><code>header()</code> tells the browser to go to another page; <code>exit</code> stops the rest of the script from running. Together they also stop a refresh from saving the same thing twice.</li><li>Any four: prepared statements for every user value · <code>htmlspecialchars()</code> on every printed value · <code>(int)</code> on every id from a URL · a friendly empty-result message · redirect after saving · close the connection at the end.</li></ol>
+</details>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="../lessons/dynamic.html"><span>Back to</span>the lesson</a>
+</nav>
+<script src="../embed.js?v=4"></script>

@@ -1,0 +1,57 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mini-quiz — Lesson 7: Functions</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>Mini-quiz — Lesson 7: Functions</h1>
+<p><strong>8 questions · 5 minutes</strong></p>
+<p>Score: ____ / 8</p>
+<hr>
+<p><strong>1.</strong> Write the smallest possible function called <code>hello()</code> that echoes <code>Hi</code>:</p>
+<pre class="lang-php"><code>_________________________________
+_________________________________
+_________________________________</code></pre>
+<p><strong>2.</strong> You wrote the function but nothing happened when you ran the file. Why?</p>
+<p>Answer: ______________________________________</p>
+<p><strong>3.</strong> In <code>function add($a, $b)</code>, what are <code>$a</code> and <code>$b</code> called?</p>
+<p>Answer: ______________________</p>
+<p><strong>4.</strong> What is the difference between <code>echo</code> and <code>return</code> inside a function?</p>
+<p>Answer: ______________________________________</p>
+<p><strong>5.</strong> What does this print?</p>
+<pre class="lang-php"><code>function f($n) {
+    return $n + 1;
+    echo &quot;done&quot;;
+}
+echo f(5);</code></pre>
+<p>Answer: ______  Why: ______________________</p>
+<p><strong>6.</strong> Why does this give an error, and how do you fix it?</p>
+<pre class="lang-php"><code>$x = 10;
+function show() {
+    echo $x;
+}
+show();</code></pre>
+<p>Error because: ______________________  Fix: ______________________</p>
+<p><strong>7.</strong> Write <code>half($n)</code> that <strong>returns</strong> half of a number, then print <code>half(50)</code>:</p>
+<pre class="lang-php"><code>_________________________________
+_________________________________
+_________________________________</code></pre>
+<p><strong>8.</strong> What does the <code>= 10</code> do here, and when is it used?</p>
+<pre class="lang-php"><code>function discount($price, $percent = 10) { }</code></pre>
+<p>Answer: ______________________________________</p>
+<hr>
+<p>✅ 7–8 → lesson 8 · 5–6 → redo exercise 5 (<code>biggest</code>) · under 5 → practise <code>return</code> vs <code>echo</code> only</p>
+<hr>
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+<br>
+<ol><li><code></code><code>php function hello() { echo &quot;Hi&quot;; } </code><code></code></li><li>Because you never <strong>called</strong> it. Writing a function does nothing on its own — you need <code>hello();</code> on a line of its own.</li><li>Parameters. (The values you pass in when calling are the <em>arguments</em>.)</li><li><code>echo</code> prints it and hands back nothing. <code>return</code> gives the value back, so you can store it, do maths with it, or pass it somewhere else.</li><li><code>6</code>. <code>return</code> ends the function immediately, so the <code>echo &quot;done&quot;</code> never runs.</li><li><strong>Scope</strong> — a function cannot see variables from outside itself. Fix: pass it in. <code>function show($x) { echo $x; }</code> then <code>show(10);</code></li><li><code></code><code>php function half($n) { return $n / 2; } echo half(50);      // 25 </code><code></code></li><li>It&#x27;s a <strong>default value</strong>: used when the caller doesn&#x27;t give that argument. <code>discount(100)</code> uses 10. <code>discount(100, 30)</code> uses 30.</li></ol>
+</details>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="../lessons/functions.html"><span>Back to</span>the lesson</a>
+</nav>
+<script src="../embed.js?v=4"></script>

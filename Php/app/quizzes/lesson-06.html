@@ -1,0 +1,51 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mini-quiz — Lesson 6: Arrays</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>Mini-quiz — Lesson 6: Arrays</h1>
+<p><strong>8 questions · 5 minutes · this is the important one</strong></p>
+<p>Score: ____ / 8</p>
+<hr>
+<p><strong>1.</strong> Given <code>$a = [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;];</code></p>
+<div class="tablewrap"><table><thead><tr><th>Question</th><th>Answer</th></tr></thead><tbody><tr><td>What is <code>$a[0]</code>?</td><td>______</td></tr><tr><td>What is <code>$a[2]</code>?</td><td>______</td></tr><tr><td>What is <code>count($a)</code>?</td><td>______</td></tr><tr><td>What is the index of the LAST item?</td><td>______</td></tr></tbody></table></div>
+<p><strong>2.</strong> What happens if you write <code>echo $a[3];</code>?</p>
+<p>Answer: ______________________________________</p>
+<p><strong>3.</strong> Write the line that adds <code>&quot;yellow&quot;</code> to the end of <code>$a</code> — without writing an index:</p>
+<pre class="lang-php"><code>_________________________________</code></pre>
+<p><strong>4.</strong> Given <code>$user = [&quot;name&quot; =&gt; &quot;Rana&quot;, &quot;age&quot; =&gt; 19];</code> — print the name:</p>
+<pre class="lang-php"><code>_________________________________</code></pre>
+<p><strong>5.</strong> What is wrong with <code>echo $user[name];</code>?</p>
+<p>Answer: ______________________________________</p>
+<p><strong>6.</strong> Write a <code>foreach</code> that prints every colour in <code>$a</code>, one per line:</p>
+<pre class="lang-php"><code>_________________________________
+_________________________________
+_________________________________</code></pre>
+<p><strong>7.</strong> What does this print?</p>
+<pre class="lang-php"><code>$n = [10, 20, 30];
+echo array_sum($n) / count($n);</code></pre>
+<p>Answer: ______</p>
+<p><strong>8.</strong> Given this array, write the line that prints <code>Sara</code>:</p>
+<pre class="lang-php"><code>$class = [
+    [&quot;name&quot; =&gt; &quot;Rana&quot;, &quot;grade&quot; =&gt; 15],
+    [&quot;name&quot; =&gt; &quot;Sara&quot;, &quot;grade&quot; =&gt; 18],
+];</code></pre>
+<pre class="lang-php"><code>_________________________________</code></pre>
+<hr>
+<p>✅ 7–8 → lesson 7 · 5–6 → redo exercises 7 and 8 · <strong>under 5 → we do NOT move on.</strong> Arrays hold up everything after this, so we redo them with boxes drawn on the whiteboard.</p>
+<hr>
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+<br>
+<ol><li><code>red</code> · <code>blue</code> · <code>3</code> · the last index is <strong>2</strong>. (count is 3, but the last index is always count − 1)</li><li>A warning: <em>undefined array key 3</em>. There is no index 3 — the last one is 2.</li><li><code>$a[] = &quot;yellow&quot;;</code></li><li><code>echo $user[&quot;name&quot;];</code></li><li>The key needs quotes. Without them PHP looks for a <em>constant</em> called <code>name</code>, not a key.</li><li><code></code><code>php foreach ($a as $colour) { echo $colour . &quot;\n&quot;; } </code><code></code></li><li><code>20</code> — sum is 60, count is 3.</li><li><code>echo $class[1][&quot;name&quot;];</code> — item 1 of the outer array, then its <code>name</code> key.</li></ol>
+<p><strong>If you got 1 or 2 of these wrong, tell your instructor before moving on.</strong> Everything from lesson 8 onwards sits on top of arrays.</p>
+</details>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="../lessons/arrays.html"><span>Back to</span>the lesson</a>
+</nav>
+<script src="../embed.js?v=4"></script>

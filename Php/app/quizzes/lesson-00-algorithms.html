@@ -1,0 +1,68 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mini-quiz — Lesson 0A: Algorithms, Flowcharts and Pseudocode</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>Mini-quiz — Lesson 0A: Algorithms, Flowcharts and Pseudocode</h1>
+<p><strong>8 questions · 5 minutes · close the lesson file first</strong></p>
+<p>This is MIT320 Lesson 1 material. No PHP needed for any of it.</p>
+<p>Score: ____ / 8</p>
+<hr>
+<p><strong>1.</strong> Define an algorithm in one sentence.</p>
+<p>______________________________________________________________</p>
+<p><strong>2.</strong> An algorithm must do three things to count as one. Name them.</p>
+<ol><li>______________________________________</li><li>______________________________________</li><li>______________________________________</li></ol>
+<p><strong>3.</strong> Name the six phases of the Program Development Life Cycle, in order.</p>
+<ol><li>____________________  4. ____________________</li><li>____________________  5. ____________________</li><li>____________________  6. ____________________</li></ol>
+<p><strong>4.</strong> Which flowchart symbol is used for each job?</p>
+<div class="tablewrap"><table><thead><tr><th>Job</th><th>Symbol</th></tr></thead><tbody><tr><td>Start of the program</td><td>____________</td></tr><tr><td>Reading a number in</td><td>____________</td></tr><tr><td>Working out an average</td><td>____________</td></tr><tr><td>Deciding if A is bigger than B</td><td>____________</td></tr></tbody></table></div>
+<p><strong>5.</strong> Two rules every flowchart must obey. What are they?</p>
+<p>______________________________________________________________</p>
+<p>______________________________________________________________</p>
+<p><strong>6.</strong> Write this as pseudocode, using your lecturer&#x27;s notation:</p>
+<blockquote><p>Read two marks. Average them. If the average is 50 or more print &quot;PASS&quot;, otherwise print &quot;FAIL&quot;.</p></blockquote>
+<pre><code>____________________________________________
+____________________________________________
+____________________________________________
+____________________________________________
+____________________________________________</code></pre>
+<p><strong>7.</strong> In pseudocode, what is the difference between <code>&lt;--</code> and <code>=</code> ?</p>
+<p>______________________________________________________________</p>
+<p><strong>8.</strong> Trace Euclid&#x27;s GCD for <strong>A = 20, B = 12</strong>. Fill the table in and give the answer.</p>
+<div class="tablewrap"><table><thead><tr><th>Step</th><th>X</th><th>Y</th></tr></thead><tbody><tr><td>start</td><td>20</td><td>12</td></tr><tr><td>1</td><td>____</td><td>____</td></tr><tr><td>2</td><td>____</td><td>____</td></tr><tr><td>3</td><td>____</td><td>____</td></tr></tbody></table></div>
+<p>GCD = ________</p>
+<hr>
+<p><strong>7 or 8</strong> — move on to <code>00-setup/</code> and start writing PHP. <strong>5 or 6</strong> — re-read sections 4 and 5 of the lesson, then redo questions 6 and 8. <strong>under 5</strong> — do the lesson again with a pen. This one is all recall, and recall needs writing, not reading.</p>
+<hr>
+<details>
+<summary><b>✅ Check your answers</b></summary>
+<br>
+<p><strong>1.</strong> A step-by-step procedure for solving a problem. <em>(Any wording with &quot;steps&quot; and &quot;solve a problem&quot; in it is fine.)</em></p>
+<p><strong>2.</strong> It must have data to work on · it must produce at least one result · it must terminate after a finite number of steps.</p>
+<p><strong>3.</strong> Problem definition · Problem analysis · Algorithm development · Coding and documentation · Testing and debugging · Maintenance.</p>
+<p><strong>4.</strong></p>
+<div class="tablewrap"><table><thead><tr><th>Job</th><th>Symbol</th></tr></thead><tbody><tr><td>Start of the program</td><td>oval</td></tr><tr><td>Reading a number in</td><td>parallelogram</td></tr><tr><td>Working out an average</td><td>rectangle</td></tr><tr><td>Deciding if A is bigger than B</td><td>diamond</td></tr></tbody></table></div>
+<p><strong>5.</strong> It must have a start and a stop · every step must be connected, nothing left hanging.</p>
+<p><strong>6.</strong> Any pseudocode with these four ideas, for example:</p>
+<pre><code>Input M1, M2
+AVG &lt;-- (M1 + M2) / 2
+if (AVG &gt;= 50) then
+    Print &quot;PASS&quot;
+else
+    Print &quot;FAIL&quot;
+endif</code></pre>
+<p>Marks are for: reading both marks, the arrow assignment, the condition the right way round, and both branches. Note <code>&gt;= 50</code> and <code>&lt; 50</code> are both correct here, as long as the PASS and FAIL are on the matching sides.</p>
+<p><strong>7.</strong> <code>&lt;--</code> puts a value into a variable (assignment). <code>=</code> asks whether two things are equal (comparison). In PHP they become <code>=</code> and <code>==</code>, which is the swap that catches everybody.</p>
+<p><strong>8.</strong></p>
+<div class="tablewrap"><table><thead><tr><th>Step</th><th>X</th><th>Y</th></tr></thead><tbody><tr><td>start</td><td>20</td><td>12</td></tr><tr><td>1</td><td>8</td><td>12</td></tr><tr><td>2</td><td>8</td><td>4</td></tr><tr><td>3</td><td>4</td><td>4</td></tr></tbody></table></div>
+<p><strong>GCD = 4.</strong> Check: 4 divides 20 five times and 12 three times.</p>
+</details>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="../lessons/algorithms.html"><span>Back to</span>the lesson</a>
+</nav>
+<script src="../embed.js?v=4"></script>

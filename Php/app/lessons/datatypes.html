@@ -81,11 +81,20 @@ $s      = (string) 100;     // &quot;100&quot;</code></pre>
 <h2>🏆 Boss challenge</h2>
 <p>Write a <strong>username generator</strong>: from <code>$first = &quot;fatima&quot;</code> and <code>$last = &quot;hassan&quot;</code>, produce <code>F.Hassan</code> — first letter of the first name capitalised, a dot, then the surname capitalised.</p>
 <p>You need <code>substr</code>, <code>strtoupper</code>, <code>ucfirst</code> and <code>.</code> working together in one line.</p>
-<h2>▶ Practise this lesson</h2>
-<p><code>games/php-arcade.html</code> → <strong>Guess the Output</strong> · <code>flashcards.html</code> → deck 2 <em>String functions</em> · <code>quizzes/mini-quizzes/lesson-02.md</code></p>
+<h2>Practise this lesson</h2>
+<div class="practise"><a class="pl main" href="../quizzes/lesson-02.html">Mini-quiz</a><a class="pl" href="../../code-lab.html">Code lab</a><a class="pl" href="../../flashcards.html?deck=strings">String functions</a><a class="pl" href="../../games/php-arcade.html?game=output">Guess the Output</a></div>
+<div class="practise run" hidden><a class="pl file" href="../../02-datatypes/examples.php" target="_blank" rel="noopener">02-datatypes/examples.php</a><a class="pl file" href="../../02-datatypes/exercises.php" target="_blank" rel="noopener">02-datatypes/exercises.php</a></div><p class="runnote">Open this page from <code>localhost</code> to run <code>examples.php</code> and <code>exercises.php</code>.</p>
 </article>
 <nav class="lessonnav">
 <a class="prev" href="basics.html"><span>Previous</span>echo, variables, comments</a>
 <a class="next" href="operators.html"><span>Next lesson</span>Operators</a>
 </nav>
 <script src="../embed.js?v=4"></script>
+<script>
+/* the run-it links only make sense where something is executing PHP.
+   Braces are doubled because this template goes through str.format. */
+if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)){
+  document.querySelectorAll(".practise.run").forEach(function(el){ el.hidden = false; });
+  document.querySelectorAll(".runnote").forEach(function(el){ el.remove(); });
+}
+</script>

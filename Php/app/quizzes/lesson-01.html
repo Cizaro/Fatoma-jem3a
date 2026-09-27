@@ -1,0 +1,51 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mini-quiz — Lesson 1: echo, Variables, Comments</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=4">
+<body class="reader">
+<article class="prose">
+<h1>Mini-quiz — Lesson 1: echo, Variables, Comments</h1>
+<p><strong>8 questions · 5 minutes · close the lesson file first</strong></p>
+<p>Score: ____ / 8</p>
+<hr>
+<p><strong>1.</strong> What does <code>echo</code> do?</p>
+<p>______________________________________</p>
+<p><strong>2.</strong> Circle the valid variable names:</p>
+<p><code>$name</code> · <code>age</code> · <code>$2fast</code> · <code>$my_age</code> · <code>$myAge</code> · <code>$my age</code></p>
+<p><strong>3.</strong> What does this print?</p>
+<pre class="lang-php"><code>$city = &quot;Tyre&quot;;
+echo &quot;I love $city&quot;;</code></pre>
+<p>Answer: ______________________________________</p>
+<p><strong>4.</strong> And this one?</p>
+<pre class="lang-php"><code>$city = &quot;Tyre&quot;;
+echo &#x27;I love $city&#x27;;</code></pre>
+<p>Answer: ______________________________________</p>
+<p><strong>5.</strong> What is printed here, and why?</p>
+<pre class="lang-php"><code>$x = 3;
+$x = 8;
+echo $x;</code></pre>
+<p>Answer: ______  Why: ______________________________________</p>
+<p><strong>6.</strong> Write one line that joins <code>$a = &quot;Good&quot;</code> and <code>$b = &quot;Night&quot;</code> into <code>Good Night</code>:</p>
+<pre class="lang-php"><code>_________________________________</code></pre>
+<p><strong>7.</strong> There are 2 mistakes. Find them:</p>
+<pre class="lang-php"><code>$name = &quot;Rana&quot;
+echo &quot;Hi $nmae&quot;;</code></pre>
+<p>Mistake 1: ______________________  Mistake 2: ______________________</p>
+<p><strong>8.</strong> Write a comment in PHP that says <code>this is my first program</code>:</p>
+<pre class="lang-php"><code>_________________________________</code></pre>
+<hr>
+<p>✅ 7–8 → straight to lesson 2 · 5–6 → redo exercises 3 and 4 · under 5 → we go through it again together</p>
+<hr>
+<details>
+<summary><b>✅ Check your answers</b> — open this only when you have finished</summary>
+<br>
+<ol><li>It prints / outputs something.</li><li>Valid: <code>$name</code>, <code>$my_age</code>, <code>$myAge</code>. Invalid: <code>age</code> (no <code>$</code>), <code>$2fast</code> (starts with a digit), <code>$my age</code> (has a space).</li><li><code>I love Tyre</code></li><li><code>I love $city</code> — single quotes are literal, they don&#x27;t read variables.</li><li><code>8</code>. A variable only keeps the <strong>last</strong> thing you put in it; the 3 is gone.</li><li><code>echo $a . &quot; &quot; . $b;</code>  (or <code>echo &quot;$a $b&quot;;</code>) — the space matters.</li><li>Missing <code>;</code> at the end of line 1, and <code>$nmae</code> is a typo for <code>$name</code>.</li><li><code>// this is my first program</code>  (<code>#</code> or <code>/* */</code> also correct)</li></ol>
+</details>
+</article>
+<nav class="lessonnav">
+<a class="prev" href="../lessons/basics.html"><span>Back to</span>the lesson</a>
+</nav>
+<script src="../embed.js?v=4"></script>
