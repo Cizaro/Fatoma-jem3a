@@ -1,10 +1,11 @@
 # Lesson 8 — YOUR TURN
 
-Start the server first:
+Start the server first: open the **XAMPP Control Panel** and press **Start**
+next to **Apache**, then work in a folder inside `C:\xampp\htdocs\` and open
+your file at `http://localhost/<your folder>/<your file>.php`.
 
-```bash
-php -S localhost:8000
-```
+(Without XAMPP: `php -S localhost:8000` from the `Php` folder, then
+`http://localhost:8000/08-forms/...`.)
 
 ### Exercise 1 — a greeting form
 Make a new file `my-form.php`. It asks for a **first name** and a **country**,

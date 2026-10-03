@@ -31,18 +31,28 @@ You should see something like `PHP 8.2.12`.
 
 ### Way 2 — Browser with a server (we need this for lesson 8 + the games)
 
-PHP has a server built in. Run this **inside the Php folder**:
+**XAMPP — this is what your class uses.** XAMPP is Apache + PHP + MySQL in one
+install, and Apache is the part that serves pages.
+
+1. Open the **XAMPP Control Panel**.
+2. Press **Start** next to **Apache**. It goes green. That's it.
+3. Put your file inside `C:\xampp\htdocs\`, ideally in a folder of your own:
+   `C:\xampp\htdocs\Fatima\hello.php`.
+4. Open `http://localhost/Fatima/hello.php`.
+
+`localhost` **is** the `htdocs` folder. So the folders you make inside `htdocs`
+become the address — you never type `C:\xampp\htdocs` into the browser.
+Start **MySQL** too once you reach lessons 9 and 10; before that, Apache alone.
+
+**Or, without XAMPP.** PHP has a small server built in. Run this **inside the
+Php folder**:
 
 ```bash
 php -S localhost:8000
 ```
 
-Then open your browser at `http://localhost:8000`. Leave the terminal open while you use it —
-closing it stops the server. Press `Ctrl + C` to stop.
-
-> If your teacher at uni asks for XAMPP, it's the same idea: XAMPP just gives you Apache +
-> PHP + MySQL together in one install. Everything you learn here works there too — you put your
-> files in `xampp/htdocs/` and open `http://localhost/yourfile.php`.
+Then open `http://localhost:8000`. Leave the terminal open while you use it —
+closing it stops the server. `Ctrl + C` stops it.
 
 ## The rules of a PHP file
 

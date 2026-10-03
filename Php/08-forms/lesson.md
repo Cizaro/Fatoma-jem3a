@@ -5,14 +5,33 @@ This is the lesson where PHP becomes **web** development. This matches
 
 ## 1. First: run a server
 
-Forms need a server. In the `Php` folder, run:
+A form has nowhere to send its data unless a server is running. Double-clicking
+a `.php` file will never work - the browser just shows you the code.
+
+**XAMPP - this is what your class uses.**
+
+1. Open the **XAMPP Control Panel**.
+2. Press **Start** next to **Apache**. It turns green. That is the whole setup.
+3. Put your file inside `C:\xampp\htdocs\`. A folder of your own is tidier:
+   `C:\xampp\htdocs\Fatima\form.php`.
+4. Open `http://localhost/Fatima/form.php` in the browser.
+
+The address is the important part. `localhost` **is** the `htdocs` folder, so
+every folder you make inside `htdocs` becomes part of the address. You never
+type the `C:\xampp\htdocs` part into the browser.
+
+> **MySQL** only needs starting for lessons 9 and 10. For forms, Apache on its
+> own is enough.
+
+**Or, without XAMPP.** From the `Php` folder in a terminal:
 
 ```bash
 php -S localhost:8000
 ```
 
-Then open `http://localhost:8000/08-forms/form.php` in your browser.
-Keep the terminal open. `Ctrl + C` stops the server.
+Then open `http://localhost:8000/08-forms/form.php`. Keep the terminal open;
+`Ctrl + C` stops it. Same result, fewer moving parts - but your class uses
+XAMPP, so use XAMPP.
 
 ## 2. Mixing PHP into HTML
 

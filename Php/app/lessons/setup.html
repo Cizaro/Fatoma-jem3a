@@ -20,10 +20,12 @@
 <pre class="lang-bash"><code>php -v</code></pre>
 <p>You should see something like <code>PHP 8.2.12</code>.</p>
 <h3>Way 2 — Browser with a server (we need this for lesson 8 + the games)</h3>
-<p>PHP has a server built in. Run this <strong>inside the Php folder</strong>:</p>
+<p><strong>XAMPP — this is what your class uses.</strong> XAMPP is Apache + PHP + MySQL in one install, and Apache is the part that serves pages.</p>
+<ol><li>Open the <strong>XAMPP Control Panel</strong>.</li><li>Press <strong>Start</strong> next to <strong>Apache</strong>. It goes green. That&#x27;s it.</li><li>Put your file inside <code>C:\xampp\htdocs\</code>, ideally in a folder of your own: <code>C:\xampp\htdocs\Fatima\hello.php</code>.</li><li>Open <code>http://localhost/Fatima/hello.php</code>.</li></ol>
+<p><code>localhost</code> <strong>is</strong> the <code>htdocs</code> folder. So the folders you make inside <code>htdocs</code> become the address — you never type <code>C:\xampp\htdocs</code> into the browser. Start <strong>MySQL</strong> too once you reach lessons 9 and 10; before that, Apache alone.</p>
+<p><strong>Or, without XAMPP.</strong> PHP has a small server built in. Run this <strong>inside the Php folder</strong>:</p>
 <pre class="lang-bash"><code>php -S localhost:8000</code></pre>
-<p>Then open your browser at <code>http://localhost:8000</code>. Leave the terminal open while you use it — closing it stops the server. Press <code>Ctrl + C</code> to stop.</p>
-<blockquote><p>If your teacher at uni asks for XAMPP, it&#x27;s the same idea: XAMPP just gives you Apache + PHP + MySQL together in one install. Everything you learn here works there too — you put your files in <code>xampp/htdocs/</code> and open <code>http://localhost/yourfile.php</code>.</p></blockquote>
+<p>Then open <code>http://localhost:8000</code>. Leave the terminal open while you use it — closing it stops the server. <code>Ctrl + C</code> stops it.</p>
 <h2>The rules of a PHP file</h2>
 <ol><li>The file must end with <strong><code>.php</code></strong> — not <code>.txt</code>, not <code>.html</code>.</li><li>PHP code lives between <code>&lt;?php</code> and <code>?&gt;</code>. Anything outside those tags is sent out as plain text.</li><li>Every statement ends with a <strong>semicolon <code>;</code></strong>. Forgetting it is error #1 for beginners.</li></ol>
 <pre class="lang-php"><code>&lt;?php

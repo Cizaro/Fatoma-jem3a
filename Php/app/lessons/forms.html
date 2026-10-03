@@ -10,9 +10,14 @@
 <h1>Lesson 8 — Forms: HTML talks to PHP</h1>
 <p>This is the lesson where PHP becomes <strong>web</strong> development. This matches <strong>Chapter 10 - Building Dynamic Webpages with PHP</strong> in your textbook.</p>
 <h2>1. First: run a server</h2>
-<p>Forms need a server. In the <code>Php</code> folder, run:</p>
+<p>A form has nowhere to send its data unless a server is running. Double-clicking a <code>.php</code> file will never work - the browser just shows you the code.</p>
+<p><strong>XAMPP - this is what your class uses.</strong></p>
+<ol><li>Open the <strong>XAMPP Control Panel</strong>.</li><li>Press <strong>Start</strong> next to <strong>Apache</strong>. It turns green. That is the whole setup.</li><li>Put your file inside <code>C:\xampp\htdocs\</code>. A folder of your own is tidier: <code>C:\xampp\htdocs\Fatima\form.php</code>.</li><li>Open <code>http://localhost/Fatima/form.php</code> in the browser.</li></ol>
+<p>The address is the important part. <code>localhost</code> <strong>is</strong> the <code>htdocs</code> folder, so every folder you make inside <code>htdocs</code> becomes part of the address. You never type the <code>C:\xampp\htdocs</code> part into the browser.</p>
+<blockquote><p><strong>MySQL</strong> only needs starting for lessons 9 and 10. For forms, Apache on its own is enough.</p></blockquote>
+<p><strong>Or, without XAMPP.</strong> From the <code>Php</code> folder in a terminal:</p>
 <pre class="lang-bash"><code>php -S localhost:8000</code></pre>
-<p>Then open <code>http://localhost:8000/08-forms/form.php</code> in your browser. Keep the terminal open. <code>Ctrl + C</code> stops the server.</p>
+<p>Then open <code>http://localhost:8000/08-forms/form.php</code>. Keep the terminal open; <code>Ctrl + C</code> stops it. Same result, fewer moving parts - but your class uses XAMPP, so use XAMPP.</p>
 <h2>2. Mixing PHP into HTML</h2>
 <p>A <code>.php</code> file can contain both. PHP runs first, HTML is what the visitor sees.</p>
 <pre class="lang-php"><code>&lt;h1&gt;Hello &lt;?php echo $name; ?&gt;&lt;/h1&gt;</code></pre>
