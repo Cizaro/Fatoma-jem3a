@@ -4,13 +4,13 @@
    Change a token here and the whole ecosystem moves together.
    ============================================================ */
 :root{
-  --paper:#F7F6F3; --surface:#FFFFFF; --surface-2:#EFEDE8;
-  --ink:#1A1D21; --ink-2:#5C6168; --ink-3:#8D939B;
-  --line:#E2DFD8; --accent:#0F7B6C; --accent-soft:#E3F1EE;
+  --paper:#FAF6EF; --surface:#FFFDF8; --surface-2:#F1EADD;
+  --ink:#221E19; --ink-2:#5E564C; --ink-3:#8F867A;
+  --line:#E6DCC9; --accent:#0F7B6C; --accent-soft:#E3F1EE;
   --warm:#B5541F; --warm-soft:#FBEDE4; --gold:#A57C1B; --gold-soft:#FBF2DC;
-  --cabinet:#15181C; --cabinet-ink:#F2F1EE;
-  --shadow:0 1px 2px rgba(26,29,33,.06), 0 10px 28px -14px rgba(26,29,33,.28);
-  --lift:0 2px 4px rgba(26,29,33,.06), 0 18px 40px -20px rgba(26,29,33,.45);
+  --cabinet:#1C1814; --cabinet-ink:#F4F0E8;
+  --shadow:0 1px 2px rgba(60,46,28,.07), 0 10px 28px -14px rgba(60,46,28,.26);
+  --lift:0 2px 4px rgba(60,46,28,.07), 0 18px 40px -20px rgba(60,46,28,.40);
   --display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
   --body:"Public Sans",system-ui,-apple-system,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
@@ -36,22 +36,22 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
-    --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
-    --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
+    --paper:#17140F; --surface:#201C16; --surface-2:#2A251E;
+    --ink:#F0EBE2; --ink-2:#ABA396; --ink-3:#7E766A;
+    --line:#36302F; --accent:#4FC2AE; --accent-soft:#16302C;
     --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B; --gold-soft:#2C2517;
-    --cabinet:#0E1013; --cabinet-ink:#F2F1EE;
+    --cabinet:#120F0B; --cabinet-ink:#F4F0E8;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
     --lift:0 2px 4px rgba(0,0,0,.5), 0 18px 40px -20px rgba(0,0,0,.9);
     --w1:#4FC2AE; --w2:#6E9CC4; --w3:#D8B45B; --w4:#E08B5A; --w5:#C97F77; --w6:#9A90C4;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#14161A; --surface:#1D2126; --surface-2:#262B31;
-  --ink:#ECEEF1; --ink-2:#A3A9B2; --ink-3:#787E88;
-  --line:#30353C; --accent:#4FC2AE; --accent-soft:#16302C;
+  --paper:#17140F; --surface:#201C16; --surface-2:#2A251E;
+  --ink:#F0EBE2; --ink-2:#ABA396; --ink-3:#7E766A;
+  --line:#36302F; --accent:#4FC2AE; --accent-soft:#16302C;
   --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B; --gold-soft:#2C2517;
-  --cabinet:#0E1013; --cabinet-ink:#F2F1EE;
+  --cabinet:#120F0B; --cabinet-ink:#F4F0E8;
   --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
   --lift:0 2px 4px rgba(0,0,0,.5), 0 18px 40px -20px rgba(0,0,0,.9);
   --w1:#4FC2AE; --w2:#6E9CC4; --w3:#D8B45B; --w4:#E08B5A; --w5:#C97F77; --w6:#9A90C4;

@@ -4,7 +4,11 @@
     {
       "name": "course",
       "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8111"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8111"
+      ],
       "port": 8111
     }
   ]

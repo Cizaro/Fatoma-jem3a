@@ -1,0 +1,229 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Teaching Order</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="app/app.css?v=5">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:900px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
+
+/* where we are now - the one thing he opens this page to find out */
+.now{background:var(--surface);border:1px solid var(--accent);border-radius:var(--r-lg);
+  padding:18px 20px;margin-bottom:26px;box-shadow:var(--shadow)}
+.now .lbl{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--accent);font-weight:700;margin-bottom:5px}
+.now h2{font-family:var(--display);font-size:23px;margin:0 0 5px;line-height:1.25}
+.now .meta{color:var(--ink-3);font-size:13.5px}
+.now .acts{display:flex;gap:9px;margin-top:13px;flex-wrap:wrap}
+
+.prog{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.prog .bar{flex:1;height:7px;background:var(--surface-2);border-radius:var(--r-pill);overflow:hidden}
+.prog .bar i{display:block;height:100%;background:var(--accent);border-radius:var(--r-pill);
+  transition:width .3s}
+.prog b{font-family:var(--mono);font-size:13px;color:var(--ink-2);white-space:nowrap}
+
+.partname{display:flex;align-items:baseline;gap:11px;margin:34px 0 14px}
+.partname h2{font-family:var(--display);font-size:19px;margin:0}
+.partname .ses{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.partname .ln{flex:1;height:1px;background:var(--line)}
+
+.step{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  margin-bottom:10px;overflow:hidden}
+.step.done{opacity:.62}
+.step > .top{display:flex;gap:12px;align-items:center;padding:13px 16px;cursor:pointer}
+.step > .top:hover{background:var(--surface-2)}
+.tick{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);
+  flex:none;display:grid;place-items:center;font-size:13px;color:#fff;
+  background:none;cursor:pointer;padding:0;line-height:1}
+.tick.on{background:var(--accent);border-color:var(--accent)}
+.num{font-family:var(--mono);font-size:12px;color:var(--ink-3);min-width:22px}
+.ttl{flex:1;font-weight:600}
+.step.done .ttl{text-decoration:line-through;text-decoration-color:var(--ink-3)}
+.caret{color:var(--ink-3);font-size:12px}
+
+.inner{padding:2px 16px 16px 54px;border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:76px 1fr;gap:12px;padding:9px 0;
+  border-bottom:1px dashed var(--line)}
+.row:last-of-type{border-bottom:0}
+.row .k{font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:700;padding-top:3px}
+.row.trap .k{color:var(--warm)}
+.row.trap .v{color:var(--warm)}
+pre.show{background:var(--cabinet);color:var(--cabinet-ink);font-family:var(--mono);
+  font-size:12.5px;line-height:1.55;padding:12px 14px;border-radius:var(--r-sm);
+  overflow-x:auto;margin:3px 0 0}
+.go{display:flex;gap:7px;flex-wrap:wrap;padding-top:11px}
+.gl{font-size:12px;letter-spacing:.03em;background:var(--accent-soft);color:var(--accent);
+  border:1px solid transparent;border-radius:var(--r-pill);padding:5px 13px;
+  text-decoration:none;font-weight:600}
+.gl:hover{border-color:var(--accent)}
+.chip{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;background:none;
+  border:1px solid var(--line);color:var(--ink-2);border-radius:var(--r-pill);
+  padding:5px 12px;cursor:pointer;font-family:inherit;text-decoration:none}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.solid{background:var(--accent);border-color:var(--accent);color:#fff}
+.intro{color:var(--ink-2);margin:0 0 22px}
+@media (max-width:620px){
+  .inner{padding-left:16px}
+  .row{grid-template-columns:1fr;gap:2px}
+}
+</style>
+
+<div class="wrap">
+<header>
+  <div>
+    <h1>Teaching <em>Order</em></h1>
+    <p class="hsub">Every topic in the order it has to be taught, with the sentence to say,
+      the thing to draw, and what she does next.</p>
+  </div>
+  <div class="hbtns">
+    <a class="chip" href="teach.html">session scripts</a>
+    <button class="chip" id="themeBtn">theme</button>
+  </div>
+</header>
+
+<p class="intro">Tick a topic once she can do it without you. The card at the top always
+  shows the next untaught one, so this page answers the only question that matters
+  before a session: <b>what now?</b></p>
+
+<div class="now" id="now"></div>
+
+<div class="prog">
+  <div class="bar"><i id="bar"></i></div>
+  <b id="pct">0 / 0</b>
+  <button class="chip" id="reset">reset</button>
+</div>
+
+<div id="list"></div>
+
+<footer>
+  <a href="teach.html">session scripts</a><a href="roadmap.html">roadmap</a>
+  <a href="php-problems.html">problems</a><a href="index.html">course home</a>
+  <br><br>Your ticks are saved in this browser only.
+</footer>
+</div>
+
+<script src="app/teaching-order-data.js?v=1"></script>
+<script>
+/* ---------------------------------------------------------------
+   The teaching spine, rendered. The data file is the content; this
+   only draws it and remembers which steps are done.
+
+   The card at the top is the point of the page: it reads the ticks
+   and names the next topic, so the answer to "what do I teach
+   tonight" is the first thing on screen.
+--------------------------------------------------------------- */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const KEY = "php_teachorder_v1";
+
+let done = {};
+try { done = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e){}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch(e){} };
+
+const links = s => s.go ? `<div class="go">` +
+  s.go.map(([label, href]) => `<a class="gl" href="${href}">${esc(label)}</a>`).join("") +
+  `</div>` : "";
+
+function rows(s){
+  let h = "";
+  /* esc(undefined) is the string "undefined", which is truthy - so the
+     missing-field test has to happen before the escaping, not after */
+  const row = (k, v, cls) => v
+    ? `<div class="row ${cls || ""}"><div class="k">${k}</div><div class="v">${esc(v)}</div></div>` : "";
+  h += row("say", s.say);
+  h += row("draw", s.draw);
+  if (s.show) h += `<div class="row"><div class="k">show</div><div class="v"><pre class="show">${esc(s.show)}</pre></div></div>`;
+  h += row("she does", s.her);
+  h += row("watch for", s.trap, "trap");
+  return h + links(s);
+}
+
+function paint(){
+  let h = "", part = null;
+  ORDER.forEach((s, i) => {
+    if (s.part !== part){
+      part = s.part;
+      h += `<div class="partname"><h2>${esc(part)}</h2>
+            <span class="ses">Session ${esc(s.s)}</span><span class="ln"></span></div>`;
+    }
+    const on = !!done[i];
+    h += `<div class="step${on ? " done" : ""}" data-i="${i}">
+      <div class="top">
+        <button class="tick${on ? " on" : ""}" data-tick="${i}"
+          aria-label="Mark “${esc(s.t)}” as taught">${on ? "✓" : ""}</button>
+        <span class="num">${i + 1}</span>
+        <span class="ttl">${esc(s.t)}</span>
+        <span class="caret">▾</span>
+      </div>
+      <div class="inner" hidden>${rows(s)}</div>
+    </div>`;
+  });
+  $("list").innerHTML = h;
+
+  $("list").querySelectorAll(".tick").forEach(b => b.onclick = e => {
+    e.stopPropagation();
+    const i = +b.dataset.tick;
+    if (done[i]) delete done[i]; else done[i] = true;
+    save(); paint();
+  });
+  $("list").querySelectorAll(".top").forEach(t => t.onclick = () => {
+    const inner = t.nextElementSibling;
+    inner.hidden = !inner.hidden;
+    t.querySelector(".caret").textContent = inner.hidden ? "▾" : "▴";
+  });
+  paintNow();
+}
+
+function paintNow(){
+  const n = Object.keys(done).length;
+  $("pct").textContent = n + " / " + ORDER.length;
+  $("bar").style.width = Math.round(n / ORDER.length * 100) + "%";
+
+  const i = ORDER.findIndex((_, k) => !done[k]);
+  if (i === -1){
+    $("now").innerHTML = `<div class="lbl">finished</div>
+      <h2>Every topic is ticked.</h2>
+      <div class="meta">Put her through the exam simulator under time, then the final project.</div>
+      <div class="acts"><a class="chip solid" href="exam-simulator.html">Exam simulator</a></div>`;
+    return;
+  }
+  const s = ORDER[i];
+  $("now").innerHTML = `<div class="lbl">teach next</div>
+    <h2>${i + 1}. ${esc(s.t)}</h2>
+    <div class="meta">${esc(s.part)} &middot; session ${esc(s.s)}</div>
+    <div class="acts">
+      <button class="chip solid" id="openNext">open it below</button>
+      <a class="chip" href="teach.html">the full session script</a>
+    </div>`;
+  $("openNext").onclick = () => {
+    const el = $("list").querySelector(`.step[data-i="${i}"]`);
+    const top = el.querySelector(".top");
+    if (el.querySelector(".inner").hidden) top.click();
+    el.scrollIntoView({ block:"center", behavior:"smooth" });
+  };
+}
+
+$("reset").onclick = () => {
+  if (!confirm("Clear every tick on this page?")) return;
+  done = {}; save(); paint();
+};
+
+const THEME = "course_theme";
+try { const t = localStorage.getItem(THEME); if (t) document.documentElement.setAttribute("data-theme", t); } catch(e){}
+$("themeBtn").onclick = () => {
+  const now = document.documentElement.getAttribute("data-theme")
+    || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const next = now === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  try { localStorage.setItem(THEME, next); } catch(e){}
+};
+
+paint();
+</script>
+<script src="app/embed.js?v=5"></script>
