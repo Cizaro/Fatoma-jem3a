@@ -1,0 +1,342 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PHP Problem Sets</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="app/app.css?v=5">
+<style>
+/* Editor chrome only, same as the code lab: nothing else on the site
+   has a code gutter, so these stay on the page rather than in app.css. */
+:root{ --editor-ink:#F2F1EE; --gutter:#6E757E; }
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:0 40px}
+.lab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:16px;align-items:start}
+@media (max-width:980px){ .lab{grid-template-columns:1fr} }
+.pane{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.pane > header{padding:11px 15px;border-bottom:1px solid var(--line);background:var(--surface-2);
+  display:flex;gap:9px;align-items:center;font-size:12.5px;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.body{padding:15px}
+.chip{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;background:none;
+  border:1px solid var(--line);color:var(--ink-2);border-radius:var(--r-pill);
+  padding:5px 12px;cursor:pointer;font-family:inherit}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip[disabled]{opacity:.4;cursor:default}
+.ptitle{font-family:var(--display);font-size:20px;font-weight:700;margin:0 0 3px}
+.pnum{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase}
+.brief p{margin:0 0 11px}
+.brief code{font-family:var(--mono);font-size:13px;background:var(--surface-2);
+  padding:1px 5px;border-radius:5px}
+.sect{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);
+  font-weight:600;margin:16px 0 7px}
+ul.reqs{margin:0;padding-left:19px}
+ul.reqs li{margin-bottom:5px}
+.inputs{background:var(--accent-soft);border-radius:var(--r-sm);padding:11px 13px;font-size:14px}
+.edwrap{position:relative;background:var(--editor);display:flex;min-height:300px}
+.gutter{padding:12px 0 12px 12px;color:var(--gutter);font-family:var(--mono);font-size:13.5px;
+  line-height:1.65;text-align:right;user-select:none;min-width:36px}
+#code{flex:1;background:transparent;color:var(--editor-ink);border:0;outline:none;resize:vertical;
+  font-family:var(--mono);font-size:13.5px;line-height:1.65;padding:12px 14px;min-height:300px}
+.bar{display:flex;gap:9px;align-items:center;flex-wrap:wrap;padding:11px 14px;
+  border-top:1px solid var(--line);background:var(--surface-2)}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:var(--r-sm);padding:9px 18px;
+  font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.btn.run{background:var(--good)}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink-2)}
+.out{background:var(--editor);color:var(--editor-ink);font-family:var(--mono);font-size:13px;
+  white-space:pre-wrap;padding:12px 14px;max-height:230px;overflow:auto;margin:0}
+.out .muted{color:var(--gutter)}
+.out .err{color:#FF9A8B}
+.preview{border:0;width:100%;min-height:120px;background:#fff;display:block}
+.pvwrap{border-top:1px solid var(--line)}
+.pvlabel{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3);
+  padding:8px 14px;background:var(--surface-2);font-weight:600}
+.verdict{padding:0 14px}
+.vhead{font-weight:600;padding:12px 0 8px}
+.vhead.ok{color:var(--good)} .vhead.no{color:var(--bad)}
+table.runs{width:100%;border-collapse:collapse;font-size:13.5px;margin-bottom:12px}
+table.runs th{text-align:left;font-size:11px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink-3);padding:5px 8px;border-bottom:1px solid var(--line)}
+table.runs td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.runs td.v{font-family:var(--mono);white-space:nowrap}
+td.pass{color:var(--good);font-weight:700} td.fail{color:var(--bad);font-weight:700}
+.gotwant{font-family:var(--mono);font-size:12px;color:var(--ink-3);
+  white-space:pre-wrap;word-break:break-word;margin-top:3px}
+.rule{background:var(--warm-soft);color:var(--warm);border-radius:var(--r-sm);
+  padding:9px 12px;margin-bottom:8px;font-size:14px}
+.picker{position:fixed;inset:0;background:rgba(10,11,16,.55);display:none;
+  align-items:center;justify-content:center;padding:18px;z-index:40}
+.picker.show{display:flex}
+.pcard{background:var(--surface);border-radius:var(--r-lg);max-width:680px;width:100%;
+  max-height:84vh;overflow:auto;padding:22px}
+.pgroup{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);
+  font-weight:600;margin:16px 0 7px}
+.pitem{display:flex;gap:10px;align-items:center;background:var(--surface-2);
+  border:1px solid transparent;border-radius:var(--r-sm);padding:10px 13px;
+  margin-bottom:6px;cursor:pointer;width:100%;text-align:left;font-family:inherit;
+  font-size:14px;color:var(--ink)}
+.pitem.cur{border-color:var(--accent);background:var(--accent-soft)}
+.pitem .k{font-family:var(--mono);font-size:12px;color:var(--ink-3);min-width:34px}
+.pitem .d{color:var(--done);font-weight:700}
+</style>
+
+<div class="wrap">
+<header>
+  <div>
+    <h1>PHP <em>Problem Sets</em></h1>
+    <p class="hsub">The problems from your sheet, plus ten more like them. Write the answer,
+      press Check, and it is run against every case — not just the easy one.</p>
+  </div>
+  <div class="hbtns">
+    <button class="chip" id="pickBtn">problems</button>
+    <a class="chip" href="php-answers.html" style="text-decoration:none">answers</a>
+    <button class="chip" id="themeBtn">theme</button>
+  </div>
+</header>
+
+<div class="lab">
+  <section class="pane">
+    <header><span id="crumb">Loading…</span><span style="flex:1"></span>
+      <button class="chip" id="prevBtn">prev</button>
+      <button class="chip" id="nextBtn">next</button>
+    </header>
+    <div class="body brief" id="brief"></div>
+  </section>
+
+  <section class="pane">
+    <header>your answer<span style="flex:1"></span>
+      <button class="chip" id="resetBtn">start again</button>
+    </header>
+    <div class="edwrap">
+      <div class="gutter" id="gutter">1</div>
+      <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off"
+        autocorrect="off" wrap="off"></textarea>
+    </div>
+    <div class="bar">
+      <button class="btn run" id="runBtn">▶ Run</button>
+      <button class="btn" id="checkBtn">Check my answer</button>
+      <span style="flex:1"></span>
+      <a class="chip" id="ansLink" href="php-answers.html" style="text-decoration:none">worked answer</a>
+    </div>
+    <pre class="out" id="out"><span class="muted">Press Run and the output appears here.</span></pre>
+    <div class="pvwrap" id="pvwrap" hidden>
+      <div class="pvlabel">what the browser shows</div>
+      <iframe class="preview" id="preview" sandbox referrerpolicy="no-referrer" title="Page preview"></iframe>
+    </div>
+    <div class="verdict" id="verdict"></div>
+  </section>
+</div>
+
+<footer>
+  <a href="index.html">course home</a><a href="code-lab.html">code lab</a>
+  <a href="php-answers.html">answers</a><a href="roadmap.html">roadmap</a>
+  <br><br>Your answers are saved in this browser only.
+</footer>
+</div>
+
+<div class="picker" id="picker">
+  <div class="pcard">
+    <h2 style="margin:0 0 4px">Problems</h2>
+    <p class="hsub" id="pstat" style="margin:0 0 6px"></p>
+    <div id="plist"></div>
+    <div style="margin-top:14px;display:flex;gap:9px">
+      <button class="btn ghost" id="closePick">close</button>
+      <span style="flex:1"></span>
+      <button class="btn ghost" id="wipe">clear my answers</button>
+    </div>
+  </div>
+</div>
+
+<script src="app/php-engine.js?v=1"></script>
+<script src="app/problems-data.js?v=1"></script>
+<script src="app/problems-extra.js?v=1"></script>
+<script>
+/* ---------------------------------------------------------------
+   The problem sets. The engine and the problems live in their own
+   files; this page is the desk she sits at.
+
+   A "check" runs her code once per entry in problem.runs, each with
+   its own $_POST or $_GET. That is the whole reason this exists: an
+   answer that is right for one set of numbers and wrong for the next
+   is the usual way these problems get handed in.
+--------------------------------------------------------------- */
+const P = [...PROBLEMS_SET1, ...PROBLEMS_EXTRA];
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const KEY = "php_problems_v1";
+
+let state = { i:0, code:{}, done:{} };
+try { Object.assign(state, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch(e){}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} };
+
+/* ---------- running her code ---------- */
+function exec(code, vars){
+  const warns = [];
+  try { return { out: PHP.run(code, { vars: vars || {}, warn: w => warns.push(w) }), warns }; }
+  catch(e){ return { error: (e.line ? "Parse error on line " + e.line + ": " : "Error: ") + e.message, warns }; }
+}
+const norm = s => s.replace(/[ \t]+$/gm, "").trim();
+
+/* ---------- the verdict ---------- */
+function judge(p, code){
+  // the rules about the code itself come first: they say what the problem
+  // is really asking, and a right answer that breaks them is still wrong
+  const broken = [];
+  for (const c of (p.code || [])){
+    if (c.re && !c.re.test(code)) broken.push(c.msg);
+    if (c.noRe && c.noRe.test(code)) broken.push(c.msg);
+  }
+  const rows = p.runs.map(r => {
+    const res = exec(code, r.vars);
+    if (res.error) return { label:r.label, ok:false, note:res.error };
+    const out = res.out;
+    if (r.out !== undefined && norm(out) !== norm(r.out))
+      return { label:r.label, ok:false, want:r.out, got:out };
+    const missing = (r.has || []).filter(h => !out.includes(h));
+    if (missing.length)
+      return { label:r.label, ok:false, note:"nothing in the output said " + missing.map(m => '"' + m + '"').join(", "), got:out };
+    if (r.outRe && !r.outRe.test(out))
+      return { label:r.label, ok:false, note:"the output did not match what the problem asks for", got:out };
+    return { label:r.label, ok:true };
+  });
+  return { broken, rows, ok: !broken.length && rows.every(r => r.ok) };
+}
+
+function showVerdict(p, code){
+  const v = judge(p, code);
+  let h = "";
+  h += `<div class="vhead ${v.ok ? "ok" : "no"}">` +
+       (v.ok ? (v.rows.length === 1 ? "✓ Correct." : "✓ All " + v.rows.length + " cases pass.")
+              : "Not yet.") + "</div>";
+  v.broken.forEach(m => h += `<div class="rule">${m}</div>`);
+  if (p.runs.length > 1 || !v.ok){
+    h += '<table class="runs"><tr><th>input</th><th>result</th></tr>';
+    for (const r of v.rows){
+      h += `<tr><td class="v">${esc(r.label)}</td><td class="${r.ok ? "pass" : "fail"}">` +
+           (r.ok ? "pass" : "no");
+      if (!r.ok){
+        if (r.note) h += `<div class="gotwant">${esc(r.note)}</div>`;
+        if (r.want !== undefined)
+          h += `<div class="gotwant">wanted: ${esc(r.want)}\nyours : ${esc(r.got || "(nothing)")}</div>`;
+      }
+      h += "</td></tr>";
+    }
+    h += "</table>";
+  }
+  $("verdict").innerHTML = h;
+  if (v.ok){ state.done[p.id] = true; save(); paintList(); }
+}
+
+/* ---------- output ---------- */
+function showOut(r){
+  if (r.error){ $("out").innerHTML = `<span class="err">${esc(r.error)}</span>`; $("pvwrap").hidden = true; return; }
+  let h = "";
+  if (r.warns.length) h += `<span class="err">${esc(r.warns.join("\n"))}\n</span>`;
+  h += r.out === "" ? '<span class="muted">(nothing was printed)</span>' : esc(r.out);
+  $("out").innerHTML = h;
+  // a problem that prints HTML is easier to judge by looking at it. The frame
+  // is sandboxed with nothing allowed, so printed markup is shown, never run.
+  if (/<[a-z]/i.test(r.out)){
+    $("pvwrap").hidden = false;
+    $("preview").srcdoc = '<meta charset="utf-8"><style>body{font:15px system-ui;margin:12px}' +
+      'table{border-collapse:collapse}td,th{border:1px solid #999;padding:4px 9px}</style>' + r.out;
+  } else $("pvwrap").hidden = true;
+}
+
+/* ---------- loading a problem ---------- */
+function load(i){
+  state.i = Math.max(0, Math.min(P.length - 1, i));
+  const p = P[state.i];
+  $("crumb").textContent = p.set;
+  $("ansLink").href = "php-answers.html?p=" + p.id;
+
+  let h = `<div class="pnum">Problem ${p.n}${p.twin ? " · " + p.twin : ""}</div>`;
+  h += `<h2 class="ptitle">${p.title}</h2>`;
+  h += `<p>${p.context}</p>`;
+  h += `<div class="sect">what to write</div><p>${p.task}</p>`;
+  h += `<div class="sect">it has to</div><ul class="reqs">` +
+       p.reqs.map(r => `<li>${r}</li>`).join("") + "</ul>";
+  h += `<div class="sect">what it is given</div><div class="inputs">${p.inputs}</div>`;
+  $("brief").innerHTML = h;
+
+  $("code").value = state.code[p.id] !== undefined ? state.code[p.id] : p.starter;
+  $("out").innerHTML = '<span class="muted">Press Run and the output appears here.</span>';
+  $("pvwrap").hidden = true;
+  $("verdict").innerHTML = "";
+  $("prevBtn").disabled = state.i === 0;
+  $("nextBtn").disabled = state.i === P.length - 1;
+  gutter(); paintList(); save();
+  location.hash = "#" + p.id;
+}
+
+function gutter(){
+  const n = $("code").value.split("\n").length;
+  $("gutter").textContent = Array.from({length:n}, (_, k) => k + 1).join("\n");
+}
+
+/* ---------- the picker ---------- */
+function paintList(){
+  let h = "", set = null;
+  P.forEach((p, i) => {
+    if (p.set !== set){ set = p.set; h += `<div class="pgroup">${esc(set)}</div>`; }
+    h += `<button class="pitem${i === state.i ? " cur" : ""}" data-i="${i}">` +
+         `<span class="k">${esc(p.n)}</span><span style="flex:1">${esc(p.title)}</span>` +
+         `<span class="d">${state.done[p.id] ? "✓" : ""}</span></button>`;
+  });
+  $("plist").innerHTML = h;
+  const done = P.filter(p => state.done[p.id]).length;
+  $("pstat").textContent = done + " of " + P.length + " solved";
+  $("plist").querySelectorAll(".pitem").forEach(b =>
+    b.onclick = () => { load(+b.dataset.i); $("picker").classList.remove("show"); });
+}
+
+/* ---------- wiring ---------- */
+$("code").addEventListener("input", () => {
+  state.code[P[state.i].id] = $("code").value; gutter(); save();
+});
+$("runBtn").onclick = () => showOut(exec($("code").value, (P[state.i].runs[0] || {}).vars));
+$("checkBtn").onclick = () => {
+  const p = P[state.i];
+  showOut(exec($("code").value, (p.runs[0] || {}).vars));
+  showVerdict(p, $("code").value);
+};
+$("resetBtn").onclick = () => {
+  const p = P[state.i];
+  delete state.code[p.id]; save(); load(state.i);
+};
+$("prevBtn").onclick = () => load(state.i - 1);
+$("nextBtn").onclick = () => load(state.i + 1);
+$("pickBtn").onclick = () => { paintList(); $("picker").classList.add("show"); };
+$("closePick").onclick = () => $("picker").classList.remove("show");
+$("wipe").onclick = () => {
+  if (!confirm("Clear every answer you have written here?")) return;
+  state = { i:0, code:{}, done:{} }; save(); load(0); $("picker").classList.remove("show");
+};
+
+/* theme, shared with every other page */
+const THEME = "course_theme";
+try { const t = localStorage.getItem(THEME); if (t) document.documentElement.setAttribute("data-theme", t); } catch(e){}
+$("themeBtn").onclick = () => {
+  const now = document.documentElement.getAttribute("data-theme")
+    || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const next = now === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  try { localStorage.setItem(THEME, next); } catch(e){}
+};
+
+/* A problem can be linked two ways: php-problems.html#p3 when the page is
+   opened on its own, and ?p=p3 from inside the app shell, which passes a
+   query along to the frame but has a hash of its own to look after. */
+const wanted = () => {
+  const id = new URLSearchParams(location.search).get("p")
+          || (location.hash || "").replace("#", "");
+  const i = P.findIndex(p => p.id === id);
+  return i === -1 ? (state.i || 0) : i;
+};
+load(wanted());
+</script>
+<script src="app/embed.js?v=5"></script>

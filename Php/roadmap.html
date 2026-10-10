@@ -2,7 +2,7 @@
 <title>PHP A to Z</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="app/app.css?v=4">
+<link rel="stylesheet" href="app/app.css?v=5">
 <style>
 
 
@@ -412,12 +412,12 @@ const HUB = {
   "00-setup":       { lesson:"setup" },
   "01-basics":      { lesson:"basics",     run:1, deck:"syntax",  game:"match"  },
   "02-datatypes":   { lesson:"datatypes",  run:1, deck:"strings", game:"output" },
-  "03-operators":   { lesson:"operators",  run:1, deck:"syntax",  game:"output" },
-  "04-conditions":  { lesson:"conditions", run:1, deck:"control", game:"bug"    },
-  "05-loops":       { lesson:"loops",      run:1, deck:"control", game:"blank"  },
+  "03-operators":   { lesson:"operators",  run:1, deck:"syntax",  game:"output", prob:"p1a" },
+  "04-conditions":  { lesson:"conditions", run:1, deck:"control", game:"bug",    prob:"p2"  },
+  "05-loops":       { lesson:"loops",      run:1, deck:"control", game:"blank",  prob:"p4"  },
   "06-arrays":      { lesson:"arrays",     run:1, deck:"arrays",  game:"blank"  },
   "07-functions":   { lesson:"functions",  run:1, deck:"syntax",  game:"bug"    },
-  "08-forms":       { lesson:"forms",      run:1, deck:"web",     game:"order"  },
+  "08-forms":       { lesson:"forms",      run:1, deck:"web",     game:"order",  prob:"p1c" },
   "09-mysql":       { lesson:"mysql",      run:1, deck:"sql",     game:"match"  },
   "10-dynamic-page":{ lesson:"dynamic",    run:1, deck:"sql",     game:"order"  }
 };
@@ -443,6 +443,7 @@ function launcher(n){
   const b = [];
   b.push(`<a class="hl main" href="app/lessons/${h.lesson}.html"><i>&#9654;</i>Read the lesson</a>`);
   if (h.run) b.push(`<a class="hl" href="code-lab.html"><i>&#9000;</i>Write it in the code lab</a>`);
+  if (h.prob) b.push(`<a class="hl" href="php-problems.html?p=${h.prob}"><i>&#10033;</i>Problems from your sheet</a>`);
   if (h.deck) b.push(`<a class="hl" href="flashcards.html?deck=${h.deck}"><i>&#9632;</i>${DECKNAME[h.deck]}</a>`);
   if (h.game) b.push(`<a class="hl" href="games/php-arcade.html?game=${h.game}"><i>&#9679;</i>${GAMENAME[h.game]}</a>`);
 
@@ -602,4 +603,4 @@ try{
 load();
 render();
 </script>
-<script src="app/embed.js?v=4"></script>
+<script src="app/embed.js?v=5"></script>

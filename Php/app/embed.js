@@ -59,6 +59,10 @@
     "whiteboard.html": "board", "../whiteboard.html": "board",
     "sql-lab.html": "sql", "../sql-lab.html": "sql", "../../sql-lab.html": "sql",
     "assignment-01.html": "hw1", "../assignment-01.html": "hw1", "../../assignment-01.html": "hw1",
+    "php-problems.html": "problems", "../php-problems.html": "problems",
+    "../../php-problems.html": "problems",
+    "php-answers.html": "answers", "../php-answers.html": "answers",
+    "../../php-answers.html": "answers",
     "exam-simulator.html": "exam", "../exam-simulator.html": "exam",
     "games/php-arcade.html": "arcade", "../games/php-arcade.html": "arcade",
     // the lesson and quiz pages live two folders deep, so they reach the

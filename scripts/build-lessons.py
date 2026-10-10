@@ -55,12 +55,16 @@ PRACTISE = {
     "setup":      dict(),
     "basics":     dict(quiz="lesson-01", deck="syntax",  game="match",  run="01-basics"),
     "datatypes":  dict(quiz="lesson-02", deck="strings", game="output", run="02-datatypes"),
-    "operators":  dict(quiz="lesson-03", deck="syntax",  game="output", run="03-operators"),
-    "conditions": dict(quiz="lesson-04", deck="control", game="bug",    run="04-conditions"),
-    "loops":      dict(quiz="lesson-05", deck="control", game="blank",  run="05-loops"),
+    "operators":  dict(quiz="lesson-03", deck="syntax",  game="output", run="03-operators",
+                       problems="p1a"),
+    "conditions": dict(quiz="lesson-04", deck="control", game="bug",    run="04-conditions",
+                       problems="p2"),
+    "loops":      dict(quiz="lesson-05", deck="control", game="blank",  run="05-loops",
+                       problems="p4"),
     "arrays":     dict(quiz="lesson-06", deck="arrays",  game="blank",  run="06-arrays"),
     "functions":  dict(quiz="lesson-07", deck="syntax",  game="bug",    run="07-functions"),
-    "forms":      dict(quiz="lesson-08", deck="web",     game="order",  run="08-forms"),
+    "forms":      dict(quiz="lesson-08", deck="web",     game="order",  run="08-forms",
+                       problems="p1c"),
     "mysql":      dict(quiz="lesson-09", deck="sql",     game="match",  run="09-mysql", sqllab=True),
     "dynamic":    dict(quiz="lesson-10", deck="sql",     game="order",  run="10-dynamic-page", sqllab=True),
 }
@@ -89,6 +93,11 @@ def practise_block(slug):
         out.append('<a class="pl" href="../../sql-lab.html">SQL lab</a>')
     elif p.get("run"):
         out.append('<a class="pl" href="../../code-lab.html">Code lab</a>')
+    if p.get("problems"):
+        # the problems she was actually set, opened at the one that belongs
+        # to this lesson
+        out.append('<a class="pl" href="../../php-problems.html?p=%s">Problem sheet</a>'
+                   % p["problems"])
     if p.get("deck"):
         out.append('<a class="pl" href="../../flashcards.html?deck=%s">%s</a>'
                    % (p["deck"], DECKNAME[p["deck"]]))
@@ -261,7 +270,7 @@ PAGE = """<!doctype html>
 <title>{title}</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="../app.css?v=4">
+<link rel="stylesheet" href="../app.css?v=5">
 <body class="reader">
 <article class="prose">
 {body}
@@ -269,7 +278,7 @@ PAGE = """<!doctype html>
 <nav class="lessonnav">
 {nav}
 </nav>
-<script src="../embed.js?v=4"></script>
+<script src="../embed.js?v=5"></script>
 <script>
 /* the run-it links only make sense where something is executing PHP.
    Braces are doubled because this template goes through str.format. */
@@ -287,7 +296,7 @@ QUIZ_PAGE = """<!doctype html>
 <title>{title}</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="../app.css?v=4">
+<link rel="stylesheet" href="../app.css?v=5">
 <body class="reader">
 <article class="prose">
 {body}
@@ -295,7 +304,7 @@ QUIZ_PAGE = """<!doctype html>
 <nav class="lessonnav">
 {nav}
 </nav>
-<script src="../embed.js?v=4"></script>
+<script src="../embed.js?v=5"></script>
 """
 
 

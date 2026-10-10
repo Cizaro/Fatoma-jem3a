@@ -1,0 +1,130 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Problem Sets — Answers</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="app/app.css?v=5">
+<style>
+:root{ --editor-ink:#F2F1EE; }
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding-inline:16px;padding-block:0 48px}
+.warn{background:var(--warm-soft);color:var(--warm);border-radius:var(--r);
+  padding:15px 17px;margin-bottom:26px}
+.warn b{display:block;font-family:var(--display);font-size:17px;margin-bottom:4px}
+.setname{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);
+  font-weight:600;margin:34px 0 12px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+details{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  margin-bottom:11px;overflow:hidden}
+details[open]{border-color:var(--accent)}
+summary{padding:14px 17px;cursor:pointer;display:flex;gap:11px;align-items:baseline;
+  list-style:none;font-weight:600}
+summary::-webkit-details-marker{display:none}
+summary:hover{background:var(--surface-2)}
+summary .k{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700;
+  min-width:40px;letter-spacing:.05em}
+summary .t{flex:1}
+summary .hint{font-size:12px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600}
+details[open] summary .hint{color:var(--accent)}
+.inner{padding:0 17px 17px;border-top:1px solid var(--line);padding-top:15px}
+.ask{color:var(--ink-2);margin:0 0 14px}
+.lbl{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);
+  font-weight:600;margin:0 0 7px}
+pre.code{background:var(--editor);color:var(--editor-ink);font-family:var(--mono);
+  font-size:13px;line-height:1.6;padding:14px 16px;border-radius:var(--r-sm);
+  overflow-x:auto;margin:0 0 16px}
+.why{background:var(--accent-soft);border-radius:var(--r-sm);padding:13px 15px;font-size:14.5px}
+.why code{font-family:var(--mono);font-size:12.5px;background:var(--surface);
+  padding:1px 5px;border-radius:5px}
+.tools{display:flex;gap:9px;margin-bottom:14px;flex-wrap:wrap}
+.chip{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;background:none;
+  border:1px solid var(--line);color:var(--ink-2);border-radius:var(--r-pill);
+  padding:5px 12px;cursor:pointer;font-family:inherit;text-decoration:none}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+</style>
+
+<div class="wrap">
+<header>
+  <div>
+    <h1>Problem Sets — <em>Answers</em></h1>
+    <p class="hsub">One worked answer per problem, and the reason it is written that way.</p>
+  </div>
+  <div class="hbtns">
+    <a class="chip" href="php-problems.html">back to the problems</a>
+    <button class="chip" id="themeBtn">theme</button>
+  </div>
+</header>
+
+<div class="warn">
+  <b>Read this before you open anything.</b>
+  An answer you read is worth almost nothing; an answer you got wrong twice and
+  then fixed stays with you. Give each problem a real try on the
+  <a href="php-problems.html">problems page</a> first — the Check button tells you
+  <i>which case</i> failed, which is usually enough to find it yourself. Come here
+  when you are properly stuck, or afterwards to compare.
+</div>
+
+<div id="list"></div>
+
+<footer>
+  <a href="php-problems.html">problems</a><a href="code-lab.html">code lab</a>
+  <a href="index.html">course home</a><a href="roadmap.html">roadmap</a>
+</footer>
+</div>
+
+<script src="app/problems-data.js?v=1"></script>
+<script src="app/problems-extra.js?v=1"></script>
+<script>
+/* Every problem's worked answer, shut by default. The <details> element
+   does the hiding, so a stray scroll cannot spoil a problem she has not
+   tried yet, and a link like php-answers.html#p3 opens exactly one. */
+const P = [...PROBLEMS_SET1, ...PROBLEMS_EXTRA];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+let html = "", set = null;
+for (const p of P){
+  if (p.set !== set){ set = p.set; html += `<div class="setname">${esc(set)}</div>`; }
+  html += `<details id="${p.id}">
+    <summary><span class="k">${esc(p.n)}</span><span class="t">${esc(p.title)}</span>
+      <span class="hint">show</span></summary>
+    <div class="inner">
+      <p class="ask">${p.task}</p>
+      <p class="lbl">the answer</p>
+      <pre class="code">${esc(p.sol.trim())}</pre>
+      <p class="lbl">why it is written that way</p>
+      <div class="why">${p.why}</div>
+    </div>
+  </details>`;
+}
+document.getElementById("list").innerHTML = html;
+
+document.querySelectorAll("details").forEach(d =>
+  d.addEventListener("toggle", () => d.querySelector(".hint").textContent = d.open ? "hide" : "show"));
+
+// arriving from a problem opens that one and nothing else. ?p= is the form
+// the app shell can pass through; #id is what a plain link uses.
+const want = new URLSearchParams(location.search).get("p")
+          || (location.hash || "").replace("#", "");
+if (want){
+  const d = document.getElementById(want);
+  if (d && d.tagName === "DETAILS"){
+    d.open = true;
+    d.querySelector(".hint").textContent = "hide";
+    d.scrollIntoView({ block:"center" });
+  }
+}
+
+const THEME = "course_theme";
+try { const t = localStorage.getItem(THEME); if (t) document.documentElement.setAttribute("data-theme", t); } catch(e){}
+document.getElementById("themeBtn").onclick = () => {
+  const now = document.documentElement.getAttribute("data-theme")
+    || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const next = now === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  try { localStorage.setItem(THEME, next); } catch(e){}
+};
+</script>
+<script src="app/embed.js?v=5"></script>
