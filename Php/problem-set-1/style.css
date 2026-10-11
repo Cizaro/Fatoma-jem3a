@@ -1,0 +1,23 @@
+/* Shared by the seven solutions. Deliberately plain: the point of these
+   files is the PHP, and a page of CSS would bury it. */
+body { font-family: system-ui, "Segoe UI", sans-serif; background: #f6f3ea;
+       color: #15171e; margin: 0; padding: 28px 20px 60px; line-height: 1.6; }
+.sheet { max-width: 720px; margin: 0 auto; }
+h1 { font-size: 24px; margin: 0 0 4px; }
+.sub { color: #565c6b; margin: 0 0 22px; }
+form { background: #fffdfa; border: 1px solid #e2dacb; border-left: 4px solid #3a42db;
+       border-radius: 10px; padding: 18px 20px; margin-bottom: 18px; }
+label { display: block; font-weight: 600; font-size: 14px; margin: 10px 0 4px; }
+input[type=number], input[type=text] { width: 100%; max-width: 260px; padding: 8px 10px;
+       border: 1px solid #e2dacb; border-radius: 8px; font: inherit; background: #fff; }
+button { margin: 14px 8px 0 0; padding: 9px 18px; border: 0; border-radius: 8px;
+       background: #3a42db; color: #fff; font: inherit; font-weight: 600; cursor: pointer; }
+button:hover { filter: brightness(1.08); }
+.result { background: #fffdfa; border: 1px solid #e2dacb; border-left: 4px solid #1c7f57;
+       border-radius: 10px; padding: 16px 20px; margin-bottom: 18px; }
+.result h2 { margin: 0 0 8px; font-size: 17px; }
+table { border-collapse: collapse; width: 100%; background: #fffdfa; }
+th, td { border: 1px solid #e2dacb; padding: 8px 12px; text-align: left; }
+th { background: #edeefd; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; }
+code { background: #edeefd; padding: 1px 6px; border-radius: 5px; font-size: 13px; }
+a { color: #3a42db; }
