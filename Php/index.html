@@ -174,6 +174,54 @@ footer a{text-decoration:none}
   .barbar{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- colour per level ----------
+   Six levels, six hues from the stage worlds, so the spine, the number
+   and the cards of one level all read as belonging together. The whole
+   course map used to be one accent, which made a long page look flat. */
+.level{ --lvc:var(--accent); }
+.level:nth-of-type(1){ --lvc:var(--w1); }
+.level:nth-of-type(2){ --lvc:var(--w2); }
+.level:nth-of-type(3){ --lvc:var(--w3); }
+.level:nth-of-type(4){ --lvc:var(--w4); }
+.level:nth-of-type(5){ --lvc:var(--w5); }
+.level:nth-of-type(6){ --lvc:var(--w6); }
+
+.level::before{ background:linear-gradient(180deg, var(--lvc), rgba(0,0,0,.06)); opacity:.35; }
+.level.done::before{ background:var(--lvc); opacity:1; }
+.dot{ border-color:var(--lvc); color:var(--lvc); background:var(--surface);
+  box-shadow:0 0 0 4px color-mix(in srgb, var(--lvc) 12%, transparent); }
+.level.done .dot, .level.now .dot{ border-color:var(--lvc); }
+.level.done .dot{ background:var(--lvc); color:#fff; }
+.lvhead h2{ color:var(--ink); }
+.lvhead h2::after{ content:"";display:block;width:38px;height:3px;border-radius:2px;margin-top:7px;
+  background:var(--lvc); }
+
+details.lesson{ border-left:3px solid color-mix(in srgb, var(--lvc) 45%, var(--line)); }
+details.lesson:hover{ border-color:color-mix(in srgb, var(--lvc) 60%, var(--line));
+  transform:translateY(-1px); box-shadow:var(--lift); }
+details.lesson[open]{ border-color:var(--lvc); }
+details.lesson[open] summary{ background:color-mix(in srgb, var(--lvc) 7%, transparent); }
+details.lesson{ transition:transform .2s cubic-bezier(.16,1,.3,1), box-shadow .2s ease,
+  border-color .18s ease; }
+.lesson.done .tick, .lesson.part .tick{ border-color:var(--lvc); }
+.lesson.done .tick{ background:var(--lvc); }
+.lesson.part .tick{ color:var(--lvc); }
+
+/* the row of buttons under a lesson: one filled, the rest tinted */
+.tools .tool{ background:color-mix(in srgb, var(--lvc) 9%, var(--surface));
+  border-color:color-mix(in srgb, var(--lvc) 22%, var(--line)); color:var(--ink);
+  /* flex was shrinking these, so a label wrapped to three lines inside a
+     pill and came out as an ellipse. They size to their text now. */
+  display:inline-flex; align-items:center; flex:0 0 auto; white-space:nowrap;
+  border-radius:var(--r-sm); padding:8px 14px; line-height:1.2; }
+.tools .tool:hover{ border-color:var(--lvc); transform:translateY(-1px);
+  box-shadow:0 6px 16px -8px color-mix(in srgb, var(--lvc) 70%, transparent); }
+.tools .tool.key{ background:var(--lvc); border-color:var(--lvc); color:#fff;
+  background-image:linear-gradient(180deg, rgba(255,255,255,.2), rgba(0,0,0,.07)); }
+/* the two that need a PHP server, shown only when one is running */
+.tools .tool.run{ font-family:var(--mono); font-size:12px;
+  background:var(--surface-2); border-color:var(--line); color:var(--ink-2); }
 </style>
 
 <div class="bar">
@@ -359,16 +407,20 @@ milestone:{name:"Project 3, Student Manager", path:"app/docs/project-3.html",
 --------------------------------------------------------------- */
 const LOCAL = location.protocol === "file:"
   || ["localhost","127.0.0.1",""].indexOf(location.hostname) !== -1;
-const REPO = "https://github.com/Cizaro/Fatoma-jem3a/blob/main/Php/";
-const PUBLISHED = {
-  "flashcards.html":       "https://claude.ai/artifact/WDYShUSe2eV7Yu19XxYJZn",
-  "roadmap.html":          "https://claude.ai/artifact/EDpJwwwvaoGwGHnjeAXdPb",
-  "games/php-arcade.html": "https://claude.ai/artifact/JYBuyUAnizeyXzAT9tXMu2",
-  "exam-simulator.html":   "https://claude.ai/artifact/H3Ca9oVaXidqa51D5hesYc",
-  "stages.html":           "https://claude.ai/artifact/Gqn7w4oMjEMCoC8CePNvk4",
-  "code-lab.html":         "https://claude.ai/artifact/9Rq4wkJkdfJc7uA7KeaE2c"
-};
-const link = p => LOCAL ? p : (PUBLISHED[p] || REPO + p);
+/* Everything the course map points at now lives beside it, so a plain
+   relative path is right in all four places this file runs: the repo
+   folder, localhost, GitHub Pages, and inside the one published
+   artifact. It used to rewrite these to a table of artifact URLs from
+   an older session, which sent her to stale copies of her own pages. */
+const link = p => p;
+
+/* examples.php and exercises.php have to be executed. Offer them only
+   where something is serving PHP; everywhere else they would download
+   as text or silently do nothing. Same test the roadmap uses. */
+const SERVED = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+
+/* where a lesson's problems live in the problem sets */
+const PROBLEM = { "3":"p1a", "4":"p2", "5":"p4", "8":"p1c" };
 
 const KEY = "phpcourse_progress", THEME = "phpcourse_theme";
 const $ = id => document.getElementById(id);
@@ -420,14 +472,22 @@ function toolRow(les){
     t.push(`<a class="tool key" href="${link(les.dir + "/")}">Read the lesson</a>`);
   }
   if (!les.file){
-    t.push(`<a class="tool" href="${link(les.dir + "/examples.php")}">Examples</a>`);
-    /* lesson 8's exercises are written up rather than coded, so they have a
-       built page; everything else runs as PHP */
-    t.push(les.id === "8"
-      ? `<a class="tool" href="app/docs/forms-exercises.html">Exercises</a>`
-      : `<a class="tool" href="${link(les.dir + "/exercises.php")}">Exercises</a>`);
     const quiz = les.quiz || ("lesson-" + String(les.id).padStart(2,"0"));
     t.push(`<a class="tool" href="app/quiz.html?q=${quiz}">Mini quiz</a>`);
+
+    /* the practice that works in a browser, which is the common case */
+    if (PROBLEM[les.id])
+      t.push(`<a class="tool" href="php-problems.html?p=${PROBLEM[les.id]}">Problem sheet</a>`);
+    t.push(`<a class="tool" href="code-lab.html">Code lab</a>`);
+
+    /* lesson 8's exercises are written up rather than coded, so they have
+       a built page and need no server */
+    if (les.id === "8")
+      t.push(`<a class="tool" href="app/docs/forms-exercises.html">Exercises</a>`);
+    else if (SERVED)
+      t.push(`<a class="tool run" href="${les.dir}/exercises.php">Exercises</a>`);
+
+    if (SERVED) t.push(`<a class="tool run" href="${les.dir}/examples.php">Examples</a>`);
   }
   if (les.arcade) t.push(`<a class="tool" href="${link("games/php-arcade.html")}">Arcade, ${esc(les.arcade)}</a>`);
   if (les.deck)   t.push(`<a class="tool" href="${link("flashcards.html")}">Cards, ${esc(les.deck)}</a>`);
