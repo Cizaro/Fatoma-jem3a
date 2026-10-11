@@ -58,6 +58,10 @@ $name = $_POST[&quot;name&quot;] ?? &quot;&quot;;
 
 // empty() is true for &quot;&quot;, 0, null, and missing
 if (empty($_POST[&quot;name&quot;])) { $errors[] = &quot;Name is required&quot;; }</code></pre>
+<p>The two are not the same question, and the difference matters the moment someone presses the button with a box left blank:</p>
+<div class="tablewrap"><table><thead><tr><th></th><th>a blank box</th><th>a key that never arrived</th></tr></thead><tbody><tr><td><code>isset($_POST[&quot;name&quot;])</code></td><td><strong>true</strong> - it arrived, carrying &quot;&quot;</td><td>false</td></tr><tr><td><code>empty($_POST[&quot;name&quot;])</code></td><td><strong>true</strong></td><td>true</td></tr></tbody></table></div>
+<p>So <code>isset()</code> answers <em>did they press the button</em>, and <code>empty()</code> answers <em>did they actually type something</em>. A form that checks only the first one happily greets a visitor called nothing at all.</p>
+<blockquote><p><strong>See it working.</strong> <code>08-forms/login-demo.php</code> is a login form built as a showcase: it prints what the server received, dumps <code>$_POST</code> with <code>print_r()</code> so you can see it really is an associative array, walks it with <code>foreach</code>, and shows the same page done with <code>$_GET</code> so the password ends up in the address bar. It prints the password on purpose, to make the point - which is also the one thing a real login must never do.</p></blockquote>
 <h2>7. Validation — never trust the user</h2>
 <p>Client-side checks (<code>required</code> in HTML) can be bypassed. <strong>Always check again in PHP.</strong></p>
 <pre class="lang-php"><code>$errors = [];

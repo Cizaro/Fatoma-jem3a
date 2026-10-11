@@ -116,6 +116,26 @@ $name = $_POST["name"] ?? "";
 if (empty($_POST["name"])) { $errors[] = "Name is required"; }
 ```
 
+The two are not the same question, and the difference matters the moment
+someone presses the button with a box left blank:
+
+| | a blank box | a key that never arrived |
+|---|---|---|
+| `isset($_POST["name"])` | **true** - it arrived, carrying "" | false |
+| `empty($_POST["name"])` | **true** | true |
+
+So `isset()` answers *did they press the button*, and `empty()` answers
+*did they actually type something*. A form that checks only the first one
+happily greets a visitor called nothing at all.
+
+> **See it working.** `08-forms/login-demo.php` is a login form built as a
+> showcase: it prints what the server received, dumps `$_POST` with
+> `print_r()` so you can see it really is an associative array, walks it
+> with `foreach`, and shows the same page done with `$_GET` so the
+> password ends up in the address bar. It prints the password on purpose,
+> to make the point - which is also the one thing a real login must never
+> do.
+
 ## 7. Validation — never trust the user
 
 Client-side checks (`required` in HTML) can be bypassed. **Always check again in PHP.**
