@@ -1,11 +1,11 @@
 <?php
 /*
- * Problem 1, approach 3: an HTML form with four action buttons, read with $_POST.
+ * Problem 1, approach 3: an HTML form with text fields and four action
+ * buttons, processed in PHP via $_POST.
  *
- * Each button carries its own name. Only the button actually clicked is sent,
- * so isset() can tell which one it was without any extra field. This is the
- * same shape as isset($_POST['Sum']) from the lecture, with four buttons
- * instead of one.
+ * Each button carries its own name, and only the button actually clicked
+ * is sent - so isset() can tell which one it was with no extra field.
+ * Same shape as isset($_POST['Sum']) from the lecture, with four buttons.
  */
 
 $num1   = $_POST["num1"] ?? "";
@@ -24,8 +24,11 @@ if (isset($_POST["ADD"]) || isset($_POST["SUB"]) || isset($_POST["MULT"]) || iss
     } elseif (isset($_POST["MULT"])) {
         $result = $num1 * $num2;
     } elseif (isset($_POST["DIV"])) {
-        $result = $num2 == 0 ? null : $num1 / $num2;
-        if ($result === null) { $error = "You cannot divide by zero."; }
+        if ($num2 == 0) {
+            $error = "You cannot divide by zero.";
+        } else {
+            $result = $num1 / $num2;
+        }
     }
 }
 ?>
@@ -41,13 +44,11 @@ if (isset($_POST["ADD"]) || isset($_POST["SUB"]) || isset($_POST["MULT"]) || iss
 
 <!-- action="" sends it back to this same file -->
 <form action="" method="POST">
-    <label for="a">First number</label>
-    <input type="number" id="a" name="num1" step="any"
-           value="<?php echo htmlspecialchars($num1); ?>">
+    <label for="a">First Number</label>
+    <input type="text" id="a" name="num1" value="<?php echo htmlspecialchars($num1); ?>">
 
-    <label for="b">Second number</label>
-    <input type="number" id="b" name="num2" step="any"
-           value="<?php echo htmlspecialchars($num2); ?>">
+    <label for="b">Second Number</label>
+    <input type="text" id="b" name="num2" value="<?php echo htmlspecialchars($num2); ?>">
 
     <!-- type must be submit. type="button" does nothing without JavaScript. -->
     <button type="submit" name="ADD"  value="1">ADD</button>
@@ -56,11 +57,14 @@ if (isset($_POST["ADD"]) || isset($_POST["SUB"]) || isset($_POST["MULT"]) || iss
     <button type="submit" name="DIV"  value="1">DIV</button>
 </form>
 
-<?php if ($error): ?>
-    <div class="result"><p><?php echo htmlspecialchars($error); ?></p></div>
-<?php elseif ($result !== null): ?>
-    <div class="result"><h2>The result = <?php echo $result; ?></h2></div>
-<?php endif; ?>
+<?php
+// ---- the output, echoed ----
+if ($error !== "") {
+    echo "<div class='result'><p>" . htmlspecialchars($error) . "</p></div>";
+} elseif ($result !== null) {
+    echo "<div class='result'><h2>The result = " . $result . "</h2></div>";
+}
 
-<p><a href="index.php">&larr; all seven solutions</a></p>
+echo "<p><a href='index.php'>&larr; all seven solutions</a></p>";
+?>
 </div></body></html>

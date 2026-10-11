@@ -4,6 +4,10 @@
  *
  * Constraint from the sheet: only if / else and the comparison operators.
  * No min(), no max(), no sort().
+ *
+ * The sheet asks for "HTML with dynamic CSS styling" - so the colour is
+ * decided in PHP and echoed into a style attribute, rather than written
+ * into the stylesheet.
  */
 
 $prices  = [];
@@ -50,23 +54,54 @@ if ($sent) {
    found by comparing, not by calling a built-in.</p>
 
 <form action="" method="POST">
-    <?php for ($i = 1; $i <= 5; $i++): ?>
-        <label for="p<?php echo $i; ?>">Price <?php echo $i; ?></label>
-        <input type="number" step="0.01" id="p<?php echo $i; ?>" name="price<?php echo $i; ?>"
-               value="<?php echo htmlspecialchars($_POST["price" . $i] ?? ""); ?>">
-    <?php endfor; ?>
-    <button type="submit" name="check" value="1">Find the highest and lowest</button>
+<?php
+// the five boxes are themselves echoed in a loop, rather than typed out
+// five times with only the number changing
+for ($i = 1; $i <= 5; $i++) {
+    $value = htmlspecialchars($_POST["price" . $i] ?? "");
+    echo "<label for='p" . $i . "'>Price " . $i . "</label>";
+    echo "<input type='text' id='p" . $i . "' name='price" . $i . "' value='" . $value . "'>";
+}
+echo "<button type='submit' name='check' value='1'>Find the highest and lowest</button>";
+?>
 </form>
 
-<?php if ($error): ?>
-    <div class="result"><p><?php echo htmlspecialchars($error); ?></p></div>
-<?php elseif ($sent): ?>
-    <div class="result">
-        <h2>Out of <?php echo implode(", ", array_map("htmlspecialchars", $prices)); ?></h2>
-        <p style="color: green; font-weight: 700">Highest price: $<?php echo $highest; ?></p>
-        <p style="color: red; font-weight: 700">Lowest price: $<?php echo $lowest; ?></p>
-    </div>
-<?php endif; ?>
+<?php
+// ---- the output, echoed, with the colour chosen in PHP ----
+if ($error !== "") {
+    echo "<div class='result'><p>" . htmlspecialchars($error) . "</p></div>";
 
-<p><a href="index.php">&larr; all seven solutions</a></p>
+} elseif ($sent) {
+    $green = "color: green; font-weight: 700";
+    $red   = "color: red; font-weight: 700";
+
+    echo "<div class='result'>";
+    echo "<h2>Out of " . htmlspecialchars(implode(", ", $prices)) . "</h2>";
+    echo "<p style='" . $green . "'>Highest price: $" . $highest . "</p>";
+    echo "<p style='" . $red   . "'>Lowest price: $"  . $lowest  . "</p>";
+
+    // every price listed, each one coloured by what it turned out to be
+    echo "<table>";
+    echo "<tr><th>Item</th><th>Price</th><th>Verdict</th></tr>";
+    for ($i = 0; $i < 5; $i++) {
+        $p = $prices[$i];
+        if ($p == $highest) {
+            $style = $green; $label = "most expensive";
+        } elseif ($p == $lowest) {
+            $style = $red;   $label = "cheapest";
+        } else {
+            $style = "";     $label = "";
+        }
+        echo "<tr>";
+        echo "<td>Item " . ($i + 1) . "</td>";
+        echo "<td style='" . $style . "'>$" . htmlspecialchars($p) . "</td>";
+        echo "<td style='" . $style . "'>" . $label . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    echo "</div>";
+}
+
+echo "<p><a href='index.php'>&larr; all seven solutions</a></p>";
+?>
 </div></body></html>
