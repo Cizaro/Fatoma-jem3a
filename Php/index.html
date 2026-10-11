@@ -123,12 +123,16 @@ summary::-webkit-details-marker{display:none}
 .practice h2{font-family:var(--display);font-size:27px;margin:0 0 4px;letter-spacing:-.02em}
 .practice .lvsub{margin-bottom:20px}
 .pgrid{display:grid;grid-template-columns:1.25fr 1fr;gap:14px}
-.big{background:var(--ink);color:var(--paper);border-radius:var(--r);padding:26px;text-decoration:none;
+/* was a near-black slab; the brief is no dark colours, so it is now a
+   lit panel with the accent carrying the weight instead */
+.big{background:linear-gradient(145deg,var(--accent-soft),var(--surface) 78%);
+  color:var(--ink);border:1px solid rgba(58,66,219,.22);
+  box-shadow:var(--shadow);border-radius:var(--r);padding:26px;text-decoration:none;
   display:flex;flex-direction:column;justify-content:space-between;gap:26px;min-height:200px;
   transition:transform .14s}
-.big:hover{transform:translateY(-3px)}
-.big h3{font-family:var(--display);font-size:24px;margin:0;color:var(--paper);letter-spacing:-.02em}
-.big p{margin:6px 0 0;color:var(--ink-3);font-size:14px;max-width:34ch}
+.big:hover{transform:translateY(-3px);box-shadow:var(--lift);border-color:var(--accent)}
+.big h3{font-family:var(--display);font-size:24px;margin:0;color:var(--ink);letter-spacing:-.02em}
+.big p{margin:6px 0 0;color:var(--ink-2);font-size:14px;max-width:34ch}
 .big .go{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
 .stack{display:grid;gap:14px}
 .small{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:17px 19px;

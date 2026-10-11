@@ -4,13 +4,29 @@
    Change a token here and the whole ecosystem moves together.
    ============================================================ */
 :root{
-  --paper:#FAF6EF; --surface:#FFFDF8; --surface-2:#F1EADD;
-  --ink:#221E19; --ink-2:#5E564C; --ink-3:#8F867A;
-  --line:#E6DCC9; --accent:#0F7B6C; --accent-soft:#E3F1EE;
-  --warm:#B5541F; --warm-soft:#FBEDE4; --gold:#A57C1B; --gold-soft:#FBF2DC;
-  --cabinet:#1C1814; --cabinet-ink:#F4F0E8;
-  --shadow:0 1px 2px rgba(60,46,28,.07), 0 10px 28px -14px rgba(60,46,28,.26);
-  --lift:0 2px 4px rgba(60,46,28,.07), 0 18px 40px -20px rgba(60,46,28,.40);
+  color-scheme: light;
+
+  /* ---- Daylight -------------------------------------------------------
+     One palette, no dark mode: she reads this at a desk in the evening on
+     a lit screen, and the request was for no dark colours anywhere - which
+     includes the code blocks, which used to be charcoal.
+
+     The depth comes from layered shadow and a very faint colour wash
+     instead, so the page still has somewhere to sit.                      */
+  --paper:#FBFAF7; --surface:#FFFFFF; --surface-2:#F2EFE8;
+  --ink:#15171E; --ink-2:#4F5565; --ink-3:#767C8B;
+  --line:#E7E2D8;
+
+  --accent:#3A42DB; --accent-soft:#EDEEFD;
+  --warm:#DC5C33;   --warm-soft:#FDEDE7;
+  --gold:#8A6208;   --gold-soft:#FAF1D9;   /* dark enough to read on its own soft tint */
+
+  /* code and editors: ivory, with ink dark enough to read all evening */
+  --cabinet:#F5F3EC; --cabinet-ink:#1B1E27;
+
+  --shadow:0 1px 2px rgba(20,22,30,.05), 0 10px 30px -16px rgba(20,22,30,.20);
+  --lift:0 2px 6px rgba(20,22,30,.06), 0 34px 70px -34px rgba(58,66,219,.38);
+
   --display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
   --body:"Public Sans",system-ui,-apple-system,sans-serif;
   --mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
@@ -19,43 +35,23 @@
      thirteen different radii across the pages, which is what makes a site
      look like it has no system behind it. Small things, panels, big
      containers, and anything pill-shaped. Nothing else. */
-  --r-sm:8px; --r:12px; --r-lg:18px; --r-pill:999px;
-  --rail:250px;
+  --r-sm:9px; --r:14px; --r-lg:22px; --r-pill:999px;
+  --rail:252px;
 
   /* Names the older pages use. They are aliases, not new colours, so that
      every page can share this one file instead of carrying its own copy
      of the palette - which is how three pages quietly lost dark mode. */
   --marker:var(--warm); --marker-soft:var(--warm-soft);
   --done:var(--accent);  --done-soft:var(--accent-soft);
-  --good:var(--accent);  --good-soft:var(--accent-soft);
+  --good:#1C7F57;        --good-soft:#E6F4ED;
   --bad:var(--warm);     --bad-soft:var(--warm-soft);
   --code-bg:var(--cabinet); --code-ink:var(--cabinet-ink); --editor:var(--cabinet);
+  --editor-ink:var(--cabinet-ink); --gutter:#A7A396;
 
   /* the six stage worlds */
-  --w1:#0F7B6C; --w2:#3E6B8A; --w3:#A57C1B; --w4:#B5541F; --w5:#94413A; --w6:#5C5470;
+  --w1:#3A42DB; --w2:#2E6F9E; --w3:#BC8710; --w4:#DC5C33; --w5:#A33F62; --w6:#5B4BA8;
 }
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --paper:#17140F; --surface:#201C16; --surface-2:#2A251E;
-    --ink:#F0EBE2; --ink-2:#ABA396; --ink-3:#7E766A;
-    --line:#36302F; --accent:#4FC2AE; --accent-soft:#16302C;
-    --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B; --gold-soft:#2C2517;
-    --cabinet:#120F0B; --cabinet-ink:#F4F0E8;
-    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
-    --lift:0 2px 4px rgba(0,0,0,.5), 0 18px 40px -20px rgba(0,0,0,.9);
-    --w1:#4FC2AE; --w2:#6E9CC4; --w3:#D8B45B; --w4:#E08B5A; --w5:#C97F77; --w6:#9A90C4;
-  }
-}
-:root[data-theme="dark"]{
-  --paper:#17140F; --surface:#201C16; --surface-2:#2A251E;
-  --ink:#F0EBE2; --ink-2:#ABA396; --ink-3:#7E766A;
-  --line:#36302F; --accent:#4FC2AE; --accent-soft:#16302C;
-  --warm:#E08B5A; --warm-soft:#2E211A; --gold:#D8B45B; --gold-soft:#2C2517;
-  --cabinet:#120F0B; --cabinet-ink:#F4F0E8;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 28px -14px rgba(0,0,0,.7);
-  --lift:0 2px 4px rgba(0,0,0,.5), 0 18px 40px -20px rgba(0,0,0,.9);
-  --w1:#4FC2AE; --w2:#6E9CC4; --w3:#D8B45B; --w4:#E08B5A; --w5:#C97F77; --w6:#9A90C4;
-}
+
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{background:var(--paper);color:var(--ink);font-family:var(--body);
@@ -109,7 +105,7 @@ a{color:var(--accent)}
 
 /* the drawer scrim is fixed and hidden until mobile opens it. It must be
    out of the grid flow or it takes a column and shunts the rail sideways. */
-.scrim{position:fixed;inset:0;background:rgba(15,17,20,.45);z-index:35;display:none}
+.scrim{position:fixed;inset:0;background:rgba(21,23,30,.32);z-index:35;display:none}
 
 .stage{position:relative;overflow:hidden;background:var(--paper);
   display:flex;flex-direction:column;min-width:0}
@@ -207,3 +203,95 @@ body.reader{padding:0}
   font-size:15px;font-weight:600;font-family:inherit;cursor:pointer}
 .btn:hover{filter:brightness(1.08)}
 .btn.ghost{background:none;border:1px solid var(--line);color:var(--ink-2)}
+
+
+/* ============================================================
+   DAYLIGHT: depth and motion
+   The brief was modern and cinematic without dark colours, so the
+   drama is carried by scale, air and layered light rather than by a
+   dark ground. Everything here is additive - remove this block and
+   the course still works exactly as before.
+   ============================================================ */
+
+/* No gradient wash.
+
+   Three versions of one were tried here - a fixed full-page layer, the
+   body background, then gradients scoped to the shell and the hero - and
+   every one of them stalled painting badly enough that pages came up
+   blank in testing. Large soft radial gradients are expensive, and this
+   is a site someone reads for an hour at a time.
+
+   So the light in this design comes from the paper itself, from layered
+   shadow, and from the glass rail. Those cost nothing and they survive
+   a long page. If a wash is ever wanted again it belongs on a small,
+   fixed-size element, not on anything that grows with the content. */
+
+/* one theme now, so the buttons that switched it have nothing to do */
+.theme-btn, #themeBtn{ display:none !important; }
+
+/* ---------- the shell reads as glass over the wash ---------- */
+.rail{ background:rgba(255,255,255,.72); backdrop-filter:blur(18px) saturate(1.3);
+  -webkit-backdrop-filter:blur(18px) saturate(1.3); border-right:1px solid rgba(231,226,216,.8); }
+.brand{ background:transparent; }
+.stage, .stage iframe{ background:transparent; }
+.topbar{ background:rgba(255,255,255,.82); backdrop-filter:blur(18px) saturate(1.3);
+  -webkit-backdrop-filter:blur(18px) saturate(1.3); border-bottom:1px solid rgba(231,226,216,.8); }
+
+.nav a{ transition:background .18s ease, color .18s ease, transform .18s cubic-bezier(.16,1,.3,1); }
+.nav a:hover{ transform:translateX(3px); }
+.nav a.on{ box-shadow:inset 0 0 0 1px rgba(58,66,219,.16); }
+
+/* ---------- type, one size bolder ---------- */
+.prose{ max-width:788px; }
+.prose h1{ font-size:clamp(34px,6.2vw,58px); letter-spacing:-.035em; line-height:1.02;
+  margin-bottom:26px; }
+.prose h2{ font-size:clamp(21px,2.4vw,27px); letter-spacing:-.025em; margin-top:46px;
+  padding-top:24px; }
+.prose p{ font-size:15.5px; }
+
+/* code sits on ivory now, so it needs an edge to stay a distinct object */
+.prose pre, pre.code, .out, .brief pre{
+  border:1px solid var(--line); box-shadow:inset 0 1px 0 rgba(255,255,255,.9); }
+
+/* ---------- things you can press should feel it ---------- */
+.pl, .lessonnav a, .gl, .hl{
+  transition:transform .22s cubic-bezier(.16,1,.3,1), box-shadow .22s ease, border-color .18s ease; }
+.pl:hover, .gl:hover, .hl:hover{ transform:translateY(-2px); box-shadow:var(--shadow); }
+.lessonnav a:hover{ transform:translateY(-3px); box-shadow:var(--lift); }
+.pl.main:hover{ box-shadow:0 10px 30px -12px rgba(58,66,219,.6); }
+
+/* ---------- the footer row every page ends with ----------
+   There was no shared rule for this, so the pages written later had
+   their links run together: "course homecode lab answersroadmap". */
+footer{ margin-top:46px; padding:22px 0 10px; border-top:1px solid var(--line);
+  font-size:13px; color:var(--ink-3); }
+footer a{ color:var(--ink-2); text-decoration:none; margin-right:18px;
+  border-bottom:1px solid transparent; transition:color .18s, border-color .18s; }
+footer a:hover{ color:var(--accent); border-bottom-color:var(--accent); }
+
+/* ---------- entrances ----------
+   A scroll-linked animation where the browser supports one, which is
+   genuinely cinematic and costs nothing: no library, no observer, and
+   no element is ever left invisible, because anything already on screen
+   when the page loads is past its entry range. */
+@keyframes enter{
+  from{ opacity:.25; transform:translateY(18px) scale(.985); }
+  to  { opacity:1;   transform:none; }
+}
+@keyframes rise{
+  from{ opacity:0; transform:translateY(14px); }
+  to  { opacity:1; transform:none; }
+}
+@media (prefers-reduced-motion: no-preference){
+  .prose > h1{ animation:rise .7s cubic-bezier(.16,1,.3,1) both; }
+  .prose > p:first-of-type{ animation:rise .7s .08s cubic-bezier(.16,1,.3,1) both; }
+
+  @supports (animation-timeline: view()){
+    .prose > h2, .prose > pre, .prose > .tablewrap, .prose > blockquote,
+    .lessonnav a, .practise{
+      animation:enter linear both;
+      animation-timeline:view();
+      animation-range:entry 0% entry 58%;
+    }
+  }
+}
