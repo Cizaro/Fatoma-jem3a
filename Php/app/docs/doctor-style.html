@@ -1,0 +1,95 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The way your lecturer answers a question</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=5">
+<body class="reader">
+<article class="prose">
+<h1>The way your lecturer answers a question</h1>
+<p>Every question from this course gets answered in the <strong>same four parts, in this order</strong>. The handwriting at the top of the exercise sheet says it outright:</p>
+<blockquote><p>write pseudocode and flow chart and PHP code</p></blockquote>
+<p>So an answer that is only code is an incomplete answer, however well it runs.</p>
+<div class="tablewrap"><table><thead><tr><th></th><th>Part</th><th>What it is</th></tr></thead><tbody><tr><td>1</td><td><strong>Pseudocode</strong></td><td>the steps in words, CAPITALS, <code>&lt;--</code> for &quot;put in&quot;</td></tr><tr><td>2</td><td><strong>Flowchart</strong></td><td>the same steps as shapes, Start and Stop, nothing unconnected</td></tr><tr><td>3</td><td><strong>HTML form</strong></td><td>the inputs and the buttons, written as plain HTML</td></tr><tr><td>4</td><td><strong>PHP script</strong></td><td><code>&lt;?php</code> under the form, reads <code>$_POST</code>, calculates, echoes</td></tr></tbody></table></div>
+<p>Copy <code>template.php</code> and fill in the four parts. <code>radius.php</code> is the worked example, and it is his own board solution.</p>
+<hr>
+<h2>His habits, copied exactly</h2>
+<p>These are not better or worse than other ways of writing PHP. They are <strong>his</strong>, and matching them is how an answer looks like it belongs in his class.</p>
+<p><strong>Short capital variable names, one per quantity.</strong></p>
+<pre class="lang-php"><code>$R = $_POST[&quot;rad&quot;];      // Radius
+$A = pi() * $R * $R;     // Area
+$C = 2 * pi() * $R;      // Circumference
+$V = (4/3) * pi() * pow($R, 3);   // Volume</code></pre>
+<p>Not <code>$radius</code> and <code>$area</code>. He writes <code>$R</code>, <code>$A</code>, <code>$C</code>, <code>$V</code> — the letter from the formula. On a whiteboard that is the whole reason, and it carries into the file.</p>
+<p><strong>The form first, the PHP underneath.</strong> He does not weave <code>&lt;?php ?&gt;</code> through the HTML. The page is: form, then one <code>&lt;?php</code> block that does everything.</p>
+<pre class="lang-html"><code>&lt;form action=&quot;radius.php&quot; method=&quot;POST&quot;&gt;
+  &lt;label&gt; Enter the Radius &lt;/label&gt;
+  &lt;input type=&quot;number&quot; name=&quot;rad&quot;&gt;
+  &lt;input type=&quot;submit&quot; value=&quot;Calculate&quot;&gt;
+  &lt;input type=&quot;reset&quot; value=&quot;Clear&quot;&gt;
+&lt;/form&gt;
+&lt;?php
+  ...</code></pre>
+<p><strong><code>&lt;input type=&quot;submit&quot;&gt;</code>, not <code>&lt;button&gt;</code>.</strong> The text on the button is the <code>value</code>. This matters: <code>value</code> is also what arrives in <code>$_POST</code> if the input has a <code>name</code>.</p>
+<p><strong><code>action</code> names the file.</strong> <code>action=&quot;radius.php&quot;</code> — the file writes its own name. (<code>action=&quot;&quot;</code> posts to the same file and is the same thing; his way is more explicit, and it is what he puts on the board.)</p>
+<p><strong><code>pi()</code> and <code>pow()</code>.</strong> The sheet says so: <em>&quot;pi() is a function predefined in PHP&quot;</em>. He uses <code>pow($R, 3)</code> for the cube rather than <code>$R*$R*$R</code>.</p>
+<p><strong>One <code>echo</code>, joined with dots.</strong></p>
+<pre class="lang-php"><code>echo &quot;Area = &quot; . $A . &quot; Circumference = &quot; . $C . &quot; Volume = &quot; . $V;</code></pre>
+<p><strong><code>$_POST[&quot;rad&quot;]</code> straight into a variable</strong>, with no <code>isset</code> on the board. He used <code>isset($_POST[&#x27;Sum&#x27;])</code> in the lecture file, so he knows it; on a quick board answer he skips it. In a file you hand in, <strong>put the guard in</strong> — the page throws a warning on its first load without it.</p>
+<hr>
+<h2>The one fault in the board answer</h2>
+<p>The sheet asks you to <em>&quot;identify which button was pressed&quot;</em>. The board has:</p>
+<pre class="lang-html"><code>&lt;input type=&quot;submit&quot; value=&quot;Calculate&quot;&gt;
+&lt;input type=&quot;reset&quot;  value=&quot;Clear&quot;&gt;</code></pre>
+<p><strong>A reset button never reaches PHP.</strong> It is handled entirely by the browser: it empties the boxes and no request is sent. So there is nothing for PHP to identify, and <code>Clear</code> can never be detected server-side.</p>
+<p>That is fine if Clear is only meant to empty the form — which is the normal reason to use <code>type=&quot;reset&quot;</code>. But if the question wants PHP to <em>know</em> that Clear was pressed, it has to be a submit button with a name:</p>
+<pre class="lang-html"><code>&lt;input type=&quot;submit&quot; name=&quot;calc&quot;  value=&quot;Calculate&quot;&gt;
+&lt;input type=&quot;submit&quot; name=&quot;clear&quot; value=&quot;Clear&quot;&gt;</code></pre>
+<p>and then <code>isset($_POST[&quot;calc&quot;])</code> tells them apart. Both versions are in <code>radius.php</code>, with this written on the page.</p>
+<hr>
+<h2>Pseudocode, his conventions</h2>
+<p>From Lesson 1 of the module, and he marks against them:</p>
+<ul><li>Keywords and variables in <strong>CAPITALS</strong></li><li><code>&lt;--</code> means &quot;put this value in&quot;</li><li><code>=</code> means &quot;is this equal to&quot;, only inside a decision</li><li><code>[square brackets]</code> for a comment</li><li><code>IF ... THEN ... ELSE ... ENDIF</code>, <code>WHILE ... ENDWHILE</code></li></ul>
+<pre><code>START
+  [the form has already been filled in]
+  R &lt;-- the radius from the form
+  IF R is not a number OR R &lt;= 0 THEN
+      PRINT &quot;enter a positive number&quot;
+  ELSE
+      A &lt;-- PI * R * R
+      C &lt;-- 2 * PI * R
+      V &lt;-- (4 / 3) * PI * R * R * R
+      PRINT &quot;Shape: Circle&quot;
+      PRINT &quot;Radius: &quot; , R
+      PRINT &quot;Area = PI x r^2 = &quot; , A
+  ENDIF
+STOP</code></pre>
+<h2>Flowchart, his five shapes</h2>
+<p>Oval to start and stop, parallelogram for input and output, rectangle to do, diamond to decide, arrows to connect. Nothing left dangling, and <strong>Start and Stop both drawn</strong> — two marks that cost nothing.</p>
+<pre><code>            ( START )
+                |
+         /  read R  /            &lt;- parallelogram, input
+                |
+             &lt; R &gt; 0 ? &gt;         &lt;- diamond, two ways out
+            /         \
+         no/           \yes
+          /             \
+  / print error /    [ A &lt;-- PI*R*R ]      &lt;- rectangle, process
+          \             |
+           \     [ C &lt;-- 2*PI*R ]
+            \           |
+             \   [ V &lt;-- 4/3*PI*R^3 ]
+              \         |
+               \  / print A, C, V /
+                \       |
+                 ( STOP )</code></pre>
+<p>Draw it on paper. Scan it. That is the deliverable, and no computer is needed for it.</p>
+<hr>
+<h2>The checklist before she hands anything in</h2>
+<ol><li>Pseudocode written, in CAPITALS, with <code>&lt;--</code></li><li>Flowchart drawn, with Start <strong>and</strong> Stop, every branch labelled</li><li>HTML form with the right <code>name</code> on every input</li><li><code>&lt;?php</code> block that reads <code>$_POST</code>, calculates, and echoes</li><li>The output says <strong>the formula used</strong> as well as the result, if the sheet asks for it — this one does, and it is the easiest mark to drop</li><li>It actually runs on XAMPP without a warning</li></ol>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=5"></script>

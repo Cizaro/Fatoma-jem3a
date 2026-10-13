@@ -363,6 +363,8 @@ DOCS = [
     ("README.md",                    "course-readme"),
     ("08-forms/exercises.md",        "forms-exercises"),
     ("projects/project-3-students/START-HERE.md", "project-3"),
+    ("doctor-style/HOW-HE-SOLVES.md", "doctor-style"),
+    ("doctor-style/PRACTICE.md",      "doctor-practice"),
 ]
 
 

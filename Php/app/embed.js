@@ -65,6 +65,8 @@
     "teaching-order.html": "order", "../teaching-order.html": "order",
     "../../teaching-order.html": "order",
     "teach.html": "scripts", "../teach.html": "scripts", "../../teach.html": "scripts",
+    "docs/doctor-style.html": "howhe", "../docs/doctor-style.html": "howhe",
+    "docs/doctor-practice.html": "drill", "../docs/doctor-practice.html": "drill",
     "../../php-answers.html": "answers",
     "exam-simulator.html": "exam", "../exam-simulator.html": "exam",
     "games/php-arcade.html": "arcade", "../games/php-arcade.html": "arcade",

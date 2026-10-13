@@ -1,0 +1,79 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Practice — the same question, eight more times</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=5">
+<body class="reader">
+<article class="prose">
+<h1>Practice — the same question, eight more times</h1>
+<p>Every one of these is the circle exercise wearing different clothes: <strong>a form, a number or two, a choice of buttons, and an answer that prints the formula as well as the result.</strong> If you can do the circle, you can do all eight. If you cannot do these, you cannot really do the circle.</p>
+<p>For each one, hand in the four parts:</p>
+<ol><li><strong>Pseudocode</strong> — CAPITALS, <code>&lt;--</code>, <code>IF ... THEN ... ELSE ... ENDIF</code></li><li><strong>Flowchart</strong> — on paper, Start and Stop, every branch labelled</li><li><strong>HTML form</strong> — the inputs and the buttons</li><li><strong>PHP script</strong> — reads <code>$_POST</code>, calculates, echoes the formula and the answer</li></ol>
+<p>Copy <code>template.php</code> and work inside it. The expected numbers are given so you can check yourself — if your answer differs in the third decimal place, you rounded somewhere you should not have.</p>
+<hr>
+<h2>1. Rectangle calculator</h2>
+<p>Enter a <strong>length</strong> and a <strong>width</strong>. Buttons: <strong>Area</strong>, <strong>Perimeter</strong>, <strong>Diagonal</strong>, <strong>Clear</strong>.</p>
+<ul><li>Area = L × W</li><li>Perimeter = 2 × (L + W)</li><li>Diagonal = √(L² + W²) &amp;nbsp; — <code>sqrt()</code> and <code>pow()</code></li></ul>
+<p><strong>Check with L = 8, W = 5</strong></p>
+<pre><code>Shape: Rectangle
+Length: 8   Width: 5
+Area = L x W = 40
+Perimeter = 2 x (L + W) = 26
+Diagonal = sqrt(L^2 + W^2) = 9.4339811320566</code></pre>
+<hr>
+<h2>2. Triangle calculator</h2>
+<p>Enter a <strong>base</strong> and a <strong>height</strong> for the area, or <strong>three sides</strong> for the perimeter. Buttons: <strong>Area</strong>, <strong>Perimeter</strong>, <strong>Clear</strong>.</p>
+<ul><li>Area = ½ × b × h</li><li>Perimeter = a + b + c</li><li>Harder, if you want it: Heron&#x27;s area = √(s(s−a)(s−b)(s−c)) where s = (a+b+c)/2</li></ul>
+<p><strong>Check with b = 10, h = 6</strong> → Area = 30 <strong>Check with a = 3, b = 4, c = 5</strong> → Perimeter = 12, Heron&#x27;s area = 6</p>
+<hr>
+<h2>3. Cylinder calculator</h2>
+<p>Enter a <strong>radius</strong> and a <strong>height</strong>. Buttons: <strong>Volume</strong>, <strong>Curved surface</strong>, <strong>Total surface</strong>, <strong>Clear</strong>.</p>
+<ul><li>Volume = π r² h</li><li>Curved surface = 2 π r h</li><li>Total surface = 2 π r (r + h)</li></ul>
+<p><strong>Check with r = 3, h = 7</strong></p>
+<pre><code>Shape: Cylinder
+Radius: 3   Height: 7
+Volume = PI x r^2 x h = 197.92033717616
+Curved surface = 2 x PI x r x h = 131.94689145077
+Total surface = 2 x PI x r x (r + h) = 188.49555921539</code></pre>
+<hr>
+<h2>4. Cone calculator</h2>
+<p>Enter a <strong>radius</strong> and a <strong>height</strong>. Buttons: <strong>Volume</strong>, <strong>Slant height</strong>, <strong>Total surface</strong>, <strong>Clear</strong>.</p>
+<ul><li>Volume = ⅓ π r² h</li><li>Slant height l = √(r² + h²)</li><li>Total surface = π r (r + l)</li></ul>
+<p><strong>Check with r = 3, h = 4</strong> → Volume = 37.699111843078, slant = 5, total surface = 75.398223686155</p>
+<p>The slant comes out as exactly 5 because 3, 4, 5 is a right triangle. Good test numbers are the ones where you already know the answer.</p>
+<hr>
+<h2>5. Temperature converter</h2>
+<p>Enter a temperature in <strong>Celsius</strong>. Buttons: <strong>Fahrenheit</strong>, <strong>Kelvin</strong>, <strong>Clear</strong>.</p>
+<ul><li>F = C × 9 / 5 + 32</li><li>K = C + 273.15</li></ul>
+<p><strong>Check with C = 25</strong> → 77 °F, 298.15 K <strong>Then check with C = −40</strong> → −40 °F. The one temperature where both scales agree, which is why it catches a formula written the wrong way round.</p>
+<hr>
+<h2>6. Interest calculator</h2>
+<p>Enter a <strong>principal</strong>, a <strong>rate</strong> and a number of <strong>years</strong>. Buttons: <strong>Simple</strong>, <strong>Compound</strong>, <strong>Clear</strong>.</p>
+<ul><li>Simple interest = P × R × T / 100</li><li>Compound interest = P × (1 + R/100)^T − P &amp;nbsp; — <code>pow()</code> again</li></ul>
+<p><strong>Check with P = 1000, R = 5, T = 3</strong> → simple 150, compound 157.625</p>
+<p>Show money with <code>number_format($x, 2)</code> so 157.625 reads as 157.63, and say in one line why <code>round()</code> would have been wrong there.</p>
+<hr>
+<h2>7. Ohm&#x27;s law calculator</h2>
+<p>Enter any <strong>two</strong> of voltage, current and resistance. Buttons: <strong>Voltage</strong>, <strong>Power</strong>, <strong>Resistance</strong>, <strong>Clear</strong>.</p>
+<ul><li>V = I × R</li><li>P = V × I</li><li>R = V / I  — and guard the divide by zero</li></ul>
+<p><strong>Check with I = 2, R = 10</strong> → V = 20 <strong>Check with V = 20, I = 2</strong> → P = 40</p>
+<hr>
+<h2>8. BMI and body surface area</h2>
+<p>Enter a <strong>weight</strong> in kg and a <strong>height</strong> in metres. Buttons: <strong>BMI</strong>, <strong>Surface area</strong>, <strong>Clear</strong>.</p>
+<ul><li>BMI = weight ÷ height²</li><li>Surface area (Mosteller) = √(height in cm × weight ÷ 3600)</li></ul>
+<p><strong>Check with weight = 70, height = 1.75</strong> → BMI 22.857142857143, surface area 1.8446619684316</p>
+<p>Then add the band: under 18.5 Underweight, under 25 Normal, under 30 Overweight, otherwise Obese. That is the <code>elseif</code> ladder, inside the same shape of answer.</p>
+<hr>
+<h2>The traps that cost marks on all eight</h2>
+<p><strong><code>type=&quot;reset&quot;</code> sends nothing.</strong> If the question wants PHP to know a button was pressed, it must be <code>type=&quot;submit&quot;</code> with a <code>name</code>.</p>
+<p><strong>A missing <code>name=</code> sends nothing either</strong>, and nothing warns you. <code>id</code> is for CSS and JavaScript; the server never sees it.</p>
+<p><strong>No <code>isset</code> means a warning on the first load</strong>, before anyone has typed. The guard is one line.</p>
+<p><strong>Brackets.</strong> <code>(4/3) * pi() * pow($R,3)</code> is right; <code>4/3 * pi() * pow($R,3)</code> happens to be right too, but <code>$w / $h * $h</code> gives you back the weight. When in doubt, bracket it — nobody ever lost a mark for a bracket.</p>
+<p><strong>Print the formula, not just the number.</strong> Every one of these sheets asks for it, and it is the easiest mark in the question to drop.</p>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=5"></script>
