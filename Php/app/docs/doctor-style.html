@@ -46,7 +46,8 @@ $V = (4/3) * pi() * pow($R, 3);   // Volume</code></pre>
 <p>That is fine if Clear is only meant to empty the form — which is the normal reason to use <code>type=&quot;reset&quot;</code>. But if the question wants PHP to <em>know</em> that Clear was pressed, it has to be a submit button with a name:</p>
 <pre class="lang-html"><code>&lt;input type=&quot;submit&quot; name=&quot;calc&quot;  value=&quot;Calculate&quot;&gt;
 &lt;input type=&quot;submit&quot; name=&quot;clear&quot; value=&quot;Clear&quot;&gt;</code></pre>
-<p>and then <code>isset($_POST[&quot;calc&quot;])</code> tells them apart. Both versions are in <code>radius.php</code>, with this written on the page.</p>
+<p>and then <code>isset($_POST[&quot;calculate&quot;])</code> tells them apart. That is what <code>radius.php</code> does.</p>
+<p><strong>Keep the form to exactly what the sheet lists.</strong> This one says: an input field for radius, a Calculate button, a Clear button. Three controls. Adding a button per formula is not generosity, it is a different question to the one that was asked, and the boxed example at the top of the sheet shows one Calculate press printing all three results at once.</p>
 <hr>
 <h2>Pseudocode, his conventions</h2>
 <p>From Lesson 1 of the module, and he marks against them:</p>

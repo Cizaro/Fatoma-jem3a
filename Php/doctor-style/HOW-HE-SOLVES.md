@@ -97,8 +97,14 @@ Clear was pressed, it has to be a submit button with a name:
 <input type="submit" name="clear" value="Clear">
 ```
 
-and then `isset($_POST["calc"])` tells them apart. Both versions are in
-`radius.php`, with this written on the page.
+and then `isset($_POST["calculate"])` tells them apart. That is what
+`radius.php` does.
+
+**Keep the form to exactly what the sheet lists.** This one says: an input
+field for radius, a Calculate button, a Clear button. Three controls. Adding a
+button per formula is not generosity, it is a different question to the one
+that was asked, and the boxed example at the top of the sheet shows one
+Calculate press printing all three results at once.
 
 ---
 
