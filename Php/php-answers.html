@@ -33,6 +33,10 @@ details[open] summary .hint{color:var(--accent)}
 .ask{color:var(--ink-2);margin:0 0 14px}
 .lbl{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);
   font-weight:600;margin:0 0 7px}
+pre.plan{background:var(--surface-2);color:var(--ink);font-family:var(--mono);
+  font-size:12.5px;line-height:1.55;padding:14px 16px;border-radius:var(--r-sm);
+  border-left:3px solid var(--gold);overflow-x:auto;margin:0 0 16px}
+pre.plan.flow{border-left-color:var(--warm);line-height:1.4}
 pre.code{background:var(--editor);color:var(--editor-ink);font-family:var(--mono);
   font-size:13px;line-height:1.6;padding:14px 16px;border-radius:var(--r-sm);
   overflow-x:auto;margin:0 0 16px}
@@ -78,12 +82,25 @@ pre.code{background:var(--editor);color:var(--editor-ink);font-family:var(--mono
 <script src="app/problems-data.js?v=1"></script>
 <script src="app/problems-extra.js?v=1"></script>
 <script src="app/problems-set2.js?v=1"></script>
+<script src="app/problems-plans.js?v=1"></script>
 <script>
 /* Every problem's worked answer, shut by default. The <details> element
    does the hiding, so a stray scroll cannot spoil a problem she has not
    tried yet, and a link like php-answers.html#p3 opens exactly one. */
 const P = [...PROBLEMS_SET1, ...PROBLEMS_SET2, ...PROBLEMS_EXTRA];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* Her lecturer marks four parts - pseudocode, flowchart, form, code -
+   so an answer here shows the plan before the code, in that order. The
+   plans live in their own file, keyed by id. */
+function plan(id){
+  const pl = (typeof PLANS !== "undefined") && PLANS[id];
+  if (!pl) return "";
+  return `<p class="lbl">1 &middot; pseudocode</p>
+          <pre class="plan">${esc(pl.pseudo.trim())}</pre>
+          <p class="lbl">2 &middot; flowchart &mdash; copy this onto paper</p>
+          <pre class="plan flow">${esc(pl.flow.trim())}</pre>`;
+}
 
 let html = "", set = null;
 for (const p of P){
@@ -93,7 +110,8 @@ for (const p of P){
       <span class="hint">show</span></summary>
     <div class="inner">
       <p class="ask">${p.task}</p>
-      <p class="lbl">the answer</p>
+      ${plan(p.id)}
+      <p class="lbl">3 &middot; the PHP</p>
       <pre class="code">${esc(p.sol.trim())}</pre>
       <p class="lbl">why it is written that way</p>
       <div class="why">${p.why}</div>
