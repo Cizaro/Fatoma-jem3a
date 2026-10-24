@@ -447,6 +447,71 @@ if (isset($_POST["S"])) {
     <br><br><b><code>$i &lt;= 4</code> gives four students.</b>
     <code>$i &lt; 5</code> gives the same four and reads as though it means
     five. Say the number you mean.`
+},
+
+{
+  id: "q8", set: "Set II · decisions and tables", n: "8",
+  title: "Hello world, N times",
+  context: `The smallest loop there is, and the one worth getting exactly
+    right before any of the others. One number in, the same line out that
+    many times. Nothing is calculated &mdash; the only question is how many
+    times the loop runs.`,
+  task: `Read a number N from the form and print <code>Hello world</code>
+    N times, one per line.`,
+  reqs: [
+    "Read <code>$_POST[\"n\"]</code>",
+    "Use a <b>loop</b> &mdash; not N copies of the same <code>echo</code>",
+    "Print <code>Hello world</code> exactly N times, each on its own line",
+    "If N is missing, not a number, or outside 1 to 100, print exactly:<br><code>Please enter a number from 1 to 100.</code> and nothing else"
+  ],
+  inputs: "One number box and a Show button.",
+  runs: [
+    { vars: { _POST: { n: "3", show: "1" } }, label: "N = 3",
+      counts: [{ text: "Hello world", times: 3 }] },
+    { vars: { _POST: { n: "1", show: "1" } }, label: "N = 1",
+      counts: [{ text: "Hello world", times: 1 }] },
+    { vars: { _POST: { n: "7", show: "1" } }, label: "N = 7",
+      counts: [{ text: "Hello world", times: 7 }] },
+    { vars: { _POST: { n: "0", show: "1" } }, label: "N = 0",
+      out: "Please enter a number from 1 to 100." },
+    { vars: { _POST: { n: "500", show: "1" } }, label: "N = 500",
+      out: "Please enter a number from 1 to 100." },
+    { vars: { _POST: { n: "abc", show: "1" } }, label: "letters typed",
+      out: "Please enter a number from 1 to 100." },
+    { vars: { _POST: { n: "", show: "1" } }, label: "empty box",
+      out: "Please enter a number from 1 to 100." }
+  ],
+  code: [
+    { re: /for\s*\(|while\s*\(/, msg: "Use a loop" },
+    { re: /is_numeric\s*\(/, msg: "Check it is a number before you count with it" }
+  ],
+  starter: "<?php\n$n = $_POST[\"n\"];\n\nif (!is_numeric($n) || $n < 1 || $n > 100) {\n    echo \"Please enter a number from 1 to 100.\";\n} else {\n\n}\n",
+  sol: `<?php
+$n = $_POST["n"];
+
+if (!is_numeric($n) || $n < 1 || $n > 100) {
+    echo "Please enter a number from 1 to 100.";
+} else {
+    for ($i = 1; $i <= $n; $i++) {
+        echo "Hello world<br>";
+    }
+}
+`,
+  why: `<b>The loop runs <code>$i &lt;= $n</code>, not <code>$i &lt; $n</code>.</b>
+    Starting at 1 and stopping at <i>less than</i> N gives N&minus;1 lines, and
+    with N = 3 you get two &mdash; close enough to look right and wrong every
+    time. Start at 1 and go up to and including N, or start at 0 and stop
+    below N. Pick one and say it out loud while you write it.
+    <br><br><b>The upper limit is not fussiness.</b> Without it, someone types
+    1000000 and the page tries to print a million lines. Any number that
+    decides how many times a loop runs and comes from outside has to be
+    checked before the loop sees it &mdash; this is the smallest example of
+    that rule you will ever write.
+    <br><br><b>An empty box is not zero.</b> It arrives as <code>""</code>, and
+    in PHP 8 comparing it with <code>&lt; 1</code> is not the error-free thing
+    you would hope; <code>is_numeric</code> is checked <i>first</i>, and the
+    <code>||</code> stops as soon as it is true, so the comparisons never run
+    on something that is not a number.`
 }
 
 ];

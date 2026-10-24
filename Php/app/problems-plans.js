@@ -536,6 +536,22 @@ q7: {
 STOP`
 },
 
+q8: {
+  pseudo:
+`START
+  N <-- the number from the form
+  IF N is not a number OR N < 1 OR N > 100 THEN
+      PRINT "Please enter a number from 1 to 100."
+  ELSE
+      I <-- 1
+      WHILE I <= N                [up to AND INCLUDING N]
+          PRINT "Hello world"
+          I <-- I + 1
+      ENDWHILE
+  ENDIF
+STOP`
+},
+
 /* ========================= Extra practice ========================= */
 x1: {
   pseudo:

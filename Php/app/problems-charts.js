@@ -207,6 +207,19 @@ q7: { nodes: [
   { t:"stop" }
 ]},
 
+q8: { nodes: [
+  { t:"start" },
+  { t:"io",   s:"read N" },
+  { t:"dec",  s:"N not a number, or outside 1 to 100 ?",
+              yes:{ t:"io", s:"print the error" } },
+  { t:"proc", s:"I <-- 1" },
+  { t:"dec",  s:"I <= N ?", body:[
+      { t:"io",   s:"print Hello world" },
+      { t:"proc", s:"I <-- I + 1" }
+  ]},
+  { t:"stop" }
+]},
+
 /* ========================= Extra practice ========================= */
 x1: { nodes: [
   { t:"start" },
