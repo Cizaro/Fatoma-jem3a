@@ -43,6 +43,17 @@ body{display:flex;flex-direction:column;overflow:hidden;min-height:100dvh}
 .menu button{display:block;width:100%;text-align:left;background:none;border:0;
   border-radius:var(--r-sm);padding:9px 10px;font:inherit;font-size:14px;color:var(--ink);cursor:pointer}
 .menu button:hover{background:var(--accent-soft);color:var(--accent)}
+.txtbtn.danger{border-color:var(--warm);color:var(--warm);font-weight:600}
+
+/* the picture, for when the browser will not let the page download it */
+.shade{position:absolute;inset:0;z-index:30;background:rgba(21,23,30,.55);
+  display:grid;place-items:center;padding:18px}
+.pic{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:14px;max-width:min(92vw,980px);max-height:88%;overflow:auto;box-shadow:var(--lift)}
+.pictop{margin:2px 4px 10px;font-size:13.5px;color:var(--ink-2)}
+.pictop #picname{display:block;font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:3px}
+.pic img{display:block;max-width:100%;border:1px solid var(--line);border-radius:var(--r-sm)}
+.pic .txtbtn{margin-top:11px}
 .txtbtn{background:none;border:1px solid var(--line);color:var(--ink-2);border-radius:var(--r-pill);
   padding:6px 13px;font:inherit;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;
   text-transform:uppercase;cursor:pointer}
@@ -87,6 +98,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor
       <button id="saveAll">Everything in one picture</button>
       <button id="savePages">Each page as its own picture</button>
       <button id="saveThis">Just the page I am looking at</button>
+      <button id="showPic">Show me the picture to save by hand</button>
     </div>
   </div>
   <button class="txtbtn" id="clear">clear</button>
@@ -95,6 +107,16 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor
 <div class="wrap" id="wrap">
   <canvas id="cv"></canvas>
   <input id="typing" spellcheck="false">
+  <div class="shade" id="shade" hidden>
+    <div class="pic">
+      <p class="pictop">Right-click the picture and choose <b>Save image as</b>,
+         or press and hold it on a phone.
+         <span id="picname"></span></p>
+      <img id="picimg" alt="Your board">
+      <button class="txtbtn" id="picclose">close</button>
+    </div>
+  </div>
+
   <div class="hint" id="hint">V to select, drag a box round several &middot; scroll for more room, Ctrl+scroll to zoom &middot; Ctrl+C and Ctrl+V copy &middot; Ctrl+S saves</div>
 </div>
 
@@ -531,9 +553,30 @@ function undo(){ if (!past.length) return; future.push(snap()); restore(past.pop
 function redo(){ if (!future.length) return; past.push(snap()); restore(future.pop()); }
 document.getElementById("undo").onclick = undo;
 document.getElementById("redo").onclick = redo;
-document.getElementById("clear").onclick = () => {
+/* Asking with confirm() looked fine until the board was opened inside
+   the artifact viewer, which never shows those dialogs and answers false
+   for you - so Clear quietly did nothing. The question is asked on the
+   button instead, which works everywhere. */
+const clearBtn = document.getElementById("clear");
+let clearTimer = null;
+function disarmClear(){
+  clearTimeout(clearTimer);
+  clearBtn.textContent = "clear";
+  clearBtn.classList.remove("danger");
+}
+clearBtn.onclick = () => {
   if (!shapes.length) return;
-  if (confirm("Wipe the whole board?")){ pushHistory(); shapes = []; picked = []; paint(); }
+  if (!clearBtn.classList.contains("danger")){
+    clearBtn.textContent = "tap again to wipe";
+    clearBtn.classList.add("danger");
+    clearTimer = setTimeout(disarmClear, 3500);
+    return;
+  }
+  disarmClear();
+  pushHistory();
+  shapes = []; picked = [];
+  paint();
+  flash("Board wiped — Ctrl+Z brings it back");
 };
 document.getElementById("home").onclick = () => { cam = { x:0, y:0, z:1 }; paint(); };
 
@@ -937,7 +980,8 @@ addEventListener("keyup", e => {
    Note: a page inside the Claude artifact cannot start a download - the
    viewer blocks it. Saving works from the GitHub link and from
    localhost, which is where she will be drawing anyway. */
-function exportPNG(a, b, c, d, name){
+/* Draw the piece of board into its own canvas and hand back the image. */
+function renderPNG(a, b, c, d){
   const out = document.createElement("canvas");
   const dpr = Math.min(2, window.devicePixelRatio || 1);
   out.width  = Math.max(1, Math.round((c - a) * dpr));
@@ -951,11 +995,32 @@ function exportPNG(a, b, c, d, name){
      rather than drawn outside the picture */
   o.beginPath(); o.rect(a, b, c - a, d - b); o.clip();
   shapes.forEach(sh => drawShape(sh, o));
+  return out.toDataURL("image/png");
+}
+
+/* A page inside the artifact viewer is not allowed to start a download,
+   and it is not told that it failed - the click simply does nothing. So
+   every save also offers the picture itself, which can be saved by hand
+   from any browser. */
+function exportPNG(a, b, c, d, name){
+  const url = renderPNG(a, b, c, d);
+  lastPicture = { url, name };
   const link = document.createElement("a");
   link.download = name;
-  link.href = out.toDataURL("image/png");
+  link.href = url;
   link.click();
+  return url;
 }
+
+let lastPicture = null;
+const shade = document.getElementById("shade");
+function showPicture(url, name){
+  document.getElementById("picimg").src = url;
+  document.getElementById("picname").textContent = name;
+  shade.hidden = false;
+}
+document.getElementById("picclose").onclick = () => { shade.hidden = true; };
+shade.addEventListener("click", e => { if (e.target === shade) shade.hidden = true; });
 
 const stamp = () => new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-");
 
@@ -974,6 +1039,7 @@ function contentBox(){
 function saveAll(){
   const [a, b, c, d] = contentBox();
   exportPNG(a, b, c, d, "whiteboard-" + stamp() + ".png");
+  flash("Saved. Nothing downloaded? Use “Show me the picture”");
 }
 function savePages(){
   const pages = usedPages();
@@ -992,6 +1058,13 @@ function saveThisPage(){
   const found = usedPages().find(p => p.col === here.col && p.row === here.row);
   const [a, b, c, d] = pageBox(here);
   exportPNG(a, b, c, d, "whiteboard-" + stamp() + "-page-" + (found ? found.n : 1) + ".png");
+  flash("Saved. Nothing downloaded? Use “Show me the picture”");
+}
+
+/* the one that works everywhere: put the image on screen to save by hand */
+function showAll(){
+  const [a, b, c, d] = contentBox();
+  showPicture(renderPNG(a, b, c, d), "whiteboard-" + stamp() + ".png");
 }
 
 const menu = document.getElementById("savemenu");
@@ -1007,6 +1080,7 @@ menu.addEventListener("click", e => e.stopPropagation());
 document.getElementById("saveAll").onclick   = () => { menu.hidden = true; saveAll(); };
 document.getElementById("savePages").onclick = () => { menu.hidden = true; savePages(); };
 document.getElementById("saveThis").onclick  = () => { menu.hidden = true; saveThisPage(); };
+document.getElementById("showPic").onclick   = () => { menu.hidden = true; showAll(); };
 
 /* ---------- keeping the board ----------
    Everything already lives in one list of plain objects, so keeping it
