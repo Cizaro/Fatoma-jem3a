@@ -205,7 +205,7 @@ COLORS.forEach(c => {
     cw.querySelectorAll(".sw").forEach(x => x.classList.toggle("on", x.dataset.c === c));
     /* a colour chosen with something selected recolours it, which is what
        anyone expects after picking a shape up */
-    if (picked.length){ pushHistory(); picked.forEach(s => s.c = c); paint(); }
+    if (picked.length){ pushHistory(); picked.forEach(s => s.c = c); changed(); }
   };
   cw.appendChild(b);
 });
@@ -219,7 +219,7 @@ WIDTHS.forEach(w => {
   b.onclick = () => {
     width = w;
     ww.querySelectorAll(".wt").forEach(x => x.classList.toggle("on", +x.dataset.w === w));
-    if (picked.length){ pushHistory(); picked.forEach(s => { if (s.t !== "text") s.w = w; }); paint(); }
+    if (picked.length){ pushHistory(); picked.forEach(s => { if (s.t !== "text") s.w = w; }); changed(); }
   };
   ww.appendChild(b);
 });
@@ -235,6 +235,7 @@ function setTool(id){
 /* ---------- canvas size ---------- */
 function resize(){
   const r = wrap.getBoundingClientRect();
+  viewRect = { width: r.width, height: r.height };
   const dpr = window.devicePixelRatio || 1;
   cv.width = Math.round(r.width * dpr);
   cv.height = Math.round(r.height * dpr);
@@ -311,8 +312,23 @@ function drawShape(s, g){
   g.stroke();
 }
 
-const ACCENT = () => getComputedStyle(document.documentElement)
-  .getPropertyValue("--accent").trim() || "#3A42DB";
+/* These were read with getComputedStyle inside the paint loop - three
+   calls a frame, each forcing a style recalculation, while paint runs on
+   every single pointermove. Read once instead, and again only if the
+   theme actually changes. */
+const THEME = { accent:"#3A42DB", line:"#E2DACB", ink3:"#767C8B", paper:"#F6F3EA" };
+function readTheme(){
+  const cs = getComputedStyle(document.documentElement);
+  const g = (n, f) => (cs.getPropertyValue(n) || "").trim() || f;
+  THEME.accent = g("--accent", THEME.accent);
+  THEME.line   = g("--line",   THEME.line);
+  THEME.ink3   = g("--ink-3",  THEME.ink3);
+  THEME.paper  = getComputedStyle(document.body).backgroundColor || THEME.paper;
+}
+readTheme();
+new MutationObserver(readTheme).observe(document.documentElement,
+  { attributes:true, attributeFilter:["data-theme"] });
+const ACCENT = () => THEME.accent;
 
 /* ---------- pages ----------
    Faint guides, so she can see where one picture ends and the next
@@ -353,10 +369,8 @@ function drawPages(){
 
   ctx.save();
   ctx.lineWidth = 1 / cam.z;
-  ctx.strokeStyle = getComputedStyle(document.documentElement)
-    .getPropertyValue("--line").trim() || "#ddd";
-  ctx.fillStyle = getComputedStyle(document.documentElement)
-    .getPropertyValue("--ink-3").trim() || "#888";
+  ctx.strokeStyle = THEME.line;
+  ctx.fillStyle = THEME.ink3;
   ctx.font = `${13 / cam.z}px "JetBrains Mono", monospace`;
   ctx.textBaseline = "top";
   for (let col = Math.floor(x0 / PAGE.w); col <= Math.floor(x1 / PAGE.w); col++){
@@ -428,8 +442,19 @@ function drawMarquee(){
   ctx.restore();
 }
 
+/* A fast hand produces far more pointermove events than the screen has
+   frames. Painting on each one did the same work several times over and
+   showed none of it; this coalesces them so the board paints once per
+   frame however hard she scribbles. */
+let pending = false;
 function paint(){
-  const r = wrap.getBoundingClientRect();
+  if (pending) return;
+  pending = true;
+  requestAnimationFrame(() => { pending = false; repaint(); });
+}
+let viewRect = { width: 0, height: 0 };
+function repaint(){
+  const r = viewRect;
   ctx.clearRect(0, 0, r.width, r.height);
   ctx.save();
   ctx.scale(cam.z, cam.z);
@@ -444,11 +469,19 @@ function paint(){
   document.getElementById("undo").disabled = !past.length;
   document.getElementById("redo").disabled = !future.length;
   drawMarquee();
-  document.getElementById("home").hidden = cam.x === 0 && cam.y === 0 && cam.z === 1;
-  const zl = document.getElementById("zlabel");
-  if (zl) zl.textContent = Math.round(cam.z * 100) + "%";
-  autosave();
+  /* These touch the DOM, so they only run when the thing they show has
+     actually changed - not sixty times a second while she draws. */
+  const atHome = cam.x === 0 && cam.y === 0 && cam.z === 1;
+  if (atHome !== lastAtHome){ document.getElementById("home").hidden = atHome; lastAtHome = atHome; }
+  const zpc = Math.round(cam.z * 100);
+  if (zpc !== lastZoom){ document.getElementById("zlabel").textContent = zpc + "%"; lastZoom = zpc; }
 }
+let lastAtHome = null, lastZoom = null;
+
+/* Saving used to be scheduled from paint(), so a single stroke queued it
+   hundreds of times and every queued save stringifies the whole board.
+   It is scheduled where the board actually changes instead. */
+function changed(){ paint(); autosave(); }
 
 /* ---------- where a shape is ---------- */
 function box(s){
@@ -546,9 +579,9 @@ function pushHistory(){
 function restore(json){
   shapes = JSON.parse(json);
   picked = [];             // the old references point at shapes that are gone
-  paint();
+  changed();
 }
-function commit(s){ pushHistory(); shapes.push(s); paint(); }
+function commit(s){ pushHistory(); shapes.push(s); changed(); }
 function undo(){ if (!past.length) return; future.push(snap()); restore(past.pop()); }
 function redo(){ if (!future.length) return; past.push(snap()); restore(future.pop()); }
 document.getElementById("undo").onclick = undo;
@@ -575,7 +608,7 @@ clearBtn.onclick = () => {
   disarmClear();
   pushHistory();
   shapes = []; picked = [];
-  paint();
+  changed();
   flash("Board wiped — Ctrl+Z brings it back");
 };
 document.getElementById("home").onclick = () => { cam = { x:0, y:0, z:1 }; paint(); };
@@ -771,8 +804,9 @@ function end(){
   if (marquee){ marquee = null; paint(); return; }
   if (action){
     if (action.mode === "pan") cv.style.cursor = CURSOR[tool] || "crosshair";
+    const touched = action.moved || action.mode === "pan";
     action = null;
-    paint();
+    touched ? changed() : paint();
     return;
   }
   if (!drawing) return;
@@ -840,7 +874,7 @@ function rubOut(p){
       pushHistory();
       picked = picked.filter(x => x !== shapes[i]);
       shapes.splice(i, 1);
-      paint();
+      changed();
       return;
     }
   }
@@ -870,6 +904,7 @@ cv.addEventListener("dblclick", e => {
   pushHistory();
   shapes.splice(shapes.indexOf(s), 1);
   picked = [];
+  autosave();
   typing.style.display = "block";
   typing.style.left = (s.x - 4 - cam.x) + "px";
   typing.style.top = (s.y - 3 - cam.y) + "px";
@@ -901,7 +936,7 @@ addEventListener("keydown", e => {
     pushHistory();
     shapes = shapes.filter(s => !picked.includes(s));
     picked = [];
-    paint();
+    changed();
     return;
   }
   /* arrow keys nudge the selection, which is how you line two boxes up */
@@ -912,7 +947,7 @@ addEventListener("keydown", e => {
     const dx = e.key === "ArrowLeft" ? -d : e.key === "ArrowRight" ? d : 0;
     const dy = e.key === "ArrowUp"   ? -d : e.key === "ArrowDown"  ? d : 0;
     picked.forEach(s => nudge(s, dx, dy));
-    paint();
+    changed();
     return;
   }
   const k = e.key.toLowerCase();
@@ -926,7 +961,7 @@ addEventListener("keydown", e => {
       clipboard = picked.map(s => JSON.parse(JSON.stringify(s)));
       pushHistory();
       shapes = shapes.filter(s => !picked.includes(s));
-      picked = []; e.preventDefault(); paint(); flash("cut"); return;
+      picked = []; e.preventDefault(); changed(); flash("cut"); return;
     }
     if (k === "v" && clipboard.length){
       /* paste 24 board-units down and right, so the copy is visibly a
@@ -937,7 +972,7 @@ addEventListener("keydown", e => {
       shapes.push(...copies);
       picked = copies;
       setTool("select");
-      e.preventDefault(); paint(); return;
+      e.preventDefault(); changed(); return;
     }
     if (k === "a"){
       picked = shapes.slice(); setTool("select");
@@ -949,7 +984,7 @@ addEventListener("keydown", e => {
       copies.forEach(s => nudge(s, 24, 24));
       shapes.push(...copies);
       picked = copies;
-      e.preventDefault(); paint(); return;
+      e.preventDefault(); changed(); return;
     }
     if (e.key === "=" || e.key === "+"){ zoomBy(1.25); e.preventDefault(); return; }
     if (e.key === "-"){ zoomBy(0.8);  e.preventDefault(); return; }
@@ -981,21 +1016,31 @@ addEventListener("keyup", e => {
    viewer blocks it. Saving works from the GitHub link and from
    localhost, which is where she will be drawing anyway. */
 /* Draw the piece of board into its own canvas and hand back the image. */
+const MAXPX = 4000;      // past this a browser quietly refuses the image
 function renderPNG(a, b, c, d){
+  const w = Math.max(1, c - a), h = Math.max(1, d - b);
+  /* A board three pages long asked for a canvas bigger than the browser
+     will make, and toDataURL then hands back something that is not an
+     image at all - which is why the picture came up broken rather than
+     missing. Scale the whole thing down to fit instead. */
+  let k = Math.min(2, window.devicePixelRatio || 1);
+  k = Math.min(k, MAXPX / w, MAXPX / h);
   const out = document.createElement("canvas");
-  const dpr = Math.min(2, window.devicePixelRatio || 1);
-  out.width  = Math.max(1, Math.round((c - a) * dpr));
-  out.height = Math.max(1, Math.round((d - b) * dpr));
+  out.width  = Math.max(1, Math.round(w * k));
+  out.height = Math.max(1, Math.round(h * k));
   const o = out.getContext("2d");
-  o.setTransform(dpr, 0, 0, dpr, 0, 0);
-  o.fillStyle = getComputedStyle(document.body).backgroundColor || "#fff";
+  o.setTransform(k, 0, 0, k, 0, 0);
+  o.fillStyle = THEME.paper || "#fff";
   o.fillRect(0, 0, c - a, d - b);
   o.translate(-a, -b);
   /* clip so a shape that crosses onto the next page is cut at the edge
      rather than drawn outside the picture */
   o.beginPath(); o.rect(a, b, c - a, d - b); o.clip();
   shapes.forEach(sh => drawShape(sh, o));
-  return out.toDataURL("image/png");
+  let url = "";
+  try { url = out.toDataURL("image/png"); } catch (e) { url = ""; }
+  /* a refusal comes back as a stub rather than as an error */
+  return (url && url.length > 2000) ? url : "";
 }
 
 /* A page inside the artifact viewer is not allowed to start a download,
@@ -1004,6 +1049,10 @@ function renderPNG(a, b, c, d){
    from any browser. */
 function exportPNG(a, b, c, d, name){
   const url = renderPNG(a, b, c, d);
+  if (!url){
+    flash("That is too big to turn into one picture — try saving page by page");
+    return "";
+  }
   lastPicture = { url, name };
   const link = document.createElement("a");
   link.download = name;
@@ -1015,6 +1064,10 @@ function exportPNG(a, b, c, d, name){
 let lastPicture = null;
 const shade = document.getElementById("shade");
 function showPicture(url, name){
+  if (!url){
+    flash("That is too big to turn into one picture — try saving page by page");
+    return;
+  }
   document.getElementById("picimg").src = url;
   document.getElementById("picname").textContent = name;
   shade.hidden = false;
