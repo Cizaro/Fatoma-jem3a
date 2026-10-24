@@ -45,7 +45,13 @@ body{display:flex;flex-direction:column;overflow:hidden;min-height:100dvh}
 .menu button:hover{background:var(--accent-soft);color:var(--accent)}
 .txtbtn.danger{border-color:var(--warm);color:var(--warm);font-weight:600}
 
-/* the picture, for when the browser will not let the page download it */
+/* the picture, for when the browser will not let the page download it.
+
+   display:grid here beat the browser's own [hidden]{display:none}, because
+   any author rule outranks the user-agent one - so the overlay was on top
+   of the board from the moment the page loaded and Close could not shift
+   it. Every element that sets its own display needs this guard. */
+[hidden]{display:none !important}
 .shade{position:absolute;inset:0;z-index:30;background:rgba(21,23,30,.55);
   display:grid;place-items:center;padding:18px}
 .pic{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
@@ -930,7 +936,10 @@ addEventListener("keydown", e => {
     e.preventDefault();
     return;
   }
-  if (e.key === "Escape"){ picked = []; marquee = null; paint(); return; }
+  if (e.key === "Escape"){
+    if (!shade.hidden){ shade.hidden = true; return; }   // the picture first
+    picked = []; marquee = null; paint(); return;
+  }
   if ((e.key === "Delete" || e.key === "Backspace") && picked.length){
     e.preventDefault();
     pushHistory();
