@@ -187,6 +187,26 @@ q6: { nodes: [
   { t:"stop" }
 ]},
 
+q7: { nodes: [
+  { t:"start" },
+  { t:"proc", s:"I <-- 1" },
+  { t:"dec",  s:"I <= 4 ?", body:[
+      { t:"io",   s:"print the username and grade boxes for student I" },
+      { t:"proc", s:"I <-- I + 1" }
+  ]},
+  { t:"io",   s:"print the Submit button" },
+  { t:"dec",  s:"Submit NOT pressed ?", yes:{ t:"io", s:"show the form only" } },
+  { t:"io",   s:"print the heading row ONCE" },
+  { t:"proc", s:"I <-- 1" },
+  { t:"dec",  s:"I <= 4 ?", body:[
+      { t:"proc", s:"read username I and grade I" },
+      { t:"io",   s:"print a row for student I" },
+      { t:"proc", s:"I <-- I + 1" }
+  ]},
+  { t:"io",   s:"print the end of the table" },
+  { t:"stop" }
+]},
+
 /* ========================= Extra practice ========================= */
 x1: { nodes: [
   { t:"start" },

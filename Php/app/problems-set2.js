@@ -351,6 +351,102 @@ echo "</table>";
     <br><br><code>number_format</code> and not <code>round</code>: 1157.625
     has to print as 1,157.63, and a balance that shows as 1157.6 looks broken
     on a bank page.`
+},
+
+{
+  id: "q7", set: "Set II · decisions and tables", n: "7",
+  title: "Four students, one form, one table",
+  context: `Both loops in one file. One builds the form before anybody has
+    typed anything; the other reads what they typed back out. The boxes are
+    named <code>username1</code> to <code>username4</code> by the first loop,
+    and the second loop asks for those same names back.`,
+  task: `Print a form with a username box and a grade box for each of four
+    students, and when it is submitted, print their names and grades in a
+    table.`,
+  reqs: [
+    "A <b>loop</b> builds the boxes &mdash; not eight typed-out <code>echo</code> lines",
+    "The boxes are named <code>username1</code>&hellip;<code>username4</code> and <code>grade1</code>&hellip;<code>grade4</code>",
+    "A second loop reads <code>$_POST[\"username\" . $i]</code> and prints one table row per student",
+    "Before Submit is pressed: the form only. <b>No heading and no table.</b>",
+    "The table heading row is printed <b>once</b>"
+  ],
+  inputs: "Nothing on the first visit. Then four names and four grades.",
+  runs: [
+    { vars: {}, label: "first visit, nothing typed yet",
+      has: ["username1", "username4", "grade1", "grade4"],
+      counts: [{ text: "<table", times: 0 }, { text: "<th", times: 0 },
+               { text: "name=\"username", times: 4 }, { text: "name=\"grade", times: 4 }] },
+    { vars: { _POST: { S:"1", username1:"Ali", grade1:"18", username2:"Sara", grade2:"15",
+                       username3:"Lina", grade3:"12", username4:"Nour", grade4:"19" } },
+      label: "four students submitted",
+      has: ["<table", "</table>", "Ali", "18", "Sara", "15", "Lina", "12", "Nour", "19"],
+      counts: [{ text: "<th", times: 2 }, { text: "<tr", times: 5 }] },
+    { vars: { _POST: { S:"1", username1:"Zara", grade1:"7", username2:"Omar", grade2:"20",
+                       username3:"Rim", grade3:"11", username4:"Jad", grade4:"16" } },
+      label: "four different students",
+      has: ["Zara", "7", "Omar", "20", "Rim", "11", "Jad", "16"],
+      counts: [{ text: "<tr", times: 5 }] }
+  ],
+  code: [
+    { re: /for\s*\(|while\s*\(/, msg: "Use a loop to build the boxes" },
+    /* a "for" anywhere satisfied the rule above, including the one that
+       reads the results back - so this checks the FORM was not typed out */
+    { noRe: /username1[\s\S]{0,400}username2/,
+      msg: "Build the names from the loop counter, not one typed line per student" },
+    { re: /isset\s*\(/, msg: "isset() is what tells you whether Submit was pressed" }
+  ],
+  starter: `<?php
+// the form - one pair of boxes per student
+for ($i = 1; $i <= 4; $i++) {
+
+}
+
+// the results, only once Submit has been pressed
+if (isset($_POST["S"])) {
+
+}
+`,
+  sol: `<?php
+// ---- the form: a loop builds four pairs of boxes ----
+for ($i = 1; $i <= 4; $i++) {
+    echo '<input type="text" name="username' . $i . '" placeholder="Username ' . $i . '"><br>';
+    echo '<input type="text" name="grade' . $i . '" placeholder="Grade ' . $i . '"><br><br>';
+}
+
+// ---- the results: EVERYTHING about them lives inside the if ----
+if (isset($_POST["S"])) {
+
+    echo "<h1>Results</h1>";
+    echo '<table border="1">';
+    echo "<tr><th>Username</th><th>Grade</th></tr>";
+
+    for ($i = 1; $i <= 4; $i++) {
+        $username = $_POST["username" . $i];
+        $grade    = $_POST["grade" . $i];
+
+        echo "<tr>";
+        echo "<td>" . $username . "</td>";
+        echo "<td>" . $grade . "</td>";
+        echo "</tr>";
+    }
+
+    echo "</table>";
+}
+`,
+  why: `<b>The heading and the opening <code>&lt;table&gt;</code> go inside the
+    <code>if</code>, with everything else about the results.</b> Left outside,
+    they print on the very first visit - so the page opens with the word
+    Results and a table that has a header row, no rows, and no closing tag,
+    before anybody has typed anything. The closing <code>&lt;/table&gt;</code>
+    is inside the if, so it is not even valid HTML until Submit is pressed.
+    The rule: if it is part of the answer, it belongs with the answer.
+    <br><br><b>The two loops have to agree about the names.</b> The first one
+    writes <code>name="username1"</code>; the second asks for
+    <code>$_POST["username" . $i]</code>. Change the spelling in one and the
+    other quietly reads nothing - no error, just empty cells.
+    <br><br><b><code>$i &lt;= 4</code> gives four students.</b>
+    <code>$i &lt; 5</code> gives the same four and reads as though it means
+    five. Say the number you mean.`
 }
 
 ];

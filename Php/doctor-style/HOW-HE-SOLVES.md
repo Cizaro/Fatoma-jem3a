@@ -164,6 +164,50 @@ Stop both drawn** — two marks that cost nothing.
 Draw it on paper. Scan it. That is the deliverable, and no computer is needed
 for it.
 
+### A loop has no shape of its own
+
+This is the question everyone asks, and the answer is that there isn't a
+"loop symbol" in the five. A loop is **built out of the shapes you already
+have**, and what makes it a loop is the **arrow that goes back up**.
+
+A `for` loop is four pieces:
+
+| Piece | Shape | Example |
+|---|---|---|
+| set the counter | rectangle | `I <-- 1` |
+| the test | **diamond** | `I <= 4 ?` |
+| the body | whatever it does | print a row |
+| the step | rectangle | `I <-- I + 1` |
+
+and then an arrow from the bottom of the step **back up to the diamond**.
+The diamond's other way out — `no` — is how the loop ends, and it leads on
+to whatever comes next.
+
+```
+[ I <-- 1 ]
+     |
+ < I <= 4 ? > --no--> carry on with the rest
+     | yes
+ [ the body ]
+     |
+ [ I <-- I + 1 ]
+     |
+     +--- back up to the diamond
+```
+
+So a `for` and a `while` draw **identically**. The only difference between
+them is where the three pieces are written in the code, not what the chart
+looks like.
+
+A `do ... while` is the same shapes with the **diamond at the bottom**, under
+the body rather than above it — which is exactly what "it always runs at
+least once" means, drawn.
+
+> Some textbooks do have a sixth symbol for a counted loop, a flat hexagon
+> marked `I <-- 1 to 4`. Her lecturer's Lesson 1 lists **five** shapes and
+> that is not one of them, so use the diamond and the back arrow. If she
+> ever sees a hexagon in a textbook, that is what it means.
+
 ---
 
 ## The checklist before she hands anything in

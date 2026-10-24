@@ -507,6 +507,35 @@ STOP`,
     +---> back to < Y <= YEARS ? >`
 },
 
+q7: {
+  pseudo:
+`START
+  [the form - one pair of boxes per student]
+  I <-- 1
+  WHILE I <= 4
+      PRINT a username box named "username" joined to I
+      PRINT a grade box named "grade" joined to I
+      I <-- I + 1
+  ENDWHILE
+  PRINT the Submit button
+
+  [the results - nothing here happens until Submit is pressed]
+  IF the Submit button was pressed THEN
+      PRINT "Results"
+      PRINT the start of the table
+      PRINT the heading row                  [once, outside the loop]
+      I <-- 1
+      WHILE I <= 4
+          USERNAME <-- the value of the box named "username" joined to I
+          GRADE    <-- the value of the box named "grade" joined to I
+          PRINT a row holding USERNAME and GRADE
+          I <-- I + 1
+      ENDWHILE
+      PRINT the end of the table
+  ENDIF
+STOP`
+},
+
 /* ========================= Extra practice ========================= */
 x1: {
   pseudo:

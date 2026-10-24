@@ -86,6 +86,23 @@ STOP</code></pre>
                 \       |
                  ( STOP )</code></pre>
 <p>Draw it on paper. Scan it. That is the deliverable, and no computer is needed for it.</p>
+<h3>A loop has no shape of its own</h3>
+<p>This is the question everyone asks, and the answer is that there isn&#x27;t a &quot;loop symbol&quot; in the five. A loop is <strong>built out of the shapes you already have</strong>, and what makes it a loop is the <strong>arrow that goes back up</strong>.</p>
+<p>A <code>for</code> loop is four pieces:</p>
+<div class="tablewrap"><table><thead><tr><th>Piece</th><th>Shape</th><th>Example</th></tr></thead><tbody><tr><td>set the counter</td><td>rectangle</td><td><code>I &lt;-- 1</code></td></tr><tr><td>the test</td><td><strong>diamond</strong></td><td><code>I &lt;= 4 ?</code></td></tr><tr><td>the body</td><td>whatever it does</td><td>print a row</td></tr><tr><td>the step</td><td>rectangle</td><td><code>I &lt;-- I + 1</code></td></tr></tbody></table></div>
+<p>and then an arrow from the bottom of the step <strong>back up to the diamond</strong>. The diamond&#x27;s other way out — <code>no</code> — is how the loop ends, and it leads on to whatever comes next.</p>
+<pre><code>[ I &lt;-- 1 ]
+     |
+ &lt; I &lt;= 4 ? &gt; --no--&gt; carry on with the rest
+     | yes
+ [ the body ]
+     |
+ [ I &lt;-- I + 1 ]
+     |
+     +--- back up to the diamond</code></pre>
+<p>So a <code>for</code> and a <code>while</code> draw <strong>identically</strong>. The only difference between them is where the three pieces are written in the code, not what the chart looks like.</p>
+<p>A <code>do ... while</code> is the same shapes with the <strong>diamond at the bottom</strong>, under the body rather than above it — which is exactly what &quot;it always runs at least once&quot; means, drawn.</p>
+<blockquote><p>Some textbooks do have a sixth symbol for a counted loop, a flat hexagon marked <code>I &lt;-- 1 to 4</code>. Her lecturer&#x27;s Lesson 1 lists <strong>five</strong> shapes and that is not one of them, so use the diamond and the back arrow. If she ever sees a hexagon in a textbook, that is what it means.</p></blockquote>
 <hr>
 <h2>The checklist before she hands anything in</h2>
 <ol><li>Pseudocode written, in CAPITALS, with <code>&lt;--</code></li><li>Flowchart drawn, with Start <strong>and</strong> Stop, every branch labelled</li><li>HTML form with the right <code>name</code> on every input</li><li><code>&lt;?php</code> block that reads <code>$_POST</code>, calculates, and echoes</li><li>The output says <strong>the formula used</strong> as well as the result, if the sheet asks for it — this one does, and it is the easiest mark to drop</li><li>It actually runs on XAMPP without a warning</li></ol>
