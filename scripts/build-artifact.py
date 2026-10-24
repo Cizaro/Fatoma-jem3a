@@ -37,7 +37,8 @@ ROOT_PAGES = {"index.html": "home.html"}
 # shared files that both depths have to be able to reach
 SHARED = ["app.css", "embed.js", "quiz.html", "quiz-data-a.js", "quiz-data-b.js"]
 APP_ONLY = ["php-engine.js", "problems-data.js", "problems-extra.js",
-            "problems-set2.js", "problems-plans.js", "sql-engine.js", "teach-data.js",
+            "problems-set2.js", "problems-plans.js", "problems-charts.js",
+            "flowchart.js", "sql-engine.js", "teach-data.js",
             "teaching-order-data.js"]
 
 

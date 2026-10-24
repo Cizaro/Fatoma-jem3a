@@ -33,6 +33,21 @@ details[open] summary .hint{color:var(--accent)}
 .ask{color:var(--ink-2);margin:0 0 14px}
 .lbl{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);
   font-weight:600;margin:0 0 7px}
+/* ---- flowchart ---- */
+.fcwrap{background:var(--surface-2);border:1px solid var(--line);
+  border-left:3px solid var(--warm);border-radius:var(--r-sm);
+  padding:14px 10px;margin:0 0 16px;overflow-x:auto}
+svg.fc{display:block;min-width:560px}
+.fc-start,.fc-stop{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}
+.fc-io{fill:var(--gold-soft);stroke:var(--gold);stroke-width:2}
+.fc-proc{fill:var(--surface);stroke:var(--ink-2);stroke-width:2}
+.fc-dec{fill:var(--warm-soft);stroke:var(--warm);stroke-width:2}
+.fc-t{font-family:var(--body);font-size:13px;text-anchor:middle;
+  dominant-baseline:middle;fill:var(--ink)}
+.fc-l{stroke:var(--ink-2);stroke-width:2;fill:none}
+.fc-h{fill:var(--ink-2)}
+.fc-y{font-family:var(--mono);font-size:11px;fill:var(--ink-3)}
+
 pre.plan{background:var(--surface-2);color:var(--ink);font-family:var(--mono);
   font-size:12.5px;line-height:1.55;padding:14px 16px;border-radius:var(--r-sm);
   border-left:3px solid var(--gold);overflow-x:auto;margin:0 0 16px}
@@ -83,6 +98,8 @@ pre.code{background:var(--editor);color:var(--editor-ink);font-family:var(--mono
 <script src="app/problems-extra.js?v=1"></script>
 <script src="app/problems-set2.js?v=1"></script>
 <script src="app/problems-plans.js?v=1"></script>
+<script src="app/flowchart.js?v=1"></script>
+<script src="app/problems-charts.js?v=1"></script>
 <script>
 /* Every problem's worked answer, shut by default. The <details> element
    does the hiding, so a stray scroll cannot spoil a problem she has not
@@ -93,13 +110,23 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":
 /* Her lecturer marks four parts - pseudocode, flowchart, form, code -
    so an answer here shows the plan before the code, in that order. The
    plans live in their own file, keyed by id. */
+/* The chart is drawn with the real shapes. If a problem has no chart
+   data the text sketch in the plan is used instead, so nothing breaks. */
+function chart(id){
+  if (typeof CHARTS === "undefined" || typeof FLOW === "undefined") return "";
+  const spec = CHARTS[id];
+  if (!spec) return "";
+  try { return `<div class="fcwrap">${FLOW.draw(spec)}</div>`; }
+  catch (e) { return ""; }
+}
+
 function plan(id){
   const pl = (typeof PLANS !== "undefined") && PLANS[id];
   if (!pl) return "";
   return `<p class="lbl">1 &middot; pseudocode</p>
           <pre class="plan">${esc(pl.pseudo.trim())}</pre>
           <p class="lbl">2 &middot; flowchart &mdash; copy this onto paper</p>
-          <pre class="plan flow">${esc(pl.flow.trim())}</pre>`;
+          ${chart(id) || `<pre class="plan flow">${esc(pl.flow.trim())}</pre>`}`;
 }
 
 let html = "", set = null;
