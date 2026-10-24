@@ -37,7 +37,7 @@ body{display:flex;flex-direction:column;overflow:hidden;min-height:100dvh}
 .txtbtn:hover{color:var(--ink);border-color:var(--accent)}
 
 .wrap{flex:1;position:relative;min-height:0;background:var(--paper)}
-canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair}
+canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:default}
 #typing{position:absolute;display:none;border:1px solid var(--accent);border-radius:var(--r-sm);
   background:var(--surface);color:var(--ink);font-family:var(--body);padding:3px 7px;
   outline:none;min-width:130px}
@@ -60,6 +60,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor
   </div>
 
   <span class="spacer"></span>
+  <button class="txtbtn" id="home" hidden>back to top</button>
   <button class="txtbtn" id="save">save png</button>
   <button class="txtbtn" id="clear">clear</button>
 </div>
@@ -67,7 +68,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor
 <div class="wrap" id="wrap">
   <canvas id="cv"></canvas>
   <input id="typing" spellcheck="false">
-  <div class="hint" id="hint">Pen 1&ndash;7 to switch tool &middot; hold Shift for straight lines &middot; Ctrl+Z undoes</div>
+  <div class="hint" id="hint">V to select and drag &middot; scroll for more room &middot; hold Shift for straight lines &middot; Ctrl+S saves</div>
 </div>
 
 <script>
@@ -86,8 +87,15 @@ const wrap = document.getElementById("wrap");
 const typing = document.getElementById("typing");
 
 let shapes = [];          // everything on the board, in draw order
-let redoStack = [];
-let tool = "pen";
+let tool = "select";
+let sel = null;           // the shape currently picked up
+let drawing = null;       // the shape being drawn right now
+
+/* The board is bigger than the window. cam is where the window is
+   looking; everything in shapes is stored in BOARD coordinates, and
+   the only places the two meet are at() and paint(). */
+let cam = { x: 0, y: 0 };
+
 /* The default ink is whatever the theme calls "ink", so the pen is dark on
    the light board and light on the dark one. A hard-coded near-black pen
    is invisible the moment she switches theme. */
@@ -95,20 +103,24 @@ const INK = (getComputedStyle(document.documentElement)
   .getPropertyValue("--ink") || "#1A1D21").trim();
 let color = INK;
 let width = 3;
-let drawing = null;       // the shape being drawn right now
 
 const TOOLS = [
-  ["pen",     "Pen (1)",      '<path d="M4 20s1-4 2-5l9-9a2.1 2.1 0 0 1 3 3l-9 9c-1 1-5 2-5 2Z"/><path d="m13.5 5.5 5 5"/>'],
-  ["line",    "Line (2)",     '<path d="M5 19 19 5"/>'],
-  ["arrow",   "Arrow (3)",    '<path d="M5 19 19 5"/><path d="M12 5h7v7"/>'],
-  ["rect",    "Box (4)",      '<rect x="4" y="6" width="16" height="12" rx="1.5"/>'],
-  ["ellipse", "Circle (5)",   '<ellipse cx="12" cy="12" rx="8" ry="6.5"/>'],
-  ["diamond", "Decision (6)", '<path d="M12 4 20 12 12 20 4 12Z"/>'],
-  ["text",    "Text (7)",     '<path d="M5 6h14"/><path d="M12 6v13"/>'],
-  ["erase",   "Rub out (8)",  '<path d="M8 20h12"/><path d="m4.5 15.5 5-5 7 7-3 3H7.5Z"/><path d="m9.5 10.5 5-5 7 7-5 5"/>']
+  ["select",  "Select, move, resize (1, or V)",
+   '<path d="M5 3l6 16 2.2-6.4L19.6 10Z"/>'],
+  ["pen",     "Pen (2)",      '<path d="M4 20s1-4 2-5l9-9a2.1 2.1 0 0 1 3 3l-9 9c-1 1-5 2-5 2Z"/><path d="m13.5 5.5 5 5"/>'],
+  ["line",    "Line (3)",     '<path d="M5 19 19 5"/>'],
+  ["arrow",   "Arrow (4)",    '<path d="M5 19 19 5"/><path d="M12 5h7v7"/>'],
+  ["rect",    "Box (5)",      '<rect x="4" y="6" width="16" height="12" rx="1.5"/>'],
+  ["ellipse", "Circle (6)",   '<ellipse cx="12" cy="12" rx="8" ry="6.5"/>'],
+  ["diamond", "Decision (7)", '<path d="M12 4 20 12 12 20 4 12Z"/>'],
+  ["text",    "Text (8)",     '<path d="M5 6h14"/><path d="M12 6v13"/>'],
+  ["erase",   "Rub out (9)",  '<path d="M8 20h12"/><path d="m4.5 15.5 5-5 7 7-3 3H7.5Z"/><path d="m9.5 10.5 5-5 7 7-5 5"/>'],
+  ["hand",    "Scroll the board (0, or hold Space)",
+   '<path d="M8 13V5.5a1.5 1.5 0 0 1 3 0V12"/><path d="M11 12V4.5a1.5 1.5 0 0 1 3 0V12"/><path d="M14 12V6.5a1.5 1.5 0 0 1 3 0V13"/><path d="M17 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1.5a6 6 0 0 1-5.3-3.2L5 13.7a1.5 1.5 0 0 1 2.6-1.5L8.6 14"/>']
 ];
 const COLORS = [INK, "#B5541F", "#0F7B6C", "#2F62B8", "#A57C1B"];
 const WIDTHS = [2, 3, 6];
+const CURSOR = { select: "default", hand: "grab", erase: "cell", text: "text" };
 
 /* ---------- toolbar ---------- */
 const tw = document.getElementById("tools");
@@ -128,10 +140,12 @@ COLORS.forEach(c => {
   b.className = "sw" + (c === color ? " on" : "");
   b.style.background = c;
   b.dataset.c = c;
-  b.title = c;
   b.onclick = () => {
     color = c;
-    cw.querySelectorAll(".sw").forEach(s => s.classList.toggle("on", s.dataset.c === c));
+    cw.querySelectorAll(".sw").forEach(x => x.classList.toggle("on", x.dataset.c === c));
+    /* a colour chosen with something selected recolours it, which is what
+       anyone expects after picking a shape up */
+    if (sel){ pushHistory(); sel.c = c; paint(); }
   };
   cw.appendChild(b);
 });
@@ -140,22 +154,25 @@ WIDTHS.forEach(w => {
   const b = document.createElement("button");
   b.className = "wt" + (w === width ? " on" : "");
   b.dataset.w = w;
-  b.innerHTML = `<i style="width:${w + 5}px;height:${w + 5}px"></i>`;
+  b.title = w + "px";
+  b.innerHTML = `<i style="width:${w + 3}px;height:${w + 3}px"></i>`;
   b.onclick = () => {
     width = w;
-    ww.querySelectorAll(".wt").forEach(s => s.classList.toggle("on", +s.dataset.w === w));
+    ww.querySelectorAll(".wt").forEach(x => x.classList.toggle("on", +x.dataset.w === w));
+    if (sel && sel.t !== "text"){ pushHistory(); sel.w = w; paint(); }
   };
   ww.appendChild(b);
 });
 
 function setTool(id){
   tool = id;
+  if (id !== "select") sel = null;
   tw.querySelectorAll(".t").forEach(b => b.classList.toggle("on", b.dataset.tool === id));
-  cv.style.cursor = id === "text" ? "text" : id === "erase" ? "cell" : "crosshair";
+  cv.style.cursor = CURSOR[id] || "crosshair";
+  paint();
 }
 
-/* ---------- canvas sizing ----------
-   Backing store at device resolution, or every line looks soft. */
+/* ---------- canvas size ---------- */
 function resize(){
   const r = wrap.getBoundingClientRect();
   const dpr = window.devicePixelRatio || 1;
@@ -166,81 +183,113 @@ function resize(){
 }
 addEventListener("resize", resize);
 
-/* ---------- drawing one shape ---------- */
-function stroke(s){
-  ctx.strokeStyle = s.c;
-  ctx.fillStyle = s.c;
-  ctx.lineWidth = s.w;
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
+/* ---------- drawing ---------- */
+function stroke(g, s){
+  g.strokeStyle = s.c;
+  g.fillStyle = s.c;
+  g.lineWidth = s.w;
+  g.lineCap = "round";
+  g.lineJoin = "round";
 }
 
-function drawShape(s){
-  stroke(s);
+/* g defaults to the live canvas; the PNG export passes its own, which is
+   why every drawing call below goes through g and never through ctx. */
+function drawShape(s, g){
+  g = g || ctx;
+  stroke(g, s);
   if (s.t === "pen"){
     const p = s.pts;
     if (p.length < 2){
-      ctx.beginPath(); ctx.arc(p[0].x, p[0].y, s.w / 2, 0, 7); ctx.fill(); return;
+      g.beginPath(); g.arc(p[0].x, p[0].y, s.w / 2, 0, 7); g.fill(); return;
     }
     /* Through the midpoints with quadratic curves. Joining the raw
        points instead gives the visible hand-shake that makes a board
        look amateur; this is what "smooth" actually means here. */
-    ctx.beginPath();
-    ctx.moveTo(p[0].x, p[0].y);
+    g.beginPath();
+    g.moveTo(p[0].x, p[0].y);
     for (let i = 1; i < p.length - 1; i++){
       const mx = (p[i].x + p[i + 1].x) / 2, my = (p[i].y + p[i + 1].y) / 2;
-      ctx.quadraticCurveTo(p[i].x, p[i].y, mx, my);
+      g.quadraticCurveTo(p[i].x, p[i].y, mx, my);
     }
-    ctx.lineTo(p[p.length - 1].x, p[p.length - 1].y);
-    ctx.stroke();
+    g.lineTo(p[p.length - 1].x, p[p.length - 1].y);
+    g.stroke();
     return;
   }
   if (s.t === "text"){
-    ctx.font = `${s.size}px "Public Sans", system-ui, sans-serif`;
-    ctx.textBaseline = "top";
-    ctx.fillText(s.s, s.x, s.y);
+    g.font = `${s.size}px "Public Sans", system-ui, sans-serif`;
+    g.textBaseline = "top";
+    g.fillText(s.s, s.x, s.y);
     return;
   }
   const { x0, y0, x1, y1 } = s;
-  ctx.beginPath();
+  g.beginPath();
   if (s.t === "line" || s.t === "arrow"){
-    ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
     if (s.t === "arrow"){
       const a = Math.atan2(y1 - y0, x1 - x0), h = Math.max(11, s.w * 3.4);
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x1 - h * Math.cos(a - 0.42), y1 - h * Math.sin(a - 0.42));
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x1 - h * Math.cos(a + 0.42), y1 - h * Math.sin(a + 0.42));
-      ctx.stroke();
+      g.beginPath();
+      g.moveTo(x1, y1);
+      g.lineTo(x1 - h * Math.cos(a - 0.42), y1 - h * Math.sin(a - 0.42));
+      g.moveTo(x1, y1);
+      g.lineTo(x1 - h * Math.cos(a + 0.42), y1 - h * Math.sin(a + 0.42));
+      g.stroke();
     }
     return;
   }
   if (s.t === "rect"){
     const r = Math.min(7, Math.abs(x1 - x0) / 4, Math.abs(y1 - y0) / 4);
-    if (ctx.roundRect) ctx.roundRect(x0, y0, x1 - x0, y1 - y0, r);
-    else ctx.rect(x0, y0, x1 - x0, y1 - y0);
+    if (g.roundRect) g.roundRect(x0, y0, x1 - x0, y1 - y0, r);
+    else g.rect(x0, y0, x1 - x0, y1 - y0);
   } else if (s.t === "ellipse"){
-    ctx.ellipse((x0 + x1) / 2, (y0 + y1) / 2,
+    g.ellipse((x0 + x1) / 2, (y0 + y1) / 2,
       Math.abs(x1 - x0) / 2, Math.abs(y1 - y0) / 2, 0, 0, 7);
   } else if (s.t === "diamond"){
     const mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
-    ctx.moveTo(mx, y0); ctx.lineTo(x1, my); ctx.lineTo(mx, y1); ctx.lineTo(x0, my);
-    ctx.closePath();
+    g.moveTo(mx, y0); g.lineTo(x1, my); g.lineTo(mx, y1); g.lineTo(x0, my);
+    g.closePath();
   }
-  ctx.stroke();
+  g.stroke();
+}
+
+/* the dashed outline and the little squares you drag */
+function drawSelection(){
+  if (!sel) return;
+  const hs = handles(sel);
+  const [a, b, c, d] = box(sel);
+  ctx.save();
+  ctx.strokeStyle = getComputedStyle(document.documentElement)
+    .getPropertyValue("--accent").trim() || "#3A42DB";
+  ctx.lineWidth = 1.2;
+  ctx.setLineDash([5, 4]);
+  ctx.strokeRect(a - 6, b - 6, c - a + 12, d - b + 12);
+  ctx.setLineDash([]);
+  ctx.fillStyle = "#fff";
+  hs.forEach(h => {
+    ctx.beginPath();
+    ctx.rect(h.x - HS / 2, h.y - HS / 2, HS, HS);
+    ctx.fill(); ctx.stroke();
+  });
+  ctx.restore();
 }
 
 function paint(){
   const r = wrap.getBoundingClientRect();
   ctx.clearRect(0, 0, r.width, r.height);
-  shapes.forEach(drawShape);
+  ctx.save();
+  ctx.translate(-cam.x, -cam.y);
+  /* an arrow, not a bare reference: forEach passes the index as the
+     second argument, which would arrive as the target context */
+  shapes.forEach(s => drawShape(s));
   if (drawing) drawShape(drawing);
-  document.getElementById("undo").disabled = !shapes.length;
-  document.getElementById("redo").disabled = !redoStack.length;
+  drawSelection();
+  ctx.restore();
+  document.getElementById("undo").disabled = !past.length;
+  document.getElementById("redo").disabled = !future.length;
+  document.getElementById("home").hidden = cam.x === 0 && cam.y === 0;
+  autosave();
 }
 
-/* ---------- hit testing, for the rubber ---------- */
+/* ---------- where a shape is ---------- */
 function box(s){
   if (s.t === "pen"){
     const xs = s.pts.map(p => p.x), ys = s.pts.map(p => p.y);
@@ -259,39 +308,129 @@ function hit(s, x, y){
   const [a, b, c, d] = box(s);
   return x > a - pad && x < c + pad && y > b - pad && y < d + pad;
 }
+function topAt(x, y){
+  for (let i = shapes.length - 1; i >= 0; i--) if (hit(shapes[i], x, y)) return shapes[i];
+  return null;
+}
 
-/* ---------- history ---------- */
-function commit(s){ shapes.push(s); redoStack = []; paint(); }
-function undo(){ if (shapes.length){ redoStack.push(shapes.pop()); paint(); } }
-function redo(){ if (redoStack.length){ shapes.push(redoStack.pop()); paint(); } }
+/* ---------- the handles you drag ---------- */
+const HS = 9;             // handle square, in board units
+function handles(s){
+  /* a line has two ends and nothing in between - corner handles on a
+     diagonal line would be a lie about what you are dragging */
+  if (s.t === "line" || s.t === "arrow")
+    return [{ k:"p0", x:s.x0, y:s.y0 }, { k:"p1", x:s.x1, y:s.y1 }];
+  const [a, b, c, d] = box(s);
+  const mx = (a + c) / 2, my = (b + d) / 2;
+  return [
+    { k:"nw", x:a, y:b }, { k:"n", x:mx, y:b }, { k:"ne", x:c, y:b },
+    { k:"w",  x:a, y:my },                      { k:"e", x:c, y:my },
+    { k:"sw", x:a, y:d }, { k:"s", x:mx, y:d }, { k:"se", x:c, y:d }
+  ];
+}
+function handleAt(s, x, y){
+  const r = HS;
+  return handles(s).find(h => Math.abs(h.x - x) <= r && Math.abs(h.y - y) <= r) || null;
+}
+
+/* Put a shape into a new bounding box. Everything is expressed as a
+   fraction of the old box, so one function resizes every kind. */
+function fitToBox(s, ob, nb){
+  const ow = ob[2] - ob[0], oh = ob[3] - ob[1];
+  const nw = nb[2] - nb[0], nh = nb[3] - nb[1];
+  const fx = ow < 0.001 ? 1 : nw / ow;
+  const fy = oh < 0.001 ? 1 : nh / oh;
+  const mapX = x => nb[0] + (x - ob[0]) * fx;
+  const mapY = y => nb[1] + (y - ob[1]) * fy;
+
+  if (s.t === "pen"){ s.pts = s.pts.map(p => ({ x: mapX(p.x), y: mapY(p.y) })); return; }
+  if (s.t === "text"){
+    s.x = nb[0];
+    s.y = nb[1];
+    s.size = Math.max(10, Math.round(s.size * fy));
+    return;
+  }
+  s.x0 = mapX(s.x0); s.y0 = mapY(s.y0);
+  s.x1 = mapX(s.x1); s.y1 = mapY(s.y1);
+}
+
+function nudge(s, dx, dy){
+  if (s.t === "pen"){ s.pts.forEach(p => { p.x += dx; p.y += dy; }); return; }
+  if (s.t === "text"){ s.x += dx; s.y += dy; return; }
+  s.x0 += dx; s.y0 += dy; s.x1 += dx; s.y1 += dy;
+}
+
+/* ---------- history ----------
+   Whole-board snapshots rather than a stack of shapes. Pushing and
+   popping shapes could only undo a drawing; moving and resizing change
+   a shape that is already there, and those have to be undoable too. */
+let past = [], future = [];
+const snap = () => JSON.stringify(shapes);
+function pushHistory(){
+  past.push(snap());
+  if (past.length > 100) past.shift();
+  future = [];
+}
+function restore(json){
+  shapes = JSON.parse(json);
+  sel = null;              // the old reference points at a shape that is gone
+  paint();
+}
+function commit(s){ pushHistory(); shapes.push(s); paint(); }
+function undo(){ if (!past.length) return; future.push(snap()); restore(past.pop()); }
+function redo(){ if (!future.length) return; past.push(snap()); restore(future.pop()); }
 document.getElementById("undo").onclick = undo;
 document.getElementById("redo").onclick = redo;
 document.getElementById("clear").onclick = () => {
   if (!shapes.length) return;
-  if (confirm("Wipe the whole board?")){ shapes = []; redoStack = []; paint(); }
+  if (confirm("Wipe the whole board?")){ pushHistory(); shapes = []; sel = null; paint(); }
 };
+document.getElementById("home").onclick = () => { cam.x = 0; cam.y = 0; paint(); };
 
 /* ---------- pointer ---------- */
 function at(e){
   const r = cv.getBoundingClientRect();
-  return { x: e.clientX - r.left, y: e.clientY - r.top };
+  return { x: e.clientX - r.left + cam.x, y: e.clientY - r.top + cam.y };
 }
 let erasing = false;
+let action = null;        // a move, a resize, or a pan in progress
+let space = false;        // Space held: pan without changing tool
 
 cv.addEventListener("pointerdown", e => {
   if (typing.style.display === "block") return placeText();
   cv.setPointerCapture(e.pointerId);
   const p = at(e);
 
-  if (tool === "erase"){
-    erasing = true;
-    rubOut(p);
+  /* panning wins over everything: hand tool, held Space, middle button */
+  if (tool === "hand" || space || e.button === 1){
+    action = { mode:"pan", sx:e.clientX, sy:e.clientY, cx:cam.x, cy:cam.y };
+    cv.style.cursor = "grabbing";
     return;
   }
+
+  if (tool === "select"){
+    if (sel){
+      const h = handleAt(sel, p.x, p.y);
+      if (h){
+        action = { mode:"resize", k:h.k, orig:JSON.parse(JSON.stringify(sel)),
+                   ob:box(sel), moved:false };
+        return;
+      }
+    }
+    const s = topAt(p.x, p.y);
+    sel = s;
+    if (s) action = { mode:"move", lx:p.x, ly:p.y, moved:false };
+    paint();
+    return;
+  }
+
+  if (tool === "erase"){ erasing = true; rubOut(p); return; }
+
   if (tool === "text"){
+    const r = cv.getBoundingClientRect();
     typing.style.display = "block";
-    typing.style.left = p.x + "px";
-    typing.style.top = p.y + "px";
+    typing.style.left = (p.x - cam.x) + "px";
+    typing.style.top = (p.y - cam.y) + "px";
     typing.style.fontSize = (width * 5 + 8) + "px";
     typing.style.color = color;
     typing.value = "";
@@ -299,13 +438,43 @@ cv.addEventListener("pointerdown", e => {
     setTimeout(() => typing.focus(), 0);
     return;
   }
+
   drawing = tool === "pen"
     ? { t: "pen", pts: [p], c: color, w: width }
     : { t: tool, x0: p.x, y0: p.y, x1: p.x, y1: p.y, c: color, w: width };
 });
 
 cv.addEventListener("pointermove", e => {
+  if (action && action.mode === "pan"){
+    cam.x = action.cx - (e.clientX - action.sx);
+    cam.y = action.cy - (e.clientY - action.sy);
+    paint();
+    return;
+  }
   const p = at(e);
+
+  if (action && action.mode === "move" && sel){
+    if (!action.moved){ pushHistory(); action.moved = true; }
+    nudge(sel, p.x - action.lx, p.y - action.ly);
+    action.lx = p.x; action.ly = p.y;
+    paint();
+    return;
+  }
+
+  if (action && action.mode === "resize" && sel){
+    if (!action.moved){ pushHistory(); action.moved = true; }
+    resizeTo(p, e.shiftKey);
+    paint();
+    return;
+  }
+
+  /* over a handle, show which way it will stretch */
+  if (tool === "select" && !action){
+    const h = sel && handleAt(sel, p.x, p.y);
+    cv.style.cursor = h ? (CURSORS[h.k] || "pointer")
+                        : (topAt(p.x, p.y) ? "move" : "default");
+  }
+
   if (erasing){ rubOut(p); return; }
   if (!drawing) return;
   if (drawing.t === "pen"){
@@ -329,8 +498,53 @@ cv.addEventListener("pointermove", e => {
   paint();
 });
 
+const CURSORS = { nw:"nwse-resize", se:"nwse-resize", ne:"nesw-resize", sw:"nesw-resize",
+                  n:"ns-resize", s:"ns-resize", e:"ew-resize", w:"ew-resize",
+                  p0:"move", p1:"move" };
+
+function resizeTo(p, square){
+  const o = action.orig, ob = action.ob, k = action.k;
+
+  if (k === "p0" || k === "p1"){      // a line end follows the finger
+    if (k === "p0"){ sel.x0 = p.x; sel.y0 = p.y; } else { sel.x1 = p.x; sel.y1 = p.y; }
+    return;
+  }
+
+  let [a, b, c, d] = ob.slice();
+  if (k.includes("n")) b = p.y;
+  if (k.includes("s")) d = p.y;
+  if (k.includes("w")) a = p.x;
+  if (k.includes("e")) c = p.x;
+
+  /* Shift keeps the proportions, measured from the corner you are not
+     holding, so a circle stays a circle while it grows. */
+  if (square && k.length === 2){
+    const ow = ob[2] - ob[0], oh = ob[3] - ob[1];
+    if (ow > 0.001 && oh > 0.001){
+      const w2 = Math.abs(c - a), h2 = Math.abs(d - b);
+      const f = Math.max(w2 / ow, h2 / oh);
+      if (k.includes("w")) a = c - ow * f; else c = a + ow * f;
+      if (k.includes("n")) b = d - oh * f; else d = b + oh * f;
+    }
+  }
+
+  // never let a shape turn inside out or collapse to nothing
+  const MIN = 6;
+  if (c - a < MIN){ if (k.includes("w")) a = c - MIN; else c = a + MIN; }
+  if (d - b < MIN){ if (k.includes("n")) b = d - MIN; else d = b + MIN; }
+
+  Object.assign(sel, JSON.parse(JSON.stringify(o)));
+  fitToBox(sel, ob, [a, b, c, d]);
+}
+
 function end(){
   erasing = false;
+  if (action){
+    if (action.mode === "pan") cv.style.cursor = CURSOR[tool] || "crosshair";
+    action = null;
+    paint();
+    return;
+  }
   if (!drawing) return;
   const s = drawing;
   drawing = null;
@@ -343,9 +557,23 @@ cv.addEventListener("pointerup", end);
 cv.addEventListener("pointercancel", end);
 cv.addEventListener("pointerleave", () => { erasing = false; });
 
+/* ---------- scrolling the board ---------- */
+cv.addEventListener("wheel", e => {
+  e.preventDefault();
+  if (e.shiftKey){ cam.x += e.deltaY; }
+  else { cam.x += e.deltaX; cam.y += e.deltaY; }
+  paint();
+}, { passive: false });
+
 function rubOut(p){
   for (let i = shapes.length - 1; i >= 0; i--){
-    if (hit(shapes[i], p.x, p.y)){ shapes.splice(i, 1); redoStack = []; paint(); return; }
+    if (hit(shapes[i], p.x, p.y)){
+      pushHistory();
+      if (shapes[i] === sel) sel = null;
+      shapes.splice(i, 1);
+      paint();
+      return;
+    }
   }
 }
 
@@ -365,6 +593,25 @@ typing.addEventListener("keydown", e => {
 });
 typing.addEventListener("blur", placeText);
 
+/* double-click a piece of text to edit the words again */
+cv.addEventListener("dblclick", e => {
+  const p = at(e);
+  const s = topAt(p.x, p.y);
+  if (!s || s.t !== "text") return;
+  pushHistory();
+  shapes.splice(shapes.indexOf(s), 1);
+  sel = null;
+  typing.style.display = "block";
+  typing.style.left = (s.x - 4 - cam.x) + "px";
+  typing.style.top = (s.y - 3 - cam.y) + "px";
+  typing.style.fontSize = s.size + "px";
+  typing.style.color = s.c;
+  typing.value = s.s;
+  typing.dataset.x = s.x - 4; typing.dataset.y = s.y - 3;
+  paint();
+  setTimeout(() => { typing.focus(); typing.select(); }, 0);
+});
+
 /* ---------- keyboard ---------- */
 addEventListener("keydown", e => {
   if (e.target === typing) return;
@@ -373,32 +620,131 @@ addEventListener("keydown", e => {
     e.shiftKey ? redo() : undo();
     return;
   }
+  if (e.code === "Space" && !space){
+    space = true;
+    cv.style.cursor = "grab";
+    e.preventDefault();
+    return;
+  }
+  if (e.key === "Escape"){ sel = null; paint(); return; }
+  if ((e.key === "Delete" || e.key === "Backspace") && sel){
+    e.preventDefault();
+    pushHistory();
+    shapes.splice(shapes.indexOf(sel), 1);
+    sel = null;
+    paint();
+    return;
+  }
+  /* arrow keys nudge the selection, which is how you line two boxes up */
+  if (sel && e.key.startsWith("Arrow")){
+    e.preventDefault();
+    const d = e.shiftKey ? 10 : 1;
+    pushHistory();
+    nudge(sel, e.key === "ArrowLeft" ? -d : e.key === "ArrowRight" ? d : 0,
+               e.key === "ArrowUp"   ? -d : e.key === "ArrowDown"  ? d : 0);
+    paint();
+    return;
+  }
+  const k = e.key.toLowerCase();
+  if (k === "v") return setTool("select");
+  if (k === "h") return setTool("hand");
   const n = parseInt(e.key, 10);
-  if (n >= 1 && n <= TOOLS.length) setTool(TOOLS[n - 1][0]);
+  if (e.key === "0") return setTool("hand");
+  if (n >= 1 && n <= 9 && TOOLS[n - 1]) setTool(TOOLS[n - 1][0]);
+});
+addEventListener("keyup", e => {
+  if (e.code === "Space"){ space = false; cv.style.cursor = CURSOR[tool] || "crosshair"; }
 });
 
 /* ---------- save ----------
-   Flatten onto the paper colour first: a transparent PNG looks empty
-   when it lands in WhatsApp on a dark theme. */
+   The whole board, not the window. She can scroll a long way down while
+   explaining something, and a PNG of wherever she happened to stop would
+   lose most of it. Flattened onto the paper colour too: a transparent
+   PNG looks empty when it lands in WhatsApp on a dark theme. */
 document.getElementById("save").onclick = () => {
   const r = wrap.getBoundingClientRect();
+  const pad = 40;
+  let a = 0, b = 0, c = r.width, d = r.height;
+  if (shapes.length){
+    const bs = shapes.map(box);
+    a = Math.min(...bs.map(v => v[0])) - pad;
+    b = Math.min(...bs.map(v => v[1])) - pad;
+    c = Math.max(...bs.map(v => v[2])) + pad;
+    d = Math.max(...bs.map(v => v[3])) + pad;
+    if (c - a < 320){ c = a + 320; }
+    if (d - b < 240){ d = b + 240; }
+  }
   const out = document.createElement("canvas");
   const dpr = window.devicePixelRatio || 1;
-  out.width = Math.round(r.width * dpr);
-  out.height = Math.round(r.height * dpr);
+  out.width = Math.round((c - a) * dpr);
+  out.height = Math.round((d - b) * dpr);
   const o = out.getContext("2d");
   o.setTransform(dpr, 0, 0, dpr, 0, 0);
   o.fillStyle = getComputedStyle(document.body).backgroundColor || "#fff";
-  o.fillRect(0, 0, r.width, r.height);
-  o.drawImage(cv, 0, 0, r.width, r.height);
-  const a = document.createElement("a");
-  a.download = "whiteboard-" + new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-") + ".png";
-  a.href = out.toDataURL("image/png");
-  a.click();
+  o.fillRect(0, 0, c - a, d - b);
+
+  /* redraw the shapes into the export rather than copying the screen,
+     so what is saved is the whole board at full resolution */
+  o.translate(-a, -b);
+  shapes.forEach(sh => drawShape(sh, o));
+
+  const link = document.createElement("a");
+  link.download = "whiteboard-" + new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-") + ".png";
+  link.href = out.toDataURL("image/png");
+  link.click();
 };
 
-setTool("pen");
+/* ---------- keeping the board ----------
+   Everything already lives in one list of plain objects, so keeping it
+   is JSON in and JSON out. It saves itself a moment after every change
+   - the board is for a live call, and nobody remembers to press save
+   while they are talking - and Ctrl+S saves at once and says so.
+
+   This is this browser only. It survives closing the tab and the
+   laptop; it does not travel to another machine. */
+const STORE = "php_whiteboard_v1";
+let saveTimer = null;
+
+function store(){
+  try {
+    localStorage.setItem(STORE, JSON.stringify({ shapes, cam, at: Date.now() }));
+    return true;
+  } catch (e) { return false; }   // private window, or storage full
+}
+function autosave(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(store, 600);
+}
+function load(){
+  try {
+    const raw = localStorage.getItem(STORE);
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (Array.isArray(d.shapes)) shapes = d.shapes;
+    if (d.cam) cam = d.cam;
+  } catch (e) { /* unreadable: start on a clean board rather than break */ }
+}
+
+function flash(msg){
+  const h = document.getElementById("hint");
+  h.textContent = msg;
+  h.style.display = "block";
+  clearTimeout(flash.t);
+  flash.t = setTimeout(() => { h.style.display = "none"; }, 1600);
+}
+
+addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s"){
+    e.preventDefault();
+    flash(store() ? "Board saved — it will be here when you come back"
+                  : "This browser will not let the page save anything");
+  }
+});
+addEventListener("beforeunload", store);
+
+load();
+setTool("select");
 resize();
-setTimeout(() => { document.getElementById("hint").style.display = "none"; }, 9000);
+setTimeout(() => { document.getElementById("hint").style.display = "none"; }, 11000);
 </script>
 <script src="app/embed.js?v=5"></script>
