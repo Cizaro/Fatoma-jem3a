@@ -31,6 +31,18 @@ body{display:flex;flex-direction:column;overflow:hidden;min-height:100dvh}
 .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
   color:var(--ink-3);margin-right:2px}
 .spacer{flex:1}
+.zlabel{background:none;border:1px solid var(--line);color:var(--ink-2);border-radius:var(--r-sm);
+  font:inherit;font-family:var(--mono);font-size:11px;padding:6px 8px;min-width:48px;cursor:pointer}
+.zlabel:hover{border-color:var(--accent);color:var(--accent)}
+.savewrap{position:relative}
+.menu{position:absolute;right:0;top:calc(100% + 7px);z-index:20;min-width:252px;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--lift);padding:7px}
+.menu .mhead{margin:4px 9px 7px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-3)}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;
+  border-radius:var(--r-sm);padding:9px 10px;font:inherit;font-size:14px;color:var(--ink);cursor:pointer}
+.menu button:hover{background:var(--accent-soft);color:var(--accent)}
 .txtbtn{background:none;border:1px solid var(--line);color:var(--ink-2);border-radius:var(--r-pill);
   padding:6px 13px;font:inherit;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;
   text-transform:uppercase;cursor:pointer}
@@ -59,16 +71,31 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor
     <button class="t" id="redo" title="Redo (Ctrl+Shift+Z)"><svg viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/></svg></button>
   </div>
 
+  <div class="grp">
+    <button class="t" id="zout" title="Zoom out (Ctrl and minus)"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.3-4.3"/><path d="M8 11h6"/></svg></button>
+    <button class="zlabel" id="zlabel" title="Back to 100%">100%</button>
+    <button class="t" id="zin" title="Zoom in (Ctrl and plus)"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.3-4.3"/><path d="M8 11h6"/><path d="M11 8v6"/></svg></button>
+    <button class="t" id="zfit" title="Fit everything on screen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg></button>
+  </div>
+
   <span class="spacer"></span>
   <button class="txtbtn" id="home" hidden>back to top</button>
-  <button class="txtbtn" id="save">save png</button>
+  <div class="savewrap">
+    <button class="txtbtn" id="save">save png &#9662;</button>
+    <div class="menu" id="savemenu" hidden>
+      <p class="mhead" id="pagecount"></p>
+      <button id="saveAll">Everything in one picture</button>
+      <button id="savePages">Each page as its own picture</button>
+      <button id="saveThis">Just the page I am looking at</button>
+    </div>
+  </div>
   <button class="txtbtn" id="clear">clear</button>
 </div>
 
 <div class="wrap" id="wrap">
   <canvas id="cv"></canvas>
   <input id="typing" spellcheck="false">
-  <div class="hint" id="hint">V to select and drag &middot; scroll for more room &middot; hold Shift for straight lines &middot; Ctrl+S saves</div>
+  <div class="hint" id="hint">V to select, drag a box round several &middot; scroll for more room, Ctrl+scroll to zoom &middot; Ctrl+C and Ctrl+V copy &middot; Ctrl+S saves</div>
 </div>
 
 <script>
@@ -88,13 +115,24 @@ const typing = document.getElementById("typing");
 
 let shapes = [];          // everything on the board, in draw order
 let tool = "select";
-let sel = null;           // the shape currently picked up
+let picked = [];          // the shapes currently picked up
 let drawing = null;       // the shape being drawn right now
 
-/* The board is bigger than the window. cam is where the window is
-   looking; everything in shapes is stored in BOARD coordinates, and
-   the only places the two meet are at() and paint(). */
-let cam = { x: 0, y: 0 };
+/* The board is bigger than the window and can be looked at from further
+   away. cam is where the window is looking and how far in; everything in
+   shapes is stored in BOARD coordinates, and the only places the two
+   meet are at() and paint().
+
+   board -> screen :  (v - cam.x) * cam.z
+   screen -> board :  cam.x + sx / cam.z                                */
+let cam = { x: 0, y: 0, z: 1 };
+const ZMIN = 0.15, ZMAX = 4;
+
+/* A page is the piece of board that fits on one printed picture. The
+   board is tiled with them from the origin, so "page 3" means the same
+   rectangle every time rather than wherever she happened to stop. */
+const PAGE = { w: 1240, h: 880 };
+let clipboard = [];
 
 /* The default ink is whatever the theme calls "ink", so the pen is dark on
    the light board and light on the dark one. A hard-coded near-black pen
@@ -145,7 +183,7 @@ COLORS.forEach(c => {
     cw.querySelectorAll(".sw").forEach(x => x.classList.toggle("on", x.dataset.c === c));
     /* a colour chosen with something selected recolours it, which is what
        anyone expects after picking a shape up */
-    if (sel){ pushHistory(); sel.c = c; paint(); }
+    if (picked.length){ pushHistory(); picked.forEach(s => s.c = c); paint(); }
   };
   cw.appendChild(b);
 });
@@ -159,14 +197,14 @@ WIDTHS.forEach(w => {
   b.onclick = () => {
     width = w;
     ww.querySelectorAll(".wt").forEach(x => x.classList.toggle("on", +x.dataset.w === w));
-    if (sel && sel.t !== "text"){ pushHistory(); sel.w = w; paint(); }
+    if (picked.length){ pushHistory(); picked.forEach(s => { if (s.t !== "text") s.w = w; }); paint(); }
   };
   ww.appendChild(b);
 });
 
 function setTool(id){
   tool = id;
-  if (id !== "select") sel = null;
+  if (id !== "select") picked = [];
   tw.querySelectorAll(".t").forEach(b => b.classList.toggle("on", b.dataset.tool === id));
   cv.style.cursor = CURSOR[id] || "crosshair";
   paint();
@@ -251,24 +289,120 @@ function drawShape(s, g){
   g.stroke();
 }
 
+const ACCENT = () => getComputedStyle(document.documentElement)
+  .getPropertyValue("--accent").trim() || "#3A42DB";
+
+/* ---------- pages ----------
+   Faint guides, so she can see where one picture ends and the next
+   begins before she saves rather than afterwards. */
+function pageOf(x, y){ return { col: Math.floor(x / PAGE.w), row: Math.floor(y / PAGE.h) }; }
+
+/* every page that has something on it, numbered in reading order */
+function usedPages(){
+  if (!shapes.length) return [{ n:1, col:0, row:0 }];
+  let c0 = Infinity, r0 = Infinity, c1 = -Infinity, r1 = -Infinity;
+  const cells = new Set();
+  shapes.forEach(s => {
+    const [a, b, c, d] = box(s);
+    const p0 = pageOf(a, b), p1 = pageOf(c, d);
+    for (let col = p0.col; col <= p1.col; col++)
+      for (let row = p0.row; row <= p1.row; row++){
+        cells.add(col + "," + row);
+        c0 = Math.min(c0, col); r0 = Math.min(r0, row);
+        c1 = Math.max(c1, col); r1 = Math.max(r1, row);
+      }
+  });
+  const out = [];
+  let n = 1;
+  for (let row = r0; row <= r1; row++)
+    for (let col = c0; col <= c1; col++)
+      if (cells.has(col + "," + row)) out.push({ n: n++, col, row });
+  return out;
+}
+const pageBox = p => [p.col * PAGE.w, p.row * PAGE.h,
+                      (p.col + 1) * PAGE.w, (p.row + 1) * PAGE.h];
+
+function drawPages(){
+  const r = wrap.getBoundingClientRect();
+  const x0 = cam.x, y0 = cam.y;
+  const x1 = cam.x + r.width / cam.z, y1 = cam.y + r.height / cam.z;
+  const used = {};
+  usedPages().forEach(p => { used[p.col + "," + p.row] = p.n; });
+
+  ctx.save();
+  ctx.lineWidth = 1 / cam.z;
+  ctx.strokeStyle = getComputedStyle(document.documentElement)
+    .getPropertyValue("--line").trim() || "#ddd";
+  ctx.fillStyle = getComputedStyle(document.documentElement)
+    .getPropertyValue("--ink-3").trim() || "#888";
+  ctx.font = `${13 / cam.z}px "JetBrains Mono", monospace`;
+  ctx.textBaseline = "top";
+  for (let col = Math.floor(x0 / PAGE.w); col <= Math.floor(x1 / PAGE.w); col++){
+    for (let row = Math.floor(y0 / PAGE.h); row <= Math.floor(y1 / PAGE.h); row++){
+      const bx = col * PAGE.w, by = row * PAGE.h;
+      ctx.setLineDash([6 / cam.z, 6 / cam.z]);
+      ctx.strokeRect(bx, by, PAGE.w, PAGE.h);
+      ctx.setLineDash([]);
+      const n = used[col + "," + row];
+      if (n) ctx.fillText("page " + n, bx + 12 / cam.z, by + 10 / cam.z);
+    }
+  }
+  ctx.restore();
+}
+
+/* ---------- the selection ---------- */
+function selBox(){
+  if (!picked.length) return null;
+  const bs = picked.map(box);
+  return [Math.min(...bs.map(v => v[0])), Math.min(...bs.map(v => v[1])),
+          Math.max(...bs.map(v => v[2])), Math.max(...bs.map(v => v[3]))];
+}
+
 /* the dashed outline and the little squares you drag */
 function drawSelection(){
-  if (!sel) return;
-  const hs = handles(sel);
-  const [a, b, c, d] = box(sel);
+  if (!picked.length) return;
+  const [a, b, c, d] = selBox();
+  const pad = 6 * px();
   ctx.save();
-  ctx.strokeStyle = getComputedStyle(document.documentElement)
-    .getPropertyValue("--accent").trim() || "#3A42DB";
-  ctx.lineWidth = 1.2;
-  ctx.setLineDash([5, 4]);
-  ctx.strokeRect(a - 6, b - 6, c - a + 12, d - b + 12);
+  ctx.strokeStyle = ACCENT();
+  ctx.lineWidth = 1.2 * px();
+  ctx.setLineDash([5 * px(), 4 * px()]);
+  ctx.strokeRect(a - pad, b - pad, c - a + pad * 2, d - b + pad * 2);
+  /* with several picked up, outline each one faintly too, so it is
+     obvious what is in the group and what is not */
+  if (picked.length > 1){
+    ctx.globalAlpha = .45;
+    picked.forEach(s => {
+      const [e, f, g, h] = box(s);
+      ctx.strokeRect(e - 2 * px(), f - 2 * px(), g - e + 4 * px(), h - f + 4 * px());
+    });
+    ctx.globalAlpha = 1;
+  }
   ctx.setLineDash([]);
   ctx.fillStyle = "#fff";
-  hs.forEach(h => {
+  const hs = HS * px();
+  handles().forEach(h => {
     ctx.beginPath();
-    ctx.rect(h.x - HS / 2, h.y - HS / 2, HS, HS);
+    ctx.rect(h.x - hs / 2, h.y - hs / 2, hs, hs);
     ctx.fill(); ctx.stroke();
   });
+  ctx.restore();
+}
+
+/* the rubber band you drag across things to pick them up */
+let marquee = null;
+function drawMarquee(){
+  if (!marquee) return;
+  const r = wrap.getBoundingClientRect();
+  ctx.save();
+  ctx.strokeStyle = ACCENT();
+  ctx.fillStyle = ACCENT() + "22";
+  ctx.lineWidth = 1.2;
+  ctx.setLineDash([4, 3]);
+  const a = (marquee.x0 - cam.x) * cam.z, b = (marquee.y0 - cam.y) * cam.z;
+  const c = (marquee.x1 - cam.x) * cam.z, d = (marquee.y1 - cam.y) * cam.z;
+  ctx.fillRect(a, b, c - a, d - b);
+  ctx.strokeRect(a, b, c - a, d - b);
   ctx.restore();
 }
 
@@ -276,7 +410,9 @@ function paint(){
   const r = wrap.getBoundingClientRect();
   ctx.clearRect(0, 0, r.width, r.height);
   ctx.save();
+  ctx.scale(cam.z, cam.z);
   ctx.translate(-cam.x, -cam.y);
+  drawPages();
   /* an arrow, not a bare reference: forEach passes the index as the
      second argument, which would arrive as the target context */
   shapes.forEach(s => drawShape(s));
@@ -285,7 +421,10 @@ function paint(){
   ctx.restore();
   document.getElementById("undo").disabled = !past.length;
   document.getElementById("redo").disabled = !future.length;
-  document.getElementById("home").hidden = cam.x === 0 && cam.y === 0;
+  drawMarquee();
+  document.getElementById("home").hidden = cam.x === 0 && cam.y === 0 && cam.z === 1;
+  const zl = document.getElementById("zlabel");
+  if (zl) zl.textContent = Math.round(cam.z * 100) + "%";
   autosave();
 }
 
@@ -303,7 +442,7 @@ function box(s){
           Math.max(s.x0, s.x1), Math.max(s.y0, s.y1)];
 }
 function hit(s, x, y){
-  const pad = Math.max(8, s.w || 3);
+  const pad = Math.max(8 * px(), (s.w || 3) * px());
   if (s.t === "pen") return s.pts.some(p => Math.hypot(p.x - x, p.y - y) < pad);
   const [a, b, c, d] = box(s);
   return x > a - pad && x < c + pad && y > b - pad && y < d + pad;
@@ -314,13 +453,18 @@ function topAt(x, y){
 }
 
 /* ---------- the handles you drag ---------- */
-const HS = 9;             // handle square, in board units
-function handles(s){
-  /* a line has two ends and nothing in between - corner handles on a
-     diagonal line would be a lie about what you are dragging */
-  if (s.t === "line" || s.t === "arrow")
-    return [{ k:"p0", x:s.x0, y:s.y0 }, { k:"p1", x:s.x1, y:s.y1 }];
-  const [a, b, c, d] = box(s);
+const HS = 9;             // handle square, in SCREEN pixels
+function handles(){
+  if (!picked.length) return [];
+  /* one line on its own has two ends and nothing in between - corner
+     handles on a diagonal line would be a lie about what you are
+     dragging. In a group it is just part of the box. */
+  if (picked.length === 1){
+    const s = picked[0];
+    if (s.t === "line" || s.t === "arrow")
+      return [{ k:"p0", x:s.x0, y:s.y0 }, { k:"p1", x:s.x1, y:s.y1 }];
+  }
+  const [a, b, c, d] = selBox();
   const mx = (a + c) / 2, my = (b + d) / 2;
   return [
     { k:"nw", x:a, y:b }, { k:"n", x:mx, y:b }, { k:"ne", x:c, y:b },
@@ -328,9 +472,15 @@ function handles(s){
     { k:"sw", x:a, y:d }, { k:"s", x:mx, y:d }, { k:"se", x:c, y:d }
   ];
 }
-function handleAt(s, x, y){
-  const r = HS;
-  return handles(s).find(h => Math.abs(h.x - x) <= r && Math.abs(h.y - y) <= r) || null;
+function handleAt(x, y){
+  const r = HS * px();
+  return handles().find(h => Math.abs(h.x - x) <= r && Math.abs(h.y - y) <= r) || null;
+}
+/* does a shape fall inside the rubber band? */
+function inRect(s, a, b, c, d){
+  const [e, f, g, h] = box(s);
+  return g >= Math.min(a, c) && e <= Math.max(a, c)
+      && h >= Math.min(b, d) && f <= Math.max(b, d);
 }
 
 /* Put a shape into a new bounding box. Everything is expressed as a
@@ -373,7 +523,7 @@ function pushHistory(){
 }
 function restore(json){
   shapes = JSON.parse(json);
-  sel = null;              // the old reference points at a shape that is gone
+  picked = [];             // the old references point at shapes that are gone
   paint();
 }
 function commit(s){ pushHistory(); shapes.push(s); paint(); }
@@ -383,15 +533,19 @@ document.getElementById("undo").onclick = undo;
 document.getElementById("redo").onclick = redo;
 document.getElementById("clear").onclick = () => {
   if (!shapes.length) return;
-  if (confirm("Wipe the whole board?")){ pushHistory(); shapes = []; sel = null; paint(); }
+  if (confirm("Wipe the whole board?")){ pushHistory(); shapes = []; picked = []; paint(); }
 };
-document.getElementById("home").onclick = () => { cam.x = 0; cam.y = 0; paint(); };
+document.getElementById("home").onclick = () => { cam = { x:0, y:0, z:1 }; paint(); };
 
 /* ---------- pointer ---------- */
 function at(e){
   const r = cv.getBoundingClientRect();
-  return { x: e.clientX - r.left + cam.x, y: e.clientY - r.top + cam.y };
+  return { x: cam.x + (e.clientX - r.left) / cam.z,
+           y: cam.y + (e.clientY - r.top) / cam.z };
 }
+/* how many board units one screen pixel covers - handles and hit
+   tolerances are measured on screen, so they divide by the zoom */
+const px = () => 1 / cam.z;
 let erasing = false;
 let action = null;        // a move, a resize, or a pan in progress
 let space = false;        // Space held: pan without changing tool
@@ -409,17 +563,29 @@ cv.addEventListener("pointerdown", e => {
   }
 
   if (tool === "select"){
-    if (sel){
-      const h = handleAt(sel, p.x, p.y);
-      if (h){
-        action = { mode:"resize", k:h.k, orig:JSON.parse(JSON.stringify(sel)),
-                   ob:box(sel), moved:false };
-        return;
-      }
+    const h = handleAt(p.x, p.y);
+    if (h){
+      action = { mode:"resize", k:h.k, moved:false,
+                 orig: picked.map(s => JSON.parse(JSON.stringify(s))),
+                 obs:  picked.map(box),
+                 ob:   selBox() };
+      return;
     }
     const s = topAt(p.x, p.y);
-    sel = s;
-    if (s) action = { mode:"move", lx:p.x, ly:p.y, moved:false };
+    if (s){
+      if (e.shiftKey){
+        /* shift adds to the group, or takes one back out of it */
+        const i = picked.indexOf(s);
+        if (i === -1) picked.push(s); else picked.splice(i, 1);
+      } else if (!picked.includes(s)){
+        picked = [s];
+      }
+      if (picked.length) action = { mode:"move", lx:p.x, ly:p.y, moved:false };
+    } else {
+      /* empty board: drag a box over the things you want */
+      if (!e.shiftKey) picked = [];
+      marquee = { x0:p.x, y0:p.y, x1:p.x, y1:p.y, add:e.shiftKey, base:picked.slice() };
+    }
     paint();
     return;
   }
@@ -453,15 +619,24 @@ cv.addEventListener("pointermove", e => {
   }
   const p = at(e);
 
-  if (action && action.mode === "move" && sel){
+  if (marquee){
+    marquee.x1 = p.x; marquee.y1 = p.y;
+    const got = shapes.filter(s => inRect(s, marquee.x0, marquee.y0, marquee.x1, marquee.y1));
+    picked = marquee.add ? [...new Set([...marquee.base, ...got])] : got;
+    paint();
+    return;
+  }
+
+  if (action && action.mode === "move" && picked.length){
     if (!action.moved){ pushHistory(); action.moved = true; }
-    nudge(sel, p.x - action.lx, p.y - action.ly);
+    const dx = p.x - action.lx, dy = p.y - action.ly;
+    picked.forEach(s => nudge(s, dx, dy));
     action.lx = p.x; action.ly = p.y;
     paint();
     return;
   }
 
-  if (action && action.mode === "resize" && sel){
+  if (action && action.mode === "resize" && picked.length){
     if (!action.moved){ pushHistory(); action.moved = true; }
     resizeTo(p, e.shiftKey);
     paint();
@@ -470,7 +645,7 @@ cv.addEventListener("pointermove", e => {
 
   /* over a handle, show which way it will stretch */
   if (tool === "select" && !action){
-    const h = sel && handleAt(sel, p.x, p.y);
+    const h = handleAt(p.x, p.y);
     cv.style.cursor = h ? (CURSORS[h.k] || "pointer")
                         : (topAt(p.x, p.y) ? "move" : "default");
   }
@@ -503,10 +678,11 @@ const CURSORS = { nw:"nwse-resize", se:"nwse-resize", ne:"nesw-resize", sw:"nesw
                   p0:"move", p1:"move" };
 
 function resizeTo(p, square){
-  const o = action.orig, ob = action.ob, k = action.k;
+  const ob = action.ob, k = action.k;
 
   if (k === "p0" || k === "p1"){      // a line end follows the finger
-    if (k === "p0"){ sel.x0 = p.x; sel.y0 = p.y; } else { sel.x1 = p.x; sel.y1 = p.y; }
+    const s = picked[0];
+    if (k === "p0"){ s.x0 = p.x; s.y0 = p.y; } else { s.x1 = p.x; s.y1 = p.y; }
     return;
   }
 
@@ -533,12 +709,23 @@ function resizeTo(p, square){
   if (c - a < MIN){ if (k.includes("w")) a = c - MIN; else c = a + MIN; }
   if (d - b < MIN){ if (k.includes("n")) b = d - MIN; else d = b + MIN; }
 
-  Object.assign(sel, JSON.parse(JSON.stringify(o)));
-  fitToBox(sel, ob, [a, b, c, d]);
+  /* Everything moves through the SAME transform: each shape goes back to
+     how it was, then its own old box is mapped through the group's old
+     box to the group's new one. One shape or twenty, same arithmetic. */
+  const ow = ob[2] - ob[0], oh = ob[3] - ob[1];
+  const fx = ow < 0.001 ? 1 : (c - a) / ow;
+  const fy = oh < 0.001 ? 1 : (d - b) / oh;
+  picked.forEach((s, i) => {
+    const o = action.orig[i], sb = action.obs[i];
+    Object.assign(s, JSON.parse(JSON.stringify(o)));
+    fitToBox(s, sb, [a + (sb[0] - ob[0]) * fx, b + (sb[1] - ob[1]) * fy,
+                     a + (sb[2] - ob[0]) * fx, b + (sb[3] - ob[1]) * fy]);
+  });
 }
 
 function end(){
   erasing = false;
+  if (marquee){ marquee = null; paint(); return; }
   if (action){
     if (action.mode === "pan") cv.style.cursor = CURSOR[tool] || "crosshair";
     action = null;
@@ -557,19 +744,58 @@ cv.addEventListener("pointerup", end);
 cv.addEventListener("pointercancel", end);
 cv.addEventListener("pointerleave", () => { erasing = false; });
 
-/* ---------- scrolling the board ---------- */
+/* ---------- scrolling and zooming ---------- */
 cv.addEventListener("wheel", e => {
   e.preventDefault();
-  if (e.shiftKey){ cam.x += e.deltaY; }
-  else { cam.x += e.deltaX; cam.y += e.deltaY; }
+  if (e.ctrlKey || e.metaKey){
+    /* zoom towards the pointer, so the thing under it stays put -
+       zooming to the middle of the screen loses your place */
+    const r = cv.getBoundingClientRect();
+    zoomAt(e.clientX - r.left, e.clientY - r.top, Math.pow(0.9992, e.deltaY));
+    return;
+  }
+  /* the wheel moves the board by screen pixels whatever the zoom */
+  if (e.shiftKey){ cam.x += e.deltaY / cam.z; }
+  else { cam.x += e.deltaX / cam.z; cam.y += e.deltaY / cam.z; }
   paint();
 }, { passive: false });
+
+function zoomAt(sx, sy, factor){
+  const z = Math.min(ZMAX, Math.max(ZMIN, cam.z * factor));
+  if (z === cam.z) return;
+  /* keep the board point under (sx,sy) exactly where it is */
+  const wx = cam.x + sx / cam.z, wy = cam.y + sy / cam.z;
+  cam.z = z;
+  cam.x = wx - sx / cam.z;
+  cam.y = wy - sy / cam.z;
+  paint();
+}
+function zoomBy(factor){
+  const r = wrap.getBoundingClientRect();
+  zoomAt(r.width / 2, r.height / 2, factor);
+}
+/* pull back until everything drawn is on screen at once */
+function zoomToFit(){
+  const r = wrap.getBoundingClientRect();
+  if (!shapes.length){ cam = { x:0, y:0, z:1 }; return paint(); }
+  const bs = shapes.map(box);
+  const a = Math.min(...bs.map(v => v[0])) - 60, b = Math.min(...bs.map(v => v[1])) - 60;
+  const c = Math.max(...bs.map(v => v[2])) + 60, d = Math.max(...bs.map(v => v[3])) + 60;
+  cam.z = Math.min(ZMAX, Math.max(ZMIN, Math.min(r.width / (c - a), r.height / (d - b))));
+  cam.x = a - (r.width / cam.z - (c - a)) / 2;
+  cam.y = b - (r.height / cam.z - (d - b)) / 2;
+  paint();
+}
+document.getElementById("zin").onclick  = () => zoomBy(1.25);
+document.getElementById("zout").onclick = () => zoomBy(0.8);
+document.getElementById("zfit").onclick = zoomToFit;
+document.getElementById("zlabel").onclick = () => { cam.z = 1; paint(); };
 
 function rubOut(p){
   for (let i = shapes.length - 1; i >= 0; i--){
     if (hit(shapes[i], p.x, p.y)){
       pushHistory();
-      if (shapes[i] === sel) sel = null;
+      picked = picked.filter(x => x !== shapes[i]);
       shapes.splice(i, 1);
       paint();
       return;
@@ -600,7 +826,7 @@ cv.addEventListener("dblclick", e => {
   if (!s || s.t !== "text") return;
   pushHistory();
   shapes.splice(shapes.indexOf(s), 1);
-  sel = null;
+  picked = [];
   typing.style.display = "block";
   typing.style.left = (s.x - 4 - cam.x) + "px";
   typing.style.top = (s.y - 3 - cam.y) + "px";
@@ -626,26 +852,67 @@ addEventListener("keydown", e => {
     e.preventDefault();
     return;
   }
-  if (e.key === "Escape"){ sel = null; paint(); return; }
-  if ((e.key === "Delete" || e.key === "Backspace") && sel){
+  if (e.key === "Escape"){ picked = []; marquee = null; paint(); return; }
+  if ((e.key === "Delete" || e.key === "Backspace") && picked.length){
     e.preventDefault();
     pushHistory();
-    shapes.splice(shapes.indexOf(sel), 1);
-    sel = null;
+    shapes = shapes.filter(s => !picked.includes(s));
+    picked = [];
     paint();
     return;
   }
   /* arrow keys nudge the selection, which is how you line two boxes up */
-  if (sel && e.key.startsWith("Arrow")){
+  if (picked.length && e.key.startsWith("Arrow")){
     e.preventDefault();
     const d = e.shiftKey ? 10 : 1;
     pushHistory();
-    nudge(sel, e.key === "ArrowLeft" ? -d : e.key === "ArrowRight" ? d : 0,
-               e.key === "ArrowUp"   ? -d : e.key === "ArrowDown"  ? d : 0);
+    const dx = e.key === "ArrowLeft" ? -d : e.key === "ArrowRight" ? d : 0;
+    const dy = e.key === "ArrowUp"   ? -d : e.key === "ArrowDown"  ? d : 0;
+    picked.forEach(s => nudge(s, dx, dy));
     paint();
     return;
   }
   const k = e.key.toLowerCase();
+
+  if (e.ctrlKey || e.metaKey){
+    if (k === "c" && picked.length){
+      clipboard = picked.map(s => JSON.parse(JSON.stringify(s)));
+      e.preventDefault(); flash(picked.length + " copied"); return;
+    }
+    if (k === "x" && picked.length){
+      clipboard = picked.map(s => JSON.parse(JSON.stringify(s)));
+      pushHistory();
+      shapes = shapes.filter(s => !picked.includes(s));
+      picked = []; e.preventDefault(); paint(); flash("cut"); return;
+    }
+    if (k === "v" && clipboard.length){
+      /* paste 24 board-units down and right, so the copy is visibly a
+         copy rather than hiding exactly on top of the original */
+      pushHistory();
+      const copies = clipboard.map(s => JSON.parse(JSON.stringify(s)));
+      copies.forEach(s => nudge(s, 24, 24));
+      shapes.push(...copies);
+      picked = copies;
+      setTool("select");
+      e.preventDefault(); paint(); return;
+    }
+    if (k === "a"){
+      picked = shapes.slice(); setTool("select");
+      e.preventDefault(); paint(); return;
+    }
+    if (k === "d" && picked.length){      // duplicate in place
+      pushHistory();
+      const copies = picked.map(s => JSON.parse(JSON.stringify(s)));
+      copies.forEach(s => nudge(s, 24, 24));
+      shapes.push(...copies);
+      picked = copies;
+      e.preventDefault(); paint(); return;
+    }
+    if (e.key === "=" || e.key === "+"){ zoomBy(1.25); e.preventDefault(); return; }
+    if (e.key === "-"){ zoomBy(0.8);  e.preventDefault(); return; }
+    if (e.key === "0"){ cam.z = 1; paint(); e.preventDefault(); return; }
+  }
+
   if (k === "v") return setTool("select");
   if (k === "h") return setTool("hand");
   const n = parseInt(e.key, 10);
@@ -661,38 +928,85 @@ addEventListener("keyup", e => {
    explaining something, and a PNG of wherever she happened to stop would
    lose most of it. Flattened onto the paper colour too: a transparent
    PNG looks empty when it lands in WhatsApp on a dark theme. */
-document.getElementById("save").onclick = () => {
-  const r = wrap.getBoundingClientRect();
-  const pad = 40;
-  let a = 0, b = 0, c = r.width, d = r.height;
-  if (shapes.length){
-    const bs = shapes.map(box);
-    a = Math.min(...bs.map(v => v[0])) - pad;
-    b = Math.min(...bs.map(v => v[1])) - pad;
-    c = Math.max(...bs.map(v => v[2])) + pad;
-    d = Math.max(...bs.map(v => v[3])) + pad;
-    if (c - a < 320){ c = a + 320; }
-    if (d - b < 240){ d = b + 240; }
-  }
+/* ---------- saving pictures ----------
+   One picture of everything is right while the board is small, and
+   wrong once she has drawn down three screens: the page guides exist so
+   that "page 2" means a rectangle she can see before she saves, and
+   each page can come out as its own picture.
+
+   Note: a page inside the Claude artifact cannot start a download - the
+   viewer blocks it. Saving works from the GitHub link and from
+   localhost, which is where she will be drawing anyway. */
+function exportPNG(a, b, c, d, name){
   const out = document.createElement("canvas");
-  const dpr = window.devicePixelRatio || 1;
-  out.width = Math.round((c - a) * dpr);
-  out.height = Math.round((d - b) * dpr);
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  out.width  = Math.max(1, Math.round((c - a) * dpr));
+  out.height = Math.max(1, Math.round((d - b) * dpr));
   const o = out.getContext("2d");
   o.setTransform(dpr, 0, 0, dpr, 0, 0);
   o.fillStyle = getComputedStyle(document.body).backgroundColor || "#fff";
   o.fillRect(0, 0, c - a, d - b);
-
-  /* redraw the shapes into the export rather than copying the screen,
-     so what is saved is the whole board at full resolution */
   o.translate(-a, -b);
+  /* clip so a shape that crosses onto the next page is cut at the edge
+     rather than drawn outside the picture */
+  o.beginPath(); o.rect(a, b, c - a, d - b); o.clip();
   shapes.forEach(sh => drawShape(sh, o));
-
   const link = document.createElement("a");
-  link.download = "whiteboard-" + new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-") + ".png";
+  link.download = name;
   link.href = out.toDataURL("image/png");
   link.click();
+}
+
+const stamp = () => new Date().toISOString().slice(0, 16).replace(/[:T]/g, "-");
+
+function contentBox(){
+  const r = wrap.getBoundingClientRect();
+  if (!shapes.length) return [0, 0, r.width, r.height];
+  const pad = 40;
+  const bs = shapes.map(box);
+  let a = Math.min(...bs.map(v => v[0])) - pad, b = Math.min(...bs.map(v => v[1])) - pad;
+  let c = Math.max(...bs.map(v => v[2])) + pad, d = Math.max(...bs.map(v => v[3])) + pad;
+  if (c - a < 320) c = a + 320;
+  if (d - b < 240) d = b + 240;
+  return [a, b, c, d];
+}
+
+function saveAll(){
+  const [a, b, c, d] = contentBox();
+  exportPNG(a, b, c, d, "whiteboard-" + stamp() + ".png");
+}
+function savePages(){
+  const pages = usedPages();
+  /* one at a time: a browser that is asked for six downloads in the same
+     tick usually keeps the first and drops the rest */
+  pages.forEach((p, i) => setTimeout(() => {
+    const [a, b, c, d] = pageBox(p);
+    exportPNG(a, b, c, d, "whiteboard-" + stamp() + "-page-" + p.n + ".png");
+  }, i * 350));
+  flash(pages.length + (pages.length === 1 ? " page saved" : " pages saved, one picture each"));
+}
+function saveThisPage(){
+  const r = wrap.getBoundingClientRect();
+  const mid = { x: cam.x + r.width / (2 * cam.z), y: cam.y + r.height / (2 * cam.z) };
+  const here = pageOf(mid.x, mid.y);
+  const found = usedPages().find(p => p.col === here.col && p.row === here.row);
+  const [a, b, c, d] = pageBox(here);
+  exportPNG(a, b, c, d, "whiteboard-" + stamp() + "-page-" + (found ? found.n : 1) + ".png");
+}
+
+const menu = document.getElementById("savemenu");
+document.getElementById("save").onclick = e => {
+  e.stopPropagation();
+  menu.hidden = !menu.hidden;
+  const n = usedPages().length;
+  document.getElementById("pagecount").textContent =
+    n === 1 ? "1 page has something on it" : n + " pages have something on them";
 };
+document.addEventListener("click", () => { menu.hidden = true; });
+menu.addEventListener("click", e => e.stopPropagation());
+document.getElementById("saveAll").onclick   = () => { menu.hidden = true; saveAll(); };
+document.getElementById("savePages").onclick = () => { menu.hidden = true; savePages(); };
+document.getElementById("saveThis").onclick  = () => { menu.hidden = true; saveThisPage(); };
 
 /* ---------- keeping the board ----------
    Everything already lives in one list of plain objects, so keeping it
@@ -721,7 +1035,8 @@ function load(){
     if (!raw) return;
     const d = JSON.parse(raw);
     if (Array.isArray(d.shapes)) shapes = d.shapes;
-    if (d.cam) cam = d.cam;
+    if (d.cam) cam = { x:+d.cam.x || 0, y:+d.cam.y || 0,
+                       z: Math.min(ZMAX, Math.max(ZMIN, +d.cam.z || 1)) };
   } catch (e) { /* unreadable: start on a clean board rather than break */ }
 }
 
