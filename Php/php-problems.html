@@ -154,6 +154,7 @@ td.pass{color:var(--good);font-weight:700} td.fail{color:var(--bad);font-weight:
 <script src="app/php-engine.js?v=1"></script>
 <script src="app/problems-data.js?v=1"></script>
 <script src="app/problems-extra.js?v=1"></script>
+<script src="app/problems-set2.js?v=1"></script>
 <script>
 /* ---------------------------------------------------------------
    The problem sets. The engine and the problems live in their own
@@ -164,7 +165,7 @@ td.pass{color:var(--good);font-weight:700} td.fail{color:var(--bad);font-weight:
    answer that is right for one set of numbers and wrong for the next
    is the usual way these problems get handed in.
 --------------------------------------------------------------- */
-const P = [...PROBLEMS_SET1, ...PROBLEMS_EXTRA];
+const P = [...PROBLEMS_SET1, ...PROBLEMS_SET2, ...PROBLEMS_EXTRA];
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const KEY = "php_problems_v1";
@@ -199,6 +200,15 @@ function judge(p, code){
     const missing = (r.has || []).filter(h => !out.includes(h));
     if (missing.length)
       return { label:r.label, ok:false, note:"nothing in the output said " + missing.map(m => '"' + m + '"').join(", "), got:out };
+    /* how MANY times something appears is the only way to catch a header
+       row printed inside the loop, or a row that closes in the wrong place */
+    for (const c of (r.counts || [])){
+      const n = out.split(c.text).length - 1;
+      if (n !== c.times)
+        return { label:r.label, ok:false,
+                 note: '"' + c.text + '" should appear ' + c.times + ' time' +
+                       (c.times === 1 ? "" : "s") + ", yours has " + n, got:out };
+    }
     if (r.outRe && !r.outRe.test(out))
       return { label:r.label, ok:false, note:"the output did not match what the problem asks for", got:out };
     return { label:r.label, ok:true };

@@ -37,7 +37,8 @@ ROOT_PAGES = {"index.html": "home.html"}
 # shared files that both depths have to be able to reach
 SHARED = ["app.css", "embed.js", "quiz.html", "quiz-data-a.js", "quiz-data-b.js"]
 APP_ONLY = ["php-engine.js", "problems-data.js", "problems-extra.js",
-            "sql-engine.js", "teach-data.js", "teaching-order-data.js"]
+            "problems-set2.js", "sql-engine.js", "teach-data.js",
+            "teaching-order-data.js"]
 
 
 def shell(src):

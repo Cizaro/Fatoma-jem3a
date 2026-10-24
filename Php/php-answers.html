@@ -77,11 +77,12 @@ pre.code{background:var(--editor);color:var(--editor-ink);font-family:var(--mono
 
 <script src="app/problems-data.js?v=1"></script>
 <script src="app/problems-extra.js?v=1"></script>
+<script src="app/problems-set2.js?v=1"></script>
 <script>
 /* Every problem's worked answer, shut by default. The <details> element
    does the hiding, so a stray scroll cannot spoil a problem she has not
    tried yet, and a link like php-answers.html#p3 opens exactly one. */
-const P = [...PROBLEMS_SET1, ...PROBLEMS_EXTRA];
+const P = [...PROBLEMS_SET1, ...PROBLEMS_SET2, ...PROBLEMS_EXTRA];
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
 let html = "", set = null;
