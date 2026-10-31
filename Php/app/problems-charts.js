@@ -220,6 +220,41 @@ q8: { nodes: [
   { t:"stop" }
 ]},
 
+q9: { nodes: [
+  { t:"start" },
+  { t:"io",   s:"read ITEM, PRICE, QTY from the form" },
+  { t:"io",   s:"read RATE from the URL, or use 11" },
+  { t:"dec",  s:"PRICE or QTY not a number ?",
+              yes:{ t:"io", s:"print the error" } },
+  { t:"proc", s:"SUBTOTAL <-- PRICE * QTY" },
+  { t:"proc", s:"VAT <-- SUBTOTAL * RATE / 100" },
+  { t:"proc", s:"TOTAL <-- SUBTOTAL + VAT" },
+  { t:"io",   s:"print item, subtotal, VAT and total" },
+  { t:"stop" }
+]},
+
+q10: { nodes: [
+  { t:"start" },
+  { t:"proc", s:"MARKS <-- the seven marks" },
+  { t:"dec",  s:"any mark left ? (a)", body:[
+      { t:"dec", s:"MARK >= 10 ?", yes:{ t:"io", s:"print MARK PASS" } },
+      { t:"io",  s:"print MARK FAIL" }
+  ]},
+  { t:"proc", s:"I <-- 0" },
+  { t:"dec",  s:"I < count ? (b)", body:[
+      { t:"io",   s:"print I + 1 and MARKS[I]" },
+      { t:"proc", s:"I <-- I + 1" }
+  ]},
+  { t:"proc", s:"I <-- 0" },
+  { t:"dec",  s:"I < count ? (c)", body:[
+      { t:"dec",  s:"MARKS[I] < 10 ?", yes:{ t:"io", s:"stop the loop" } },
+      { t:"proc", s:"I <-- I + 1" }
+  ]},
+  { t:"io",   s:"print Checked I + 1" },
+  { t:"io",   s:"print the total and the average" },
+  { t:"stop" }
+]},
+
 /* ========================= Extra practice ========================= */
 x1: { nodes: [
   { t:"start" },

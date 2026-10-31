@@ -1,0 +1,256 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Mock Exam - Answers</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=5">
+<body class="reader">
+<article class="prose">
+<h1>Mock Exam - Answers</h1>
+<p>Every traced output in Section 3 was produced by running the snippet through PHP 8.2, not by reading it. Where PHP 8 changed a behaviour that older notes still teach, it is called out.</p>
+<h2>Section 1 - Multiple Choice</h2>
+<p><strong>1.</strong> Where does PHP code run?</p>
+<p><strong>b) on the server, before the HTML is sent to the browser</strong></p>
+<p>The browser never sees PHP. It receives only what the script printed.</p>
+<p><strong>2.</strong> Which of these is a VALID PHP variable name?</p>
+<p><strong>c) $_total</strong></p>
+<p>A name may start with a letter or an underscore, never a digit; a hyphen is a minus sign; and without the $ it is not a variable at all.</p>
+<p><strong>3.</strong> What does  echo 10 . 5;  print?</p>
+<p><strong>b) 105</strong></p>
+<p>The dot joins. It turns both numbers into text and sticks them together.</p>
+<p><strong>4.</strong> In PHP 8, what does  echo &quot;Total: &quot; . 5 + 3;  print?</p>
+<p><strong>b) Total: 8</strong></p>
+<p>PHP 8 changed the precedence: + now binds tighter than the dot, so the addition happens first. In PHP 7 this was an error.</p>
+<p><strong>5.</strong> var_dump((int) &quot;12abc&quot;);  gives:</p>
+<p><strong>b) int(12)</strong></p>
+<p>Casting to int reads digits from the front and stops at the first character that is not one.</p>
+<p><strong>6.</strong> Which comparison is TRUE?</p>
+<p><strong>c) &quot;1&quot; == &quot;01&quot;</strong></p>
+<p>Two numeric strings are compared as numbers, and 1 equals 01. The first and last were true in PHP 7 and are false in PHP 8.</p>
+<p><strong>7.</strong> What does  7 / 2  produce?</p>
+<p><strong>b) float(3.5)</strong></p>
+<p>Division always produces a float in PHP unless you ask for intdiv().</p>
+<p><strong>8.</strong> Which loop is guaranteed to run at least once?</p>
+<p><strong>c) do-while</strong></p>
+<p>Its test is at the bottom, so the body has already run before anything is checked.</p>
+<p><strong>9.</strong> Inside a loop, continue:</p>
+<p><strong>b) skips the rest of this pass and starts the next</strong></p>
+<p>break ends the loop; continue only ends the current pass.</p>
+<p><strong>10.</strong> Which is a valid PHP comment?</p>
+<p><strong>c) # note</strong></p>
+<p>PHP takes //, # and /<em> ... </em>/. The first is an HTML comment, which PHP ignores and the browser shows in the source.</p>
+<h2>Section 2 - True or False</h2>
+<p><strong>1.</strong> Every PHP variable name must begin with a $ sign.</p>
+<p><strong>TRUE</strong> - No exceptions. Leaving it off makes PHP read a bare word instead.</p>
+<p><strong>2.</strong> $Name and $name refer to the same variable.</p>
+<p><strong>FALSE</strong> - Variable names are case sensitive. (Function names are not.)</p>
+<p><strong>3.</strong> The === operator compares the value AND the data type.</p>
+<p><strong>TRUE</strong> - That is the whole difference between === and ==.</p>
+<p><strong>4.</strong> &quot;5&quot; === 5 evaluates to true.</p>
+<p><strong>FALSE</strong> - Same value, different types - string against integer - so === says no.</p>
+<p><strong>5.</strong> The + operator joins two strings together in PHP.</p>
+<p><strong>FALSE</strong> - The dot joins. + tries to add, converting the text to numbers first.</p>
+<p><strong>6.</strong> (bool) &quot;0.0&quot; evaluates to false.</p>
+<p><strong>FALSE</strong> - It is TRUE. Only the empty string and the single character &quot;0&quot; are falsy strings; &quot;0.0&quot; is neither.</p>
+<p><strong>7.</strong> empty(&quot;0&quot;) returns true.</p>
+<p><strong>TRUE</strong> - empty() counts &quot;0&quot; as empty, which is exactly why it is the wrong check for a quantity box someone legitimately typed 0 into.</p>
+<p><strong>8.</strong> Changing $v inside  foreach ($arr as $v)  changes the array.</p>
+<p><strong>FALSE</strong> - $v is a copy. Changing the array needs a reference: foreach ($arr as &amp;$v).</p>
+<h2>Section 3 - Code Output and Tracing</h2>
+<p><strong>1.</strong></p>
+<pre class="lang-php"><code>&lt;?php
+$a = &quot;5&quot;;
+$b = 5;
+var_dump($a == $b);
+var_dump($a === $b);</code></pre>
+<p>Output:</p>
+<pre><code>bool(true)
+bool(false)</code></pre>
+<p>== converts the string to a number and finds them equal. === compares the types first and stops there.</p>
+<p><strong>2.</strong></p>
+<pre class="lang-php"><code>&lt;?php
+for ($i = 1; $i &lt;= 6; $i++) {
+    if ($i % 2 == 0) continue;
+    if ($i == 5) break;
+    echo $i . &quot; &quot;;
+}</code></pre>
+<p>Output:</p>
+<pre><code>1 3 </code></pre>
+<p>2, 4 and 6 are skipped by continue. At 5 the loop breaks before the echo, so 5 is never printed.</p>
+<p><strong>3.</strong></p>
+<pre class="lang-php"><code>&lt;?php
+$n = 10;
+do {
+    echo &quot;run &quot;;
+    $n++;
+} while ($n &lt; 5);</code></pre>
+<p>Output:</p>
+<pre><code>run </code></pre>
+<p>The test is at the bottom, so the body runs once even though 10 was never less than 5.</p>
+<p><strong>4.</strong></p>
+<pre class="lang-php"><code>&lt;?php
+$s = &quot;PHP&quot;;
+$s .= &quot; is&quot;;
+$s .= &quot; fun&quot;;
+echo $s . &quot; (&quot; . strlen($s) . &quot;)&quot;;</code></pre>
+<p>Output:</p>
+<pre><code>PHP is fun (10)</code></pre>
+<p>.= adds to the end of what is already there. &quot;PHP is fun&quot; is ten characters including the two spaces.</p>
+<p><strong>5.</strong></p>
+<pre class="lang-php"><code>&lt;?php
+$cart = [&quot;pen&quot; =&gt; 3, &quot;book&quot; =&gt; 12, &quot;bag&quot; =&gt; 25];
+$t = 0;
+foreach ($cart as $item =&gt; $price) {
+    if ($price &lt; 5) continue;
+    $t += $price;
+}
+echo $t;</code></pre>
+<p>Output:</p>
+<pre><code>37</code></pre>
+<p>The pen at 3 is skipped, so 12 + 25.</p>
+<p><strong>6.</strong></p>
+<pre class="lang-php"><code>&lt;?php
+$x = 10;
+$y = $x++;
+$z = ++$x;
+echo &quot;$x $y $z&quot;;</code></pre>
+<p>Output:</p>
+<pre><code>12 10 12</code></pre>
+<p>$x++ hands back the old value and then adds; ++$x adds first and hands back the new one. $x is raised twice either way.</p>
+<p><strong>7.</strong> The three faults:</p>
+<ul><li>Line 2 has no semicolon at the end.</li><li>The if uses = (which puts a value in and is always true) instead of ==.</li><li>The output uses + to join text to a number; it should be the dot.</li></ul>
+<p>Only the first stops the script from parsing. The other two run happily and give a wrong answer, which is the point of the question.</p>
+<h2>Section 4 - Main Exercise</h2>
+<p>A tutor types <strong>five marks out of 20</strong> into a form, one box per student, and presses <strong>Show results</strong>. The page must then display a table of the five marks with a letter grade beside each one, and underneath it the total, the average to two decimal places, the highest mark, and how many students passed (a pass is 10 or more). If any box is empty or holds something that is not a number from 0 to 20, the page must say so and show no table.</p>
+<h3>(a) Pseudocode</h3>
+<pre><code>START
+  IF the Show results button was pressed THEN
+      TOTAL   &lt;-- 0
+      HIGHEST &lt;-- nothing yet          [not 0: zero is a legal mark]
+      PASSES  &lt;-- 0
+      PRINT the table heading row      [once, outside the loop]
+      I &lt;-- 1
+      WHILE I &lt;= 5
+          MARK &lt;-- the mark typed for student I
+          IF MARK is not a number OR MARK &lt; 0 OR MARK &gt; 20 THEN
+              PRINT &quot;Every mark must be a number from 0 to 20.&quot;
+              STOP
+          ENDIF
+          TOTAL &lt;-- TOTAL + MARK
+          IF MARK &gt;= 10 THEN PASSES &lt;-- PASSES + 1 ENDIF
+          IF HIGHEST is nothing OR MARK &gt; HIGHEST THEN HIGHEST &lt;-- MARK ENDIF
+          PRINT a row holding I, MARK and the letter grade for MARK
+          I &lt;-- I + 1
+      ENDWHILE
+      PRINT the end of the table
+      PRINT TOTAL
+      PRINT TOTAL / 5 to two decimal places
+      PRINT HIGHEST
+      PRINT PASSES
+  ENDIF
+STOP</code></pre>
+<h3>(b) Flowchart</h3>
+<pre><code>( START )
+    |
+&lt; Show results pressed ? &gt; --no--&gt; ( STOP )
+    | yes
+[ TOTAL &lt;-- 0 , HIGHEST &lt;-- none , PASSES &lt;-- 0 ]
+    |
+/ print the heading row ONCE /
+    |
+[ I &lt;-- 1 ]
+    |
+&lt; I &lt;= 5 ? &gt; --no--&gt; / print total, average, highest, passes / --&gt; ( STOP )
+    | yes
+/ read MARK for student I /
+    |
+&lt; MARK valid ? &gt; --no--&gt; / print the error / --&gt; ( STOP )
+    | yes
+[ TOTAL &lt;-- TOTAL + MARK ]
+    |
+&lt; MARK &gt;= 10 ? &gt; --yes--&gt; [ PASSES &lt;-- PASSES + 1 ]
+    |
+&lt; MARK &gt; HIGHEST ? &gt; --yes--&gt; [ HIGHEST &lt;-- MARK ]
+    |
+/ print the row for student I /
+    |
+[ I &lt;-- I + 1 ]
+    |
+    +---- back up to &lt; I &lt;= 5 ? &gt;</code></pre>
+<h3>(c) PHP</h3>
+<pre class="lang-php"><code>&lt;?php
+/**
+ * Exam results dashboard.
+ *
+ * Reads five marks out of 20 from a POST form, grades each one, and
+ * reports the total, the average, the highest mark and the pass count.
+ *
+ * @author  Fatima Al-Helou
+ * @version 1.0
+ */
+
+/**
+ * Turn a mark out of 20 into a letter grade.
+ *
+ * @param  int|float $mark The mark to grade, 0 to 20.
+ * @return string          A, B, C, D or F.
+ */
+function letterGrade($mark) {
+    if ($mark &gt;= 18)     { return &quot;A&quot;; }
+    elseif ($mark &gt;= 16) { return &quot;B&quot;; }
+    elseif ($mark &gt;= 14) { return &quot;C&quot;; }
+    elseif ($mark &gt;= 10) { return &quot;D&quot;; }
+    return &quot;F&quot;;
+}
+
+// Nothing below runs until the button has actually been pressed.
+if (isset($_POST[&quot;show&quot;])) {
+
+    $total   = 0;      // running sum of every mark
+    $highest = null;   // null, not 0 - a mark of 0 is legal
+    $passes  = 0;      // how many reached 10
+
+    echo &quot;&lt;table border=&#x27;1&#x27;&gt;&quot;;
+    echo &quot;&lt;tr&gt;&lt;th&gt;Student&lt;/th&gt;&lt;th&gt;Mark&lt;/th&gt;&lt;th&gt;Grade&lt;/th&gt;&lt;/tr&gt;&quot;;
+
+    // One pass per student; $i doubles as the student number shown.
+    for ($i = 1; $i &lt;= 5; $i++) {
+
+        $mark = $_POST[&quot;mark&quot; . $i];
+
+        // Everything from a form is text, and the box may be empty.
+        if (!is_numeric($mark) || $mark &lt; 0 || $mark &gt; 20) {
+            echo &quot;&lt;/table&gt;&quot;;
+            echo &quot;&lt;p&gt;Every mark must be a number from 0 to 20.&lt;/p&gt;&quot;;
+            return;
+        }
+
+        $total += $mark;
+        if ($mark &gt;= 10) { $passes++; }
+        if ($highest === null || $mark &gt; $highest) { $highest = $mark; }
+
+        echo &quot;&lt;tr&gt;&quot;;
+        echo &quot;&lt;td&gt;Student &quot; . $i . &quot;&lt;/td&gt;&quot;;
+        echo &quot;&lt;td&gt;&quot; . $mark . &quot;&lt;/td&gt;&quot;;
+        echo &quot;&lt;td&gt;&quot; . letterGrade($mark) . &quot;&lt;/td&gt;&quot;;
+        echo &quot;&lt;/tr&gt;&quot;;
+    }
+
+    echo &quot;&lt;/table&gt;&quot;;
+
+    // Worked out after the loop, never inside it.
+    echo &quot;&lt;p&gt;Total: &quot;   . $total . &quot;&lt;/p&gt;&quot;;
+    echo &quot;&lt;p&gt;Average: &quot; . number_format($total / 5, 2) . &quot;&lt;/p&gt;&quot;;
+    echo &quot;&lt;p&gt;Highest: &quot; . $highest . &quot;&lt;/p&gt;&quot;;
+    echo &quot;&lt;p&gt;Passed: &quot;  . $passes . &quot; out of 5&lt;/p&gt;&quot;;
+}</code></pre>
+<h3>Marking</h3>
+<div class="tablewrap"><table><thead><tr><th>What</th><th>Marks</th><th>Look for</th></tr></thead><tbody><tr><td>Pseudocode</td><td>5</td><td>Counter set before the loop; the loop tests up to and including 5; the totals are printed after it, not inside. CAPITALS and &lt;-- are his conventions and are expected.</td></tr><tr><td>Flowchart</td><td>5</td><td>Start AND Stop both drawn; input and output in parallelograms; every decision a diamond with both ways labelled; the arrow back up to the loop test present. An unconnected box loses a mark.</td></tr><tr><td>PHP, working</td><td>6</td><td>Loop runs exactly five times, total and pass count accumulate outside the loop, average divides after it.</td></tr><tr><td>PHP, documented</td><td>4</td><td>One PHPDoc block for the script and one for the function, with @param and @return, plus inline // comments that say WHY rather than restating the line.</td></tr></tbody></table></div>
+<h3>Say these out loud before she sits it</h3>
+<ul><li>Write the $ on every variable. It is the single most common lost mark.</li><li>Join text with the dot. The + will quietly turn your words into numbers.</li><li>=== checks the value AND the type; == checks the value after converting.</li><li>In an if, == asks a question. A single = puts a value in and is always true.</li><li>A PHPDoc block is /** on its own line, a one-line summary, then @param and @return. Section 4 asks for it by name.</li></ul>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=5"></script>

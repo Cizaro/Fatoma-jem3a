@@ -1,0 +1,99 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MIT320 Partial I - Mock Exam</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=5">
+<body class="reader">
+<article class="prose">
+<h1>MIT320 Partial I - Mock Exam</h1>
+<p>Lessons 1 to 3 &amp;middot; 60 minutes &amp;middot; 50 marks. Sit it with no notes and no computer, then mark it from the answers page.</p>
+<blockquote><p>There is a printable PDF of this paper, and a separate one with the answers, built by <code>scripts/build-mock-exam.py</code>.</p></blockquote>
+<h2>Section 1 - Multiple Choice</h2>
+<p><em>Circle one. 10 marks, about 12 minutes.</em></p>
+<p><strong>1.</strong> Where does PHP code run?</p>
+<ul><li>a) in the browser</li><li>b) on the server, before the HTML is sent to the browser</li><li>c) in the browser, after the HTML has loaded</li><li>d) inside the database</li></ul>
+<p><strong>2.</strong> Which of these is a VALID PHP variable name?</p>
+<ul><li>a) $2php</li><li>b) $my-var</li><li>c) $_total</li><li>d) my_var</li></ul>
+<p><strong>3.</strong> What does  echo 10 . 5;  print?</p>
+<ul><li>a) 15</li><li>b) 105</li><li>c) 10.5</li><li>d) a syntax error</li></ul>
+<p><strong>4.</strong> In PHP 8, what does  echo &quot;Total: &quot; . 5 + 3;  print?</p>
+<ul><li>a) Total: 53</li><li>b) Total: 8</li><li>c) 8</li><li>d) a syntax error</li></ul>
+<p><strong>5.</strong> var_dump((int) &quot;12abc&quot;);  gives:</p>
+<ul><li>a) int(0)</li><li>b) int(12)</li><li>c) string(5) &quot;12abc&quot;</li><li>d) a fatal error</li></ul>
+<p><strong>6.</strong> Which comparison is TRUE?</p>
+<ul><li>a) 0 == &quot;a&quot;</li><li>b) null === false</li><li>c) &quot;1&quot; == &quot;01&quot;</li><li>d) &quot;abc&quot; == 0</li></ul>
+<p><strong>7.</strong> What does  7 / 2  produce?</p>
+<ul><li>a) int(3)</li><li>b) float(3.5)</li><li>c) int(4)</li><li>d) string(&quot;3.5&quot;)</li></ul>
+<p><strong>8.</strong> Which loop is guaranteed to run at least once?</p>
+<ul><li>a) for</li><li>b) while</li><li>c) do-while</li><li>d) foreach</li></ul>
+<p><strong>9.</strong> Inside a loop, continue:</p>
+<ul><li>a) ends the loop completely</li><li>b) skips the rest of this pass and starts the next</li><li>c) starts the loop again from the first pass</li><li>d) stops the whole script</li></ul>
+<p><strong>10.</strong> Which is a valid PHP comment?</p>
+<ul><li>a) &lt;!-- note --&gt;</li><li>b) <strong> note </strong></li><li>c) # note</li><li>d) &#x27; note</li></ul>
+<h2>Section 2 - True or False</h2>
+<p><em>8 marks, about 6 minutes.</em></p>
+<p><strong>1.</strong> Every PHP variable name must begin with a $ sign. <strong>2.</strong> $Name and $name refer to the same variable. <strong>3.</strong> The === operator compares the value AND the data type. <strong>4.</strong> &quot;5&quot; === 5 evaluates to true. <strong>5.</strong> The + operator joins two strings together in PHP. <strong>6.</strong> (bool) &quot;0.0&quot; evaluates to false. <strong>7.</strong> empty(&quot;0&quot;) returns true. <strong>8.</strong> Changing $v inside  foreach ($arr as $v)  changes the array.</p>
+<h2>Section 3 - Code Output and Tracing</h2>
+<p><em>Write the EXACT output. Spaces matter. 12 marks, about 17 minutes.</em></p>
+<p><strong>1.</strong> What is printed?</p>
+<pre class="lang-php"><code>&lt;?php
+$a = &quot;5&quot;;
+$b = 5;
+var_dump($a == $b);
+var_dump($a === $b);</code></pre>
+<p><strong>2.</strong> What is printed?</p>
+<pre class="lang-php"><code>&lt;?php
+for ($i = 1; $i &lt;= 6; $i++) {
+    if ($i % 2 == 0) continue;
+    if ($i == 5) break;
+    echo $i . &quot; &quot;;
+}</code></pre>
+<p><strong>3.</strong> What is printed?</p>
+<pre class="lang-php"><code>&lt;?php
+$n = 10;
+do {
+    echo &quot;run &quot;;
+    $n++;
+} while ($n &lt; 5);</code></pre>
+<p><strong>4.</strong> What is printed?</p>
+<pre class="lang-php"><code>&lt;?php
+$s = &quot;PHP&quot;;
+$s .= &quot; is&quot;;
+$s .= &quot; fun&quot;;
+echo $s . &quot; (&quot; . strlen($s) . &quot;)&quot;;</code></pre>
+<p><strong>5.</strong> What is printed?</p>
+<pre class="lang-php"><code>&lt;?php
+$cart = [&quot;pen&quot; =&gt; 3, &quot;book&quot; =&gt; 12, &quot;bag&quot; =&gt; 25];
+$t = 0;
+foreach ($cart as $item =&gt; $price) {
+    if ($price &lt; 5) continue;
+    $t += $price;
+}
+echo $t;</code></pre>
+<p><strong>6.</strong> What is printed?</p>
+<pre class="lang-php"><code>&lt;?php
+$x = 10;
+$y = $x++;
+$z = ++$x;
+echo &quot;$x $y $z&quot;;</code></pre>
+<p><strong>7.</strong> This script has <strong>three</strong> faults. Name each one and give the correction.</p>
+<pre class="lang-php"><code>&lt;?php
+$price = 10
+$qty = &quot;3&quot;;
+if ($price = 10) {
+    echo &quot;Total: &quot; + $price * $qty;
+}</code></pre>
+<h2>Section 4 - Main Algorithmic and Coding Exercise</h2>
+<p><em>20 marks, about 25 minutes. All three deliverables are required.</em></p>
+<p>A tutor types <strong>five marks out of 20</strong> into a form, one box per student, and presses <strong>Show results</strong>. The page must then display a table of the five marks with a letter grade beside each one, and underneath it the total, the average to two decimal places, the highest mark, and how many students passed (a pass is 10 or more). If any box is empty or holds something that is not a number from 0 to 20, the page must say so and show no table.</p>
+<p><strong>Grades:</strong> 18 and over = A  |  16 = B  |  14 = C  |  10 = D  |  under 10 = F</p>
+<p><strong>(a) Pseudocode</strong> - 5 marks</p>
+<p><strong>(b) Flowchart</strong> - 5 marks, showing the inputs, the decisions and the loop</p>
+<p><strong>(c) PHP code</strong> - 10 marks, with inline <code>//</code> comments and a PHPDoc block (<code>/** ... */</code>)</p>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=5"></script>

@@ -512,6 +512,152 @@ if (!is_numeric($n) || $n < 1 || $n > 100) {
     you would hope; <code>is_numeric</code> is checked <i>first</i>, and the
     <code>||</code> stops as soon as it is true, so the comparisons never run
     on something that is not a number.`
+},
+
+{
+  id: "q9", set: "Set II · decisions and tables", n: "9",
+  title: "The café bill — POST and GET together",
+  context: `The only question here that uses both superglobals in one file,
+    which is where the difference between them stops being a definition. The
+    order comes from the form; the VAT rate comes from the address bar.`,
+  task: `Read an item, a price and a quantity from the form, and the VAT rate
+    from the URL. Print the subtotal, the VAT and the total.`,
+  reqs: [
+    "Item, price and quantity from <code>$_POST</code>",
+    "The VAT rate from <code>$_GET[\"vat\"]</code>, or <b>11</b> if the URL does not carry one",
+    "Subtotal = price &times; quantity, VAT = subtotal &times; rate &divide; 100, Total = subtotal + VAT",
+    "Money to 2 decimal places with <code>number_format()</code>",
+    "Exactly these labels: <code>Item: </code>, <code>Subtotal: </code>, <code>VAT (11%): </code>, <code>Total: </code>",
+    "If price or quantity is not a number, print <code>Please enter a price and a quantity.</code> and nothing else"
+  ],
+  inputs: "Three boxes and a Calculate button. The rate rides in the URL.",
+  runs: [
+    { vars: { _POST: { item:"Coffee", price:"2.50", qty:"3", calc:"1" }, _GET: {} },
+      label: "Coffee 2.50 x 3, no rate in the URL",
+      has: ["Item: Coffee", "Subtotal: 7.50", "VAT (11%): 0.83", "Total: 8.33"] },
+    { vars: { _POST: { item:"Coffee", price:"2.50", qty:"3", calc:"1" }, _GET: { vat:"20" } },
+      label: "same order, ?vat=20",
+      has: ["Subtotal: 7.50", "VAT (20%): 1.50", "Total: 9.00"] },
+    { vars: { _POST: { item:"Tea", price:"", qty:"2", calc:"1" }, _GET: {} },
+      label: "price left empty",
+      out: "Please enter a price and a quantity." }
+  ],
+  code: [
+    { re: /\$_GET\s*\[/, msg: "The VAT rate has to come from $_GET" },
+    { re: /\$_POST\s*\[/, msg: "The order has to come from $_POST" },
+    { re: /number_format\s*\(/, msg: "Money needs number_format so the pennies show" }
+  ],
+  starter: "<?php\n$item  = $_POST[\"item\"];\n$price = $_POST[\"price\"];\n$qty   = $_POST[\"qty\"];\n\n// 11 unless the URL says otherwise\n$rate  = $_GET[\"vat\"] ?? 11;\n\n",
+  sol: `<?php
+$item  = $_POST["item"];
+$price = $_POST["price"];
+$qty   = $_POST["qty"];
+
+// the rate rides in the URL, and 11 is the default
+$rate = $_GET["vat"] ?? 11;
+
+if (!is_numeric($price) || !is_numeric($qty)) {
+    echo "Please enter a price and a quantity.";
+} else {
+    $subtotal = $price * $qty;
+    $vat      = $subtotal * $rate / 100;
+    $total    = $subtotal + $vat;
+
+    echo "Item: " . $item . "<br>";
+    echo "Subtotal: " . number_format($subtotal, 2) . "<br>";
+    echo "VAT (" . $rate . "%): " . number_format($vat, 2) . "<br>";
+    echo "Total: " . number_format($total, 2) . "<br>";
+}
+`,
+  why: `<b>Why the rate belongs in the URL and the price does not.</b> A rate is
+    a setting: it is the same for every customer, it is not secret, and a link
+    carrying it is useful. An order is private and changes something, so it
+    goes in the body where nobody can see it in a history. That is the whole
+    GET-versus-POST rule, and this is the question that shows it rather than
+    stating it.
+    <br><br><code>$_GET["vat"] ?? 11</code> reads as "the rate from the URL, or
+    11 if there isn't one". Written as <code>$_GET["vat"]</code> alone it warns
+    on every visit that does not carry a rate &mdash; which is most of them.
+    <br><br>The VAT label prints the rate it actually used, so the output
+    cannot quietly disagree with the arithmetic above it.`
+},
+
+{
+  id: "q10", set: "Set II · decisions and tables", n: "10",
+  title: "Three loops, one set of marks",
+  context: `The same seven marks walked three different ways, so the only thing
+    that changes between the parts is the loop. Answer all three and the
+    question "which loop should I use?" answers itself.`,
+  task: `Starting from the array below, do three things: list every mark with
+    PASS or FAIL, print a numbered list, and stop at the first failing mark.`,
+  reqs: [
+    "Start with <code>$marks = [14, 8, 17, 11, 5, 19, 9];</code>",
+    "<b>(a) foreach</b> &mdash; one line per mark: <code>14 PASS</code>, <code>8 FAIL</code> &hellip; (a pass is 10 or more)",
+    "<b>(b) for</b> &mdash; a numbered list using the index: <code>1. 14</code>, <code>2. 8</code> &hellip;",
+    "<b>(c) while</b> &mdash; stop at the first failing mark with <code>break</code>, then print <code>Checked 2</code>",
+    "<b>(d)</b> print <code>Total: 83</code> and <code>Average: 11.86</code>"
+  ],
+  inputs: "No form. The marks are written into the script.",
+  runs: [
+    { vars: {}, label: "all four parts",
+      has: ["14 PASS", "8 FAIL", "17 PASS", "5 FAIL", "19 PASS", "9 FAIL",
+            "1. 14", "2. 8", "7. 9", "Checked 2", "Total: 83", "Average: 11.86"],
+      counts: [{ text: "PASS", times: 4 }, { text: "FAIL", times: 3 }] }
+  ],
+  code: [
+    { re: /foreach\s*\(/, msg: "Part (a) asks for foreach" },
+    { re: /for\s*\(/,     msg: "Part (b) asks for a for loop" },
+    { re: /while\s*\(/,   msg: "Part (c) asks for a while loop" },
+    { re: /break/,        msg: "Part (c) asks you to stop with break" }
+  ],
+  starter: "<?php\n$marks = [14, 8, 17, 11, 5, 19, 9];\n\n// (a) foreach\n\n\n// (b) for\n\n\n// (c) while, stopping at the first fail\n\n\n// (d) total and average\n",
+  sol: `<?php
+$marks = [14, 8, 17, 11, 5, 19, 9];
+
+// (a) every mark, with its verdict
+foreach ($marks as $mark) {
+    if ($mark >= 10) {
+        echo $mark . " PASS<br>";
+    } else {
+        echo $mark . " FAIL<br>";
+    }
+}
+
+// (b) the same marks, numbered - this one needs the position
+for ($i = 0; $i < count($marks); $i++) {
+    echo ($i + 1) . ". " . $marks[$i] . "<br>";
+}
+
+// (c) stop at the first fail - we do not know in advance how far that is
+$i = 0;
+while ($i < count($marks)) {
+    if ($marks[$i] < 10) {
+        break;
+    }
+    $i++;
+}
+echo "Checked " . ($i + 1) . "<br>";
+
+// (d) total and average
+$total = 0;
+foreach ($marks as $mark) {
+    $total += $mark;
+}
+echo "Total: " . $total . "<br>";
+echo "Average: " . number_format($total / count($marks), 2) . "<br>";
+`,
+  why: `<b>Each loop earns its place.</b> <code>foreach</code> in (a), because
+    every mark is wanted and the position is not. <code>for</code> in (b),
+    because the number printed in front <i>is</i> the position.
+    <code>while</code> in (c), because how many passes it takes is not known
+    until it happens.
+    <br><br>Notice (b) counts from <b>0</b> and prints <code>$i + 1</code>: the
+    array starts at 0 and people start at 1, and that gap is where off-by-one
+    lives.
+    <br><br>In (c) the counter is left where the loop stopped, which is what
+    makes the answer readable afterwards &mdash; <code>$i</code> is the index
+    of the first failure, so the count is <code>$i + 1</code>. A loop variable
+    declared inside the loop would have thrown that away.`
 }
 
 ];

@@ -552,6 +552,59 @@ q8: {
 STOP`
 },
 
+q9: {
+  pseudo:
+`START
+  ITEM  <-- the item from the form
+  PRICE <-- the price from the form
+  QTY   <-- the quantity from the form
+  RATE  <-- the vat from the URL, or 11 if the URL has none
+  IF PRICE is not a number OR QTY is not a number THEN
+      PRINT "Please enter a price and a quantity."
+  ELSE
+      SUBTOTAL <-- PRICE * QTY
+      VAT      <-- SUBTOTAL * RATE / 100
+      TOTAL    <-- SUBTOTAL + VAT
+      PRINT ITEM, SUBTOTAL, VAT, TOTAL      [money to 2 decimal places]
+  ENDIF
+STOP`
+},
+
+q10: {
+  pseudo:
+`START
+  MARKS <-- [14, 8, 17, 11, 5, 19, 9]
+
+  [a - every mark, verdict only]
+  FOR EACH MARK IN MARKS
+      IF MARK >= 10 THEN PRINT MARK, "PASS" ELSE PRINT MARK, "FAIL" ENDIF
+  ENDFOR
+
+  [b - numbered, so the position is needed]
+  I <-- 0
+  WHILE I < how many marks
+      PRINT I + 1 , ". " , MARKS[I]
+      I <-- I + 1
+  ENDWHILE
+
+  [c - stop at the first fail; how far is not known in advance]
+  I <-- 0
+  WHILE I < how many marks
+      IF MARKS[I] < 10 THEN BREAK ENDIF
+      I <-- I + 1
+  ENDWHILE
+  PRINT "Checked " , I + 1
+
+  [d]
+  TOTAL <-- 0
+  FOR EACH MARK IN MARKS
+      TOTAL <-- TOTAL + MARK
+  ENDFOR
+  PRINT TOTAL
+  PRINT TOTAL / how many marks to 2 decimal places
+STOP`
+},
+
 /* ========================= Extra practice ========================= */
 x1: {
   pseudo:
