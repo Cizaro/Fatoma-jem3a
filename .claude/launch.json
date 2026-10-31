@@ -1,15 +1,6 @@
 {
   "version": "0.0.1",
   "configurations": [
-    {
-      "name": "course",
-      "runtimeExecutable": "python",
-      "runtimeArgs": [
-        "-m",
-        "http.server",
-        "8111"
-      ],
-      "port": 8111
-    }
+    { "name": "php-course", "runtimeExecutable": "python", "runtimeArgs": ["-m","http.server","8099"], "port": 8099 }
   ]
 }

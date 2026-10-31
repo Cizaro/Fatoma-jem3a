@@ -39,6 +39,7 @@ SHARED = ["app.css", "embed.js", "quiz.html", "quiz-data-a.js", "quiz-data-b.js"
 APP_ONLY = ["php-engine.js", "problems-data.js", "problems-extra.js",
             "problems-set2.js", "problems-plans.js", "problems-charts.js",
             "flowchart.js", "sql-engine.js", "teach-data.js",
+            "partial-1-data.js",
             "teaching-order-data.js"]
 
 

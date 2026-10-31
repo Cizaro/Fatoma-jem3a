@@ -1,0 +1,730 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Partial I — sit the paper</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="app/app.css?v=5">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);
+     font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:780px;margin:0 auto;padding-inline:16px;padding-block:0 70px}
+header{padding-block:32px 16px;display:flex;align-items:flex-end;gap:14px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(27px,7vw,38px);
+   letter-spacing:-.02em;line-height:1.05;margin:0}
+h1 em{font-style:normal;color:var(--accent)}
+.lede{color:var(--ink-2);font-size:14.5px;margin:2px 0 0}
+.theme-btn{margin-left:auto;font-family:var(--mono);font-size:11px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid var(--line);
+  color:var(--ink-3);border-radius:var(--r-pill);padding:5px 12px;cursor:pointer}
+.theme-btn:hover{color:var(--ink);border-color:var(--accent)}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:var(--r-sm);padding:12px 24px;
+  font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink-2)}
+.btn.warn{background:var(--warm)}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.btn.sm{padding:8px 15px;font-size:13.5px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px;box-shadow:var(--shadow)}
+pre{font-family:var(--mono);font-size:13.5px;line-height:1.55;background:var(--surface-2);
+  border-radius:var(--r-sm);padding:13px 15px;overflow-x:auto;margin:11px 0}
+code{font-family:var(--mono);font-size:.92em}
+.hide{display:none!important}
+.lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600}
+a{color:var(--accent)}
+
+.rules{margin:18px 0 0;padding-left:20px;color:var(--ink-2);font-size:14.5px}
+.rules li{margin-bottom:7px}
+.rules b{color:var(--ink)}
+.breakdown{width:100%;border-collapse:collapse;margin-top:16px;font-size:14px}
+.breakdown th,.breakdown td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+.breakdown th{font-family:var(--mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600}
+.breakdown td:last-child,.breakdown th:last-child{text-align:right;font-variant-numeric:tabular-nums}
+
+.hud{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);
+  border-bottom:1px solid var(--line);padding:11px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.clock{font-family:var(--mono);font-size:21px;font-weight:700;font-variant-numeric:tabular-nums;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:5px 14px}
+.clock.low{color:var(--warm);border-color:var(--warm)}
+.clock.out{color:#fff;background:var(--warm);border-color:var(--warm)}
+.pill{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:5px 13px;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.hud .btn{margin-left:auto;padding:9px 18px;font-size:14px}
+.sec-head{margin:34px 0 4px;padding-top:14px;border-top:2px solid var(--line)}
+.sec-head h2{font-family:var(--display);font-size:21px;margin:0;letter-spacing:-.01em}
+.sec-head p{margin:2px 0 0;color:var(--ink-3);font-size:13px;font-family:var(--mono)}
+.brief{background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--r);
+  padding:16px 18px;margin-top:14px}
+.brief p{margin:0 0 9px}.brief p:last-child{margin-bottom:0}
+.brief .grades{font-family:var(--mono);font-size:13px}
+
+.q{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px 19px;margin-top:14px;box-shadow:var(--shadow)}
+.q.answered{border-color:var(--accent)}
+.qn{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:11px;
+  font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.qtext{margin:7px 0 0;font-size:15.5px}
+.qtext code{background:var(--surface-2);padding:1px 5px;border-radius:var(--r-sm)}
+.opts{display:grid;gap:8px;margin-top:12px}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:10px 13px;cursor:pointer;background:var(--paper);font-size:14.5px}
+.opt:hover{border-color:var(--accent)}
+.opt input{margin:4px 0 0;accent-color:var(--accent);flex:none}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt .letter{font-family:var(--mono);font-weight:700;color:var(--ink-3)}
+.opt.sel .letter{color:var(--accent)}
+.tf{display:flex;gap:10px;margin-top:12px}
+.tf button{flex:1;font-family:var(--mono);font-size:14px;font-weight:700;letter-spacing:.06em;
+  background:var(--paper);border:1px solid var(--line);color:var(--ink-2);border-radius:var(--r-sm);
+  padding:11px 0;cursor:pointer}
+.tf button:hover{border-color:var(--accent)}
+.tf button.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+input.short,textarea{width:100%;font-family:var(--mono);font-size:14px;color:inherit;
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--r-sm);padding:11px 13px;
+  margin-top:11px;line-height:1.55}
+input.short:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:var(--accent)}
+textarea{resize:vertical;min-height:140px;white-space:pre;overflow-wrap:normal;overflow-x:auto}
+textarea.tall{min-height:260px}
+.hint{font-size:12.5px;color:var(--ink-3);margin:7px 0 0}
+
+/* Section 4 (b) and (c): the two that leave the page */
+.away{background:var(--surface-2);border-radius:var(--r-sm);padding:14px 16px;margin-top:13px}
+.away b.lbl{display:block;margin-bottom:7px;color:var(--accent)}
+.away ol{margin:0;padding-left:19px;font-size:14px;color:var(--ink-2)}
+.away ol li{margin-bottom:5px}
+.away ol b{color:var(--ink)}
+.did{display:flex;gap:11px;align-items:center;border:1px solid var(--line);border-radius:var(--r-sm);
+  padding:12px 14px;margin-top:12px;cursor:pointer;background:var(--paper);font-size:14.5px}
+.did.on{border-color:var(--accent);background:var(--accent-soft)}
+.did input{accent-color:var(--accent);width:18px;height:18px;flex:none}
+.copied{font-family:var(--mono);font-size:12px;color:var(--accent);margin-left:8px}
+
+.given{background:var(--surface-2);border-radius:var(--r-sm);padding:13px 15px;font-family:var(--mono);
+  font-size:13.5px;white-space:pre-wrap;word-break:break-word;margin-top:9px;min-height:22px;
+  max-height:330px;overflow:auto}
+.given.empty{color:var(--ink-3);font-style:italic;font-family:var(--body)}
+.model{background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--r);
+  padding:14px 16px;margin-top:14px}
+.model b.lbl{color:var(--accent);display:block;margin-bottom:6px}
+.model pre{background:var(--surface);margin:9px 0 0}
+.crit{margin-top:15px;display:grid;gap:8px}
+.crit label{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:11px 13px;cursor:pointer;background:var(--surface);font-size:14.5px}
+.crit label:hover{border-color:var(--accent)}
+.crit label.on{border-color:var(--accent);background:var(--accent-soft)}
+.crit input{margin:4px 0 0;accent-color:var(--accent);width:17px;height:17px;flex:none}
+.crit .mk{margin-left:auto;font-family:var(--mono);font-size:11.5px;color:var(--ink-3);flex:none}
+.auto{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent);
+  border-radius:var(--r-pill);padding:3px 10px;margin-top:11px}
+.auto.miss{background:var(--warm-soft);color:var(--warm)}
+.mark-nav{display:flex;gap:10px;align-items:center;margin-top:20px}
+.mark-nav .score{margin-left:auto;font-family:var(--mono);font-weight:700;font-size:15px}
+
+.big{font-family:var(--display);font-size:54px;font-weight:700;color:var(--accent);
+  line-height:1;font-variant-numeric:tabular-nums}
+.big small{font-size:22px;color:var(--ink-3);font-weight:600}
+.band{font-family:var(--display);font-size:20px;margin:8px 0 3px}
+.secbar{display:block;height:7px;background:var(--surface-2);border-radius:var(--r-pill);overflow:hidden;margin-top:5px}
+.secbar i{display:block;height:100%;background:var(--accent);border-radius:var(--r-pill)}
+.secbar i.weak{background:var(--warm)}
+.srow{display:grid;grid-template-columns:1fr auto;gap:3px 12px;align-items:baseline;margin-top:15px}
+.srow .name{font-weight:600}
+.srow .val{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums}
+.srow .bar{grid-column:1/-1}
+.diag{background:var(--warm-soft);border-radius:var(--r);padding:15px 17px;margin-top:16px}
+.diag b.lbl{color:var(--warm);display:block;margin-bottom:7px}
+.diag p{margin:0 0 9px}.diag p:last-child{margin-bottom:0}
+.revision ul{margin:0;padding-left:20px}
+.revision li{margin-bottom:7px;color:var(--ink-2)}
+.hist div{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);
+  font-size:13.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.hist span:last-child{margin-left:auto;font-family:var(--mono);font-weight:700;color:var(--ink)}
+footer{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--ink-3);text-align:center}
+footer a{color:var(--accent);text-decoration:none;margin:0 7px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{.hud,.theme-btn,.btn,footer{display:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div>
+    <h1>MIT320 <em>Partial I</em></h1>
+    <p class="lede">The mock paper, on a clock, marked the way he marks it.</p>
+  </div>
+  <button class="theme-btn" id="themeBtn">theme</button>
+</header>
+
+<!-- ================= START ================= -->
+<section id="start">
+  <div class="card">
+    <h2 style="font-family:var(--display);margin:0 0 4px;font-size:22px">Partial I — mock paper</h2>
+    <p style="margin:0;color:var(--ink-2)">50 marks · 60 minutes · lessons 1 to 3</p>
+    <table class="breakdown">
+      <tr><th>Section</th><th>What it asks</th><th>Marks</th></tr>
+      <tr><td><b>1</b></td><td>Multiple choice</td><td>10</td></tr>
+      <tr><td><b>2</b></td><td>True or false</td><td>8</td></tr>
+      <tr><td><b>3</b></td><td>Code output and tracing</td><td>12</td></tr>
+      <tr><td><b>4</b></td><td>Pseudocode, flowchart and PHP</td><td>20</td></tr>
+    </table>
+    <ul class="rules">
+      <li><b>Sections 1 to 3: no computer.</b> No notes, no lesson files, no running the snippets.
+          Trace them in your head — that is the thing being examined.</li>
+      <li><b>Section 4 you write in VS Code</b>, exactly as you would at home. The page gives you
+          the starter file and tells you where to put it. Paste it back when the code runs.</li>
+      <li>Have <b>paper and a pen</b> next to you before you start. The flowchart is drawn, not typed.</li>
+      <li>The clock starts when you press begin and <b>does not pause</b>. At 0:00 it marks what you have.</li>
+      <li>Sections 1, 2 and most of 3 are marked for you. <b>The written answers you mark yourself</b>,
+          one criterion at a time, against the real scheme.</li>
+      <li>Be honest with the marking. A mark you gave yourself for an answer you didn't write buys you
+          nothing — what you want out of this is the revision list, not the number.</li>
+      <li>Your answers save as you type, so a closed tab is not a lost attempt.</li>
+    </ul>
+    <div class="row">
+      <button class="btn" id="beginBtn">Begin the paper</button>
+      <button class="btn ghost hide" id="resumeBtn">Resume saved attempt</button>
+    </div>
+    <p class="hint" id="beginWarn" style="display:none"></p>
+  </div>
+  <div class="card hide" id="histCard" style="margin-top:16px">
+    <b class="lbl">Past attempts</b>
+    <div class="hist" id="histList"></div>
+  </div>
+</section>
+
+<!-- ================= EXAM ================= -->
+<section id="exam" class="hide">
+  <div class="hud">
+    <div class="clock" id="clock">60:00</div>
+    <div class="pill" id="prog">0 / 28 answered</div>
+    <button class="btn" id="submitBtn">Finish &amp; mark</button>
+  </div>
+  <div id="paper"></div>
+  <div class="row"><button class="btn" id="submitBtn2">Finish &amp; mark</button></div>
+  <p class="hint" id="submitWarn" style="display:none"></p>
+</section>
+
+<!-- ================= MARKING ================= -->
+<section id="mark" class="hide">
+  <div class="sec-head" style="border:0;padding-top:0;margin-top:20px">
+    <h2>Marking</h2>
+    <p id="markProg"></p>
+  </div>
+  <div class="card" id="markCard"></div>
+  <div class="mark-nav">
+    <button class="btn ghost" id="prevMark">Back</button>
+    <button class="btn" id="nextMark">Next</button>
+    <span class="score" id="runScore">0 / 50</span>
+  </div>
+</section>
+
+<!-- ================= RESULTS ================= -->
+<section id="results" class="hide"></section>
+
+<footer>
+  <a data-path="index.html">course home</a>·
+  <a data-path="app/docs/mock-exam.html">paper version</a>·
+  <a data-path="app/docs/mock-exam-answers.html">full answer key</a>·
+  <a data-path="whiteboard.html">whiteboard</a>·
+  <a data-path="flashcards.html">flashcards</a>
+  <br><br>Your answers are saved in this browser only — they don't follow you to another phone or laptop.
+</footer>
+</div>
+
+<script src="app/partial-1-data.js?v=5"></script>
+<script>
+const TOTAL = 50, DURATION = 60 * 60;
+const ALLQ = PAPER.flatMap(s => s.qs.map(q => ({...q, sec: s.id})));
+const AUTO = ["mcq", "tf"];
+const TOMARK = ALLQ.filter(q => AUTO.indexOf(q.type) === -1);
+const SAVE = "partial1_attempt", HIST = "partial1_history", THEME = "phpexam_theme";
+
+let answers = {}, awarded = {}, crit = {}, left = DURATION, timer = null, markIdx = 0, ranOut = false;
+
+/* Links resolve at runtime: from the repo folder they are sibling files;
+   published as one artifact the shell flattens them next to this page. */
+const LOCAL = location.protocol === "file:"
+  || ["localhost", "127.0.0.1", ""].indexOf(location.hostname) !== -1;
+const REPO = "https://github.com/Cizaro/Fatoma-jem3a/blob/main/Php/";
+const link = p => LOCAL ? p : REPO + p;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const round = n => Math.round(n * 10) / 10;
+const fmt = s => Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+const marksOf = q => q.criteria ? q.criteria.reduce((a, c) => a + c.m, 0) : q.marks;
+/* A true/false answer of FALSE is an answer. Testing it with String(v)
+   made every "false" she picked read as a blank — the progress counter
+   said 23/28 on a finished paper, and Finish refused to go through. */
+const filled = n => {
+  const v = answers[n];
+  return typeof v === "boolean" || typeof v === "number" || String(v || "").trim() !== "";
+};
+const show = id => {
+  ["start","exam","mark","results"].forEach(s => $(s).classList.toggle("hide", s !== id));
+  window.scrollTo(0, 0);
+};
+
+/* ---------- theme (shared with the other pages) ---------- */
+function setTheme(t){
+  document.documentElement.setAttribute("data-theme", t);
+  try { localStorage.setItem(THEME, t); } catch(e) {}
+}
+try { const t = localStorage.getItem(THEME); if (t) setTheme(t); } catch(e) {}
+$("themeBtn").onclick = () => {
+  const now = document.documentElement.getAttribute("data-theme")
+    || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  setTheme(now === "dark" ? "light" : "dark");
+};
+
+/* ---------- saving ---------- */
+function save(){
+  try { localStorage.setItem(SAVE, JSON.stringify({answers, left})); } catch(e) {}
+}
+function loadSaved(){
+  try { return JSON.parse(localStorage.getItem(SAVE) || "null"); } catch(e) { return null; }
+}
+function getHistory(){
+  try { return JSON.parse(localStorage.getItem(HIST) || "[]"); } catch(e) { return []; }
+}
+function pushHistory(entry){
+  try {
+    const h = getHistory(); h.unshift(entry);
+    localStorage.setItem(HIST, JSON.stringify(h.slice(0, 12)));
+  } catch(e) {}
+}
+
+/* ---------- start ---------- */
+function paintStart(){
+  const s = loadSaved();
+  const resumable = s && Object.keys(s.answers || {}).length;
+  $("resumeBtn").classList.toggle("hide", !resumable);
+  if (resumable) $("resumeBtn").textContent = "Resume — " + fmt(Math.max(s.left || 0, 0)) + " left";
+
+  const h = getHistory();
+  $("histCard").classList.toggle("hide", !h.length);
+  $("histList").innerHTML = h.map(a => `<div>
+      <span>${a.date}</span>
+      <span>${a.weak.length ? "weakest: section " + a.weak.join(", ") : "even across sections"}</span>
+      <span>${a.total} / 50</span>
+    </div>`).join("");
+}
+
+/* ---------- the paper ----------
+   One renderer per question type. Section 4 (b) and (c) are the two that
+   send her somewhere else — paper for the flowchart, VS Code for the PHP —
+   so they get instructions rather than a blank box as their first element. */
+function body(q){
+  if (q.type === "mcq") return `
+    <div class="opts">${q.opts.map((o, i) => `
+      <label class="opt" data-q="${q.n}" data-i="${i}">
+        <input type="radio" name="q${q.n}" value="${i}">
+        <span class="letter">${"abcd"[i]})</span><span>${o}</span>
+      </label>`).join("")}</div>`;
+
+  if (q.type === "tf") return `
+    <div class="tf" data-q="${q.n}">
+      <button type="button" data-v="1">TRUE</button>
+      <button type="button" data-v="0">FALSE</button>
+    </div>`;
+
+  if (q.type === "out") return `
+    <input class="short" data-q="${q.n}" autocomplete="off" spellcheck="false"
+           placeholder="exactly what lands on the screen">
+    <p class="hint">Exactly what is printed. Spaces count — but at marking time you get the
+       scheme, so a near miss can still score.</p>`;
+
+  if (q.type === "draw") return `
+    <div class="away">
+      <b class="lbl">On paper — not in this box</b>
+      <ol>
+        <li>Draw it with a pen, the way you will have to in the hall.</li>
+        <li>Five shapes only: oval, parallelogram, rectangle, diamond, arrow.</li>
+        <li><b>A loop has no shape of its own</b> — it is a diamond, a body, and an arrow
+            going back up to the diamond.</li>
+        <li>If you'd rather draw it on screen, the
+            <a href="${link("whiteboard.html")}" ${LOCAL ? "" : 'target="_blank" rel="noopener"'}>whiteboard</a>
+            saves what you draw.</li>
+      </ol>
+    </div>
+    <label class="did" data-q="${q.n}">
+      <input type="checkbox"><span>Drawn, and it is in front of me</span>
+    </label>`;
+
+  if (q.type === "vscode") return `
+    <div class="away">
+      <b class="lbl">In VS Code — this one is a real file</b>
+      <ol>
+        <li>Copy the starter below into a new file called <b>${q.file}</b>.</li>
+        <li>Save it in <b>C:\\xampp\\htdocs\\partial1\\</b> — make the folder if it isn't there.</li>
+        <li>Open XAMPP, press <b>Start</b> on Apache.</li>
+        <li>Go to <b>localhost/partial1/${q.file}</b> in the browser.</li>
+        <li>Fill the five boxes, press Show results, and keep fixing until it is right.</li>
+        <li>Paste the finished file back here so you can mark it against the scheme.</li>
+      </ol>
+      <div class="row" style="margin-top:13px">
+        <button class="btn sm" type="button" id="copyStarter">Copy the starter file</button>
+        <button class="btn sm ghost" type="button" id="showStarter">Show it instead</button>
+        <span class="copied hide" id="copiedMsg">copied</span>
+      </div>
+      <pre id="starterBox" class="hide">${esc(STARTER)}</pre>
+    </div>
+    <textarea class="tall" data-q="${q.n}" spellcheck="false"
+      placeholder="paste your finished ${q.file} here"></textarea>`;
+
+  return `<textarea data-q="${q.n}" spellcheck="false" placeholder="your answer"></textarea>`;
+}
+
+function paintPaper(){
+  $("paper").innerHTML = PAPER.map(sec => `
+    <div class="sec-head"><h2>${sec.title}</h2><p>${sec.note}</p></div>
+    ${sec.brief ? `<div class="brief">${sec.brief}</div>` : ""}
+    ${sec.qs.map(q => `
+      <div class="q" id="q${q.n}">
+        <div class="qn">
+          <span>${q.part ? "Part " + q.part : "Question " + q.n}</span>
+          <span>${marksOf(q)} ${marksOf(q) === 1 ? "mark" : "marks"}</span>
+        </div>
+        <p class="qtext">${q.q}</p>
+        ${q.code ? `<pre>&lt;?php\n${esc(q.code)}</pre>` : ""}
+        ${body(q)}
+      </div>`).join("")}`).join("");
+
+  $("paper").querySelectorAll(".opt").forEach(el => el.addEventListener("click", () => {
+    const n = el.dataset.q;
+    answers[n] = +el.dataset.i;
+    el.parentElement.querySelectorAll(".opt").forEach(o => o.classList.remove("sel"));
+    el.classList.add("sel");
+    el.querySelector("input").checked = true;
+    touched(n);
+  }));
+  $("paper").querySelectorAll(".tf button").forEach(b => b.addEventListener("click", () => {
+    const n = b.parentElement.dataset.q;
+    answers[n] = b.dataset.v === "1";
+    b.parentElement.querySelectorAll("button").forEach(o => o.classList.remove("sel"));
+    b.classList.add("sel");
+    touched(n);
+  }));
+  $("paper").querySelectorAll("input.short, textarea").forEach(el => el.addEventListener("input", () => {
+    answers[el.dataset.q] = el.value;
+    touched(el.dataset.q);
+  }));
+  $("paper").querySelectorAll(".did").forEach(el => {
+    const box = el.querySelector("input");
+    box.addEventListener("change", () => {
+      // unticked means not done yet, so the key goes rather than storing
+      // false — false is a real answer in section 2 and must stay distinct
+      if (box.checked) answers[el.dataset.q] = true;
+      else delete answers[el.dataset.q];
+      el.classList.toggle("on", box.checked);
+      touched(el.dataset.q);
+    });
+  });
+
+  /* The copy button can be refused — in an artifact frame, or on a page
+     served over plain http. So the fallback is always one press away
+     rather than an error she has to work around. */
+  const copyBtn = $("copyStarter");
+  if (copyBtn){
+    copyBtn.onclick = () => {
+      const done = ok => {
+        $("copiedMsg").textContent = ok ? "copied" : "couldn't copy — use Show it instead";
+        $("copiedMsg").classList.remove("hide");
+        if (!ok) $("starterBox").classList.remove("hide");
+      };
+      try {
+        navigator.clipboard.writeText(STARTER).then(() => done(true), () => done(false));
+      } catch(e) { done(false); }
+    };
+    $("showStarter").onclick = () => $("starterBox").classList.toggle("hide");
+  }
+
+  restore();
+  progress();
+}
+
+function restore(){
+  Object.keys(answers).forEach(n => {
+    const q = ALLQ.find(x => String(x.n) === String(n));
+    if (!q) return;
+    if (q.type === "mcq"){
+      const el = document.querySelector('.opt[data-q="' + n + '"][data-i="' + answers[n] + '"]');
+      if (el){ el.classList.add("sel"); el.querySelector("input").checked = true; }
+    } else if (q.type === "tf"){
+      const el = document.querySelector('.tf[data-q="' + n + '"] button[data-v="' + (answers[n] ? 1 : 0) + '"]');
+      if (el) el.classList.add("sel");
+    } else if (q.type === "draw"){
+      const el = document.querySelector('.did[data-q="' + n + '"]');
+      if (el && answers[n]){ el.classList.add("on"); el.querySelector("input").checked = true; }
+    } else {
+      const el = document.querySelector('[data-q="' + n + '"]');
+      if (el) el.value = answers[n];
+    }
+    $("q" + n).classList.toggle("answered", filled(n));
+  });
+}
+function touched(n){
+  $("q" + n).classList.toggle("answered", filled(n));
+  progress();
+  save();
+}
+function progress(){
+  $("prog").textContent = ALLQ.filter(q => filled(q.n)).length + " / " + ALLQ.length + " answered";
+}
+
+/* ---------- the clock. It does not pause. ---------- */
+function tick(){
+  left--;
+  $("clock").textContent = fmt(Math.max(left, 0));
+  $("clock").classList.toggle("low", left <= 600 && left > 120);
+  $("clock").classList.toggle("out", left <= 120);
+  if (left % 5 === 0) save();
+  if (left <= 0){ clearInterval(timer); timer = null; ranOut = true; toMarking(); }
+}
+function startClock(){
+  $("clock").textContent = fmt(left);
+  timer = setInterval(tick, 1000);
+}
+
+/* A two-press confirm rather than confirm(): inside an artifact frame
+   confirm() comes back false every time, which silently ate the press. */
+function arm(btn, note, warnEl, go){
+  let armed = false;
+  btn.onclick = () => {
+    if (!armed){
+      armed = true;
+      const was = btn.textContent;
+      btn.textContent = "Press again to confirm";
+      btn.classList.add("warn");
+      warnEl.textContent = note;
+      warnEl.style.display = "";
+      setTimeout(() => {
+        if (!armed) return;
+        armed = false; btn.textContent = was;
+        btn.classList.remove("warn"); warnEl.style.display = "none";
+      }, 6000);
+      return;
+    }
+    armed = false;
+    warnEl.style.display = "none";
+    go();
+  };
+}
+
+function begin(){
+  answers = {}; left = DURATION; ranOut = false;
+  try { localStorage.removeItem(SAVE); } catch(e) {}
+  paintPaper(); show("exam"); startClock();
+}
+(function wireBegin(){
+  const s = loadSaved();
+  if (s && Object.keys(s.answers || {}).length)
+    arm($("beginBtn"), "This throws the saved attempt away and starts fresh.", $("beginWarn"), begin);
+  else $("beginBtn").onclick = begin;
+})();
+
+$("resumeBtn").onclick = () => {
+  const s = loadSaved();
+  answers = s.answers || {};
+  left = typeof s.left === "number" ? s.left : DURATION;
+  ranOut = false;
+  paintPaper(); show("exam"); startClock();
+};
+
+function finish(){
+  clearInterval(timer); timer = null;
+  toMarking();
+}
+["submitBtn", "submitBtn2"].forEach(id => {
+  const btn = $(id), warn = $("submitWarn");
+  let armed = false, t = null;
+  btn.addEventListener("click", () => {
+    const blank = ALLQ.length - ALLQ.filter(q => filled(q.n)).length;
+    if (!blank || armed){ clearTimeout(t); return finish(); }
+    armed = true;
+    btn.textContent = "Press again to finish";
+    btn.classList.add("warn");
+    warn.textContent = blank + " question" + (blank === 1 ? " is" : "s are")
+      + " still blank. Press again and it marks what you have.";
+    warn.style.display = "";
+    t = setTimeout(() => {
+      armed = false; btn.textContent = "Finish & mark";
+      btn.classList.remove("warn"); warn.style.display = "none";
+    }, 6000);
+  });
+});
+
+/* ---------- marking ---------- */
+const norm = s => String(s || "").toLowerCase().replace(/\s+/g, "").replace(/^["'`]+|["'`.;]+$/g, "");
+const autoRight = q => q.type === "out" && filled(q.n)
+  && q.accept.some(a => norm(a) === norm(answers[q.n]));
+
+function toMarking(){
+  awarded = {}; crit = {}; markIdx = 0;
+  ALLQ.forEach(q => {
+    if (q.type === "mcq"){ awarded[q.n] = answers[q.n] === q.ans ? q.marks : 0; return; }
+    if (q.type === "tf"){ awarded[q.n] = answers[q.n] === q.ans ? q.marks : 0; return; }
+    // an exact match marks itself, and she can still untick it — nothing is locked
+    const ok = autoRight(q);
+    crit[q.n] = q.criteria.map(() => ok);
+    awarded[q.n] = ok ? marksOf(q) : 0;
+  });
+  show("mark");
+  paintMark();
+}
+
+function paintMark(){
+  const q = TOMARK[markIdx];
+  const given = answers[q.n] === true ? "(drawn on paper)" : String(answers[q.n] || "");
+  const ok = autoRight(q);
+
+  $("markProg").textContent = "answer " + (markIdx + 1) + " of " + TOMARK.length
+    + " · " + (q.part ? "Section 4 " + q.part : "Q" + q.n) + ", " + marksOf(q) + " marks";
+
+  $("markCard").innerHTML = `
+    <div class="qn">
+      <span>${q.part ? "Section 4 " + q.part : "Question " + q.n}</span>
+      <span>${marksOf(q)} marks</span>
+    </div>
+    <p class="qtext">${q.q}</p>
+    ${q.code ? `<pre>&lt;?php\n${esc(q.code)}</pre>` : ""}
+    <b class="lbl">What you wrote</b>
+    <div class="given ${given.trim() ? "" : "empty"}">${given.trim() ? esc(given) : "left blank"}</div>
+    ${q.type === "out" ? `<span class="auto ${ok ? "" : "miss"}">${
+        ok ? "auto-marked correct" : "not an exact match — mark it yourself"}</span>` : ""}
+    <div class="model"><b class="lbl">The marking scheme</b>${q.model}</div>
+    <div class="crit">${q.criteria.map((c, i) => `
+      <label class="${crit[q.n][i] ? "on" : ""}" data-i="${i}">
+        <input type="checkbox" ${crit[q.n][i] ? "checked" : ""}>
+        <span>${c.t}</span>
+        <span class="mk">${c.m} ${c.m === 1 ? "mark" : "marks"}</span>
+      </label>`).join("")}</div>`;
+
+  // listen on the checkbox, not the label: the browser already forwards a
+  // click on the text to the box, and toggling here too cancels itself out
+  $("markCard").querySelectorAll(".crit input").forEach(box => box.addEventListener("change", () => {
+    const el = box.closest("label");
+    crit[q.n][+el.dataset.i] = box.checked;
+    el.classList.toggle("on", box.checked);
+    awarded[q.n] = q.criteria.reduce((a, c, i) => a + (crit[q.n][i] ? c.m : 0), 0);
+    runScore();
+  }));
+
+  $("prevMark").disabled = markIdx === 0;
+  $("nextMark").textContent = markIdx === TOMARK.length - 1 ? "See the result" : "Next";
+  runScore();
+}
+function runScore(){
+  const t = Object.keys(awarded).reduce((a, k) => a + awarded[k], 0);
+  $("runScore").textContent = round(t) + " / " + TOTAL;
+}
+$("prevMark").onclick = () => { if (markIdx > 0){ markIdx--; paintMark(); } };
+$("nextMark").onclick = () => {
+  if (markIdx < TOMARK.length - 1){ markIdx++; paintMark(); }
+  else paintResults();
+};
+
+/* ---------- results ---------- */
+function band(t){
+  if (t >= 43) return ["Ready.",
+    "Do the paper version once more two days before, and leave it there."];
+  if (t >= 33) return ["Good.",
+    "Revise only the sections that lost marks. Going back over what you got right is wasted time."];
+  if (t >= 25) return ["A pass, but shaky.",
+    "One section is carrying the damage. Find it below and redo that lesson only."];
+  return ["Don't panic — this is a mock, and it is doing its job.",
+    "Find which <i>section</i> lost the marks and redo that lesson only, not the whole course."];
+}
+function paintResults(){
+  const total = round(Object.keys(awarded).reduce((a, k) => a + awarded[k], 0));
+  const secs = PAPER.map(s => ({
+    id: s.id,
+    title: s.title.replace(/^Section . — /, ""),
+    got: round(s.qs.reduce((a, q) => a + (awarded[q.n] || 0), 0)),
+    out: s.qs.reduce((a, q) => a + marksOf(q), 0)
+  }));
+  const weak = secs.filter(s => s.got / s.out < 0.6);
+  const lost = ALLQ.filter(q => (awarded[q.n] || 0) < marksOf(q));
+  const head = band(total);
+
+  $("results").innerHTML = `
+    <div class="card" style="text-align:center">
+      <div class="big">${total}<small> / 50</small></div>
+      <p class="band">${head[0]}</p>
+      <p style="color:var(--ink-2);margin:0">${head[1]}</p>
+      ${ranOut ? `<p style="color:var(--warm);font-size:13.5px;margin:11px 0 0">
+        The clock ran out — this was marked on what you had at 0:00.</p>` : ""}
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <b class="lbl">By section</b>
+      ${secs.map(s => {
+        const pct = Math.round(s.got / s.out * 100);
+        return `<div class="srow">
+          <span class="name">${s.id} · ${s.title}</span>
+          <span class="val">${s.got} / ${s.out}</span>
+          <span class="bar"><span class="secbar"><i class="${pct < 60 ? "weak" : ""}" style="width:${pct}%"></i></span></span>
+        </div>`;
+      }).join("")}
+      <p style="color:var(--ink-3);font-size:13px;margin:17px 0 0">
+        Don't read the total first. <b style="color:var(--ink)">Read which section lost the marks.</b>
+        The total tells you how you feel; the section tells you what to do.</p>
+    </div>
+
+    ${weak.length ? weak.map(s => `
+      <div class="diag">
+        <b class="lbl">Section ${s.id} — ${s.title} · ${s.got} / ${s.out}</b>
+        <p>${DIAGNOSIS[s.id][0]}</p><p>${DIAGNOSIS[s.id][1]}</p>
+      </div>`).join("")
+    : `<div class="card" style="margin-top:16px;background:var(--accent-soft);border-color:var(--accent)">
+        <b style="color:var(--accent)">No weak section.</b> Every one is above 60%. Keep it there.
+      </div>`}
+
+    <div class="card revision" style="margin-top:16px">
+      <b class="lbl">Your revision plan</b>
+      ${lost.length ? `
+        <p style="color:var(--ink-2);margin:9px 0 11px">
+          Everything that lost a mark. <b style="color:var(--ink)">This list is the plan</b> — not the score.</p>
+        <ul>${lost.map(q => `<li>
+          <b style="color:var(--ink);font-family:var(--mono)">${q.part ? "4" + q.part : "Q" + q.n}</b>
+          — ${q.label}
+          <span style="color:var(--ink-3)">(${round(awarded[q.n] || 0)}/${marksOf(q)})</span>
+          ${q.why ? `<br><span style="color:var(--ink-3);font-size:13.5px">${q.why}</span>` : ""}
+          </li>`).join("")}</ul>`
+      : `<p style="margin:9px 0 0;color:var(--accent);font-weight:600">
+          Full marks. Nothing to revise — go and do something else.</p>`}
+    </div>
+
+    <div class="row">
+      <button class="btn" onclick="location.reload()">Back to the start</button>
+      <button class="btn ghost" onclick="window.print()">Print this result</button>
+    </div>`;
+
+  pushHistory({
+    date: new Date().toLocaleDateString(undefined, {day:"numeric", month:"short", year:"numeric"}),
+    total: total,
+    weak: weak.map(s => s.id)
+  });
+  try { localStorage.removeItem(SAVE); } catch(e) {}
+  show("results");
+}
+
+/* closing the tab mid-paper should at least ask */
+addEventListener("beforeunload", e => {
+  if (timer){ e.preventDefault(); e.returnValue = ""; }
+});
+
+document.querySelectorAll("footer a[data-path]").forEach(a => {
+  a.href = link(a.dataset.path);
+  if (!LOCAL){ a.target = "_blank"; a.rel = "noopener"; }
+});
+
+paintStart();
+</script>
+<script src="app/embed.js?v=5"></script>
