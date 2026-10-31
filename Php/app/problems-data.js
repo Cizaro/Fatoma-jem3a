@@ -175,9 +175,18 @@ if (isset($_POST["ADD"])) {
   inputs: "Five price boxes were filled in and the form was submitted.",
   runs: [
     { vars: { _POST: { price1: "14.50", price2: "3.99", price3: "27.00", price4: "8.25", price5: "19.99" } },
-      label: "14.50, 3.99, 27.00, 8.25, 19.99", has: ["27", "3.99"], outRe: /green/i },
+      label: "14.50, 3.99, 27.00, 8.25, 19.99",
+      has: ["27", "3.99"], outRe: /green/i },
+    /* The numbers here matter: the highest is 2nd and the lowest is LAST, so
+       an else-if chain that stops at the first match gets the lowest wrong.
+       Checked with a boundary, not as a substring - "1" lives inside "100",
+       and that alone let a broken answer through. */
     { vars: { _POST: { price1: "5", price2: "100", price3: "2.5", price4: "60", price5: "1" } },
-      label: "5, 100, 2.5, 60, 1  (lowest is last)", has: ["100", "1"], outRe: /red/i }
+      label: "5, 100, 2.5, 60, 1  (highest 2nd, lowest last)",
+      outRe: /Highest price: \$?100(?!\d)[\s\S]*Lowest price: \$?1(?![\d.])/ },
+    { vars: { _POST: { price1: "1", price2: "2", price3: "3", price4: "4", price5: "5" } },
+      label: "1, 2, 3, 4, 5  (highest is last)",
+      outRe: /Highest price: \$?5(?![\d.])/ }
   ],
   code: [
     { noRe: /\b(min|max)\s*\(/, msg: "The sheet forbids min() and max() — use if and < >" },
@@ -217,7 +226,11 @@ echo "<p style='color: red'>Lowest price: $" . $lowest . "</p>";
     <i>always</i>, because nothing is ever below zero.
     <br><br>This is the same shape as the <code>largest</code> exercise from
     Lesson 1 — hold the best answer so far, and replace it when you meet a
-    better one. Five prices or five thousand, the idea does not change.`
+    better one. Five prices or five thousand, the idea does not change.
+    <br><br>The commonest wrong answer here chains the comparisons with
+    <code>else if</code>, which stops at the first match and so only ever
+    looks at two prices. There is a worked case study of exactly that under
+    <b>Bug case study</b> in the rail.`
 },
 
 /* ============================ Problem 3 ============================ */

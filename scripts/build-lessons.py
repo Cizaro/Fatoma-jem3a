@@ -365,6 +365,7 @@ DOCS = [
     ("projects/project-3-students/START-HERE.md", "project-3"),
     ("doctor-style/HOW-HE-SOLVES.md", "doctor-style"),
     ("doctor-style/PRACTICE.md",      "doctor-practice"),
+    ("doctor-style/CASE-price-filter.md", "case-price-filter"),
     ("resources/exams/mock-exam.md",         "mock-exam"),
     ("resources/exams/mock-exam-answers.md", "mock-exam-answers"),
 ]

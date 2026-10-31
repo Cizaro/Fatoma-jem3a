@@ -67,6 +67,8 @@
     "teach.html": "scripts", "../teach.html": "scripts", "../../teach.html": "scripts",
     "docs/doctor-style.html": "howhe", "../docs/doctor-style.html": "howhe",
     "docs/doctor-practice.html": "drill", "../docs/doctor-practice.html": "drill",
+    "docs/case-price-filter.html": "bugcase",
+    "../docs/case-price-filter.html": "bugcase",
     "docs/mock-exam.html": "mock", "../docs/mock-exam.html": "mock",
     "docs/mock-exam-answers.html": "mockkey",
     "../docs/mock-exam-answers.html": "mockkey",

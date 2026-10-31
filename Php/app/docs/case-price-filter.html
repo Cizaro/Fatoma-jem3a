@@ -1,0 +1,99 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Case study: the price filter that only looks at two prices</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=5">
+<body class="reader">
+<article class="prose">
+<h1>Case study: the price filter that only looks at two prices</h1>
+<p>This is a real attempt at Problem 2, with five faults in it. Four of them are invisible on the numbers printed in the exercise sheet, which is the reason it is worth a page of its own.</p>
+<p>Work through it before reading the answers. Everything below was found by running the file, not by reading it.</p>
+<h2>What it does</h2>
+<div class="tablewrap"><table><thead><tr><th>The five prices</th><th>It says</th><th>It should say</th></tr></thead><tbody><tr><td>14.50, 3.99, 27.00, 8.25, 19.99</td><td>highest <strong>27.00</strong>, lowest <strong>3.99</strong></td><td>highest 27.00, lowest 3.99 &amp;nbsp;✓</td></tr><tr><td>1, 2, 3, 4, 5</td><td>highest <strong>2</strong></td><td>highest <strong>5</strong></td></tr><tr><td>5, 4, 3, 2, 1</td><td>lowest <strong>4</strong></td><td>lowest <strong>1</strong></td></tr></tbody></table></div>
+<p><strong>The first row is the one from the exercise sheet, and it is right.</strong> That is the trap. Tested only with the given numbers, this looks finished.</p>
+<hr>
+<h2>Fault 1 — <code>else if</code> stops at the first match</h2>
+<pre class="lang-php"><code>$Largest = $n1;
+if ($n2 &gt; $Largest)      { $Largest = $n2; }
+else if ($n3 &gt; $Largest) { $Largest = $n3; }
+else if ($n4 &gt; $Largest) { $Largest = $n4; }
+else if ($n5 &gt; $Largest) { $Largest = $n5; }</code></pre>
+<p>A ladder answers <strong>once</strong>. The moment one branch is taken, every branch below it is skipped for good.</p>
+<p>Trace 1, 2, 3, 4, 5:</p>
+<pre><code>$Largest = 1
+is 2 &gt; 1 ?  yes -&gt; $Largest = 2   and the rest of the ladder is skipped
+                                   3, 4 and 5 are never looked at</code></pre>
+<p>The sheet&#x27;s numbers hide it because the largest, 27.00, happens to be compared before anything else can short-circuit the chain.</p>
+<p><strong>The fix is to delete four words.</strong> Each price needs its own question:</p>
+<pre class="lang-php"><code>if ($n2 &gt; $Largest) { $Largest = $n2; }
+if ($n3 &gt; $Largest) { $Largest = $n3; }
+if ($n4 &gt; $Largest) { $Largest = $n4; }
+if ($n5 &gt; $Largest) { $Largest = $n5; }</code></pre>
+<blockquote><p><strong>When is a ladder right, then?</strong> When the branches are alternatives and only one can be true &amp;mdash; a grade is A <em>or</em> B <em>or</em> C. Here they are not alternatives: several prices can each be bigger than the one before, and every one of them has to get its turn.</p></blockquote>
+<h2>Fault 2 — a brace in the wrong place sends two prices somewhere unreachable</h2>
+<pre class="lang-php"><code>if ($action == &quot;Res&quot;) {
+    $Smallest = $n1;
+    if ($n2 &lt; $Smallest) { $Smallest = $n2; }
+    else if ($n3 &lt; $Smallest) { $Smallest = $n3; }
+}                                   &lt;-- this closes the &quot;Res&quot; block
+else if ($n4 &lt; $Smallest) { ... }   &lt;-- so this is the ELSE of &quot;Res&quot;
+else if ($n5 &lt; $Smallest) { ... }</code></pre>
+<p>Those last two tests now belong to <code>if ($action == &quot;Res&quot;)</code>, not to the search. They run <strong>only when the button was not pressed</strong> &amp;mdash; which is never. The 4th and 5th prices are dead code.</p>
+<p>It parses, so nothing warns you. Indentation is how you catch this: the <code>else if</code> is further left than the <code>if</code> it appears to belong to.</p>
+<h2>Fault 3 — the wrong variable, three times</h2>
+<pre class="lang-php"><code>else if ($n4 &lt; $Smallest) { $Smallest = $n3; }   // should be $n4
+else if ($n5 &lt; $Smallest) { $Smallest = $n3; }   // should be $n5</code></pre>
+<p>A copy-paste that was never finished. Even with faults 1 and 2 fixed, the answer would still be wrong.</p>
+<h2>Fault 4 — reading <code>$_POST</code> before checking it is there</h2>
+<pre class="lang-php"><code>$action = $_POST[&quot;action&quot;];      // line 34
+if (isset($_POST[&quot;action&quot;])) {   // line 36</code></pre>
+<p>The check is one line too late. On the first visit, before anybody has pressed anything, line 34 reaches for a key that is not there:</p>
+<pre><code>Warning: Undefined array key &quot;action&quot;</code></pre>
+<p>Move the read inside the <code>if</code>. This is the same fault as in <code>revision/index.php</code> and in <code>ProblemI.php</code> &amp;mdash; the rule is <strong>isset first, read second</strong>.</p>
+<h2>Fault 5 — the form posts to a file that does not exist</h2>
+<pre class="lang-php"><code>&lt;form action=&quot;Ecommerce.php&quot; method=&quot;POST&quot;&gt;</code></pre>
+<p>The file is called <code>Problem2_Ecommerce.php</code>. Pressing the button asks the server for a page that is not there. Use <code>action=&quot;&quot;</code> to post back to the same file, and the name can never drift again.</p>
+<hr>
+<h2>The whole thing, corrected</h2>
+<pre class="lang-php"><code>&lt;?php
+if (isset($_POST[&quot;action&quot;])) {
+
+    $n1 = $_POST[&quot;n1&quot;];
+    $n2 = $_POST[&quot;n2&quot;];
+    $n3 = $_POST[&quot;n3&quot;];
+    $n4 = $_POST[&quot;n4&quot;];
+    $n5 = $_POST[&quot;n5&quot;];
+
+    // Assume the first price is both, then let the others challenge it.
+    $Largest  = $n1;
+    $Smallest = $n1;
+
+    // A separate question per price - not a ladder.
+    if ($n2 &gt; $Largest) { $Largest = $n2; }
+    if ($n3 &gt; $Largest) { $Largest = $n3; }
+    if ($n4 &gt; $Largest) { $Largest = $n4; }
+    if ($n5 &gt; $Largest) { $Largest = $n5; }
+
+    if ($n2 &lt; $Smallest) { $Smallest = $n2; }
+    if ($n3 &lt; $Smallest) { $Smallest = $n3; }
+    if ($n4 &lt; $Smallest) { $Smallest = $n4; }
+    if ($n5 &lt; $Smallest) { $Smallest = $n5; }
+
+    echo &quot;&lt;p style=&#x27;color: green&#x27;&gt;The highest price = $&quot; . $Largest . &quot;&lt;/p&gt;&quot;;
+    echo &quot;&lt;p style=&#x27;color: red&#x27;&gt;The smallest price = $&quot; . $Smallest . &quot;&lt;/p&gt;&quot;;
+}</code></pre>
+<p>Checked: 1, 2, 3, 4, 5 gives 5 and 1. 5, 4, 3, 2, 1 gives 5 and 1. The sheet&#x27;s own numbers still give 27.00 and 3.99.</p>
+<hr>
+<h2>The lesson, which is bigger than this question</h2>
+<p><strong>The test data in a question is chosen to show you what the question means. It is not chosen to find your mistakes.</strong></p>
+<p>Four of these five faults survive the sheet&#x27;s own numbers. Before handing anything in, run it on data designed to break it:</p>
+<ul><li>the answer <strong>first</strong> in the list</li><li>the answer <strong>last</strong> in the list</li><li>everything <strong>the same</strong></li><li>the boxes left <strong>empty</strong></li></ul>
+<p>Two of those take ten seconds and would have caught this.</p>
+<blockquote><p>This is why Problem 2 on the practice page is run against <em>two</em> sets of prices, one with the lowest at the end. That second set was weak when it was written &amp;mdash; it checked for the text <code>1</code>, which also appears inside <code>100</code>, so this very answer slipped through it. It now checks the number with a boundary, and a third set has been added with the highest last.</p></blockquote>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=5"></script>
