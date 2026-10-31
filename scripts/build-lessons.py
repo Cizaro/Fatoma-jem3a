@@ -239,8 +239,27 @@ def convert(md):
             out.append("<%s>%s</%s>" % (tag, "".join("<li>%s</li>" % inline(x) for x in items), tag))
             continue
 
-        # raw html passes through untouched
+        # Raw HTML passes through untouched, one line at a time, so the
+        # markdown inside a wrapper like <details> still gets converted.
+        # The exception is a tag whose content is never markdown: this
+        # loop classifies line by line, so an indented CSS line inside a
+        # <style> fell through and was rendered as a paragraph. A
+        # stylesheet printed on the page as visible text is how that
+        # announced itself. Those tags are consumed whole instead.
         if line.lstrip().startswith("<"):
+            m = re.match(r"<(style|svg|script|pre|textarea)[\s>]", line.lstrip())
+            if m and ("</%s>" % m.group(1)) not in line:
+                tag, depth, buf = m.group(1), 0, []
+                while i < n:
+                    l = lines[i]
+                    depth += len(re.findall(r"<%s[\s>/]" % tag, l))
+                    depth -= len(re.findall(r"</%s\s*>" % tag, l))
+                    buf.append(l)
+                    i += 1
+                    if depth <= 0:
+                        break
+                out.append("\n".join(buf))
+                continue
             out.append(line)
             i += 1
             continue

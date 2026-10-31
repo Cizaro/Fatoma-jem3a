@@ -174,28 +174,173 @@ Mixing them up is the single most common mark lost on this topic.
 A flowchart is the same algorithm drawn as a picture. It shows the logic, the individual
 steps, and how they connect.
 
-### The symbols
+### The symbols — what each one looks like
 
-| Symbol | Shape | What it means |
+<style>
+.shapekey{display:grid;gap:14px;margin:0 0 22px;
+  grid-template-columns:repeat(auto-fit,minmax(208px,1fr))}
+.shapekey figure{margin:0;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r);padding:14px 14px 15px;text-align:center}
+.shapekey svg{display:block;width:100%;height:auto;margin-bottom:9px}
+.shapekey .sh{fill:var(--accent-soft);stroke:var(--accent);stroke-width:3;stroke-linejoin:round}
+.shapekey .in{fill:var(--accent);font-family:var(--mono),monospace;font-size:17px;
+  font-weight:700;text-anchor:middle}
+.shapekey .nm{display:block;font-family:var(--display),sans-serif;font-size:16px;
+  font-weight:700;color:var(--ink)}
+.shapekey .ds{display:block;font-size:13.5px;color:var(--ink-2);margin-top:3px;line-height:1.45}
+.shapekey .no{border-color:var(--warm)}
+.shapekey .no .sh{fill:var(--warm-soft);stroke:var(--warm);stroke-dasharray:7 5}
+.shapekey .no .in{fill:var(--warm);font-size:15px}
+.shapekey .no .nm{color:var(--warm)}
+</style>
+<div class="shapekey">
+<figure>
+<svg viewBox="0 0 200 104" role="img" aria-label="An oval">
+<ellipse class="sh" cx="100" cy="52" rx="82" ry="36"></ellipse>
+<text class="in" x="100" y="59">START</text>
+</svg>
+<b class="nm">Oval</b>
+<span class="ds">Where the program <b>begins</b> and where it <b>ends</b>. You need both of them.</span>
+</figure>
+<figure>
+<svg viewBox="0 0 200 104" role="img" aria-label="A parallelogram">
+<polygon class="sh" points="44,16 180,16 156,88 20,88"></polygon>
+<text class="in" x="100" y="59">READ X</text>
+</svg>
+<b class="nm">Parallelogram</b>
+<span class="ds">Anything a <b>person types in</b>, and anything <b>printed on the screen</b>.</span>
+</figure>
+<figure>
+<svg viewBox="0 0 200 104" role="img" aria-label="A rectangle">
+<rect class="sh" x="22" y="16" width="156" height="72" rx="4"></rect>
+<text class="in" x="100" y="59">X &#8592; X + 1</text>
+</svg>
+<b class="nm">Rectangle</b>
+<span class="ds">A step the program <b>works out on its own</b> — a sum, or storing a value.</span>
+</figure>
+<figure>
+<svg viewBox="0 0 200 104" role="img" aria-label="A diamond">
+<polygon class="sh" points="100,10 188,52 100,94 12,52"></polygon>
+<text class="in" x="100" y="59">X &gt; 9 ?</text>
+</svg>
+<b class="nm">Diamond</b>
+<span class="ds">A question with a <b>yes / no</b> answer. The only shape with <b>two</b> ways out.</span>
+</figure>
+<figure>
+<svg viewBox="0 0 200 104" role="img" aria-label="An arrow">
+<line x1="22" y1="52" x2="150" y2="52" stroke="var(--accent)" stroke-width="7" stroke-linecap="round"></line>
+<polygon points="146,32 186,52 146,72" fill="var(--accent)"></polygon>
+</svg>
+<b class="nm">Arrow</b>
+<span class="ds">Joins one shape to the next. The head shows <b>which way</b> the logic runs.</span>
+</figure>
+<figure class="no">
+<svg viewBox="0 0 200 104" role="img" aria-label="A circle">
+<circle class="sh" cx="100" cy="52" r="40"></circle>
+<text class="in" x="100" y="58">A</text>
+</svg>
+<b class="nm">Circle — not one of his five</b>
+<span class="ds">A <b>connector</b>, for a chart too long for one page. You will not need it. <b>Start and stop are ovals, not circles.</b></span>
+</figure>
+</div>
+
+### Which shape? Ask what the step *does*
+
+Work from the step, never from the shape. This is the table to have in your head
+when the pen is already on the paper:
+
+| What the step does | Shape | Written inside it |
 |---|---|---|
-| **Oval** | rounded box | the beginning or the end of the program (a *terminal*) |
-| **Parallelogram** | leaning box | an **input** operation. `Input M1` |
-| **Parallelogram** | leaning box | an **output** operation. `Print SUM` |
-| **Rectangle** | plain box | a process to be carried out: addition, subtraction, division, assigning a value |
-| **Diamond** | turned square | a decision, or branch. The program continues along one of two routes |
-| **Flow line** | arrow | the direction the logic flows |
+| begins or ends the program | **oval** | `START`, `STOP` |
+| asks the person for a value | **parallelogram** | `READ MARK`, `INPUT M1` |
+| puts something on the screen | **parallelogram** | `PRINT TOTAL` |
+| works a value out, or stores one | **rectangle** | `TOTAL <-- TOTAL + MARK` |
+| asks a question with a yes/no answer | **diamond** | `IS MARK >= 10 ?` |
+| connects one shape to the next | **arrow** | nothing |
 
-Input and output are listed separately on your lecturer's slide even though they
-share the same shape, so if the question asks "how many symbols are there", the
-answer he is looking for counts them as two.
+If you only remember one line, remember this one:
 
-### The two rules that cost marks
+> **Did a person type it, or read it off the screen? Parallelogram.**
+> **Is the program choosing between two ways to go? Diamond.**
+> **Anything else the program does by itself? Rectangle.**
 
-1. **A flowchart must have a start and a stop.** Both of them. Ovals.
-2. **Every step must connect.** Nothing left hanging with an arrow going nowhere.
+### All five together
 
-Those two are easy to check before you hand the paper in, and easy to lose a mark on if
-you do not.
+The same short algorithm drawn properly, so you can see each shape doing its own
+job. Every arrow has a head, the diamond's two exits are both labelled, and the
+one running back **up** the left-hand side is the loop.
+
+<style>
+.flowdemo{margin:0 0 22px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r);padding:18px 12px}
+.flowdemo svg{display:block;width:100%;max-width:440px;height:auto;margin:0 auto}
+.flowdemo .s{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2.5;stroke-linejoin:round}
+.flowdemo .t{fill:var(--ink);font-family:var(--mono),monospace;font-size:13px;text-anchor:middle}
+.flowdemo .f{stroke:var(--ink-2);stroke-width:2.2;fill:none}
+.flowdemo .yn{fill:var(--ink-3);font-family:var(--mono),monospace;font-size:11.5px;font-weight:700}
+</style>
+<div class="flowdemo">
+<svg viewBox="0 0 440 548" role="img" aria-label="A flowchart using all five shapes, with a loop arrow going back up the left side">
+<defs>
+<marker id="ah" markerWidth="9" markerHeight="7" refX="7.6" refY="3.2" orient="auto">
+<path d="M0,0 L8,3.2 L0,6.4 z" fill="var(--ink-2)"></path>
+</marker>
+</defs>
+<ellipse class="s" cx="210" cy="30" rx="58" ry="22"></ellipse>
+<text class="t" x="210" y="35">START</text>
+<path class="f" marker-end="url(#ah)" d="M210,52 L210,84"></path>
+<rect class="s" x="128" y="86" width="164" height="42" rx="3"></rect>
+<text class="t" x="210" y="112">TOTAL &#8592; 0</text>
+<path class="f" marker-end="url(#ah)" d="M210,128 L210,160"></path>
+<polygon class="s" points="146,162 300,162 274,204 120,204"></polygon>
+<text class="t" x="210" y="188">READ MARK</text>
+<path class="f" marker-end="url(#ah)" d="M210,204 L210,238"></path>
+<polygon class="s" points="210,240 336,292 210,344 84,292"></polygon>
+<text class="t" x="210" y="297">MARK &gt; 0 ?</text>
+<text class="yn" x="222" y="364">yes</text>
+<path class="f" marker-end="url(#ah)" d="M210,344 L210,384"></path>
+<rect class="s" x="110" y="386" width="200" height="42" rx="3"></rect>
+<text class="t" x="210" y="412">TOTAL &#8592; TOTAL + MARK</text>
+<text class="yn" x="344" y="286">no</text>
+<path class="f" marker-end="url(#ah)" d="M336,292 L400,292 L400,480 L300,480"></path>
+<polygon class="s" points="158,460 298,460 274,500 134,500"></polygon>
+<text class="t" x="216" y="485">PRINT TOTAL</text>
+<path class="f" marker-end="url(#ah)" d="M216,500 L216,518"></path>
+<ellipse class="s" cx="216" cy="534" rx="50" ry="20"></ellipse>
+<text class="t" x="216" y="539">STOP</text>
+<path class="f" marker-end="url(#ah)" d="M110,407 L44,407 L44,183 L120,183"></path>
+<text class="yn" x="8" y="300">loop</text>
+</svg>
+</div>
+
+That arrow down the left is doing the whole job of a loop. **There is no loop
+shape** — a loop is a diamond, a body, and an arrow going back up to the diamond.
+
+### Five mistakes that cost marks
+
+**1. Assignment is a rectangle, not a parallelogram.** `TOTAL <-- 0` feels like it
+belongs with the inputs, because it is putting a value somewhere. It does not.
+Nobody typed it and nobody saw it, so it is a step the program works out on its
+own: rectangle. Same for `I <-- 1` before a loop and `I <-- I + 1` at the end of one.
+
+**2. A loop has no shape of its own.** It is drawn above. If your arrow does not go
+*back* to an earlier shape, you have not drawn a loop.
+
+**3. There is no square.** The process symbol is a **rectangle**, drawn wider than
+it is tall. One that happens to come out square is not wrong — but when you name it
+in writing, call it a rectangle. "Square" is not on his slide.
+
+**4. There is no circle either, and this is the trap.** A circle is a *connector*,
+for a chart too long to fit on one page: a letter in a circle at the bottom, the
+same letter in a circle at the top of the next column. His slides never use one and
+Partial I is never that long. What matters is the other half of it — **start and
+stop are ovals.** A circle drawn where an oval belongs loses the mark.
+
+**5. Nothing may be left hanging.** Every shape needs an arrow in and an arrow out
+— the only exceptions are START, which has none coming in, and STOP, which has
+none going out. A box floating on its own with no line to it loses a mark even
+when the logic around it is perfect. It takes ten seconds to check: put your pen
+on START and trace every route to a STOP without lifting it.
 
 ### The decision structure
 
