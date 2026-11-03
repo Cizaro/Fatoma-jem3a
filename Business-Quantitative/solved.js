@@ -122,7 +122,7 @@ window.SOLVED = {
     { q: "Exam scores are normal with mean 500 and standard deviation 100. Use the empirical rule.",
       s: ["1 SD: 500 ± 100 → 400 to 600", "2 SD: 500 ± 200 → 300 to 700", "3 SD: 500 ± 300 → 200 to 800"],
       a: "68% between 400 and 600, 95% between 300 and 700, 99.7% between 200 and 800." },
-    { q: "Same scores. The z-table gives 0.9332 for z = 1.5. What share of scores is above 650?",
+    { q: "Same scores. The z-table gives 0.9332 for z = 1.5. What share of scores is above 650?", z: 1.5,
       s: ["z = (650 − 500) ÷ 100 = 1.5", "Area below 650 = 0.9332", "Area above = 1 − 0.9332 = 0.0668"],
       a: "0.0668, about 6.68% of scores are above 650." }
   ],

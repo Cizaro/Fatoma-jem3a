@@ -5,6 +5,7 @@ const fs = require("fs"), path = require("path"), os = require("os"), { execFile
 const dir = path.join(__dirname, "..", "Business-Quantitative");
 global.window = {};
 require(path.join(dir, "formulas.js"));
+require(path.join(dir, "ztable.js"));
 const F = window.FORMULAS;
 const frac = (s) => s.replace(/\{([^{}|]+)\|([^{}]+)\}/g, '<span class="fr"><span>$1</span><span>$2</span></span>');
 
@@ -15,6 +16,7 @@ const topics = F.map((t, i) => `
   <p class="what">${t.what}</p>
   <table>${t.formulas.map(f => `<tr><td class="n">${f[0]}</td><td class="f">${frac(f[1])}</td><td class="m">${f[2]}</td></tr>`).join("")}</table>
   ${t.example ? `<div class="ex"><b>Example from her file.</b> ${t.example.q}<ol>${t.example.s.map(s => `<li>${s}</li>`).join("")}</ol></div>` : ""}
+  ${t.example && t.example.z != null ? window.ZTABLE.html(t.example.z) : ""}
   <p class="rem"><b>Remember:</b> ${t.remember}</p>
 </section>`).join("");
 
@@ -39,6 +41,18 @@ td.m{width:28%;color:#5b6a64;font-size:9pt}
 .ex{background:#eef5f1;padding:7px 10px;border-radius:4px}
 .ex ol{margin:4px 0 0;padding-left:20px}
 .ex b,li b{color:#0d6b4e}
+.ztable{margin:8px 0 0;break-inside:avoid}
+.ztable figcaption{font-weight:700;color:#0d6b4e;margin-bottom:4px}
+.zcurve{width:230px;display:block;margin-bottom:4px}
+.zcurve .za{fill:#cfe5da}.zcurve .zl{fill:none;stroke:#0d6b4e;stroke-width:2}.zcurve .zx{stroke:#5b6a64}
+.zcurve .zm{stroke:#a4520c;stroke-dasharray:3 3}.zcurve .zt{font:600 10px Consolas,monospace;fill:#15211d}
+.ztable table{font:8.5pt Consolas,monospace;margin:0}
+.ztable th,.ztable td{padding:2px 5px;text-align:right;width:auto}
+.ztable th{background:#e1efe9;color:#0d6b4e}
+.ztable tr.hr td,.ztable td.hc{background:#eef5f1}
+.ztable tr td.hit{background:#ffd84a;font-weight:700;outline:2px solid #a4520c}
+.zhow{margin:4px 0 0;font-size:9.5pt}
+section:has(.ztable){break-inside:auto}
 .rem{background:#fbefe2;border-left:3px solid #a4520c;padding:6px 10px;margin:8px 0 0}
 </style></head><body>
 <h1>Business Quantitative: the formulas</h1>

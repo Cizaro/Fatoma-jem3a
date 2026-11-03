@@ -79,7 +79,7 @@ window.QUESTIONS = {
     ],
     t14: [
       { q: "Mean 1150, standard deviation 150. What is the z-score of 1380?", a: 1.53, s: ["(1380 − 1150) ÷ 150 = 230 ÷ 150 = <b>1.53</b>"] },
-      { q: "The z-table gives 0.937 for z = 1.53. What share of scores is above 1380? (as a decimal)", a: 0.063, alt: [6.3], s: ["1 − 0.937 = <b>0.063</b> (6.3%)"] },
+      { q: "The z-table gives 0.937 for z = 1.53. What share of scores is above 1380? (as a decimal)", a: 0.063, alt: [6.3], z: 1.53, s: ["1 − 0.937 = <b>0.063</b> (6.3%)"] },
       { q: "Mean 1150, standard deviation 150. About 95% of scores lie between 850 and…?", a: 1450, s: ["2 standard deviations: 1150 + 2×150 = <b>1450</b>"] },
       { q: "In a normal distribution, the mean, median and mode are…", o: ["All different", "The same", "Mean bigger than median"], c: 1, s: ["They are <b>the same</b>."] }
     ],

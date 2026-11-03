@@ -211,7 +211,7 @@ window.FORMULAS = [
       ["Standard normal", "mean 0, standard deviation 1", ""]
     ],
     example: {
-      q: "SAT scores: mean 1150, standard deviation 150. What share of scores are above 1380?",
+      q: "SAT scores: mean 1150, standard deviation 150. What share of scores are above 1380?", z: 1.53,
       s: ["Empirical rule: 68% between 1,000 and 1,300; 95% between 850 and 1,450; 99.7% between 700 and 1,600",
           "z = (1380 − 1150) ÷ 150 = 230 ÷ 150 = 1.53",
           "z-table: 0.937 of scores are below 1380",
