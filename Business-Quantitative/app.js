@@ -1,12 +1,19 @@
-// Renders the formula course from formulas.js and questions.js.
-const F = window.FORMULAS, Q = window.QUESTIONS;
+// Renders the course from formulas.js, solved.js and questions.js.
+// Views (hash): start · t1..t15 (lessons) · solved-t1.. · practice-t1.. · all · exam
+const F = window.FORMULAS, S = window.SOLVED, Q = window.QUESTIONS;
 const $ = (h) => { const d = document.createElement("div"); d.innerHTML = h.trim(); return d.firstElementChild; };
 const frac = (s) => s.replace(/\{([^{}|]+)\|([^{}]+)\}/g, '<span class="fr"><span>$1</span><span>$2</span></span>');
 const fmt = (x) => Number(x).toLocaleString("en-US", { maximumFractionDigits: 4 });
+const short = (i) => F[i].title.split(/[:(]/)[0].trim();
 const ids = F.map((t, i) => "t" + (i + 1));
-const views = [{ id: "start", label: "Start here" }, { id: "all", label: "All formulas" },
-  ...F.map((t, i) => ({ id: ids[i], label: (i + 1) + ". " + t.title.split(/[:(]/)[0].trim() })),
-  { id: "exam", label: "Mock exam" }];
+const sections = [
+  { id: "start", label: "Start here" },
+  { id: "lesson", label: "Lessons", first: "t1" },
+  { id: "solved", label: "Solved questions", first: "solved-t1" },
+  { id: "practice", label: "Practice", first: "practice-t1" },
+  { id: "all", label: "All formulas" },
+  { id: "exam", label: "Mock exam" }
+];
 const total = ids.reduce((n, id) => n + (Q.practice[id] || []).length, 0);
 
 let solved = {};
@@ -20,6 +27,7 @@ function right(v, q) {
   const x = parse(v);
   return !isNaN(x) && [q.a, ...(q.alt || [])].some(a => Math.abs(x - a) <= Math.max(0.01, Math.abs(a) * 0.005));
 }
+const answerText = (q) => q.o ? q.o[q.c] : fmt(q.a) + (q.unit === "%" ? "%" : q.unit ? " " + q.unit : "");
 
 function progress() {
   const n = Object.keys(solved).length;
@@ -27,104 +35,156 @@ function progress() {
   document.getElementById("count").textContent = `${n} / ${total} practice solved`;
 }
 
-let current = "start";
-function nav(cur) {
+// "solved-t5" → { sec: "solved", i: 4 }
+function route(hash) {
+  if (/^t\d+$/.test(hash) && ids.includes(hash)) return { sec: "lesson", i: ids.indexOf(hash) };
+  const m = /^(solved|practice)(?:-(t\d+))?$/.exec(hash);
+  if (m) return { sec: m[1], i: Math.max(0, ids.indexOf(m[2] || "t1")) };
+  if (hash === "all" || hash === "exam") return { sec: hash };
+  return { sec: "start" };
+}
+const hashFor = (sec, i) => sec === "lesson" ? ids[i] : sec === "solved" || sec === "practice" ? `${sec}-${ids[i]}` : sec;
+
+function nav(sec) {
   const n = document.getElementById("nav"); n.innerHTML = "";
-  views.forEach(v => {
-    const tick = ids.includes(v.id) && topicDone(v.id) ? '<span class="tick">✓</span>' : "";
-    const b = $(`<button type="button" class="${v.id === "exam" ? "exam" : ""}">${v.label}${tick}</button>`);
-    b.setAttribute("aria-current", v.id === cur);
-    b.onclick = () => go(v.id);
+  sections.forEach(v => {
+    const b = $(`<button type="button" class="${v.id === "exam" ? "exam" : ""}">${v.label}</button>`);
+    b.setAttribute("aria-current", v.id === sec);
+    b.onclick = () => go(v.first || v.id);
     n.append(b);
-    if (v.id === cur) setTimeout(() => b.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" }), 0);
   });
 }
 
+// Chapter picker inside Lessons, Solved questions and Practice.
+function chips(sec, cur) {
+  const name = { lesson: "Lessons", solved: "Solved questions", practice: "Practice" }[sec];
+  const c = $(`<div class="chips" role="navigation" aria-label="Chapters"><span class="lbl">${name} · pick a chapter</span><div class="grid"></div></div>`);
+  F.forEach((t, i) => {
+    const b = $(`<button type="button" title="${i + 1}. ${t.title}" aria-label="Chapter ${i + 1}: ${t.title}">${i + 1}</button>`);
+    if (sec === "practice" && topicDone(ids[i])) b.classList.add("done");
+    b.setAttribute("aria-current", i === cur);
+    b.onclick = () => go(hashFor(sec, i));
+    c.querySelector(".grid").append(b);
+  });
+  return c;
+}
+
+function pager(sec, i) {
+  const nx = $(`<div class="next"></div>`);
+  if (i > 0) { const b = $(`<button class="btn ghost" type="button">← ${i}. ${short(i - 1)}</button>`); b.onclick = () => go(hashFor(sec, i - 1)); nx.append(b); } else nx.append($("<span></span>"));
+  if (i < F.length - 1) { const b = $(`<button class="btn" type="button">${i + 2}. ${short(i + 1)} →</button>`); b.onclick = () => go(hashFor(sec, i + 1)); nx.append(b); }
+  else { const b = $(`<button class="btn coral" type="button">Mock exam →</button>`); b.onclick = () => go("exam"); nx.append(b); }
+  return nx;
+}
+
+// Links from one chapter to the same chapter in the other two sections.
+function jump(sec, i) {
+  const r = $(`<div class="row jump"></div>`);
+  [["lesson", "Lesson"], ["solved", "Solved questions"], ["practice", "Practice"]].filter(x => x[0] !== sec).forEach(([s, l]) => {
+    const b = $(`<button class="btn ghost" type="button">${l} for chapter ${i + 1}</button>`); b.onclick = () => go(hashFor(s, i)); r.append(b);
+  });
+  return r;
+}
+
 let clock = null;
-function go(id) {
-  if (!views.some(v => v.id === id)) id = "start";
-  clearInterval(clock); current = id;
-  try { history.replaceState(null, "", "#" + id); } catch (e) {}
-  nav(id); progress();
+function go(hash) {
+  const r = route(hash);
+  clearInterval(clock);
+  try { history.replaceState(null, "", "#" + hashFor(r.sec, r.i)); } catch (e) {}
+  nav(r.sec); progress();
   const m = document.getElementById("main"); m.innerHTML = "";
-  if (id === "start") start(m); else if (id === "all") all(m); else if (id === "exam") exam(m); else topic(m, ids.indexOf(id));
-  [...m.children].forEach((c, i) => c.style.setProperty("--i", i));
+  if (r.sec === "lesson" || r.sec === "solved" || r.sec === "practice") m.append(chips(r.sec, r.i));
+  ({ start, lesson, solvedView, practice, all, exam })[{ solved: "solvedView" }[r.sec] || r.sec](m, r.i);
+  [...m.children].forEach((c, k) => c.style.setProperty("--i", k));
   window.scrollTo(0, 0);
 }
 
 const table = (t) => `<div class="sheet"><table>${t.formulas.map(f => `<tr><td class="n">${f[0]}</td><td class="f">${frac(f[1])}</td><td class="m">${f[2]}</td></tr>`).join("")}</table></div>`;
 const steps = (s, hidden) => `<ol class="steps sol"${hidden ? " hidden" : ""}>${s.map(x => `<li>${x}</li>`).join("")}</ol>`;
 
-// One practice question: number box or choice buttons. onRight fires once it is answered correctly.
+// One practice question: number box or choice buttons, with Check and Show answer.
 function question(q, label, onRight) {
   const el = $(`<div class="pq"><div class="n">${label}</div><div>${q.q}</div></div>`);
-  const fb = $(`<span class="fb" aria-live="polite"></span>`), sol = $(steps(q.s, true));
+  const fb = $(`<span class="fb" aria-live="polite"></span>`);
+  const sol = $(`<div class="sol" hidden><p class="answer">Answer: <b>${answerText(q)}</b></p>${steps(q.s)}</div>`);
   const ok = () => { el.classList.add("ok"); el.classList.remove("no"); onRight(); };
   const no = () => { el.classList.remove("no"); void el.offsetWidth; el.classList.add("no"); };
+  const show = $(`<button class="btn ghost" type="button">Show answer</button>`);
+  show.onclick = () => {
+    sol.hidden = !sol.hidden; show.textContent = sol.hidden ? "Show answer" : "Hide answer";
+    if (q.o) el.querySelectorAll(".opt").forEach((b, k) => b.classList.toggle("right", !sol.hidden && k === q.c));
+  };
   if (q.o) {
     const opts = $(`<div class="opts"></div>`);
     q.o.forEach((o, k) => {
       const b = $(`<button type="button" class="opt">${o}</button>`);
       b.onclick = () => {
         opts.querySelectorAll(".opt").forEach(x => x.classList.remove("right", "wrong"));
-        if (k === q.c) { b.classList.add("right"); fb.className = "fb ok"; fb.textContent = "Correct."; sol.hidden = false; ok(); }
+        if (k === q.c) { b.classList.add("right"); fb.className = "fb ok"; fb.textContent = "Correct."; ok(); }
         else { b.classList.add("wrong"); fb.className = "fb no"; fb.textContent = "Not this one. Try another."; no(); }
       };
       opts.append(b);
     });
-    el.append(opts, fb);
+    const row = $(`<div class="row"></div>`); row.append(show, fb);
+    el.append(opts, row);
   } else {
-    const row = $(`<div class="row"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><span class="unit">${q.unit || ""}</span>
-      <button class="btn" type="button">Check</button><button class="btn ghost" type="button">Show steps</button></div>`);
-    const inp = row.querySelector("input"), [chk, show] = row.querySelectorAll("button");
+    const row = $(`<div class="row"><input type="text" inputmode="decimal" autocomplete="off" aria-label="Your answer"><span class="unit">${q.unit || ""}</span><button class="btn" type="button">Check</button></div>`);
+    const inp = row.querySelector("input"), chk = row.querySelector("button");
     inp.id = "a-" + label.replace(/\W+/g, "-");
     const check = () => {
       if (!inp.value.trim()) { fb.className = "fb no"; fb.textContent = "Type a number first."; return; }
       if (right(inp.value, q)) { fb.className = "fb ok"; fb.textContent = "Correct."; ok(); }
-      else { fb.className = "fb no"; fb.textContent = "Not yet. Try again or show the steps."; no(); }
+      else { fb.className = "fb no"; fb.textContent = "Not yet. Try again or show the answer."; no(); }
     };
     chk.onclick = check; inp.onkeydown = e => { if (e.key === "Enter") check(); };
-    show.onclick = () => { sol.hidden = !sol.hidden; show.textContent = sol.hidden ? "Show steps" : "Hide steps"; };
-    row.append(fb); el.append(row);
+    row.append(show, fb); el.append(row);
   }
   el.append(sol);
   return el;
 }
 
 function start(m) {
+  const nS = ids.reduce((n, id) => n + S[id].length, 0);
   m.append($(`<section><h2>Every formula she needs, <em>in her order</em></h2>
-    <p class="lede">Everything here comes from her 15 lecture files. Each topic explains the idea in plain words, lists the formulas, walks through the example from her file, then lets her practise. The mock exam at the end puts it all together.</p></section>`));
-  m.append($(`<div class="stats"><div class="stat"><b>${F.length}</b><span>topics</span></div><div class="stat"><b>${total}</b><span>practice questions</span></div><div class="stat"><b>${Q.exam.length}</b><span>exam questions</span></div><div class="stat"><b>60</b><span>exam minutes</span></div></div>`));
-  const s = $(`<section><h3>The order</h3><div class="plan"></div></section>`), p = s.querySelector(".plan");
+    <p class="lede">Everything here comes from her 15 lecture files. For each chapter: read the <b>lesson</b>, study the <b>solved questions</b>, then try the <b>practice</b>. The <b>mock exam</b> puts it all together.</p></section>`));
+  m.append($(`<div class="stats"><div class="stat"><b>${F.length}</b><span>chapters</span></div><div class="stat"><b>${nS}</b><span>solved questions</span></div><div class="stat"><b>${total}</b><span>practice questions</span></div><div class="stat"><b>${Q.exam.length}</b><span>exam questions</span></div></div>`));
+  const s = $(`<section><h3>The chapters, in order</h3><div class="plan"></div></section>`), p = s.querySelector(".plan");
   F.forEach((t, i) => {
-    const n = (Q.practice[ids[i]] || []).length;
-    const b = $(`<button type="button" class="${topicDone(ids[i]) ? "done" : ""}"><span class="i">${topicDone(ids[i]) ? "✓" : i + 1}</span><span class="t">${t.title}</span><span class="m">${n} questions</span></button>`);
-    b.style.setProperty("--i", i); b.onclick = () => go(ids[i]); p.append(b);
+    const b = $(`<div class="chap ${topicDone(ids[i]) ? "done" : ""}"><span class="i">${topicDone(ids[i]) ? "✓" : i + 1}</span><span class="t">${t.title}</span>
+      <span class="links"><button type="button">Lesson</button><button type="button">Solved</button><button type="button">Practice</button></span></div>`);
+    const [a, bb, c] = b.querySelectorAll("button");
+    a.onclick = () => go(ids[i]); bb.onclick = () => go("solved-" + ids[i]); c.onclick = () => go("practice-" + ids[i]);
+    b.style.setProperty("--i", i); p.append(b);
   });
-  const e = $(`<button type="button" class="x"><span class="i">✎</span><span class="t">Mock exam</span><span class="m">${Q.exam.length} questions · 60 min</span></button>`);
-  e.style.setProperty("--i", F.length); e.onclick = () => go("exam"); p.append(e);
   m.append(s);
 }
 
-function topic(m, i) {
-  const t = F[i], id = ids[i];
-  m.append($(`<section><p class="meta">Topic ${i + 1} of ${F.length} · file: ${t.file}</p><h2>${t.title}</h2><p class="lede">${t.what}</p></section>`));
+function lesson(m, i) {
+  const t = F[i];
+  m.append($(`<section><p class="meta">Chapter ${i + 1} of ${F.length} · file: ${t.file}</p><h2>${t.title}</h2><p class="lede">${t.what}</p></section>`));
   m.append($(`<section><h3>Formulas</h3>${table(t)}</section>`));
   if (t.example) m.append($(`<section><h3>Example from her file</h3><div class="work"><div class="q">${t.example.q}</div>${steps(t.example.s)}</div></section>`));
   m.append($(`<div class="trap"><strong>Remember</strong>${t.remember}</div>`));
-  const ps = $(`<section><h3>Practice</h3></section>`);
+  m.append(jump("lesson", i), pager("lesson", i));
+}
+
+function solvedView(m, i) {
+  m.append($(`<section><p class="meta">Chapter ${i + 1} of ${F.length} · solved questions</p><h2>${F[i].title}</h2><p class="lede">Read each question, try it in your head, then read the solution and the answer.</p></section>`));
+  const s = $(`<section></section>`);
+  S[ids[i]].forEach((x, k) => s.append($(`<div class="work"><div class="n meta">Solved question ${k + 1}</div><div class="q">${x.q}</div>${steps(x.s)}<p class="answer">Answer: <b>${x.a}</b></p></div>`)));
+  m.append(s, jump("solved", i), pager("solved", i));
+}
+
+function practice(m, i) {
+  const id = ids[i];
+  m.append($(`<section><p class="meta">Chapter ${i + 1} of ${F.length} · practice</p><h2>${F[i].title}</h2><p class="lede">Answer each question, then press Check. Stuck? Press Show answer to see the answer and how to get it.</p></section>`));
+  const ps = $(`<section></section>`);
   (Q.practice[id] || []).forEach((q, k) => ps.append(question(q, `Question ${k + 1}`, () => {
     if (solved[id + "-" + k]) return;
     solved[id + "-" + k] = 1; save(); progress();
-    if (topicDone(id)) nav(id);
+    if (topicDone(id)) document.querySelectorAll(".chips button")[i].classList.add("done");
   })));
-  m.append(ps);
-  const nx = $(`<div class="next"></div>`);
-  if (i > 0) { const b = $(`<button class="btn ghost" type="button">← ${F[i - 1].title}</button>`); b.onclick = () => go(ids[i - 1]); nx.append(b); } else nx.append($("<span></span>"));
-  const last = i === F.length - 1;
-  const b = $(`<button class="btn${last ? " coral" : ""}" type="button">${last ? "Mock exam" : F[i + 1].title} →</button>`);
-  b.onclick = () => go(last ? "exam" : ids[i + 1]); nx.append(b);
-  m.append(nx);
+  m.append(ps, jump("practice", i), pager("practice", i));
 }
 
 function all(m) {
@@ -134,12 +194,12 @@ function all(m) {
 
 function exam(m) {
   const E = Q.exam;
-  m.append($(`<section><h2>Mock exam</h2><p class="lede">${E.length} questions using her formulas with new numbers, mixed like a real paper. Work on paper, type only the final number or pick an answer. Nothing is marked until you press Finish.</p></section>`));
-  const top = $(`<div class="bar"><span class="timer">60:00</span><button class="btn coral" type="button">Finish and mark</button></div>`);
+  m.append($(`<section><h2>Mock exam</h2><p class="lede">${E.length} questions using her formulas with new numbers, mixed like a real paper. Answer as many as you can, then press <b>Mark my answers</b> at any time. Every question gets marked, and the right answer appears under each one, even the ones you left empty.</p></section>`));
+  const top = $(`<div class="bar"><span class="timer">60:00</span><button class="btn coral" type="button">Mark my answers</button></div>`);
   m.append(top);
   const list = $(`<section></section>`), picks = [];
   const boxes = E.map((q, k) => {
-    const el = $(`<div class="pq"><div class="n">Q${k + 1} · topic ${q.t}: ${F[q.t - 1].title.split(/[:(]/)[0].trim()}</div><div>${q.q}</div></div>`);
+    const el = $(`<div class="pq"><div class="n">Q${k + 1} · chapter ${q.t}: ${short(q.t - 1)}</div><div>${q.q}</div></div>`);
     if (q.o) {
       const opts = $(`<div class="opts"></div>`);
       q.o.forEach((o, j) => {
@@ -149,10 +209,12 @@ function exam(m) {
       });
       el.append(opts);
     } else el.append($(`<div class="row"><input type="text" inputmode="decimal" autocomplete="off" id="ex-${k}" aria-label="Answer to question ${k + 1}"><span class="unit">${q.unit || ""}</span></div>`));
-    el.append($(`<span class="fb"></span>`), $(steps(q.s, true)));
+    el.append($(`<span class="fb"></span>`), $(`<div class="sol" hidden><p class="answer">Answer: <b>${answerText(q)}</b></p>${steps(q.s)}</div>`));
     list.append(el); return el;
   });
   m.append(list);
+  const bottom = $(`<div class="row"><button class="btn coral" type="button">Mark my answers</button></div>`);
+  m.append(bottom);
   let left = 60 * 60; const t = top.querySelector(".timer");
   clock = setInterval(() => {
     left = Math.max(0, left - 1);
@@ -162,29 +224,35 @@ function exam(m) {
   }, 1000);
   function mark() {
     clearInterval(clock);
-    let score = 0; const weak = new Set();
+    let score = 0, blank = 0; const weak = new Set();
     boxes.forEach((el, k) => {
       const q = E[k], fb = el.querySelector(".fb"); el.dataset.marked = 1;
-      let good;
+      let good, empty;
       if (q.o) {
-        good = picks[k] === q.c;
+        empty = picks[k] === undefined; good = picks[k] === q.c;
         el.querySelectorAll(".opt").forEach((b, j) => { if (j === q.c) b.classList.add("right"); else if (j === picks[k]) b.classList.add("wrong"); });
       } else {
-        const inp = el.querySelector("input"); inp.readOnly = true; good = right(inp.value, q);
+        const inp = el.querySelector("input"); inp.readOnly = true;
+        empty = !inp.value.trim(); good = !empty && right(inp.value, q);
+        inp.classList.add(good ? "good" : "bad");
       }
       if (good) { score++; el.classList.add("ok"); fb.className = "fb ok"; fb.textContent = "Correct"; }
-      else { weak.add(q.t); fb.className = "fb no"; fb.textContent = q.o ? "Right answer: " + q.o[q.c] : "Answer: " + fmt(q.a) + (q.unit === "%" ? "%" : ""); }
+      else { weak.add(q.t); if (empty) blank++; el.classList.add("miss"); fb.className = "fb no"; fb.textContent = empty ? "Not answered" : "Wrong"; }
       el.querySelector(".sol").hidden = false;
     });
     const pct = score / E.length, C = 2 * Math.PI * 50;
     const res = $(`<div class="work result"><svg class="ring" viewBox="0 0 120 120"><circle class="bgc" cx="60" cy="60" r="50"/><circle class="fg" cx="60" cy="60" r="50" stroke-dasharray="${C}" stroke-dashoffset="${C}"/><text x="60" y="60">${Math.round(pct * 100)}%</text></svg>
-      <div><p><b>${score} of ${E.length} correct.</b></p><p>${weak.size ? "Go back over: " + [...weak].sort((a, b) => a - b).map(n => `<a href="#t${n}">${n}. ${F[n - 1].title}</a>`).join(", ") + "." : "Every answer right. Read All formulas once more and get some sleep."}</p></div></div>`);
-    top.replaceWith(res);
+      <div><p><b>${score} of ${E.length} correct</b>${blank ? `, ${blank} not answered` : ""}. The right answer and the solution are shown under every question.</p>
+      <p>${weak.size ? "Go back over: " + [...weak].sort((a, b) => a - b).map(n => `<a href="#solved-t${n}">${n}. ${F[n - 1].title}</a>`).join(", ") + "." : "Every answer right. Read All formulas once more and get some sleep."}</p>
+      <p><button class="btn ghost" type="button">Take the exam again</button></p></div></div>`);
+    top.replaceWith(res); bottom.remove();
     res.querySelectorAll("a").forEach(a => a.onclick = (e) => { e.preventDefault(); go(a.getAttribute("href").slice(1)); });
+    res.querySelector("button").onclick = () => go("exam");
     requestAnimationFrame(() => requestAnimationFrame(() => res.querySelector(".fg").style.strokeDashoffset = C * (1 - pct)));
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
   top.querySelector("button").onclick = mark;
+  bottom.querySelector("button").onclick = mark;
 }
 
 go((location.hash || "").slice(1) || "start");

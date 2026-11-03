@@ -35,8 +35,8 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .logo{width:30px;height:30px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:800 15px var(--f-display)}
 .brand h1{font:800 21px/1 var(--f-display);margin:0;letter-spacing:-.02em}
 .brand .count{margin-left:auto;font:600 13px var(--f-mono);color:var(--muted)}
-nav{max-width:920px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;padding-block:8px 12px;scrollbar-width:thin}
-nav button{flex:none;font:600 14px/1 var(--f-body);color:var(--muted);background:var(--bg);border:1px solid var(--rule);border-radius:999px;padding:9px 14px;cursor:pointer;white-space:nowrap;transition:background .2s,color .2s,transform .2s}
+nav{max-width:920px;margin:0 auto;display:flex;flex-wrap:wrap;gap:6px;padding-block:8px 12px}
+nav button{flex:1 1 auto;font:600 14px/1 var(--f-body);color:var(--muted);background:var(--bg);border:1px solid var(--rule);border-radius:999px;padding:9px 14px;cursor:pointer;white-space:nowrap;transition:background .2s,color .2s,transform .2s}
 nav button:hover{color:var(--ink);transform:translateY(-1px)}
 nav button[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
 nav button .tick{color:var(--good);margin-left:5px}
@@ -123,6 +123,29 @@ input:focus-visible,button:focus-visible,.opt:focus-visible{outline:2px solid va
 .ring .fg{stroke:var(--accent);stroke-linecap:round;transform:rotate(-90deg);transform-box:fill-box;transform-origin:center;transition:stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1)}
 .ring text{fill:var(--ink);font:800 26px var(--f-display);text-anchor:middle;dominant-baseline:central}
 .result a{color:var(--accent);font-weight:600}
+.chips{display:grid;gap:10px;background:var(--paper);border:1px solid var(--rule);border-radius:12px;padding:12px 14px}
+.chips .lbl{font:700 12.5px/1 var(--f-body);text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.chips .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:6px}
+.chips button{position:relative;font:700 14px/1 var(--f-mono);color:var(--muted);background:var(--bg);border:1.5px solid var(--rule);border-radius:9px;height:40px;cursor:pointer;transition:border-color .2s,color .2s,transform .15s,background .2s}
+.chips button:hover{border-color:var(--accent);color:var(--ink);transform:translateY(-2px)}
+.chips button[aria-current="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);transform:scale(1.08)}
+.chips button.done:not([aria-current="true"]){border-color:var(--good);color:var(--good);background:var(--good-soft)}
+.chips button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chap{display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;padding:10px 14px;background:var(--paper);border:1px solid var(--rule);border-radius:12px;transition:border-color .2s,box-shadow .2s;animation:rise .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 35ms + 150ms)}
+.chap:hover{border-color:var(--accent);box-shadow:0 8px 20px -14px var(--accent)}
+.chap .i{width:34px;height:34px;border-radius:9px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font:700 13px var(--f-mono)}
+.chap.done .i{background:var(--good);color:var(--paper)}
+.chap .t{font-weight:700;min-width:0}
+.chap .links{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.chap .links button{font:600 12.5px var(--f-body);color:var(--accent);background:var(--accent-soft);border:0;border-radius:6px;padding:6px 9px;cursor:pointer;transition:transform .15s}
+.chap .links button:hover{transform:translateY(-1px)}
+.chap .links button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.answer{margin-top:4px;padding:8px 12px;border-radius:8px;background:var(--good-soft)}
+.answer b{color:var(--good)}
+.sol{display:grid;gap:8px}
+.pq.miss{border-color:var(--bad)}
+input.good{border-color:var(--good)} input.bad{border-color:var(--bad);text-decoration:line-through}
+.jump{gap:6px}
 .next{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .topic{display:grid;gap:12px;padding-top:14px;border-top:2px solid var(--accent-soft)}
 .topic h4{font:800 23px/1.15 var(--f-display);margin:0;letter-spacing:-.015em}
@@ -133,6 +156,8 @@ input:focus-visible,button:focus-visible,.opt:focus-visible{outline:2px solid va
   tr:first-child{border-top:0}
   td,td.n,td.f,td.m{border:0;width:auto;min-width:0;padding:3px 14px}
   td.m:empty{display:none}
+  .chap{grid-template-columns:34px 1fr}
+  .chap .links{grid-column:1/-1;justify-content:flex-start}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
@@ -145,5 +170,6 @@ input:focus-visible,button:focus-visible,.opt:focus-visible{outline:2px solid va
 <main id="main" class="gut"></main>
 
 <script src="formulas.js"></script>
+<script src="solved.js"></script>
 <script src="questions.js"></script>
 <script src="app.js"></script>
