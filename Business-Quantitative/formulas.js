@@ -60,7 +60,7 @@ window.FORMULAS = [
       s: ["ROI = (1,120,000 − 1,000,000) ÷ 1,000,000 = 0.12 = <b>12%</b>",
           "Shares bought for 100,000 that grow to 160,000: (160,000 − 100,000) ÷ 100,000 = <b>60%</b>"]
     },
-    remember: "Divide by the cost, not by the gain. Limits: ROI ignores risk and time (12% in 3 years is not the same as 12% in 1 year), needs accurate cost figures, and ignores non-money benefits."
+    remember: "Divide by the cost, not by the gain. The number of years never goes into the formula: never multiply or divide by the years. The house was held 3 years and its ROI is still 12%; the shares are 60% whether it took 1 year or 2. That is a limit of ROI: it ignores the holding period (and risk), needs accurate cost figures, and ignores non-money benefits."
   },
   {
     title: "CVP: Cost-Volume-Profit analysis", file: "COST VOLUME OF PROFIT",
@@ -214,7 +214,7 @@ window.FORMULAS = [
       q: "SAT scores: mean 1150, standard deviation 150. What share of scores are above 1380?", z: 1.53,
       s: ["Empirical rule: 68% between 1,000 and 1,300; 95% between 850 and 1,450; 99.7% between 700 and 1,600",
           "z = (1380 − 1150) ÷ 150 = 230 ÷ 150 = 1.53",
-          "z-table: 0.937 of scores are below 1380",
+          "z-table: row 1.5 ①, column 0.03 ②, value .9370 ③ → 0.937 of scores are below 1380 (marked in the table below)",
           "Above 1380: 1 − 0.937 = <b>0.063 = 6.3%</b>"]
     },
     remember: "The z-table gives the area to the left (below). For \"more than\", do 1 − the table value."

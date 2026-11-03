@@ -1,4 +1,4 @@
-// The standard normal z-table (area to the LEFT of z), drawn as HTML.
+// The standard normal z-table (area to the LEFT of z), drawn like a printed textbook table.
 // Used by the website (app.js) and the PDF build (scripts/build-bq-formulas-pdf.js).
 (function () {
   // Abramowitz & Stegun 7.1.26: erf to about 1e-7, plenty for a 4-decimal table.
@@ -9,6 +9,11 @@
     return s * y;
   }
   const cdf = (z) => 0.5 * (1 + erf(z / Math.SQRT2));
+  const four = (p) => p.toFixed(4).replace(/^0/, "");          // 0.9370 → .9370, like the printed table
+  const minus = (s) => s.replace("-", "−");
+
+  // Row r is stored in tenths with a sign (−15 = row −1.5, "-0" = row −0.0); column c is the hundredths digit.
+  const cell = (neg, tenths, c) => cdf((neg ? -1 : 1) * (tenths / 10 + c / 100));
 
   // A small bell curve with the area left of z shaded.
   function curve(z) {
@@ -22,23 +27,48 @@
     area += `L${X(z).toFixed(1)},${Y(pdf(z)).toFixed(1)}L${X(z).toFixed(1)},${Y(0)}Z`;
     return `<svg class="zcurve" viewBox="0 0 ${W} ${H}" role="img" aria-label="Bell curve with the area to the left of z = ${z} shaded">
       <path d="${area}" class="za"/><path d="${line}" class="zl"/><line x1="0" x2="${W}" y1="${Y(0)}" y2="${Y(0)}" class="zx"/>
-      <line x1="${X(z)}" x2="${X(z)}" y1="${Y(0)}" y2="8" class="zm"/><text x="${X(z) + 4}" y="14" class="zt">z = ${z}</text>
-      <text x="${X(z) - 6}" y="${H - 22}" class="zt" text-anchor="end">${cdf(z).toFixed(4)}</text><text x="${X(0)}" y="${H - 2}" class="zt" text-anchor="middle">0</text></svg>`;
+      <line x1="${X(z)}" x2="${X(z)}" y1="${Y(0)}" y2="8" class="zm"/><text x="${X(z) + 4}" y="14" class="zt">z = ${minus(String(z))}</text>
+      <text x="${X(z) - 6}" y="${H - 22}" class="zt" text-anchor="end">${four(cdf(z))}</text><text x="${X(0)}" y="${H - 2}" class="zt" text-anchor="middle">0</text></svg>`;
   }
 
-  // z: the value to highlight (or null). from/to: first and last row (e.g. 0.0 to 3.4).
-  function html(z, from = 0, to = 3.4) {
-    const hr = z == null ? null : Math.floor(z * 10 + 1e-9) / 10, hc = z == null ? null : Math.round((z - hr) * 100);
+  // One printed table. neg: the negative half. lo/hi: row range in tenths (0..36). pick: {neg, tenths, c} to mark.
+  function table(neg, lo, hi, pick) {
     const cols = [...Array(10).keys()];
+    const order = neg ? [...Array(hi - lo + 1).keys()].map(k => hi - k) : [...Array(hi - lo + 1).keys()].map(k => lo + k);
+    const isCol = (c) => pick && pick.neg === neg && c === pick.c;
     let rows = "";
-    for (let r = Math.round(from * 10); r <= Math.round(to * 10); r++) {
-      const rv = r / 10, isRow = hr != null && Math.abs(rv - hr) < 1e-9;
-      rows += `<tr class="${isRow ? "hr" : ""}"><th>${rv.toFixed(1)}</th>${cols.map(c => `<td class="${isRow && c === hc ? "hit" : c === hc ? "hc" : ""}">${cdf(rv + c / 100).toFixed(4)}</td>`).join("")}</tr>`;
-    }
-    const how = z == null ? "" : `<p class="zhow">Row <b>${hr.toFixed(1)}</b> + column <b>${(hc / 100).toFixed(2)}</b> → z = ${z} → area to the left = <b>${cdf(z).toFixed(4)}</b>. Area to the right = 1 − ${cdf(z).toFixed(4)} = <b>${(1 - cdf(z)).toFixed(4)}</b>.</p>`;
-    return `<figure class="ztable"><figcaption>z-table: area to the LEFT of z (below z)</figcaption>${z == null ? "" : curve(z)}
-      <div class="zscroll"><table><thead><tr><th>z</th>${cols.map(c => `<th>.0${c}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>${how}</figure>`;
+    order.forEach(r => {
+      const isRow = pick && pick.neg === neg && r === pick.tenths;
+      rows += `<tr class="${isRow ? "hr" : ""}"><th class="${isRow ? "mark" : ""}">${isRow ? '<i class="bd">1</i>' : ""}${neg ? "−" : ""}${(r / 10).toFixed(1)}</th>${cols.map(c =>
+        `<td class="${isRow && isCol(c) ? "hit" : isCol(c) ? "hc" : ""}">${isRow && isCol(c) ? '<i class="bd">3</i>' : ""}${four(cell(neg, r, c))}</td>`).join("")}</tr>`;
+    });
+    return `<table class="zp"><thead><tr><th>z</th>${cols.map(c => `<th class="${isCol(c) ? "mark" : ""}">${isCol(c) ? '<i class="bd">2</i>' : ""}0.0${c}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>`;
   }
 
-  window.ZTABLE = { cdf, html };
+  // z: value to mark (or null). span: how many rows either side of it (null = the whole half table).
+  function html(z, span = null) {
+    let pick = null;
+    if (z != null) {
+      const a = Math.abs(z), tenths = Math.floor(a * 10 + 1e-9);
+      pick = { neg: z < 0, tenths, c: Math.round((a - tenths / 10) * 100) };
+    }
+    const neg = pick ? pick.neg : false;
+    const lo = span == null || !pick ? 0 : Math.max(0, pick.tenths - span), hi = span == null || !pick ? 36 : Math.min(36, pick.tenths + span);
+    const p = z == null ? 0 : cdf(z), rowTxt = (neg ? "−" : "") + (pick ? (pick.tenths / 10).toFixed(1) : "");
+    const how = z == null ? "" : `<ol class="zhow">
+      <li><i class="bd">1</i> Split z = ${minus(z.toFixed(2))} into <b>${rowTxt}</b> and <b>0.0${pick.c}</b>. Go down the z column to row <b>${rowTxt}</b>.</li>
+      <li><i class="bd">2</i> Go across to the column headed <b>0.0${pick.c}</b>.</li>
+      <li><i class="bd">3</i> Where they meet: <b>${four(p)}</b>. This is the area to the LEFT of z (the share below it).</li>
+      <li>Need the share ABOVE z? 1 − ${four(p)} = <b>${four(1 - p)}</b>.</li></ol>`;
+    return `<figure class="ztable"><figcaption>Standard normal table · area to the left of z</figcaption>${z == null ? "" : curve(z)}
+      <div class="zscroll"><div class="zpaper">${table(neg, lo, hi, pick)}</div></div>${how}</figure>`;
+  }
+
+  // Both halves of the full table (for the lesson): negative z, then positive z.
+  function full(z) {
+    const pos = html(z), negPart = `<div class="zscroll"><div class="zpaper">${table(true, 0, 36, null)}</div></div>`;
+    return { pos, neg: `<figure class="ztable"><figcaption>Standard normal table · negative z · area to the left of z</figcaption>${negPart}</figure>` };
+  }
+
+  window.ZTABLE = { cdf, html, full };
 })();

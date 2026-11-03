@@ -28,7 +28,7 @@ function right(v, q) {
   return !isNaN(x) && [q.a, ...(q.alt || [])].some(a => Math.abs(x - a) <= Math.max(0.01, Math.abs(a) * 0.005));
 }
 // A few rows of the z-table around z, with a pointer to the full table in Lesson 14.
-const zPart = (z) => window.ZTABLE.html(z, Math.max(0, Math.floor(z * 10) / 10 - 0.2), Math.floor(z * 10) / 10 + 0.2)
+const zPart = (z) => window.ZTABLE.html(z, 3)
   .replace("</figure>", `<p class="zhow"><a href="#t14" data-go="t14">See the full z-table in Lesson 14</a></p></figure>`);
 const answerText =(q) => q.o ? q.o[q.c] : fmt(q.a) + (q.unit === "%" ? "%" : q.unit ? " " + q.unit : "");
 
@@ -110,7 +110,7 @@ const steps = (s, hidden) => `<ol class="steps sol"${hidden ? " hidden" : ""}>${
 function question(q, label, onRight) {
   const el = $(`<div class="pq"><div class="n">${label}</div><div>${q.q}</div></div>`);
   // In practice the table's reading line ("area to the right = …") is the answer, so it moves into the hidden solution.
-  const zHow = q.z != null ? /<p class="zhow">Row[\s\S]*?<\/p>/.exec(zPart(q.z))[0] : "";
+  const zHow = q.z != null ? /<ol class="zhow">[\s\S]*?<\/ol>/.exec(zPart(q.z))[0] : "";
   if (q.z != null) el.append($(zPart(q.z).replace(zHow, "")));
   const fb = $(`<span class="fb" aria-live="polite"></span>`);
   const sol = $(`<div class="sol" hidden><p class="answer">Answer: <b>${answerText(q)}</b></p>${zHow}${steps(q.s)}</div>`);
@@ -171,7 +171,15 @@ function lesson(m, i) {
   m.append($(`<section><p class="meta">Chapter ${i + 1} of ${F.length} · file: ${t.file}</p><h2>${t.title}</h2><p class="lede">${t.what}</p></section>`));
   m.append($(`<section><h3>Formulas</h3>${table(t)}</section>`));
   if (t.example) m.append($(`<section><h3>Example from her file</h3><div class="work"><div class="q">${t.example.q}</div>${steps(t.example.s)}</div></section>`));
-  if (t.example && t.example.z != null) m.append($(`<section><h3>The z-table</h3><p>Find the row with the first decimal of z, then the column with the second decimal. The highlighted cell is the value used in the example.</p>${window.ZTABLE.html(t.example.z)}</section>`));
+  if (t.example && t.example.z != null) {
+    const zt = window.ZTABLE.full(t.example.z);
+    const s = $(`<section><h3>The z-table</h3><p>The numbered marks show what the example picked: ① the row, ② the column, ③ the value where they meet.</p>
+      <div class="ztabs"><button type="button" aria-pressed="true">Positive z (0 to 3.6)</button><button type="button" aria-pressed="false">Negative z (−3.6 to 0)</button></div><div class="zbox">${zt.pos}</div></section>`);
+    const [bp, bn] = s.querySelectorAll(".ztabs button"), box = s.querySelector(".zbox");
+    bp.onclick = () => { box.innerHTML = zt.pos; bp.setAttribute("aria-pressed", true); bn.setAttribute("aria-pressed", false); };
+    bn.onclick = () => { box.innerHTML = zt.neg; bn.setAttribute("aria-pressed", true); bp.setAttribute("aria-pressed", false); };
+    m.append(s);
+  }
   m.append($(`<div class="trap"><strong>Remember</strong>${t.remember}</div>`));
   m.append(jump("lesson", i), pager("lesson", i));
 }
@@ -179,7 +187,8 @@ function lesson(m, i) {
 function solvedView(m, i) {
   m.append($(`<section><p class="meta">Chapter ${i + 1} of ${F.length} · solved questions</p><h2>${F[i].title}</h2><p class="lede">Read each question, try it in your head, then read the solution and the answer.</p></section>`));
   const s = $(`<section></section>`);
-  S[ids[i]].forEach((x, k) => s.append($(`<div class="work"><div class="n meta">Solved question ${k + 1}</div><div class="q">${x.q}</div>${x.z != null ? zPart(x.z) : ""}${steps(x.s)}<p class="answer">Answer: <b>${x.a}</b></p></div>`)));
+  S[ids[i]].forEach((x, k) => s.append($(`<div class="work"><div class="n meta">Solved question ${k + 1}</div><div class="q">${x.q}</div>
+    <div class="how"><strong>What it asks and how we solve it</strong>${x.how}</div>${steps(x.s)}${x.z != null ? zPart(x.z) : ""}<p class="answer">Answer: <b>${x.a}</b></p></div>`)));
   m.append(s, jump("solved", i), pager("solved", i));
 }
 
