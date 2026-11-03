@@ -39,7 +39,9 @@ td.m{width:28%;color:#5b6a64;font-size:9pt}
 .fr>span:first-child{border-bottom:1.2px solid #15211d;padding:0 3px 1px}
 .fr>span:last-child{padding:1px 3px 0}
 .ex{background:#eef5f1;padding:7px 10px;border-radius:4px}
-.ex ol{margin:4px 0 0;padding-left:20px}
+.ex ol{margin:4px 0 0;padding-left:0;list-style:none;counter-reset:st}
+.ex li{counter-increment:st;margin-top:2px}
+.ex li::before{content:"Step " counter(st) "  ";font-weight:700;font-size:8.5pt;color:#0d6b4e}
 .ex b,li b{color:#0d6b4e}
 .ztable{margin:8px 0 0;break-inside:avoid}
 .ztable figcaption{font-weight:700;color:#0d6b4e;margin-bottom:4px}
