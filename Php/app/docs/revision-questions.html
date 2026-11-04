@@ -1,0 +1,309 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Three questions to solve tonight</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=5">
+<body class="reader">
+<article class="prose">
+<h1>Three questions to solve tonight</h1>
+<p>Sit these with no notes. The answers are underneath — <strong>do not read down until you have written something.</strong> Every output below was produced by running the code on PHP 8.2.12.</p>
+<p>Question 1 is the one with a table, and it needs a loop.</p>
+<hr>
+<h2>Question 1 — the times table <em>(a table, built with a loop)</em></h2>
+<p>A teacher types <strong>one number</strong> into a form and presses <strong>Show the table</strong>.</p>
+<p>The page must then print a <strong>table with three columns</strong> and <strong>ten rows</strong>:</p>
+<div class="tablewrap"><table><thead><tr><th>Number</th><th>Answer</th><th>Even or odd</th></tr></thead><tbody><tr><td>7 x 1</td><td>7</td><td>Odd</td></tr><tr><td>7 x 2</td><td>14</td><td>Even</td></tr><tr><td>…</td><td>…</td><td>…</td></tr></tbody></table></div>
+<ul><li>Column 1 is the sum being done, like <code>7 x 3</code>.</li><li>Column 2 is the answer.</li><li>Column 3 says <strong>Even</strong> or <strong>Odd</strong> about that answer.</li></ul>
+<p>If the box is empty or does not hold a number, print a message and no table.</p>
+<p>Give the <strong>pseudocode</strong>, the <strong>flowchart</strong> and the <strong>PHP</strong>, with <code>//</code> comments and a PHPDoc block.</p>
+<hr>
+<h2>Question 2 — the largest of two numbers</h2>
+<p>A form takes <strong>two numbers</strong>. When the button is pressed the page says which one is larger — and if they are the same, says that instead.</p>
+<p>If either box does not hold a number, print a message.</p>
+<p>Give the <strong>pseudocode</strong>, the <strong>flowchart</strong> and the <strong>PHP</strong>.</p>
+<hr>
+<h2>Question 3 — what does it print?</h2>
+<p>Write the <strong>exact</strong> output. Spaces matter.</p>
+<pre class="lang-php"><code>&lt;?php
+$x = 12;
+$y = 15 + $x++;
+echo &quot;x is $x and y is $y&quot;;
+echo &quot;\n&quot;;
+
+$out = &quot;Hello&quot;;
+$out .= &quot; &quot;;
+$out .= &quot;World!&quot;;
+echo $out;
+echo &quot;\n&quot;;
+
+for ($c = 1; $c &lt;= 6; $c++) {
+    if ($c % 2 == 0) continue;
+    if ($c == 5) break;
+    echo &quot;Count: $c &quot;;
+}
+echo &quot;\n&quot;;
+
+echo &quot;A&quot; . FALSE . &quot;B&quot;;
+echo &quot;\n&quot;;
+echo 10 . 5;
+echo &quot;\n&quot;;
+echo (int) 9.9 - 1;
+echo &quot;\n&quot;;
+
+$n = 3;
+do {
+    echo &quot;go &quot;;
+    $n++;
+} while ($n &lt; 3);</code></pre>
+<hr>
+<hr>
+<h1>Answers</h1>
+<hr>
+<h2>Answer 1 — the times table</h2>
+<h3>(a) Pseudocode</h3>
+<pre><code>START
+  IF the Show the table button was pressed THEN
+      NUM &lt;-- the number typed
+      IF NUM is not a number THEN
+          PRINT &quot;Please type a number.&quot;
+      ELSE
+          PRINT the heading row        [once, OUTSIDE the loop]
+          I &lt;-- 1
+          WHILE I &lt;= 10
+              ANSWER &lt;-- NUM * I
+              IF ANSWER / 2 has no remainder THEN
+                  TYPE &lt;-- &quot;Even&quot;
+              ELSE
+                  TYPE &lt;-- &quot;Odd&quot;
+              ENDIF
+              PRINT a row holding NUM x I, ANSWER and TYPE
+              I &lt;-- I + 1
+          ENDWHILE
+          PRINT the end of the table
+      ENDIF
+  ENDIF
+STOP</code></pre>
+<h3>(b) Flowchart</h3>
+<pre><code>          ( START )
+              |
+    &lt; button pressed ? &gt; --no--&gt; ( STOP )
+              | yes
+       / read NUM /
+              |
+    &lt; NUM is a number ? &gt; --no--&gt; / print the message / --&gt; ( STOP )
+              | yes
+   / print the heading row /          &lt;- ONCE, before the loop
+              |
+         [ I &lt;-- 1 ]
+              |
+   +---------&gt;|
+   |          |
+   |    &lt; I &lt;= 10 ? &gt; --no--&gt; / print the end of the table / --&gt; ( STOP )
+   |          | yes
+   |  [ ANSWER &lt;-- NUM * I ]
+   |          |
+   |  &lt; ANSWER even ? &gt; --yes--&gt; [ TYPE &lt;-- &quot;Even&quot; ]
+   |          | no                        |
+   |  [ TYPE &lt;-- &quot;Odd&quot; ]                  |
+   |          |                           |
+   |          +&lt;--------------------------+
+   |          |
+   |  / print the row /
+   |          |
+   |    [ I &lt;-- I + 1 ]
+   |          |
+   +----------+          &lt;- the back-arrow. THIS is the loop.</code></pre>
+<h3>(c) PHP</h3>
+<pre class="lang-php"><code>&lt;?php
+/**
+ * The times table.
+ *
+ * Reads one number from a POST form and prints a table of that number
+ * times 1 to 10, saying for each row whether the answer is even or odd.
+ *
+ * @author  Fatima Al-Helou
+ * @version 1.0
+ */
+?&gt;
+&lt;form action=&quot;&quot; method=&quot;POST&quot;&gt;
+    &lt;label&gt;Enter a number &lt;/label&gt;
+    &lt;input type=&quot;text&quot; name=&quot;num&quot;&gt;
+    &lt;button type=&quot;submit&quot; name=&quot;show&quot; value=&quot;1&quot;&gt;Show the table&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;?php
+// isset first, read second - nothing has been posted on the first visit.
+if (isset($_POST[&quot;show&quot;])) {
+
+    $num = $_POST[&quot;num&quot;];
+
+    // Everything a form sends is text, and the box may be left empty.
+    if (!is_numeric($num)) {
+
+        echo &quot;&lt;p&gt;Please type a number.&lt;/p&gt;&quot;;
+
+    } else {
+
+        echo &quot;&lt;table border=&#x27;1&#x27;&gt;&quot;;
+        echo &quot;&lt;tr&gt;&lt;th&gt;Number&lt;/th&gt;&lt;th&gt;Answer&lt;/th&gt;&lt;th&gt;Even or odd&lt;/th&gt;&lt;/tr&gt;&quot;;
+
+        // One pass per row. $i is both the counter and the number shown.
+        for ($i = 1; $i &lt;= 10; $i++) {
+
+            $answer = $num * $i;
+
+            // % gives the remainder. A remainder of 0 means it divides evenly.
+            if ($answer % 2 == 0) {
+                $type = &quot;Even&quot;;
+            } else {
+                $type = &quot;Odd&quot;;
+            }
+
+            echo &quot;&lt;tr&gt;&quot;;
+            echo &quot;&lt;td&gt;&quot; . $num . &quot; x &quot; . $i . &quot;&lt;/td&gt;&quot;;
+            echo &quot;&lt;td&gt;&quot; . $answer . &quot;&lt;/td&gt;&quot;;
+            echo &quot;&lt;td&gt;&quot; . $type . &quot;&lt;/td&gt;&quot;;
+            echo &quot;&lt;/tr&gt;&quot;;
+        }
+
+        echo &quot;&lt;/table&gt;&quot;;
+    }
+}</code></pre>
+<p><strong>Run with 7, this prints:</strong></p>
+<pre><code>Number | Answer | Even or odd
+7 x 1  | 7      | Odd
+7 x 2  | 14     | Even
+7 x 3  | 21     | Odd
+7 x 4  | 28     | Even
+7 x 5  | 35     | Odd
+7 x 6  | 42     | Even
+7 x 7  | 49     | Odd
+7 x 8  | 56     | Even
+7 x 9  | 63     | Odd
+7 x 10 | 70     | Even</code></pre>
+<h3>Why it is written this way</h3>
+<p><strong>The heading row is printed once, outside the loop.</strong> This is the single commonest mistake in a table question. Putting <code>echo &quot;&lt;tr&gt;&lt;th&gt;Number&lt;/th&gt;...&quot;</code> inside the <code>for</code> gives you ten heading rows. Anything that happens <strong>once</strong> belongs outside; anything that happens <strong>per row</strong> belongs inside.</p>
+<p><strong><code>&lt;table&gt;</code> and <code>&lt;/table&gt;</code> are outside too</strong>, for the same reason. The loop only ever prints <code>&lt;tr&gt;...&lt;/tr&gt;</code>.</p>
+<p><strong><code>$i</code> does two jobs.</strong> It counts the passes <em>and</em> it is the number shown in the first column. That is why it starts at 1 and not at 0 — the table starts at <code>7 x 1</code>.</p>
+<p><strong><code>&lt;= 10</code>, not <code>&lt; 10</code>.</strong> Ten rows means the counter has to reach 10. <code>&lt; 10</code> gives nine rows, and that is a lost mark for an answer that otherwise works.</p>
+<p><strong>The even test is <code>% 2 == 0</code>.</strong> <code>%</code> is the remainder. <code>14 % 2</code> is 0, so 14 is even. <code>21 % 2</code> is 1, so 21 is odd. Note <code>==</code>, not <code>=</code>.</p>
+<p><strong><code>$type</code> is worked out before the row is printed</strong>, not inside the <code>echo</code>. It keeps the decision and the printing separate, which is easier to read and easier to mark.</p>
+<hr>
+<h2>Answer 2 — the largest of two numbers</h2>
+<h3>(a) Pseudocode</h3>
+<pre><code>START
+  IF the button was pressed THEN
+      READ A, B
+      IF A or B is not a number THEN
+          PRINT &quot;Please type a number in both boxes.&quot;
+      ELSE IF A &gt; B THEN
+          PRINT &quot;The largest is &quot;, A
+      ELSE IF B &gt; A THEN
+          PRINT &quot;The largest is &quot;, B
+      ELSE
+          PRINT &quot;Both numbers are equal&quot;
+      ENDIF
+  ENDIF
+STOP</code></pre>
+<h3>(b) Flowchart</h3>
+<pre><code>      ( START )
+          |
+    / read A, B /
+          |
+  &lt; A and B numbers ? &gt; --no--&gt; / print the message / --&gt; ( STOP )
+          | yes
+     &lt; IS A &gt; B ? &gt; --yes--&gt; / print A / ----+
+          | no                               |
+     &lt; IS B &gt; A ? &gt; --yes--&gt; / print B / ----+
+          | no                               |
+  / print &quot;Both numbers are equal&quot; / --------+
+                                             |
+                                        ( STOP )</code></pre>
+<h3>(c) PHP</h3>
+<pre class="lang-php"><code>&lt;?php
+/**
+ * The largest of two numbers.
+ *
+ * Reads two numbers from a POST form and reports which is larger, or
+ * says so when they are equal.
+ *
+ * @author  Fatima Al-Helou
+ * @version 1.0
+ */
+?&gt;
+&lt;form action=&quot;&quot; method=&quot;POST&quot;&gt;
+    &lt;label&gt;First number &lt;/label&gt;
+    &lt;input type=&quot;text&quot; name=&quot;a&quot;&gt;&lt;br&gt;&lt;br&gt;
+    &lt;label&gt;Second number &lt;/label&gt;
+    &lt;input type=&quot;text&quot; name=&quot;b&quot;&gt;&lt;br&gt;&lt;br&gt;
+    &lt;button type=&quot;submit&quot; name=&quot;show&quot; value=&quot;1&quot;&gt;Find the largest&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;?php
+if (isset($_POST[&quot;show&quot;])) {
+
+    $a = $_POST[&quot;a&quot;];
+    $b = $_POST[&quot;b&quot;];
+
+    if (!is_numeric($a) || !is_numeric($b)) {
+
+        echo &quot;&lt;p&gt;Please type a number in both boxes.&lt;/p&gt;&quot;;
+
+    } elseif ($a &gt; $b) {
+
+        // The dot joins. A + here would try to add the words together.
+        echo &quot;&lt;p&gt;The largest is &quot; . $a . &quot;&lt;/p&gt;&quot;;
+
+    } elseif ($b &gt; $a) {
+
+        echo &quot;&lt;p&gt;The largest is &quot; . $b . &quot;&lt;/p&gt;&quot;;
+
+    } else {
+
+        // Neither is bigger, so they must be the same.
+        echo &quot;&lt;p&gt;Both numbers are equal&lt;/p&gt;&quot;;
+    }
+}</code></pre>
+<p><strong>Checked:</strong></p>
+<div class="tablewrap"><table><thead><tr><th>Typed</th><th>Prints</th></tr></thead><tbody><tr><td>9, 4</td><td>The largest is 9</td></tr><tr><td>4, 9</td><td>The largest is 9</td></tr><tr><td>5, 5</td><td>Both numbers are equal</td></tr><tr><td>-3, -8</td><td>The largest is -3</td></tr><tr><td>x, 4</td><td>Please type a number in both boxes.</td></tr></tbody></table></div>
+<h3>Why it is written this way</h3>
+<p><strong>Here an <code>elseif</code> ladder is right.</strong> This is the opposite of the price-filter bug. The three outcomes are genuine <strong>alternatives</strong> — A is bigger, <em>or</em> B is bigger, <em>or</em> they are equal. Exactly one can be true, so a ladder is correct and is the clearest way to write it.</p>
+<blockquote><p>Compare: when you are hunting the largest of <strong>five</strong> numbers, a ladder is wrong, because several numbers can each beat the one before and every one of them needs its own turn. Alternatives → ladder. Repeated challenges → separate <code>if</code>s.</p></blockquote>
+<p><strong>The third branch is <code>else</code>, not <code>elseif ($a == $b)</code>.</strong> If A is not bigger and B is not bigger, they must be equal — there is no fourth possibility. An <code>else</code> says that, and cannot leave a case unhandled by accident.</p>
+<p><strong>Negative numbers work with no extra code</strong>, because <code>&gt;</code> compares values and does not care about signs. <code>-3 &gt; -8</code> is true. This is worth testing: an answer that assumes marks are positive will fail here.</p>
+<hr>
+<h2>Answer 3 — what it prints</h2>
+<pre><code>x is 13 and y is 27
+Hello World!
+Count: 1 Count: 3 
+AB
+105
+8
+go </code></pre>
+<h3>Why, line by line</h3>
+<p><strong><code>x is 13 and y is 27</code></strong> — <code>$x++</code> hands back the <strong>old</strong> value and <em>then</em> adds. So <code>$y = 15 + 12 = 27</code>, and <code>$x</code> becomes 13. This is his slide, word for word. <code>++$x</code> would have given <code>$y = 28</code>.</p>
+<p><strong><code>Hello World!</code></strong> — <code>.=</code> adds to the end of what is already there. <code>&quot;Hello&quot;</code> → <code>&quot;Hello &quot;</code> → <code>&quot;Hello World!&quot;</code>.</p>
+<p><strong><code>Count: 1 Count: 3 </code></strong> <em>(with a trailing space)</em> — 2, 4 and 6 are skipped by <code>continue</code>. At 5 the loop <strong>breaks before the echo</strong>, so 5 never prints.</p>
+<p><strong><code>AB</code></strong> — joining <code>FALSE</code> to a string gives an <strong>empty string</strong>. His slide puts it nicely: FALSE is &quot;not there&quot; — even smaller than zero when it comes to width. (<code>TRUE</code> would have given <code>A1B</code>.)</p>
+<p><strong><code>105</code></strong> — the dot <strong>joins</strong>, it does not add. <code>10 . 5</code> is the text <code>&quot;10&quot;</code> stuck to the text <code>&quot;5&quot;</code>. If it had been <code>10 + 5</code> the answer would be <code>15</code>.</p>
+<p><strong><code>8</code></strong> — <code>(int) 9.9</code> <strong>chops</strong> the decimal part off, it does not round. So <code>9 - 1 = 8</code>. The cast is applied to <code>9.9</code> first, before the subtraction.</p>
+<p><strong><code>go </code></strong> — <code>do...while</code> is a <strong>one-trip</strong> loop. The test is at the <strong>bottom</strong>, so the body has already run once before <code>$n &lt; 3</code> is ever checked. <code>$n</code> started at 3, so the test fails immediately — but the <code>echo</code> had already happened.</p>
+<hr>
+<h2>And the <code>define()</code> question</h2>
+<p><strong><code>define()</code> is not in any of her decks.</strong> No slide mentions constants, <code>define()</code> or <code>const</code>, and the exam announcement lists &quot;Variables &amp; Scope&quot;, not constants. <strong>It is very unlikely to be on Partial I.</strong></p>
+<p>For completeness, this is the answer:</p>
+<pre class="lang-php"><code>define(&quot;PASS_MARK&quot;, 60);
+echo PASS_MARK;        // 60  - no $ sign</code></pre>
+<p><strong>Why you would use it.</strong> A constant is a value that must never change while the script runs. You use <code>define()</code> instead of a variable for three reasons:</p>
+<ol><li><strong>It cannot be reassigned.</strong> A variable holding the pass mark can be overwritten by mistake three hundred lines later. A constant cannot: defining it a second time prints <code>Warning: Constant PASS_MARK already defined</code> and <strong>the value does not change</strong>. The mistake announces itself instead of quietly corrupting every grade below it.</li><li><strong>One place to change it.</strong> If the pass mark moves from 60 to 50, you change one line, not every <code>if ($grade &lt; 60)</code> scattered through the file.</li><li><strong>It is global.</strong> A constant is visible inside every function without being passed in. A variable is not — <code>$passMark</code> declared at the top of the file is invisible inside a function.</li></ol>
+<p>Written with <code>const</code> instead, at the top level, it means the same thing:</p>
+<pre class="lang-php"><code>const PASS_MARK = 60;</code></pre>
+<p>The difference that matters: <code>define()</code> runs <strong>when that line executes</strong>, so it can be inside an <code>if</code>. <code>const</code> is fixed when the file is <strong>compiled</strong>, so it cannot be.</p>
+<p><strong>Naming:</strong> constants are written in CAPITALS <strong>with no <code>$</code></strong>. Writing <code>$PASS_MARK</code> makes it a variable again.</p>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=5"></script>

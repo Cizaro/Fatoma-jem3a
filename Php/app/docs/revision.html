@@ -1,0 +1,182 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Partial I — everything, in six parts</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=5">
+<body class="reader">
+<article class="prose">
+<h1>Partial I — everything, in six parts</h1>
+<p>Everything below is traced to a page of her own slides. Where a thing is <strong>not</strong> in her decks it says so, because revision time the night before is too expensive to spend on something that cannot be asked.</p>
+<p>Every output on this page was produced by <strong>running</strong> the code on PHP 8.2.12, not by reading it.</p>
+<hr>
+<h2>Part 1 — Algorithms, pseudocode, flowcharts</h2>
+<p><em>Lesson 01, all 20 pages.</em></p>
+<h3>The key points</h3>
+<ul><li>An <strong>algorithm</strong> is a step-by-step procedure for solving a problem. It must have data to work on, must produce at least one result, and <strong>must stop after a finite number of steps</strong>.</li><li><strong>Pseudocode</strong> is &quot;fake code&quot; — informal, no syntax rules, never compiled. You write it so you can think about the design without fighting syntax.</li><li>A <strong>flowchart</strong> is the same algorithm drawn as a picture.</li><li>The <strong>PDLC</strong> has six phases: Problem Definition → Problem Analysis → Algorithm Development → Coding &amp; Documentation → Testing &amp; Debugging → Maintenance.</li></ul>
+<h3>His pseudocode conventions — these are marked</h3>
+<div class="tablewrap"><table><thead><tr><th>Convention</th><th>What it means</th></tr></thead><tbody><tr><td>The algorithm has a <strong>name</strong></td><td><code>Algorithm GCD</code></td></tr><tr><td><code>[square brackets]</code></td><td>a comment to the reader</td></tr><tr><td><strong>CAPITAL LETTERS</strong></td><td>variable names</td></tr><tr><td><code>&lt;--</code></td><td>assignment (a left arrow)</td></tr><tr><td><code>+ - * / &lt; &gt; = !=</code></td><td>the operators</td></tr><tr><td><code>if-then</code>, <code>if-then-else</code>, <code>endif</code></td><td>the decision</td></tr><tr><td><code>Repeat</code>, <code>for</code>, <code>while</code>, <code>until</code></td><td>the repetition</td></tr></tbody></table></div>
+<h3>The five flowchart shapes</h3>
+<div class="tablewrap"><table><thead><tr><th>Shape</th><th>Use</th></tr></thead><tbody><tr><td><strong>Oval</strong></td><td>the beginning or the end of the program</td></tr><tr><td><strong>Parallelogram</strong></td><td>an input operation <strong>and</strong> an output operation</td></tr><tr><td><strong>Rectangle</strong></td><td>a process — addition, subtraction, division, assigning</td></tr><tr><td><strong>Diamond</strong></td><td>a decision; the program continues along one of two routes</td></tr><tr><td><strong>Flow line</strong></td><td>the direction the logic flows</td></tr></tbody></table></div>
+<p><strong>Two rules he states outright, and both lose marks:</strong></p>
+<ol><li><em>&quot;A flowchart must have a start and stop.&quot;</em> Both of them.</li><li><em>&quot;All steps in a flowchart must connect. Can&#x27;t leave a step hanging with no connection.&quot;</em></li></ol>
+<p>A loop has <strong>no shape of its own</strong>. It is a diamond, a body, and an arrow going back up to the diamond. That back-arrow <em>is</em> the loop.</p>
+<h3>Solved question — his own Example 2</h3>
+<blockquote><p>Write an algorithm to determine a student&#x27;s final grade and say whether it is passing or failing. The final grade is the average of four marks.</p></blockquote>
+<p><strong>Pseudocode:</strong></p>
+<pre><code>Input M1, M2, M3, M4
+GRADE &lt;-- (M1 + M2 + M3 + M4) / 4
+If (GRADE &lt; 60) then
+    Print &quot;FAIL&quot;
+Else
+    Print &quot;PASS&quot;
+Endif</code></pre>
+<p><strong>Flowchart:</strong></p>
+<pre><code>   ( START )
+       |
+/ Input M1,M2,M3,M4 /          &lt;- parallelogram, one input symbol
+       |
+[ GRADE &lt;-- (M1+M2+M3+M4)/4 ]  &lt;- rectangle, it works this out itself
+       |
+  &lt; IS GRADE &lt; 60 ? &gt;          &lt;- diamond, two routes
+     Y /        \ N
+/ PRINT &quot;FAIL&quot; /  / PRINT &quot;PASS&quot; /
+       \        /
+        ( STOP )</code></pre>
+<p><strong>Why it is written like this</strong></p>
+<ul><li>The four marks come in through <strong>one</strong> parallelogram, not four. That is how his slide draws it.</li><li>The average is a <strong>rectangle</strong>: nobody typed it and nobody saw it, the program worked it out.</li><li>The two branches <strong>join back together</strong> before STOP. Leaving two separate STOP ovals is also accepted, but nothing may be left hanging.</li><li><code>&lt;</code> is used, so exactly 60 is a <strong>PASS</strong>. Read the boundary in the question and write the comparison that matches it — this is where marks go.</li></ul>
+<hr>
+<h2>Part 2 — What PHP is, and how it runs</h2>
+<p><em>Lesson 02, all 22 pages.</em></p>
+<h3>The key points</h3>
+<ul><li><strong>PHP stands for Hypertext Preprocessor.</strong></li><li>It is <strong>interpreted</strong> — there is no compilation step.</li><li>It is a <strong>server-side</strong> scripting language. The code runs on the server and the browser receives only what was printed. The browser never sees PHP.</li><li>It is <strong>open-source</strong> and <strong>object-oriented</strong>, and it can be <strong>embedded into HTML</strong>.</li><li>Created by <strong>Rasmus Lerdorf in 1994</strong>, released <strong>1995</strong>. Current version <strong>PHP 8.2</strong>.</li><li>PHP itself is written in <strong>C</strong>, and has three modules: <strong>PHP core</strong>, the <strong>Extension layer</strong>, and the <strong>Zend Engine</strong> (which reads, compiles and executes the file).</li></ul>
+<h3>XAMPP</h3>
+<ul><li><strong>X</strong>-platform, <strong>A</strong>pache, <strong>M</strong>ySQL/MariaDB, <strong>P</strong>HP, <strong>P</strong>erl.</li><li>Files must be saved inside <strong><code>C:\xampp\htdocs</code></strong>.</li><li>You reach them at <strong><code>localhost</code></strong> (which is <strong>127.0.0.1</strong>).</li><li><strong>Apache must be started</strong> before a <code>.php</code> file will run.</li><li>Apache runs as a <strong>daemon</strong> — a process waiting in the background for a request — and uses <strong>modules</strong> (also called handlers) to decide how to answer one.</li></ul>
+<h3>Solved question</h3>
+<blockquote><p>Why does opening <code>firstPHP.php</code> by double-clicking it show the code instead of the result?</p></blockquote>
+<p><strong>Answer.</strong> Double-clicking opens the file straight from the disk, so no server is involved. PHP is a <em>server-side</em> language: the code only runs when Apache hands the file to the PHP module. The fix is the three steps from his slide — put the file inside <code>C:\xampp\htdocs</code>, press <strong>Start</strong> on Apache in the XAMPP control panel, then visit <strong><code>localhost/PHPfiles/firstPHP.php</code></strong>.</p>
+<p><strong>Why this is the answer.</strong> It is the same fact as &quot;where does PHP code run&quot;, asked backwards. If you can say <em>the browser never sees PHP</em>, you can answer either version.</p>
+<hr>
+<h2>Part 3 — Variables, strings, comments, output</h2>
+<p><em>Lesson 03, pages 7 to 15.</em></p>
+<h3>Variable names — he gives the rule and the counter-examples</h3>
+<blockquote><p>Start with a dollar sign <code>$</code> followed by a letter or underscore, followed by any number of letters, numbers, or underscores. <strong>Case matters.</strong></p></blockquote>
+<div class="tablewrap"><table><thead><tr><th>Valid</th><th>Invalid</th><th>Why</th></tr></thead><tbody><tr><td><code>$abc</code></td><td><code>abc = 12;</code></td><td>no <code>$</code> — it is not a variable at all</td></tr><tr><td><code>$total</code></td><td><code>$2php = 0;</code></td><td>starts with a digit</td></tr><tr><td><code>$largest_so_far</code></td><td><code>$bad-punc = 0;</code></td><td>the hyphen is a minus sign</td></tr></tbody></table></div>
+<p><strong>Case matters</strong> means <code>$Name</code> and <code>$name</code> are two different variables. This is the single most common lost mark.</p>
+<p>Leaving the <code>$</code> off is not a small thing:</p>
+<pre class="lang-php"><code>$x = 2;
+y = $x + 5;     // Parse error
+print $x;</code></pre>
+<h3>Strings</h3>
+<ul><li>Single quotes <strong>or</strong> double quotes.</li><li><strong>In double quotes, variables expand.</strong> In single quotes they do not.</li><li>The backslash <code>\</code> is the escape character.</li><li>A string may span several lines; the newline is part of the string.</li></ul>
+<pre class="lang-php"><code>$expand = 12;
+echo &quot;Variables do $expand&quot;;      // Variables do 12
+echo &#x27;Variables do not $expand&#x27;;  // Variables do not $expand</code></pre>
+<h3>Comments — all three are valid</h3>
+<pre class="lang-php"><code>echo &#x27;test&#x27;;  // a C++ style comment
+/* a multi line comment
+   another line */
+echo &#x27;test&#x27;;  # a shell-style comment</code></pre>
+<p><code>&lt;!-- this --&gt;</code> is an <strong>HTML</strong> comment. PHP ignores it and the browser shows it in the page source.</p>
+<h3>echo and print</h3>
+<ul><li><code>echo</code> is a <strong>language construct</strong>. Without parentheses it takes <strong>several</strong> parameters: <code>echo $x, &quot;\n&quot;;</code></li><li><code>print</code> is a <strong>function</strong>. One parameter only, parentheses optional.</li></ul>
+<hr>
+<h2>Part 4 — Operators, casting, equality</h2>
+<p><em>Lesson 03, pages 17 to 31. This is the richest part of his deck and the likeliest source of Section 1 and Section 3.</em></p>
+<h3>Concatenation is the dot, never the plus</h3>
+<blockquote><p><em>&quot;PHP uses the period character for concatenation, because the plus character would instruct PHP to do the best it could to </em><em>add</em><em> the two things together, converting if necessary.&quot;</em></p></blockquote>
+<pre class="lang-php"><code>echo &quot;100&quot; . 25;   // 10025   &lt;- joined
+echo &quot;100&quot; + 25;   // 125     &lt;- added
+echo 10 . 5;       // 105</code></pre>
+<h3>Casting — PHP converts silently and aggressively</h3>
+<div class="tablewrap"><table><thead><tr><th>Code</th><th>Result</th><th>Why</th></tr></thead><tbody><tr><td><code>56 / 12</code></td><td><code>4.666...</code></td><td><strong>division always makes a float</strong></td></tr><tr><td><code>&quot;100&quot; + 36.25 + TRUE</code></td><td><code>137.25</code></td><td>TRUE counts as 1</td></tr><tr><td><code>(int) 9.9 - 1</code></td><td><code>8</code></td><td>casting to int <strong>chops</strong>, it does not round</td></tr><tr><td><code>&quot;sam&quot; . 25</code></td><td><code>sam25</code></td><td>the dot joins</td></tr><tr><td><code>&quot;A&quot; . FALSE . &quot;B&quot;</code></td><td><code>AB</code></td><td>FALSE joins as an <strong>empty string</strong></td></tr><tr><td><code>&quot;X&quot; . TRUE . &quot;Y&quot;</code></td><td><code>X1Y</code></td><td>TRUE joins as <strong>1</strong></td></tr></tbody></table></div>
+<h3>⚠ One slide of his is out of date</h3>
+<p>Pages 26 and 27 teach <code>&quot;sam&quot; + 25</code> giving <strong>25</strong>. On <strong>PHP 8.2</strong> — the version his own Lesson 02 deck specifies — that is a <strong>fatal error</strong>:</p>
+<pre><code>Uncaught TypeError: Unsupported operand types: string + int</code></pre>
+<p>It gave <code>25</code> in PHP 7. If it appears on the paper, <strong>the answer he is marking from is 25.</strong> Write 25, and know why.</p>
+<p><code>&quot;100&quot; + 25</code> still works, because <code>&quot;100&quot;</code> converts cleanly to a number. It is only a string with no number in it that now throws.</p>
+<h3>Equality against identity</h3>
+<ul><li><code>==</code> is <strong>equality</strong> — it converts first, then compares.</li><li><code>===</code> is <strong>identity</strong> — it compares <strong>the value and the type</strong>.</li></ul>
+<p>From his page 29, these are the true ones:</p>
+<pre class="lang-php"><code>123 == &quot;123&quot;        // true  - the string converts to a number
+FALSE == &quot;0&quot;        // true  - both are falsy
+(5 &lt; 6) === TRUE    // true  - both are booleans
+&quot;5&quot; === 5           // FALSE - same value, different type</code></pre>
+<h3>Increment — his exact example</h3>
+<pre class="lang-php"><code>$x = 12;
+$y = 15 + $x++;
+echo &quot;x is $x and y is $y&quot;;   // x is 13 and y is 27</code></pre>
+<p><code>$x++</code> hands back the <strong>old</strong> value (12, so <code>$y</code> is 27) and <em>then</em> adds one (so <code>$x</code> is 13). <code>++$x</code> adds first and hands back the new value.</p>
+<h3><code>.=</code> adds to the end</h3>
+<pre class="lang-php"><code>$out = &quot;Hello&quot;;
+$out .= &quot; &quot;;
+$out .= &quot;World!&quot;;
+echo $out;        // Hello World!</code></pre>
+<hr>
+<h2>Part 5 — Control structures</h2>
+<p><em>Lesson 03, pages 33 to 43.</em></p>
+<h3>if / elseif / else</h3>
+<pre class="lang-php"><code>$x = 7;
+if ($x &lt; 2) {
+    print &quot;Small&quot;;
+} elseif ($x &lt; 10) {
+    print &quot;Medium&quot;;
+} else {
+    print &quot;LARGE&quot;;
+}</code></pre>
+<ul><li>Logical operators: <code>== != &lt; &gt; &lt;= &gt;= &amp;&amp; || !</code></li><li><strong>Curly braces are not required</strong> for a single statement — but use them.</li><li><strong>Whitespace does not matter</strong> to PHP. It matters to the person marking it.</li></ul>
+<p><strong>The trap:</strong> in an <code>if</code>, <code>==</code> asks a question. A single <code>=</code> <strong>puts a value in</strong> and is always true.</p>
+<h3>The three loops</h3>
+<div class="tablewrap"><table><thead><tr><th>Loop</th><th>His own words</th><th>Runs at least once?</th></tr></thead><tbody><tr><td><code>while</code></td><td>a <strong>zero-trip</strong> loop, test at the <strong>top</strong></td><td><strong>no</strong></td></tr><tr><td><code>do...while</code></td><td>a <strong>one-trip</strong> loop, test at the <strong>bottom</strong></td><td><strong>yes</strong></td></tr><tr><td><code>for</code></td><td><em>&quot;the simplest way to construct a counted loop&quot;</em></td><td>no</td></tr></tbody></table></div>
+<pre class="lang-php"><code>for ($count = 1; $count &lt;= 6; $count++) { ... }
+//   before it starts   runs while true   after each pass</code></pre>
+<h3>break and continue</h3>
+<ul><li><strong><code>break</code></strong> ends the loop completely and jumps past it.</li><li><strong><code>continue</code></strong> ends only <strong>this pass</strong> and starts the next.</li></ul>
+<pre class="lang-php"><code>for ($c = 1; $c &lt;= 10; $c++) {
+    if (($c % 2) == 0) continue;
+    echo &quot;Count: $c &quot;;
+}
+// Count: 1 Count: 3 Count: 5 Count: 7 Count: 9</code></pre>
+<h3>Solved question</h3>
+<blockquote><p>What does this print?</p>
+<pre class="lang-php"><code>for ($c = 1; $c &lt;= 6; $c++) {
+if ($c % 2 == 0) continue;
+if ($c == 5) break;
+echo &quot;Count: $c &quot;;
+}</code></pre></blockquote>
+<p><strong>Answer:</strong> <code>Count: 1 Count: 3 </code></p>
+<p><strong>Why.</strong> Trace it one pass at a time, which is the only way that works:</p>
+<div class="tablewrap"><table><thead><tr><th><code>$c</code></th><th>even?</th><th>is it 5?</th><th>prints</th></tr></thead><tbody><tr><td>1</td><td>no</td><td>no</td><td><code>Count: 1 </code></td></tr><tr><td>2</td><td><strong>yes → continue</strong></td><td>—</td><td>nothing</td></tr><tr><td>3</td><td>no</td><td>no</td><td><code>Count: 3 </code></td></tr><tr><td>4</td><td><strong>yes → continue</strong></td><td>—</td><td>nothing</td></tr><tr><td>5</td><td>no</td><td><strong>yes → break</strong></td><td>nothing, and the loop ends</td></tr></tbody></table></div>
+<p>5 is never printed, because <code>break</code> comes <strong>before</strong> the <code>echo</code>. Mind the trailing space — every <code>Count: $c </code> brings one with it.</p>
+<hr>
+<h2>Part 6 — Forms</h2>
+<p><em>The announcement, and the exercise on Lesson 03 page 47.</em></p>
+<p>His exercise asks for exactly four things, and they are the marks:</p>
+<ol><li>A form whose inputs have a <strong><code>name</code></strong> attribute, submitting by <strong>POST</strong>.</li><li>A check that <strong>the form was actually submitted</strong>.</li><li><strong>Validation</strong> — that the value is set, and is a sensible number.</li><li>A <strong>clean output</strong>, or an error message if the input is invalid or empty.</li></ol>
+<h3>The shape to memorise</h3>
+<pre class="lang-php"><code>&lt;form action=&quot;&quot; method=&quot;POST&quot;&gt;
+    &lt;input type=&quot;text&quot; name=&quot;num&quot;&gt;
+    &lt;button type=&quot;submit&quot; name=&quot;show&quot; value=&quot;1&quot;&gt;Go&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;?php
+if (isset($_POST[&quot;show&quot;])) {      // 1. was it submitted?
+    $num = $_POST[&quot;num&quot;];         // 2. isset FIRST, read SECOND
+    if (!is_numeric($num)) {      // 3. validate
+        echo &quot;&lt;p&gt;Please type a number.&lt;/p&gt;&quot;;
+    } else {
+        echo &quot;&lt;p&gt;You typed &quot; . $num . &quot;&lt;/p&gt;&quot;;   // 4. output
+    }
+}</code></pre>
+<p><strong>Why <code>isset</code> comes first.</strong> On the very first visit nothing has been posted. Reading <code>$_POST[&quot;num&quot;]</code> before checking it exists prints <code>Warning: Undefined array key &quot;num&quot;</code> on the page.</p>
+<p><strong><code>action=&quot;&quot;</code></strong> posts back to the same file. Typing a filename there means the form breaks the moment the file is renamed.</p>
+<hr>
+<h2>A note on <code>define()</code></h2>
+<p><strong>It is not in any of her three decks.</strong> Not one slide mentions constants, <code>define()</code> or <code>const</code>. The exam announcement does not mention them either — it lists &quot;Variables &amp; Scope&quot;, not constants.</p>
+<p>So: <strong>do not spend tonight on it.</strong> For completeness, the answer is in the revision questions page.</p>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=5"></script>
