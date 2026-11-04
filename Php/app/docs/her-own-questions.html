@@ -1,97 +1,49 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Every question in her own PDFs</title>
+<title>Questions from her PDFs</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="../app.css?v=5">
 <body class="reader">
 <article class="prose">
-<h1>Every question in her own PDFs</h1>
-<p>Thirteen. Nothing here is invented — each one is copied from a page of her own material, with the source named. Her three lecture decks and the Set I sheet were searched end to end for every <code>Exercise</code>, <code>Problem</code>, <code>Example</code>, <code>Task</code> and <em>&quot;write an algorithm&quot;</em>.</p>
-<p><strong>Two of them are table-and-loop questions, and they were already in her Set I sheet</strong> — Problems 4 and 5. If she does nothing else tonight, do those.</p>
+<h1>Questions from her PDFs</h1>
+<p>Thirteen questions, copied from her own material. Nothing added.</p>
 <hr>
-<h2>⭐ Do these tonight, in this order</h2>
-<div class="tablewrap"><table><thead><tr><th>#</th><th>Question</th><th>Why first</th></tr></thead><tbody><tr><td>1</td><td><strong>Set I, Problem 4</strong> — squares and cubes table</td><td>loop <strong>+</strong> HTML table, runs with no input. The simplest possible Section 4.</td></tr><tr><td>2</td><td><strong>Set I, Problem 5</strong> — storage tiers table</td><td>same shape, three columns instead of two. Proves the shape stuck.</td></tr><tr><td>3</td><td><strong>Lesson 01, Exercise 2</strong> — largest of two numbers</td><td>pseudocode + flowchart + code, and it is short</td></tr><tr><td>4</td><td><strong>Lesson 01, Exercise 4</strong> — odd or even</td><td>one decision, one diamond. Ten minutes.</td></tr><tr><td>5</td><td><strong>Lesson 01, Exercise 1</strong> — sum up to n</td><td>a loop with a running total, which is the other Section 4 pattern</td></tr></tbody></table></div>
-<p>Everything below that line is revision if there is time. There will not be.</p>
+<h2>Lesson 01 — Exercises</h2>
+<p><em>For the following exercises, design pseudo-code, a flowchart, and an algorithm.</em></p>
+<p><strong>Exercise 1: Sum of Natural Numbers</strong> Write a program to calculate the sum of natural numbers up to a given number n.</p>
+<p><strong>Exercise 2: Find the Largest of Two Numbers</strong> Write a program to find the largest of two given numbers.</p>
+<p><strong>Exercise 3: Calculate the Average of Three Numbers</strong> Write a program that takes three numbers as input and calculates their average.</p>
+<p><strong>Exercise 4: Check if a Number is Even or Odd</strong> Write a program that takes an integer as input and determines whether it is even or odd.</p>
+<p><strong>Exercise 5: Calculate the Factorial of a Number (Iterative)</strong> Write a program that calculates the factorial of a given positive integer using a loop.</p>
 <hr>
-<h1>Lesson 01 — the five Exercises</h1>
-<blockquote><p><em>&quot;For the following exercises, design pseudo-code, a flowchart, and an algorithm.&quot;</em></p></blockquote>
-<p><strong>These are the only questions in her decks that he does not answer for her.</strong> They are also the exact shape of Section 4 — pseudocode, flowchart, and the logic. Written for paper, not for PHP, but every one of them is three lines away from being a PHP question.</p>
-<h3>Exercise 1 — Sum of Natural Numbers</h3>
-<blockquote><p>Write a program to calculate the sum of natural numbers up to a given number <strong>n</strong>.</p></blockquote>
-<h3>Exercise 2 — Find the Largest of Two Numbers</h3>
-<blockquote><p>Write a program to find the largest of two given numbers.</p></blockquote>
-<h3>Exercise 3 — Calculate the Average of Three Numbers</h3>
-<blockquote><p>Write a program that takes three numbers as input and calculates their average.</p></blockquote>
-<h3>Exercise 4 — Check if a Number is Even or Odd</h3>
-<blockquote><p>Write a program that takes an integer as input and determines whether it is even or odd.</p></blockquote>
-<h3>Exercise 5 — Calculate the Factorial of a Number (Iterative)</h3>
-<blockquote><p>Write a program that calculates the factorial of a given positive integer <strong>using a loop</strong>.</p></blockquote>
+<h2>Lesson 01 — Examples</h2>
+<p><strong>Example 1</strong> Problem: Add 10 and 20.</p>
+<p><strong>Example 2</strong> Write an algorithm to determine a student&#x27;s final grade and indicate whether it is passing or failing. The final grade is calculated as the average of four marks.</p>
+<p><strong>Example 3</strong> Write an algorithm to log in to school&#x27;s email account.</p>
+<p><strong>Example with loop</strong> Find the sum of five numbers.</p>
 <hr>
-<h1>Lesson 01 — the four worked Examples</h1>
-<p>He gives the answers to these in the deck. <strong>Do not solve them — check yourself against them.</strong> Cover his answer, write yours, compare. It is the fastest honest feedback available tonight, because the marking scheme is literally his own slide.</p>
-<h3>Example 1 — Add 10 and 20</h3>
-<p>Answer on his slide: four steps, and a flowchart of six boxes with an oval at each end.</p>
-<h3>Example 2 — Student&#x27;s final grade <em>(the important one)</em></h3>
-<blockquote><p>Write an algorithm to determine a student&#x27;s final grade and indicate whether it is passing or failing. The final grade is calculated as the average of four marks.</p></blockquote>
-<p>His pseudocode, word for word:</p>
-<pre><code>Input M1,M2,M3,M4
-GRADE  (M1+M2+M3+M4)/4
-If (GRADE &lt; 60) then
-    Print &quot;FAIL&quot;
-Else
-    Print &quot;PASS&quot;
-Endif</code></pre>
-<p><strong>This is the single most likely source for Section 4.</strong> It is the only worked example in any deck that has input, a calculation and a decision together, and the announcement says Section 4 is a practical scenario needing exactly those.</p>
-<h3>Example 3 — Log in to a school email account</h3>
-<blockquote><p>Write an algorithm to log in to school&#x27;s email account.</p></blockquote>
-<p>A four-step algorithm with no numbers in it. Worth two minutes, because it proves an algorithm does not have to be arithmetic.</p>
-<h3>Example with a loop — The sum of five numbers</h3>
-<p>His slide gives the flowchart only. <strong>Write the pseudocode for it yourself</strong> — this is the loop-with-a-running-total pattern, and it is Exercise 1 with the count fixed at five.</p>
+<h2>Lesson 03 — Exercise</h2>
+<p><strong>Circle Area and Sphere Volume Calculator</strong></p>
+<p>Write PHP code to calculate the surface area of a circle (A = π·r²) and the volume of a sphere (V = ⁴⁄₃·π·r³) using a given radius (r). You will implement this solution using two different approaches.</p>
+<p><strong>Part 1: Static / Developer-Defined Calculation</strong></p>
+<ul><li>Create a PHP script named <code>part1_static.php</code>.</li><li>Define a variable <code>$radius</code> with a default hardcoded value assigned directly by the developer (e.g., <code>$radius = 5</code>).</li><li>Calculate: Circle Area (A = π·r²), Sphere Volume (V = ⁴⁄₃·π·r³).</li><li>Display the original radius along with the calculated area and volume rounded to 2 decimal places.</li></ul>
+<p><strong>Part 2: Dynamic Calculation using HTML Form</strong></p>
+<ul><li>Create an HTML file (<code>index.html</code>) with a form containing: an <code>&lt;input&gt;</code> field of type number (with <code>step=&quot;any&quot;</code> to allow decimals) for the user to enter a radius, and a submit button.</li><li>The form should submit data using the POST method to <code>part2_dynamic.php</code>.</li><li>Create a PHP script named <code>part2_dynamic.php</code> that: - Checks if the form has been submitted via POST. - Validates that the radius input is set and is a positive number. - Computes the Circle Area and Sphere Volume based on the user&#x27;s input. - Displays a clean output with the results or an error message if the input is invalid/empty.</li></ul>
 <hr>
-<h1>Lesson 03 — the Exercise</h1>
-<h3>Circle Area and Sphere Volume Calculator</h3>
-<blockquote><p>Write PHP code to calculate the surface area of a circle (A = π·r²) and the volume of a sphere (V = ⁴⁄₃·π·r³) using a given radius (r). You will implement this solution using two different approaches.</p></blockquote>
-<p><strong>Part 1 — Static / Developer-Defined</strong></p>
-<ul><li>A script named <code>part1_static.php</code></li><li>A variable <code>$radius</code> with a hardcoded value (e.g. <code>$radius = 5</code>)</li><li>Calculate the circle area and the sphere volume</li><li>Display the radius with both results <strong>rounded to 2 decimal places</strong></li></ul>
-<p><strong>Part 2 — Dynamic, using an HTML Form</strong></p>
-<ul><li>An <code>index.html</code> with a form: an <code>&lt;input type=&quot;number&quot;&gt;</code> with <code>step=&quot;any&quot;</code> for the radius, and a submit button</li><li>The form submits by <strong>POST</strong> to <code>part2_dynamic.php</code></li><li><code>part2_dynamic.php</code> must: - check the form was submitted via POST - validate that the radius <strong>is set and is a positive number</strong> - compute both values from the user&#x27;s input - display a clean output, <strong>or an error message</strong> if the input is invalid or empty</li></ul>
-<p><strong>Those four bullets in Part 2 are a marking scheme.</strong> Submitted check, validation, computation, error message. Section 4 asks for the same four things whatever the scenario.</p>
-<hr>
-<h1>PHP Problems — Set I</h1>
-<p>Five problems. All five already have runnable worked solutions in <code>Php/problem-set-1/</code>, and the self-marking versions are on the practice page.</p>
-<h3>Problem I — Basic Arithmetic Calculator</h3>
-<blockquote><p>Write a PHP script that prompts or receives input for numbers, performs basic arithmetic operations, and renders the sum, product, difference, and quotient.</p></blockquote>
-<p>Three approaches, and the three are the point:</p>
-<ul><li><strong>Approach 1 — hardcoded.</strong> Two variables defined in the script. Output rendered into the HTML with <code>echo</code>.</li><li><strong>Approach 2 — GET.</strong> Two numbers from URL parameters (<code>&amp;num1=100&amp;num2=10</code>) read with <strong><code>$_GET</code></strong>.</li><li><strong>Approach 3 — POST.</strong> An HTML <code>&lt;form method=&quot;POST&quot;&gt;</code> with text fields and action buttons (ADD, SUB, MULT, DIV), handled with <strong><code>$_POST</code></strong>, printing e.g. <code>The result = 115</code>.</li></ul>
-<h3>Problem 2 — The E-Commerce Price Filter</h3>
-<blockquote><p>Write a PHP script that receives <strong>five item prices</strong> in dollars via an HTML <code>&lt;form method=&quot;POST&quot;&gt;</code>.</p>
-<ul><li>Determine the minimum and maximum item prices.</li><li>**Constraint: use only basic <code>if</code> / <code>else</code> and the comparison operators</li></ul>
-<p>(<code>&lt;</code>, <code>&gt;</code>). Do not use built-in functions like <code>min()</code> or <code>max()</code>.**</p>
-<ul><li>Output HTML with dynamic CSS styling — the highest price in <strong>green</strong>,</li></ul>
-<p>the lowest in <strong>red</strong>.</p></blockquote>
-<p>⚠ This is the one with the case study. The obvious answer — an <code>else if</code> ladder — is wrong, and it is wrong in a way that passes the sheet&#x27;s own numbers. See <strong>Bug case study</strong> in the rail before writing it.</p>
-<h3>Problem 3 — Smart-Home Smart Plug</h3>
-<blockquote><p>Write a PHP script that processes a single integer input representing the current day of the month.</p>
-<ul><li>Check if the day is Odd or Even using the <strong>modulus operator (%)</strong>.</li><li>Render an HTML status message, e.g. *&quot;Day 14 is EVEN: Extra power mode</li></ul>
-<p>active!&quot;<em> or </em>&quot;Day 15 is ODD: Eco-conservation mode active!&quot;*</p></blockquote>
-<h3>⭐ Problem 4 — The Data Science Dashboard</h3>
-<blockquote><p>Write a PHP script that automatically calculates <strong>the square and the cube for all integers from 0 to 5</strong> using a <strong>loop</strong>.</p>
-<ul><li>Runs automatically on server load, <strong>without user input</strong>.</li><li>Dynamically generates an HTML5 <code>&lt;table&gt;</code> rendering the sequence.</li></ul></blockquote>
-<p><strong>Start here tonight.</strong> No form, no validation, no input — just a loop that builds a table. It is Section 4 with the hard parts removed, and the table shape is identical to anything he can set.</p>
-<p>Watch the boundary: <strong>0 to 5 is six rows</strong>, not five.</p>
-<h3>⭐ Problem 5 — The Cloud Storage Pricing Tier Generator</h3>
-<blockquote><p>Write a PHP script that <strong>loops through node counts from 1 to 6</strong>.</p>
-<ul><li>Runs automatically on page load.</li><li>For each node step, calculate <strong>10 × N</strong> (Storage GB), <strong>100 × N</strong></li></ul>
-<p>(Bandwidth TB) and <strong>1000 × N</strong> (API Requests).</p>
-<ul><li>Output the results inside an HTML5 <code>&lt;table&gt;</code>.</li></ul></blockquote>
-<p>Same shape as Problem 4 with three computed columns instead of two. Do it straight after, from blank, without looking back.</p>
-<p>Boundary again: <strong>1 to 6 is six rows.</strong></p>
-<hr>
-<h2>The thing both table problems are teaching</h2>
-<p>Everything that happens <strong>once</strong> goes outside the loop — <code>&lt;table&gt;</code>, the heading <code>&lt;tr&gt;</code>, <code>&lt;/table&gt;</code>. Everything that happens <strong>per row</strong> goes inside — and that is only ever one <code>&lt;tr&gt;…&lt;/tr&gt;</code>.</p>
-<p>Putting the heading row inside the loop is the commonest mistake in a table question, and it is instantly visible in the output: six heading rows.</p>
+<h2>PHP Problems — Set I</h2>
+<p><strong>Problem I: Basic Arithmetic Calculator</strong></p>
+<p>Objective: Write a PHP script that prompts or receives input for numbers, performs basic arithmetic operations, and renders the sum, product, difference, and quotient.</p>
+<ul><li><strong>Approach 1: Hardcoded Inputs &amp; Server-Side HTML Output</strong> - Input: Define two numbers as standard variables (e.g., <code>$num1</code> and <code>$num2</code>) directly inside your PHP script. - Output: Dynamically render and display the arithmetic results directly into the webpage&#x27;s HTML structure using PHP echo statements.</li><li><strong>Approach 2: URL Parameters (GET Method Input)</strong> - Input: Accept two numbers passed via URL query parameters (e.g., <code>&amp;num1=100&amp;num2=10</code>) using PHP&#x27;s <code>$_GET</code> superglobal array. - Output: Read the values from <code>$_GET</code>, compute the calculations server-side, and display the formatted results on the webpage.</li><li><strong>Approach 3: HTML Forms &amp; Server POST Handling</strong> - Input: Create an HTML <code>&lt;form method=&quot;POST&quot;&gt;</code> containing text fields for user inputs alongside calculation action buttons (e.g., ADD, SUB, MULT, DIV). - Output: Process the submitted form data in PHP via <code>$_POST</code>, perform the calculation, and output the result (e.g., &quot;The result = 115&quot;).</li></ul>
+<p><strong>Problem 2: The E-Commerce Price Filter</strong></p>
+<ul><li>Context: Shopping cart component highlighting cheapest and most expensive items.</li><li>Task: Write a PHP script that receives five item prices in dollars via an HTML <code>&lt;form method=&quot;POST&quot;&gt;</code>.</li><li>Requirements: - Determine the minimum and maximum item prices. - Constraint: Use only basic <code>if</code> / <code>else</code> conditional statements and comparison operators (<code>&lt;</code>, <code>&gt;</code>). Do not use built-in functions like <code>min()</code> or <code>max()</code>. - Output HTML with dynamic CSS styling to display the highest price in green text and the lowest price in red text.</li></ul>
+<p><strong>Problem 3: Smart-Home Smart Plug</strong></p>
+<ul><li>Context: Power allocation algorithm allocating extra voltage on even-numbered days and conserving energy on odd-numbered days.</li><li>Task: Write a PHP script that processes a single integer input representing the current day of the month.</li><li>Requirements: - Check if the day is Odd or Even using the modulus operator (<code>%</code>). - Render an HTML status message (e.g., &quot;Day 14 is EVEN: Extra power mode active!&quot; or &quot;Day 15 is ODD: Eco-conservation mode active!&quot;).</li></ul>
+<p><strong>Problem 4: The Data Science Dashboard (Grid Array Math)</strong></p>
+<ul><li>Context: Dashboard grid component computing exponential numbers (N² and N³).</li><li>Task: Write a PHP script that automatically calculates the square and cube for all integers from 0 to 5 using a loop.</li><li>Requirements: - Runs automatically on server load without user input. - Dynamically generates an HTML5 <code>&lt;table&gt;</code> rendering the sequence.</li></ul>
+<p><strong>Problem 5: The Cloud Storage Pricing Tier Generator</strong></p>
+<ul><li>Context: Administrative dashboard calculating enterprise storage limits based on purchased server nodes (N).</li><li>Task: Write a PHP script that loops through node counts from 1 to 6.</li><li>Requirements: - Runs automatically on page load. - For each node step, calculate 10 × N (Storage GB), 100 × N (Bandwidth TB), and 1000 × N (API Requests). - Output results inside an HTML5 <code>&lt;table&gt;</code>.</li></ul>
 </article>
 <nav class="lessonnav">
 
