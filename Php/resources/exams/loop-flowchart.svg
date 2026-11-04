@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 760" width="800" height="760" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+
+  <defs>
+    <marker id="a" markerWidth="11" markerHeight="9" refX="9.5" refY="3.6" orient="auto">
+      <path d="M0,0 L10,3.6 L0,7.2 z" fill="#374151"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="800" height="760" fill="#ffffff"/>
+
+  <!-- title -->
+  <text x="400" y="38" text-anchor="middle" font-size="20" font-weight="700" fill="#111827">Print "hi" five times</text>
+  <text x="400" y="62" text-anchor="middle" font-size="14" fill="#6b7280">The while loop and the for loop give the SAME flowchart</text>
+
+  <!-- START -->
+  <ellipse cx="400" cy="112" rx="86" ry="31" fill="#e8eaff" stroke="#3a42db" stroke-width="3"/>
+  <text x="400" y="119" text-anchor="middle" font-size="18" font-weight="700" fill="#3a42db">START</text>
+  <path d="M400,143 L400,176" stroke="#374151" stroke-width="2.4" fill="none" marker-end="url(#a)"/>
+
+  <!-- i = 0 -->
+  <rect x="283" y="178" width="234" height="58" rx="4" fill="#e8eaff" stroke="#3a42db" stroke-width="3"/>
+  <text x="400" y="214" text-anchor="middle" font-size="19" font-family="Consolas, monospace" fill="#111827">i &#8592; 0</text>
+  <path d="M400,236 L400,272" stroke="#374151" stroke-width="2.4" fill="none" marker-end="url(#a)"/>
+
+  <!-- decision -->
+  <polygon points="400,274 558,340 400,406 242,340" fill="#e8eaff" stroke="#3a42db" stroke-width="3" stroke-linejoin="round"/>
+  <text x="400" y="347" text-anchor="middle" font-size="19" font-family="Consolas, monospace" fill="#111827">i &lt; 5 ?</text>
+
+  <!-- yes, down -->
+  <text x="416" y="432" font-size="14" font-weight="700" fill="#15803d">yes</text>
+  <path d="M400,406 L400,446" stroke="#374151" stroke-width="2.4" fill="none" marker-end="url(#a)"/>
+
+  <!-- print hi -->
+  <polygon points="330,448 516,448 486,512 300,512" fill="#e8eaff" stroke="#3a42db" stroke-width="3" stroke-linejoin="round"/>
+  <text x="408" y="487" text-anchor="middle" font-size="19" font-family="Consolas, monospace" fill="#111827">PRINT "hi"</text>
+  <path d="M400,512 L400,548" stroke="#374151" stroke-width="2.4" fill="none" marker-end="url(#a)"/>
+
+  <!-- i = i + 1 -->
+  <rect x="283" y="550" width="234" height="58" rx="4" fill="#e8eaff" stroke="#3a42db" stroke-width="3"/>
+  <text x="400" y="586" text-anchor="middle" font-size="19" font-family="Consolas, monospace" fill="#111827">i &#8592; i + 1</text>
+
+  <!-- the back arrow: THIS is the loop -->
+  <path d="M283,579 L140,579 L140,340 L238,340" stroke="#374151" stroke-width="2.4" fill="none" marker-end="url(#a)"/>
+  <text x="128" y="466" text-anchor="end" font-size="14" font-weight="700" fill="#b45309">the loop</text>
+  <text x="128" y="486" text-anchor="end" font-size="13" fill="#b45309">(back arrow)</text>
+
+  <!-- no, right, to STOP -->
+  <text x="572" y="330" font-size="14" font-weight="700" fill="#b91c1c">no</text>
+  <path d="M558,340 L672,340 L672,636" stroke="#374151" stroke-width="2.4" fill="none" marker-end="url(#a)"/>
+  <ellipse cx="672" cy="672" rx="74" ry="30" fill="#e8eaff" stroke="#3a42db" stroke-width="3"/>
+  <text x="672" y="679" text-anchor="middle" font-size="18" font-weight="700" fill="#3a42db">STOP</text>
+
+  <!-- the two code forms -->
+  <text x="40" y="640" font-size="13.5" font-family="Consolas, monospace" fill="#374151">$i = 0;</text>
+  <text x="40" y="660" font-size="13.5" font-family="Consolas, monospace" fill="#374151">while ($i &lt; 5) {</text>
+  <text x="40" y="680" font-size="13.5" font-family="Consolas, monospace" fill="#374151">    echo 'hi';</text>
+  <text x="40" y="700" font-size="13.5" font-family="Consolas, monospace" fill="#374151">    $i++;</text>
+  <text x="40" y="720" font-size="13.5" font-family="Consolas, monospace" fill="#374151">}</text>
+
+  <text x="230" y="660" font-size="13.5" font-family="Consolas, monospace" fill="#374151">for ($i = 0; $i &lt; 5; $i++) {</text>
+  <text x="230" y="680" font-size="13.5" font-family="Consolas, monospace" fill="#374151">    echo 'hi';</text>
+  <text x="230" y="700" font-size="13.5" font-family="Consolas, monospace" fill="#374151">}</text>
+</svg>
