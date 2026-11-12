@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PHP Problems Explained</title>
+<style>
+@page { size: A4; margin: 14mm 12mm; }
+* { box-sizing: border-box; }
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: #1b1d22; line-height: 1.55; font-size: 10.5pt; margin: 0;
+  background: #fff;
+}
+h1 { font-size: 22pt; margin: 0 0 2mm; letter-spacing: -0.3pt; }
+h2 { font-size: 15pt; margin: 0 0 1mm; color: #2d3a8c; }
+h3 { font-size: 11.5pt; margin: 6mm 0 2mm; color: #1b1d22;
+     border-bottom: 1px solid #d9d9e3; padding-bottom: 1mm; }
+p  { margin: 0 0 2.5mm; }
+code { font-family: Consolas, "Courier New", monospace; font-size: 9.5pt;
+       background: #eef0f6; padding: 0.4mm 1.2mm; border-radius: 2px; }
+b, strong { font-weight: 600; }
+
+.cover { border-bottom: 3px solid #2d3a8c; padding-bottom: 4mm; margin-bottom: 6mm; }
+.cover .sub { color: #5d6270; font-size: 10pt; }
+.toc { background: #f5f6fa; border-radius: 4px; padding: 4mm 5mm; margin-bottom: 6mm; }
+.toc ol { margin: 1mm 0 0 5mm; padding: 0; }
+.toc li { margin-bottom: 1mm; }
+
+.problem { page-break-before: always; }
+.tag { display: inline-block; background: #2d3a8c; color: #fff; font-size: 8pt;
+       font-weight: 600; letter-spacing: 0.5pt; padding: 0.8mm 2.5mm;
+       border-radius: 3px; margin-bottom: 2mm; text-transform: uppercase; }
+.task { background: #fffaf0; border-left: 3px solid #d79a2b; padding: 3mm 4mm;
+        margin-bottom: 4mm; font-size: 10pt; }
+
+pre.full { background: #1e2130; color: #e8eaf5; font-family: Consolas, monospace;
+  font-size: 8.8pt; line-height: 1.5; padding: 4mm; border-radius: 4px;
+  white-space: pre; overflow: visible; margin: 0 0 4mm; }
+pre.full .c { color: #8e94b5; }
+pre.full .k { color: #ffb86c; }
+pre.full .s { color: #a5e8a0; }
+
+.ann { display: flex; align-items: stretch; gap: 0; margin-bottom: 2.5mm;
+       page-break-inside: avoid; }
+.ann .code { flex: 0 0 56%; background: #1e2130; color: #e8eaf5;
+  font-family: Consolas, monospace; font-size: 9pt; line-height: 1.5;
+  padding: 2.5mm 3mm; border-radius: 4px 0 0 4px; white-space: pre; margin: 0; }
+.ann .arw { flex: 0 0 9mm; display: flex; align-items: center; justify-content: center; }
+.ann .note { flex: 1; background: #f0f2f9; border-left: 3px solid #2d3a8c;
+  padding: 2.5mm 3mm; font-size: 9.3pt; border-radius: 0 4px 4px 0; }
+.ann .note b { color: #2d3a8c; }
+
+.why { background: #eaf4ec; border-left: 3px solid #2f7a4f; padding: 3mm 4mm;
+       margin: 3mm 0; font-size: 9.8pt; }
+.warn { background: #fdeeee; border-left: 3px solid #c0392b; padding: 3mm 4mm;
+        margin: 3mm 0; font-size: 9.8pt; }
+
+table { width: 100%; border-collapse: collapse; font-size: 9.3pt; margin: 2mm 0 4mm; }
+th { background: #eef0f6; text-align: left; padding: 1.8mm 2.5mm; font-weight: 600;
+     border-bottom: 1.5px solid #c9ccd8; }
+td { padding: 1.6mm 2.5mm; border-bottom: 1px solid #e4e6ee; vertical-align: top; }
+td.mono, th.mono { font-family: Consolas, monospace; font-size: 8.8pt; }
+
+.trace { display: flex; align-items: center; gap: 1.5mm; flex-wrap: wrap; margin: 3mm 0 4mm; }
+.trace .cell { background: #e1f0ec; border: 1px solid #2f7a6e; color: #0f4a42;
+   border-radius: 4px; padding: 1.5mm 3mm; font-family: Consolas, monospace;
+   font-size: 9.5pt; font-weight: 600; text-align: center; min-width: 13mm; }
+.trace .cell.start { background: #eceef3; border-color: #8b8f9e; color: #3a3d47; }
+.trace .lab { font-size: 7.5pt; color: #6a6e7c; display: block; font-weight: 400;
+   font-family: "Segoe UI", sans-serif; }
+.trace .x { color: #8b8f9e; font-size: 11pt; }
+
+.flow { margin: 3mm 0 4mm; }
+.flow .step { display: flex; align-items: flex-start; gap: 3mm; margin-bottom: 1.5mm;
+   page-break-inside: avoid; }
+.flow .n { flex: 0 0 6mm; height: 6mm; border-radius: 50%; background: #2d3a8c;
+   color: #fff; font-size: 8.5pt; font-weight: 600; display: flex;
+   align-items: center; justify-content: center; margin-top: 0.4mm; }
+.flow .txt { flex: 1; font-size: 9.6pt; }
+.flow .txt b { display: block; }
+.flow .txt span { color: #5d6270; font-size: 9pt; }
+
+.pseudo { background: #f7f7f4; border: 1px solid #ddddd6; border-radius: 4px;
+   padding: 3mm 4mm; font-family: Consolas, monospace; font-size: 9pt;
+   line-height: 1.6; white-space: pre; margin: 0 0 4mm; }
+
+.chart { text-align: center; margin: 3mm 0 4mm; }
+.foot { margin-top: 6mm; padding-top: 2mm; border-top: 1px solid #d9d9e3;
+   font-size: 8.5pt; color: #80848f; }
+ul { margin: 0 0 3mm 5mm; padding: 0; }
+li { margin-bottom: 1mm; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>PHP problems, explained line by line</h1>
+  <p class="sub">MIT320 &middot; Information Systems Development &nbsp;&bull;&nbsp;
+     Four problems, with an arrow on every line that matters</p>
+</div>
+
+<div class="toc">
+  <b>What is inside</b>
+  <ol>
+    <li><b>Problem 2 — integerPower</b> &nbsp; the lecturer's own answer, taken apart</li>
+    <li><b>Problem 1 — the quadratic solver</b> &nbsp; the one that was left unsolved</li>
+    <li><b>Problem IV — the smart plug</b> &nbsp; odd or even with <code>%</code></li>
+    <li><b>Exercises Set I — the circle calculator</b> &nbsp; with pseudocode and flowchart</li>
+  </ol>
+</div>
+
+<p><b>How to read the arrows.</b> On the left is a piece of real code. The arrow points from
+the explanation to the exact line it is talking about. Every number in this document was
+produced by actually running the code in PHP 8.2 — nothing here is guessed.</p>
+
+<div class="why">
+<b>The habit worth building.</b> Before typing anything, say out loud what each line is
+<i>for</i>. If you cannot say it, you do not understand it yet — and that is the question the
+marker will ask you.
+</div>
+
+
+<!-- ============================ PROBLEM 2 ============================ -->
+<div class="problem">
+<span class="tag">Problem 2</span>
+<h2>integerPower (base, exponent)</h2>
+
+<div class="task">
+  <b>The task.</b> Write a function <code>integerPower(base, exponent)</code> that returns
+  base<sup>exponent</sup>. For example <code>integerPower(3, 4) = 3*3*3*3</code>. The function
+  must use a <b>for</b> or <b>while</b> loop. Put it in a script that reads the two numbers
+  from an HTML5 form with two text fields and a button.
+  <br><br>Expected: <code>2 raised to the power 10 is 1024</code>
+</div>
+
+<h3>The lecturer's answer, as he wrote it</h3>
+
+<pre class="full">&lt;form action="Power.php" method="POST"&gt;
+&lt;label&gt;Base &lt;/label&gt;     &lt;input type="number" name="B"&gt;
+&lt;label&gt;Exponent &lt;/label&gt; &lt;input type="number" name="E"&gt;
+&lt;input type="submit" name="Cal" value="Calculate"&gt;
+&lt;/form&gt;
+&lt;?php
+function PowerInteger($a, $n) {
+    $P = 1;
+    if ($n &gt;= 0) {
+        for ($i = 0; $i &lt; $n; $i++) {
+            $P = $P * $a;
+        }
+    }
+    else {
+        for ($i = $n; $i &lt; 0; $i++) {
+            $P = $P * (1/$a);
+        }
+    }
+    return $P;
+}
+$Base   = $_POST["B"];
+$Exp    = $_POST['E'];
+$Result = PowerInteger($Base, $Exp);
+echo "Result : {$Result}";
+?&gt;</pre>
+
+<h3>Now the arrows</h3>
+
+<div class="ann">
+  <pre class="code">&lt;form action="Power.php"
+      method="POST"&gt;</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> the form has to send its two numbers somewhere.
+  <code>action</code> names the file that receives them — here the <b>same file</b>, so one
+  file holds both the form and the calculation. <code>POST</code> sends them hidden instead of
+  in the address bar.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">&lt;input type="number" name="B"&gt;
+&lt;input type="number" name="E"&gt;</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> <code>name</code> is the only part PHP ever sees.
+  <code>name="B"</code> is what makes <code>$_POST["B"]</code> exist later. Change the name here
+  and you must change it there too — or the data vanishes.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">function PowerInteger($a, $n) {</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> the question says to write a <b>function</b>.
+  <code>$a</code> and <code>$n</code> are empty slots — they hold nothing yet. They get filled
+  at the bottom of the file, when the function is actually called.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">$P = 1;</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#c0392b" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#c0392b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> <code>$P</code> is about to be <b>multiplied</b>
+  over and over. Start it at 0 and every answer is 0, because <code>0 &times; anything = 0</code>.
+  Starting at 1 is safe — multiplying by 1 changes nothing.
+  <br><br><b>The rule:</b> adding up &rarr; start at <b>0</b>. Multiplying up &rarr; start at <b>1</b>.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">if ($n &gt;= 0) {</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> a negative exponent means something different
+  (<code>2</code><sup>-3</sup> is a fraction, not a big number). So the code splits into two
+  paths. The question never asked for this — it is extra credit.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">for ($i = 0; $i &lt; $n; $i++) {
+    $P = $P * $a;
+}</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#c0392b" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#c0392b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> this is the whole calculation.
+  <code>$i &lt; $n</code> (not <code>&lt;=</code>) makes the body run <b>exactly n times</b> —
+  for n=10 it checks 0&lt;10 … 9&lt;10, then 10&lt;10 fails and it stops.
+  <br><br><b>Note:</b> <code>$i</code> never appears in the maths. It only counts the rounds.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">for ($i = $n; $i &lt; 0; $i++) {
+    $P = $P * (1/$a);
+}</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> for a negative exponent we multiply by
+  <code>1/$a</code> instead. Starting <code>$i</code> at <code>$n</code> (a negative number)
+  and counting <b>up</b> to 0 runs the loop |n| times. For 2<sup>-3</sup> it runs 3 times and
+  gives <code>0.125</code>, which is 1/8. Correct.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">return $P;</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#c0392b" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#c0392b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> <code>return</code> hands the number back so it
+  can be <b>stored and reused</b>. If he had written <code>echo $P;</code> here the number would
+  print and then be gone — the line <code>$Result = PowerInteger(...)</code> would get nothing.
+  <br><br><code>return</code> also <b>ends the function immediately</b>.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">$Base   = $_POST["B"];
+$Exp    = $_POST['E'];</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> this is where the typed numbers arrive.
+  The <code>"B"</code> and <code>'E'</code> match the <code>name=</code> in the form exactly.
+  Single or double quotes make no difference here.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">$Result = PowerInteger($Base, $Exp);</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> writing a function runs nothing. This is the line
+  that <b>calls</b> it. <code>$Base</code> goes into the slot <code>$a</code>, and
+  <code>$Exp</code> goes into <code>$n</code> — in that order.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">echo "Result : {$Result}";</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> the answer has to appear on the page.
+  The <code>{ }</code> around the variable is just a tidy way of putting it inside a
+  string — <code>"Result : $Result"</code> does exactly the same thing.</div>
+</div>
+
+<h3>What the loop actually does — 2 to the power 10</h3>
+
+<div class="trace">
+  <div class="cell start"><span class="lab">start</span>1</div><span class="x">&rarr;</span>
+  <div class="cell"><span class="lab">i = 0</span>2</div><span class="x">&rarr;</span>
+  <div class="cell"><span class="lab">i = 1</span>4</div><span class="x">&rarr;</span>
+  <div class="cell"><span class="lab">i = 2</span>8</div><span class="x">&rarr;</span>
+  <div class="cell"><span class="lab">i = 3</span>16</div><span class="x">&rarr;</span>
+  <div class="cell"><span class="lab">i = 4</span>32</div><span class="x">&rarr;</span>
+  <span class="x">&hellip;</span><span class="x">&rarr;</span>
+  <div class="cell"><span class="lab">i = 9</span>1024</div>
+</div>
+
+<p style="font-size:9.5pt;color:#5d6270;margin-top:-2mm">
+Every arrow is one round of the loop, and every round is the same line:
+<code>$P = $P * $a</code>. Ten rounds, ten multiplications by 2.</p>
+
+<h3>Tested in real PHP</h3>
+<table>
+<tr><th>Input</th><th>Loop runs</th><th class="mono">Result</th><th>Why</th></tr>
+<tr><td>2, 10</td><td>10 times</td><td class="mono">1024</td><td>the expected answer</td></tr>
+<tr><td>3, 4</td><td>4 times</td><td class="mono">81</td><td>3&times;3&times;3&times;3</td></tr>
+<tr><td>5, 0</td><td><b>0 times</b></td><td class="mono">1</td><td>loop never runs, <code>$P</code> stays 1 — and anything<sup>0</sup> is 1</td></tr>
+<tr><td>2, &minus;3</td><td>3 times</td><td class="mono">0.125</td><td>1/8, the else branch</td></tr>
+</table>
+
+<div class="warn">
+<b>Two changes before you hand this in.</b>
+<ul>
+<li>The question asks for <code>integerPower</code>. He named it <code>PowerInteger</code>.
+Rename it — markers check.</li>
+<li>The sheet's example output is <i>"2 raised to the power 10 is 1024"</i>, not
+<i>"Result : 1024"</i>. Change the last line to:
+<br><code>echo "$Base raised to the power $Exp is $Result";</code></li>
+</ul>
+</div>
+</div>
+
+
+<!-- ============================ PROBLEM 1 ============================ -->
+<div class="problem">
+<span class="tag">Problem 1 &mdash; the unsolved one</span>
+<h2>The quadratic solver</h2>
+
+<div class="task">
+  <b>The task.</b> Ask the user for <b>two coefficients and one constant</b> of a quadratic
+  function through three input fields, then print whether it has <b>one solution, two
+  solutions or no solution</b> — and show them.
+  <br><br>The form on the slide reads: <code>[ ] X&sup2; + [ ] X + [ ] = 0</code> with a
+  <b>Solve it</b> button.
+</div>
+
+<div class="why">
+<b>The whole problem is one number.</b> It is called the <b>discriminant</b>:
+<code>D = b&sup2; &minus; 4ac</code>. Its sign tells you how many solutions exist — which is
+exactly the three cases the question asks about. Work out D once, then one
+<code>if / elseif / else</code> on it.
+</div>
+
+<table>
+<tr><th class="mono">D</th><th>Meaning</th><th>Formula to print</th></tr>
+<tr><td class="mono">&gt; 0</td><td><b>two</b> solutions</td><td class="mono">(&minus;b &plusmn; &radic;D) / 2a</td></tr>
+<tr><td class="mono">= 0</td><td><b>one</b> solution</td><td class="mono">&minus;b / 2a</td></tr>
+<tr><td class="mono">&lt; 0</td><td><b>no</b> solution</td><td>you cannot square-root a negative</td></tr>
+</table>
+
+<h3>The code, written in his style</h3>
+
+<pre class="full">&lt;form action="Quadratic.php" method="POST"&gt;
+&lt;label&gt;Enter the integer numbers on the following equation:&lt;/label&gt;&lt;br&gt;
+&lt;input type="number" name="A"&gt; X&lt;sup&gt;2&lt;/sup&gt; +
+&lt;input type="number" name="B"&gt; X +
+&lt;input type="number" name="C"&gt; = 0 &lt;br&gt;
+&lt;input type="submit" name="Solve" value="Solve it"&gt;
+&lt;/form&gt;
+&lt;?php
+$a = $_POST["A"];
+$b = $_POST["B"];
+$c = $_POST["C"];
+
+$D = $b*$b - 4*$a*$c;
+
+if ($D &gt; 0) {
+    $x1 = (-$b + sqrt($D)) / (2*$a);
+    $x2 = (-$b - sqrt($D)) / (2*$a);
+    echo "Two solutions : X1 = {$x1} and X2 = {$x2}";
+}
+elseif ($D == 0) {
+    $x = -$b / (2*$a);
+    echo "One solution : X = {$x}";
+}
+else {
+    echo "No solution";
+}
+?&gt;</pre>
+
+<h3>The arrows</h3>
+
+<div class="ann">
+  <pre class="code">$D = $b*$b - 4*$a*$c;</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#c0392b" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#c0392b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> everything depends on this one number, so we
+  calculate it <b>once</b> and then just ask about its sign three times. Calculating it inside
+  each branch would repeat the same work.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">if ($D &gt; 0) { ... }
+elseif ($D == 0) { ... }
+else { ... }</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> the question literally lists three outcomes, and
+  a number can only be positive, zero or negative. The three branches <b>are</b> the three
+  cases — nothing is missing and nothing overlaps.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">sqrt($D)</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> PHP already has a square root — the same idea as
+  <code>pi()</code>. Never work one out by hand.
+  <br><br>And notice: it is only ever used <b>inside the D &gt; 0 branch</b>, where D is
+  guaranteed positive.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">(2*$a)</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> the brackets force the whole bottom of the
+  fraction to be worked out first. Without them PHP would divide by 2 and then multiply by a,
+  which is a different sum entirely.</div>
+</div>
+
+<h3>Tested in real PHP</h3>
+<table>
+<tr><th>a, b, c</th><th class="mono">D</th><th>Output</th></tr>
+<tr><td>1, &minus;3, 2</td><td class="mono">1</td><td class="mono">Two solutions : X1 = 2 and X2 = 1</td></tr>
+<tr><td>1, 2, 1</td><td class="mono">0</td><td class="mono">One solution : X = -1</td></tr>
+<tr><td>1, 1, 5</td><td class="mono">&minus;19</td><td class="mono">No solution</td></tr>
+</table>
+
+<div class="warn">
+<b>The trap.</b> If she types <code>a = 0</code> it is not a quadratic at all, and
+<code>2*$a</code> becomes zero — a division-by-zero error. His style has no guards anywhere,
+so leave it out unless asked. If you want the extra mark, one line at the top does it:
+<br><code>if ($a == 0) { echo "Not a quadratic equation"; }</code>
+</div>
+</div>
+
+
+<!-- ============================ PROBLEM IV ============================ -->
+<div class="problem">
+<span class="tag">Problem IV</span>
+<h2>Smart-home smart plug</h2>
+
+<div class="task">
+  <b>The task.</b> Read one integer — the day of the month. Use the <b>modulus operator</b>
+  to decide odd or even, and print a status message:
+  <br><br><code>Day 14 is EVEN: Extra power mode active!</code>
+  <br><code>Day 15 is ODD: Eco-conservation mode active!</code>
+</div>
+
+<div class="why">
+<b>What <code>%</code> really means: what is left over after dividing.</b>
+<br><br>
+<code>14 &divide; 2 = 7 remainder <b>0</b></code> &nbsp;&rarr;&nbsp; <code>14 % 2 = 0</code> &nbsp;&rarr;&nbsp; <b>EVEN</b><br>
+<code>15 &divide; 2 = 7 remainder <b>1</b></code> &nbsp;&rarr;&nbsp; <code>15 % 2 = 1</code> &nbsp;&rarr;&nbsp; <b>ODD</b>
+<br><br>
+So <code>% 2 == 0</code> is just asking <i>"did it divide cleanly?"</i>
+</div>
+
+<h3>The simplest version that answers the question</h3>
+
+<pre class="full">&lt;form method="post"&gt;
+    &lt;input type="text" name="day"&gt;
+    &lt;button type="submit"&gt;Check&lt;/button&gt;
+&lt;/form&gt;
+
+&lt;?php
+if (isset($_POST["day"])) {
+    $day = $_POST["day"];
+
+    if ($day % 2 == 0) {
+        echo "Day $day is EVEN: Extra power mode active!";
+    } else {
+        echo "Day $day is ODD: Eco-conservation mode active!";
+    }
+}
+?&gt;</pre>
+
+<div class="ann">
+  <pre class="code">if (isset($_POST["day"])) {</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> on the very first visit nobody has typed anything
+  yet. Without this check PHP complains about a missing key before the page has even been used.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">if ($day % 2 == 0) {</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#c0392b" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#c0392b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> this is the entire problem. One operator, one
+  comparison. <code>%</code> gives the remainder, and a remainder of zero means even.
+  <br><br>Careful: <code>==</code> asks a question. A single <code>=</code> would put a value in
+  and the <code>if</code> would behave very strangely.</div>
+</div>
+
+<h3>Pseudocode</h3>
+<pre class="pseudo">Algorithm SmartPlug
+[decides the power mode from the day of the month]
+
+    Input DAY
+
+    if (DAY % 2 = 0) then
+        Print "Day ", DAY, " is EVEN: Extra power mode active!"
+    else
+        Print "Day ", DAY, " is ODD: Eco-conservation mode active!"
+    endif
+
+End</pre>
+
+<h3>Flowchart</h3>
+<div class="chart">
+<svg width="300" viewBox="0 0 300 330">
+<defs><marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#5d6270" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect x="105" y="10" width="90" height="30" rx="15" fill="#eceef3" stroke="#8b8f9e" stroke-width="1"/>
+<text x="150" y="29" text-anchor="middle" font-family="Segoe UI" font-size="12" fill="#3a3d47">Start</text>
+<line x1="150" y1="40" x2="150" y2="58" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a1)"/>
+<polygon points="78,64 222,64 207,94 63,94" fill="#fff6e5" stroke="#b4690e" stroke-width="1"/>
+<text x="143" y="83" text-anchor="middle" font-family="Segoe UI" font-size="12" fill="#6b4208">Input DAY</text>
+<line x1="150" y1="94" x2="150" y2="112" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a1)"/>
+<polygon points="150,116 245,156 150,196 55,156" fill="#eaf4ec" stroke="#2f7a4f" stroke-width="1"/>
+<text x="150" y="152" text-anchor="middle" font-family="Segoe UI" font-size="11.5" fill="#1d4d31">DAY % 2 = 0 ?</text>
+<text x="150" y="168" text-anchor="middle" font-family="Segoe UI" font-size="10" fill="#4a7a5c">(no remainder)</text>
+<line x1="55" y1="156" x2="30" y2="156" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="30" y1="156" x2="30" y2="226" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a1)"/>
+<text x="42" y="150" font-family="Segoe UI" font-size="10" fill="#5d6270">No</text>
+<line x1="245" y1="156" x2="270" y2="156" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="270" y1="156" x2="270" y2="226" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a1)"/>
+<text x="248" y="150" font-family="Segoe UI" font-size="10" fill="#5d6270">Yes</text>
+<polygon points="10,230 128,230 116,260 -2,260" fill="#fff6e5" stroke="#b4690e" stroke-width="1"/>
+<text x="59" y="249" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#6b4208">Print ODD</text>
+<polygon points="186,230 304,230 292,260 174,260" fill="#fff6e5" stroke="#b4690e" stroke-width="1"/>
+<text x="239" y="249" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#6b4208">Print EVEN</text>
+<line x1="59" y1="260" x2="59" y2="286" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="239" y1="260" x2="239" y2="286" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="59" y1="286" x2="239" y2="286" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="150" y1="286" x2="150" y2="300" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a1)"/>
+<rect x="105" y="300" width="90" height="28" rx="14" fill="#eceef3" stroke="#8b8f9e" stroke-width="1"/>
+<text x="150" y="318" text-anchor="middle" font-family="Segoe UI" font-size="12" fill="#3a3d47">Stop</text>
+</svg>
+</div>
+
+<p style="font-size:9.5pt;color:#5d6270">Note the two branches <b>rejoin</b> before Stop —
+markers like that, because it shows you saw that both paths end the same way. Ovals top and
+bottom, nothing left dangling.</p>
+</div>
+
+
+<!-- ======================= EXERCISES SET I ======================= -->
+<div class="problem">
+<span class="tag">PHP Exercises &mdash; Set I</span>
+<h2>The circle calculator</h2>
+
+<div class="task">
+  <b>The task.</b> Enter a radius. Calculate the <b>area, circumference or volume</b>. Show
+  the formula used <b>and</b> the result. The form needs a radius box, a <b>Calculate</b>
+  button and a <b>Clear</b> button — and the PHP must work out <b>which button was pressed</b>.
+  <br><br><code>pi()</code> is predefined in PHP.
+</div>
+
+<div class="why">
+<b>The real question is the two buttons.</b> A submit button is only sent to PHP if it was the
+one clicked. Give them different names and <code>isset()</code> tells you which:
+<br><br>
+<code>if (isset($_POST["clear"])) { ... }</code><br>
+<code>elseif (isset($_POST["calculate"])) { ... }</code>
+</div>
+
+<h3>The three formulas</h3>
+<pre class="full">$result = pi() * $r * $r;                   // Area          = &pi; &times; r&sup2;
+$result = 2 * pi() * $r;                    // Circumference = 2 &times; &pi; &times; r
+$result = (4 / 3) * pi() * $r * $r * $r;    // Volume        = 4/3 &times; &pi; &times; r&sup3;</pre>
+
+<div class="ann">
+  <pre class="code">&lt;button name="calculate"&gt;Calculate&lt;/button&gt;
+&lt;button name="clear"&gt;Clear&lt;/button&gt;</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#c0392b" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#c0392b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> two <b>different names</b> is what makes the two
+  buttons tellable apart. Only the clicked one is sent, so only its key exists in
+  <code>$_POST</code>.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">pi()</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> the sheet says so, and because typing
+  <code>3.14</code> loses accuracy — and a mark. <code>pi()</code> is far more precise.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">(4 / 3) * pi() * $r * $r * $r</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2d3a8c" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2d3a8c" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>We did this because</b> the brackets say what we meant. Writing
+  <code>1.33</code> instead of <code>4 / 3</code> makes the volume wrong in the third digit.
+  Keep it as a division.</div>
+</div>
+
+<h3>Pseudocode</h3>
+<pre class="pseudo">Algorithm CircleCalculator
+[reads a radius and a chosen calculation, prints the formula and the result]
+
+    Input RADIUS, CHOICE, BUTTON
+
+    if (BUTTON = "Clear") then
+        RADIUS &lt;-- empty
+        RESULT &lt;-- empty
+    else
+        if (RADIUS is not a number) OR (RADIUS &lt;= 0) then
+            Print "Please enter a positive number"
+        else
+            if (CHOICE = "Area") then
+                RESULT  &lt;-- PI * RADIUS * RADIUS
+                FORMULA &lt;-- "Area = pi x r^2"
+            else
+                if (CHOICE = "Circumference") then
+                    RESULT  &lt;-- 2 * PI * RADIUS
+                    FORMULA &lt;-- "Circumference = 2 x pi x r"
+                else
+                    RESULT  &lt;-- (4 / 3) * PI * RADIUS * RADIUS * RADIUS
+                    FORMULA &lt;-- "Volume = 4/3 x pi x r^3"
+                endif
+            endif
+            Print "Shape: Circle"
+            Print "Radius: ", RADIUS
+            Print FORMULA, " = ", RESULT
+        endif
+    endif
+
+End</pre>
+
+<div class="warn">
+<b>Two marks people lose in pseudocode.</b>
+<ul>
+<li><code>&lt;--</code> puts a value in, a single <code>=</code> <b>compares</b>. In PHP they
+swap round. Write the arrow on paper.</li>
+<li>Three <code>if</code>s need three <code>endif</code>s. Count them before handing in.</li>
+</ul>
+</div>
+
+<h3>Tested in real PHP &mdash; radius 5</h3>
+<table>
+<tr><th>Choice</th><th class="mono">Rounded</th><th class="mono">Exact</th></tr>
+<tr><td>Area</td><td class="mono">78.54</td><td class="mono">78.539816339745</td></tr>
+<tr><td>Circumference</td><td class="mono">31.42</td><td class="mono">31.415926535898</td></tr>
+<tr><td>Volume</td><td class="mono">523.6</td><td class="mono">523.5987755983</td></tr>
+</table>
+<p style="font-size:9.5pt;color:#5d6270"><b>Those exact numbers are the ones printed on the
+assignment sheet</b>, digit for digit. If you get them, your formulas are right.</p>
+
+<div class="foot">
+Every code sample in this document was executed in PHP 8.2 before being printed here.
+Type the code yourself rather than copying it &mdash; you may be asked to explain a line.
+</div>
+</div>
+
+</body>
+</html>
