@@ -120,6 +120,117 @@ marker will ask you.
 </div>
 
 
+<!-- ======================= WHAT IS A FUNCTION ======================= -->
+<div class="problem">
+<span class="tag">First, the big idea</span>
+<h2>What a function is</h2>
+
+<div class="why" style="font-size:11pt">
+<b>A function is a machine.</b> You put something <b>in</b>, it gives something <b>out</b>.
+<br><br>
+A blender: put fruit in &rarr; get juice out. You do not rebuild the blender every time you
+want juice. You built it <b>once</b>, and now you use it whenever you like.
+</div>
+
+<div class="chart">
+<svg width="420" viewBox="0 0 420 150">
+<defs><marker id="m1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#5d6270" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text x="42" y="36" text-anchor="middle" font-family="Segoe UI" font-size="10" fill="#6a6e7c">you give it</text>
+<rect x="10" y="46" width="64" height="38" rx="6" fill="#eceef3" stroke="#8b8f9e"/>
+<text x="42" y="70" text-anchor="middle" font-family="Consolas" font-size="15" fill="#3a3d47">5</text>
+<line x1="80" y1="65" x2="128" y2="65" stroke="#5d6270" stroke-width="1.4" marker-end="url(#m1)"/>
+<rect x="134" y="34" width="150" height="62" rx="8" fill="#e8eaf7" stroke="#2d3a8c" stroke-width="1.5"/>
+<text x="209" y="58" text-anchor="middle" font-family="Consolas" font-size="13" fill="#2d3a8c">area($r)</text>
+<text x="209" y="78" text-anchor="middle" font-family="Segoe UI" font-size="10" fill="#4a5296">the machine</text>
+<line x1="290" y1="65" x2="338" y2="65" stroke="#5d6270" stroke-width="1.4" marker-end="url(#m1)"/>
+<text x="378" y="36" text-anchor="middle" font-family="Segoe UI" font-size="10" fill="#6a6e7c">it gives back</text>
+<rect x="344" y="46" width="66" height="38" rx="6" fill="#e1f0ec" stroke="#2f7a6e"/>
+<text x="377" y="70" text-anchor="middle" font-family="Consolas" font-size="14" fill="#0f4a42">78.54</text>
+<text x="210" y="128" text-anchor="middle" font-family="Segoe UI" font-size="10.5" fill="#6a6e7c">Build it once. Use it as many times as you want.</text>
+</svg>
+</div>
+
+<h3>Why bother? Look at the difference</h3>
+
+<div class="ann">
+  <pre class="code">$r = 5;
+echo 3.14159 * $r * $r;
+
+$r = 7;
+echo 3.14159 * $r * $r;
+
+$r = 2;
+echo 3.14159 * $r * $r;</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#c0392b" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#c0392b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>Without a function.</b> The same sum copied three times. If the formula
+  is wrong, you have to fix it in <b>three places</b> — and you will forget one.</div>
+</div>
+
+<div class="ann">
+  <pre class="code">function area($r) {
+    return 3.14159 * $r * $r;
+}
+
+echo area(5);
+echo area(7);
+echo area(2);</pre>
+  <div class="arw"><svg width="9mm" height="8mm" viewBox="0 0 34 30"><path d="M32 15H6" stroke="#2f7a4f" stroke-width="2" fill="none"/><path d="M10 9L4 15L10 21" stroke="#2f7a4f" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  <div class="note"><b>With a function.</b> The sum is written <b>once</b>. Fix it there and all
+  three are fixed. And the code now reads like English: <i>area of 5</i>.</div>
+</div>
+
+<h3>How to turn any solution into a function &mdash; 3 steps</h3>
+
+<div class="flow">
+  <div class="step"><div class="n">1</div><div class="txt">
+    <b>Find the thing that changes</b>
+    <span>In the sum above, only the radius changes. So the radius becomes the
+    <b>parameter</b> &mdash; the empty slot: <code>function area($r)</code></span></div></div>
+  <div class="step"><div class="n">2</div><div class="txt">
+    <b>Wrap the working lines in the box</b>
+    <span>Put <code>function name($slot) {</code> above them and <code>}</code> below them.
+    The lines themselves do not change at all.</span></div></div>
+  <div class="step"><div class="n">3</div><div class="txt">
+    <b>Swap the last <code>echo</code> for <code>return</code></b>
+    <span><code>echo</code> prints it and it is gone. <code>return</code> <b>hands it back</b>
+    so you can store it, add it, or print it outside.</span></div></div>
+</div>
+
+<div class="chart">
+<svg width="430" viewBox="0 0 430 190">
+<defs><marker id="m2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#2f7a4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text x="88" y="18" text-anchor="middle" font-family="Segoe UI" font-size="10.5" fill="#6a6e7c">the solution you already wrote</text>
+<rect x="10" y="28" width="156" height="58" rx="6" fill="#1e2130"/>
+<text x="22" y="50" font-family="Consolas" font-size="11" fill="#e8eaf5">$r = 5;</text>
+<text x="22" y="70" font-family="Consolas" font-size="11" fill="#e8eaf5">echo 3.14 * $r * $r;</text>
+<line x1="176" y1="57" x2="238" y2="57" stroke="#2f7a4f" stroke-width="1.6" marker-end="url(#m2)"/>
+<text x="207" y="48" text-anchor="middle" font-family="Segoe UI" font-size="10" fill="#2f7a4f">3 steps</text>
+<text x="337" y="18" text-anchor="middle" font-family="Segoe UI" font-size="10.5" fill="#6a6e7c">the same thing, as a machine</text>
+<rect x="248" y="28" width="172" height="78" rx="6" fill="#1e2130"/>
+<text x="260" y="48" font-family="Consolas" font-size="11" fill="#ffb86c">function area($r) {</text>
+<text x="260" y="68" font-family="Consolas" font-size="11" fill="#a5e8a0">  return 3.14 * $r * $r;</text>
+<text x="260" y="88" font-family="Consolas" font-size="11" fill="#ffb86c">}</text>
+<text x="88" y="126" text-anchor="middle" font-family="Segoe UI" font-size="10" fill="#6a6e7c">works for one radius</text>
+<text x="337" y="126" text-anchor="middle" font-family="Segoe UI" font-size="10" fill="#6a6e7c">works for every radius, forever</text>
+<rect x="248" y="140" width="172" height="34" rx="5" fill="#e1f0ec" stroke="#2f7a6e"/>
+<text x="334" y="161" text-anchor="middle" font-family="Consolas" font-size="11" fill="#0f4a42">echo area(5) + area(7);</text>
+<text x="88" y="161" text-anchor="middle" font-family="Segoe UI" font-size="10" fill="#c0392b">you cannot do this &rarr;</text>
+</svg>
+</div>
+
+<div class="warn">
+<b>The one mistake everybody makes.</b> Using <code>echo</code> inside the function instead of
+<code>return</code>.
+<br><br>
+With <code>echo</code>, the number appears on screen and then disappears &mdash; so
+<code>area(3) + area(4)</code> adds up <b>nothing</b>. With <code>return</code> the number comes
+back to you and the sum works.
+<br><br>
+<b>Say it like this:</b> <i>echo = shout it out of the window. return = hand it to me.</i>
+</div>
+</div>
+
+
 <!-- ============================ PROBLEM 2 ============================ -->
 <div class="problem">
 <span class="tag">Problem 2</span>
@@ -263,6 +374,64 @@ $Exp    = $_POST['E'];</pre>
   string — <code>"Result : $Result"</code> does exactly the same thing.</div>
 </div>
 
+<h3>Pseudocode</h3>
+<pre class="pseudo">Algorithm IntegerPower
+[returns BASE raised to the power EXPONENT]
+
+    Input BASE, EXPONENT
+
+    P &lt;-- 1
+    I &lt;-- 0
+
+    while (I &lt; EXPONENT)
+        P &lt;-- P * BASE
+        I &lt;-- I + 1
+    endwhile
+
+    Print BASE, " raised to the power ", EXPONENT, " is ", P
+
+End</pre>
+
+<h3>Flowchart</h3>
+<div class="chart">
+<svg width="330" viewBox="0 0 340 410">
+<defs><marker id="a2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#5d6270" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect x="115" y="8" width="90" height="28" rx="14" fill="#eceef3" stroke="#8b8f9e"/>
+<text x="160" y="26" text-anchor="middle" font-family="Segoe UI" font-size="12" fill="#3a3d47">Start</text>
+<line x1="160" y1="36" x2="160" y2="48" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a2)"/>
+<polygon points="78,52 252,52 238,82 64,82" fill="#fff6e5" stroke="#b4690e"/>
+<text x="158" y="71" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#6b4208">Input BASE, EXPONENT</text>
+<line x1="160" y1="82" x2="160" y2="94" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a2)"/>
+<rect x="82" y="98" width="156" height="34" rx="4" fill="#f0f2f9" stroke="#2d3a8c"/>
+<text x="160" y="119" text-anchor="middle" font-family="Consolas" font-size="11.5" fill="#2d3a8c">P &lt;-- 1 , I &lt;-- 0</text>
+<line x1="160" y1="132" x2="160" y2="144" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a2)"/>
+<polygon points="160,146 262,180 160,214 58,180" fill="#eaf4ec" stroke="#2f7a4f"/>
+<text x="160" y="185" text-anchor="middle" font-family="Segoe UI" font-size="11.5" fill="#1d4d31">I &lt; EXPONENT ?</text>
+<text x="166" y="230" font-family="Segoe UI" font-size="10" fill="#5d6270">Yes</text>
+<line x1="160" y1="214" x2="160" y2="238" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a2)"/>
+<rect x="82" y="242" width="156" height="42" rx="4" fill="#f0f2f9" stroke="#2d3a8c"/>
+<text x="160" y="259" text-anchor="middle" font-family="Consolas" font-size="11" fill="#2d3a8c">P &lt;-- P * BASE</text>
+<text x="160" y="275" text-anchor="middle" font-family="Consolas" font-size="11" fill="#2d3a8c">I &lt;-- I + 1</text>
+<line x1="160" y1="284" x2="160" y2="298" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="160" y1="298" x2="22" y2="298" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="22" y1="298" x2="22" y2="180" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="22" y1="180" x2="55" y2="180" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a2)"/>
+<text x="30" y="240" font-family="Segoe UI" font-size="9.5" fill="#5d6270">loop back</text>
+<text x="270" y="172" font-family="Segoe UI" font-size="10" fill="#5d6270">No</text>
+<line x1="262" y1="180" x2="302" y2="180" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="302" y1="180" x2="302" y2="322" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="302" y1="322" x2="256" y2="322" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a2)"/>
+<polygon points="72,306 254,306 240,338 58,338" fill="#fff6e5" stroke="#b4690e"/>
+<text x="156" y="326" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#6b4208">Print BASE, EXPONENT, P</text>
+<line x1="160" y1="338" x2="160" y2="356" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a2)"/>
+<rect x="115" y="360" width="90" height="28" rx="14" fill="#eceef3" stroke="#8b8f9e"/>
+<text x="160" y="378" text-anchor="middle" font-family="Segoe UI" font-size="12" fill="#3a3d47">Stop</text>
+</svg>
+</div>
+<p style="font-size:9.5pt;color:#5d6270"><b>The loop-back arrow is the whole point.</b> It
+returns to the <i>question</i>, not to the start — so the question is asked again after every
+round, and the moment it answers No the loop lets go.</p>
+
 <h3>What the loop actually does — 2 to the power 10</h3>
 
 <div class="trace">
@@ -396,6 +565,76 @@ else { ... }</pre>
   which is a different sum entirely.</div>
 </div>
 
+<h3>Pseudocode</h3>
+<pre class="pseudo">Algorithm QuadraticSolver
+[finds how many solutions a quadratic has, and what they are]
+
+    Input A, B, C
+
+    D &lt;-- B*B - 4*A*C
+
+    if (D &gt; 0) then
+        X1 &lt;-- (-B + squareroot(D)) / (2*A)
+        X2 &lt;-- (-B - squareroot(D)) / (2*A)
+        Print "Two solutions : ", X1, " and ", X2
+    else
+        if (D = 0) then
+            X &lt;-- -B / (2*A)
+            Print "One solution : ", X
+        else
+            Print "No solution"
+        endif
+    endif
+
+End</pre>
+
+<h3>Flowchart</h3>
+<div class="chart">
+<svg width="400" viewBox="0 0 410 420">
+<defs><marker id="a3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#5d6270" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<rect x="58" y="8" width="88" height="28" rx="14" fill="#eceef3" stroke="#8b8f9e"/>
+<text x="102" y="26" text-anchor="middle" font-family="Segoe UI" font-size="12" fill="#3a3d47">Start</text>
+<line x1="102" y1="36" x2="102" y2="48" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a3)"/>
+<polygon points="42,52 172,52 160,80 30,80" fill="#fff6e5" stroke="#b4690e"/>
+<text x="101" y="70" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#6b4208">Input A, B, C</text>
+<line x1="102" y1="80" x2="102" y2="92" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a3)"/>
+<rect x="18" y="96" width="168" height="32" rx="4" fill="#f0f2f9" stroke="#2d3a8c"/>
+<text x="102" y="117" text-anchor="middle" font-family="Consolas" font-size="11" fill="#2d3a8c">D &lt;-- B*B - 4*A*C</text>
+<line x1="102" y1="128" x2="102" y2="140" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a3)"/>
+<polygon points="102,142 184,172 102,202 20,172" fill="#eaf4ec" stroke="#2f7a4f"/>
+<text x="102" y="177" text-anchor="middle" font-family="Segoe UI" font-size="11.5" fill="#1d4d31">D &gt; 0 ?</text>
+<text x="190" y="165" font-family="Segoe UI" font-size="10" fill="#5d6270">Yes</text>
+<line x1="184" y1="172" x2="222" y2="172" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a3)"/>
+<polygon points="238,150 404,150 392,194 226,194" fill="#fff6e5" stroke="#b4690e"/>
+<text x="315" y="168" text-anchor="middle" font-family="Segoe UI" font-size="10.5" fill="#6b4208">Two solutions</text>
+<text x="314" y="184" text-anchor="middle" font-family="Consolas" font-size="9.5" fill="#8a5a12">(-B +/- sqrt D) / 2A</text>
+<text x="108" y="218" font-family="Segoe UI" font-size="10" fill="#5d6270">No</text>
+<line x1="102" y1="202" x2="102" y2="224" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a3)"/>
+<polygon points="102,226 184,256 102,286 20,256" fill="#eaf4ec" stroke="#2f7a4f"/>
+<text x="102" y="261" text-anchor="middle" font-family="Segoe UI" font-size="11.5" fill="#1d4d31">D = 0 ?</text>
+<text x="190" y="249" font-family="Segoe UI" font-size="10" fill="#5d6270">Yes</text>
+<line x1="184" y1="256" x2="222" y2="256" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a3)"/>
+<polygon points="238,234 404,234 392,278 226,278" fill="#fff6e5" stroke="#b4690e"/>
+<text x="315" y="252" text-anchor="middle" font-family="Segoe UI" font-size="10.5" fill="#6b4208">One solution</text>
+<text x="314" y="268" text-anchor="middle" font-family="Consolas" font-size="9.5" fill="#8a5a12">-B / 2A</text>
+<text x="108" y="302" font-family="Segoe UI" font-size="10" fill="#5d6270">No</text>
+<line x1="102" y1="286" x2="102" y2="306" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a3)"/>
+<polygon points="42,310 172,310 160,340 30,340" fill="#fff6e5" stroke="#b4690e"/>
+<text x="101" y="329" text-anchor="middle" font-family="Segoe UI" font-size="11" fill="#6b4208">Print "No solution"</text>
+<line x1="392" y1="194" x2="398" y2="194" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="398" y1="194" x2="398" y2="366" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="392" y1="278" x2="398" y2="278" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="398" y1="366" x2="102" y2="366" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="102" y1="340" x2="102" y2="366" stroke="#5d6270" stroke-width="1.2"/>
+<line x1="102" y1="366" x2="102" y2="378" stroke="#5d6270" stroke-width="1.2" marker-end="url(#a3)"/>
+<rect x="58" y="382" width="88" height="28" rx="14" fill="#eceef3" stroke="#8b8f9e"/>
+<text x="102" y="400" text-anchor="middle" font-family="Segoe UI" font-size="12" fill="#3a3d47">Stop</text>
+</svg>
+</div>
+<p style="font-size:9.5pt;color:#5d6270">Two diamonds, three ways out &mdash; and all three
+<b>rejoin</b> before Stop. That is what the question means by "one solution, two solutions or
+no solution".</p>
+
 <h3>Tested in real PHP</h3>
 <table>
 <tr><th>a, b, c</th><th class="mono">D</th><th>Output</th></tr>
@@ -485,7 +724,7 @@ End</pre>
 
 <h3>Flowchart</h3>
 <div class="chart">
-<svg width="300" viewBox="0 0 300 330">
+<svg width="310" viewBox="0 0 310 334">
 <defs><marker id="a1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M2 1L8 5L2 9" fill="none" stroke="#5d6270" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
 <rect x="105" y="10" width="90" height="30" rx="15" fill="#eceef3" stroke="#8b8f9e" stroke-width="1"/>
 <text x="150" y="29" text-anchor="middle" font-family="Segoe UI" font-size="12" fill="#3a3d47">Start</text>
