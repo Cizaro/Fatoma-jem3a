@@ -1,261 +1,141 @@
 ﻿===============================================================================
-  PHP - LESSON 04 - USING FUNCTIONS
-  Problems 4, 5, 6 and 7 - Answers
-  Fatima Al-Helou
+PHP - Lesson 04 - Using Functions
+Problems 4, 5, 6, 7
 ===============================================================================
-
-  Written the way the lecturer writes: the pseudocode comment block first,
-  then the form, then the PHP underneath it, with the HTML echoed out of PHP.
-
-  Every answer in this file was RUN on PHP 8.2 before it was written down.
-  The test results are printed under each one.
-
-  HOW TO RUN ANY OF THEM
-    1. Save the file(s) inside   C:\xampp\htdocs\lesson04\
-    2. Open XAMPP and press Start on Apache
-    3. Go to   localhost/lesson04/problem4.php   (or 5, 6, 7)
 
 
 ===============================================================================
-  PROBLEM 4 - Sum / Difference / Product / Division / Max / Min / Average
+PROBLEM 4
 ===============================================================================
 
-  THE QUESTION
-  Ask the user for three decimal numbers using three input fields, then show
-  the sum, difference, product, division, maximum, minimum or average when
-  the matching button is clicked.
-  NOTE: develop TWO PHP files and use the include function for the
-  processing stage.
-
-  -------------------------------------------------------------------------
-  FILE 1 OF 2:   process4.php      (the processing stage - all the functions)
-  -------------------------------------------------------------------------
+----- File : process4.php -----------------------------------------------------
 
 <?php
-/* Write pseudocode:
-inputs:
-step1: Receive three numbers A, B and C from the calling page (Parallelogram)
 
-Processing:
-step2: One function for each operation (Rectangle)
-       Sum, Difference, Product, Division, Maximum, Minimum, Average
-       Maximum and Minimum compare the values with if, without max() or min()
-
-Outputs:
-step3: Each function RETURNS its answer to the calling page (Parallelogram)
-*/
-
-/**
- * Add the three numbers.
- *
- * @param  float $a First number.
- * @param  float $b Second number.
- * @param  float $c Third number.
- * @return float    The sum.
- */
-function getSum($a, $b, $c) {
-    return $a + $b + $c;
+function getSum($a,$b,$c){
+    return $a+$b+$c;
 }
 
-/**
- * Subtract the second and third numbers from the first.
- */
-function getDifference($a, $b, $c) {
-    return $a - $b - $c;
+function getDifference($a,$b,$c){
+    return $a-$b-$c;
 }
 
-/**
- * Multiply the three numbers.
- */
-function getProduct($a, $b, $c) {
-    return $a * $b * $c;
+function getProduct($a,$b,$c){
+    return $a*$b*$c;
 }
 
-/**
- * Divide the first number by the second, then by the third.
- * Dividing by zero is not allowed, so it is checked first.
- */
-function getDivision($a, $b, $c) {
-    if ($b == 0 || $c == 0) {
+function getDivision($a,$b,$c){
+    if($b==0 || $c==0){
         return "Cannot divide by zero";
     }
-    return $a / $b / $c;
+    return $a/$b/$c;
 }
 
-/**
- * The largest of the three, found with if - not with max().
- */
-function getMaximum($a, $b, $c) {
-    $m = $a;                      // assume the first one wins
-    if ($b > $m) { $m = $b; }     // then let each other one challenge it
-    if ($c > $m) { $m = $c; }
-    return $m;
+function getMaximum($a,$b,$c){
+    $Largest = $a;
+    if($b > $Largest){
+        $Largest = $b;
+    }
+    if($c > $Largest){
+        $Largest = $c;
+    }
+    return $Largest;
 }
 
-/**
- * The smallest of the three, found with if - not with min().
- */
-function getMinimum($a, $b, $c) {
-    $m = $a;
-    if ($b < $m) { $m = $b; }
-    if ($c < $m) { $m = $c; }
-    return $m;
+function getMinimum($a,$b,$c){
+    $Smallest = $a;
+    if($b < $Smallest){
+        $Smallest = $b;
+    }
+    if($c < $Smallest){
+        $Smallest = $c;
+    }
+    return $Smallest;
 }
 
-/**
- * The average of the three numbers.
- */
-function getAverage($a, $b, $c) {
-    return ($a + $b + $c) / 3;
+function getAverage($a,$b,$c){
+    return ($a+$b+$c)/3;
 }
+
 ?>
 
 
-  -------------------------------------------------------------------------
-  FILE 2 OF 2:   problem4.php      (the form and the output)
-  -------------------------------------------------------------------------
+----- File : problem4.php -----------------------------------------------------
 
 <?php
-// include brings the whole of process4.php into this file, so every
-// function above can be called here as if it were written here.
 include "process4.php";
 ?>
 
 <form action="" method="POST">
-    <label>First number </label>
-    <input type="number" step="any" name="n1"><br><br>
-    <label>Second number </label>
-    <input type="number" step="any" name="n2"><br><br>
-    <label>Third number </label>
-    <input type="number" step="any" name="n3"><br><br>
-
-    <button type="submit" name="bt" value="SUM">SUM</button>
-    <button type="submit" name="bt" value="DIF">DIFFERENCE</button>
-    <button type="submit" name="bt" value="PRO">PRODUCT</button>
-    <button type="submit" name="bt" value="DIV">DIVISION</button>
-    <button type="submit" name="bt" value="MAX">MAXIMUM</button>
-    <button type="submit" name="bt" value="MIN">MINIMUM</button>
-    <button type="submit" name="bt" value="AVG">AVERAGE</button>
+<label>First number </label>
+<input type="number" step=0.1 name="n1"><br><br>
+<label>Second number </label>
+<input type="number" step=0.1 name="n2"><br><br>
+<label>Third number </label>
+<input type="number" step=0.1 name="n3"><br><br>
+<button type="submit" name="bt" value="SUM">SUM</button>
+<button type="submit" name="bt" value="DIF">DIFFERENCE</button>
+<button type="submit" name="bt" value="PRO">PRODUCT</button>
+<button type="submit" name="bt" value="DIV">DIVISION</button>
+<button type="submit" name="bt" value="MAX">MAXIMUM</button>
+<button type="submit" name="bt" value="MIN">MINIMUM</button>
+<button type="submit" name="bt" value="AVG">AVERAGE</button>
 </form>
 
 <?php
-// isset first, read second. On the first visit nothing has been posted.
-if (isset($_POST["bt"])) {
+
+if(isset($_POST["bt"])){
 
     $n1 = $_POST["n1"];
     $n2 = $_POST["n2"];
     $n3 = $_POST["n3"];
+    $bt = $_POST["bt"];
 
-    // Everything a form sends is text, and a box may be left empty.
-    if (!is_numeric($n1) || !is_numeric($n2) || !is_numeric($n3)) {
-
+    if(!is_numeric($n1) || !is_numeric($n2) || !is_numeric($n3)){
         echo "<p style='color: red'>Please enter three numbers.</p>";
-
-    } else {
-
-        $bt = $_POST["bt"];   // only the button that was clicked is sent
-
-        if ($bt == "SUM") {
-            echo "<p>The Sum = " . getSum($n1, $n2, $n3) . "</p>";
-        } elseif ($bt == "DIF") {
-            echo "<p>The Difference = " . getDifference($n1, $n2, $n3) . "</p>";
-        } elseif ($bt == "PRO") {
-            echo "<p>The Product = " . getProduct($n1, $n2, $n3) . "</p>";
-        } elseif ($bt == "DIV") {
-            echo "<p>The Division = " . getDivision($n1, $n2, $n3) . "</p>";
-        } elseif ($bt == "MAX") {
-            echo "<p>The Maximum = " . getMaximum($n1, $n2, $n3) . "</p>";
-        } elseif ($bt == "MIN") {
-            echo "<p>The Minimum = " . getMinimum($n1, $n2, $n3) . "</p>";
-        } elseif ($bt == "AVG") {
-            echo "<p>The Average = " . getAverage($n1, $n2, $n3) . "</p>";
-        }
+    } else if($bt == "SUM"){
+        echo "<p>The Sum = ".getSum($n1,$n2,$n3)."</p>";
+    } else if($bt == "DIF"){
+        echo "<p>The Difference = ".getDifference($n1,$n2,$n3)."</p>";
+    } else if($bt == "PRO"){
+        echo "<p>The Product = ".getProduct($n1,$n2,$n3)."</p>";
+    } else if($bt == "DIV"){
+        echo "<p>The Division = ".getDivision($n1,$n2,$n3)."</p>";
+    } else if($bt == "MAX"){
+        echo "<p>The Maximum = ".getMaximum($n1,$n2,$n3)."</p>";
+    } else if($bt == "MIN"){
+        echo "<p>The Minimum = ".getMinimum($n1,$n2,$n3)."</p>";
+    } else if($bt == "AVG"){
+        echo "<p>The Average = ".getAverage($n1,$n2,$n3)."</p>";
     }
 }
 ?>
 
-  TESTED - with 12, 4 and 2:
-      SUM  -> The Sum = 18
-      DIF  -> The Difference = 6
-      PRO  -> The Product = 96
-      DIV  -> The Division = 1.5
-      MAX  -> The Maximum = 12
-      MIN  -> The Minimum = 2
-      AVG  -> The Average = 6
-    with 12, 0 and 2:
-      DIV  -> The Division = Cannot divide by zero
-    with decimals 2.5, 7.5 and 1.0:
-      AVG  -> The Average = 3.6666666666667
-
-  WHY IT IS WRITTEN THIS WAY
-  * The question asks for TWO files and include. process4.php holds nothing
-    but functions - no form, no echo. problem4.php holds the form and the
-    output. That split is the mark.
-  * include is written ONCE at the very top, before anything else. A function
-    cannot be called before PHP has read it.
-  * Maximum and Minimum use "assume the first one wins, then let the others
-    challenge it" with SEPARATE if statements - not an else-if ladder. A
-    ladder stops at the first match, so with 1, 2, 3 it would answer 2.
-  * The buttons all share name="bt" with different values, so only the one
-    that was clicked arrives in $_POST["bt"].
-  * HERE the else-if ladder IS correct, because the buttons are alternatives
-    - exactly one can have been pressed.
-  * step="any" on the inputs is what allows decimals to be typed.
-
 
 ===============================================================================
-  PROBLEM 5 - Palindrome (text or numbers)
+PROBLEM 5
 ===============================================================================
 
-  THE QUESTION
-  A palindrome reads the same backward and forward: 12321, ABCCBA, AB161BA.
-  Read text or numbers from the user and say whether it is a palindrome.
-
-  -------------------------------------------------------------------------
-  FILE:   problem5.php
-  -------------------------------------------------------------------------
+----- File : problem5.php -----------------------------------------------------
 
 <?php
-/* Write pseudocode:
-inputs:
-step1: Read a text or a number from the user (Parallelogram)
 
-Processing:
-step2: Build a clean copy - remove the spaces, make every letter uppercase
-       so that "Race car" counts the same as "racecar"           (Rectangle)
-step3: Build the reverse by reading the clean copy from the last character
-       back to the first, one at a time                          (Rectangle)
-step4: Compare the clean copy with the reverse                   (Diamond)
+function isPalindrome($text){
 
-Outputs:
-step5: Print "is a Palindrome" or "is NOT a Palindrome"          (Parallelogram)
-*/
-
-/**
- * Decide whether a text or a number reads the same both ways.
- *
- * @param  string $text The value typed by the user.
- * @return bool         TRUE when it is a palindrome.
- */
-function isPalindrome($text) {
-
-    // Build a clean copy: no spaces, and all one case.
     $clean = "";
-    for ($i = 0; $i < strlen($text); $i++) {
+    for($i=0; $i<strlen($text); $i++){
         $ch = $text[$i];
-        if ($ch != " ") {
-            $clean = $clean . strtoupper($ch);
+        if($ch != " "){
+            $clean = $clean.strtoupper($ch);
         }
     }
 
-    // Build the reverse by walking BACKWARDS, from the last character to the
-    // first. $i-- is what makes the loop count down.
     $reverse = "";
-    for ($i = strlen($clean) - 1; $i >= 0; $i--) {
-        $reverse = $reverse . $clean[$i];
+    for($i=strlen($clean)-1; $i>=0; $i--){
+        $reverse = $reverse.$clean[$i];
     }
 
-    if ($clean == $reverse) {
+    if($clean == $reverse){
         return true;
     }
     return false;
@@ -263,272 +143,152 @@ function isPalindrome($text) {
 ?>
 
 <form action="" method="POST">
-    <label>Enter a text or a number </label>
-    <input type="text" name="value">
-    <button type="submit" name="bt" value="CHECK">Check</button>
+<label>Enter a text or a number </label>
+<input type="text" name="value"><br><br>
+<button type="submit" name="bt" value="CHECK">Check</button>
 </form>
 
 <?php
-if (isset($_POST["bt"])) {
+
+if(isset($_POST["bt"])){
 
     $value = $_POST["value"];
 
-    if ($value == "") {
+    if($value == ""){
         echo "<p style='color: red'>Please enter a text or a number.</p>";
-    } elseif (isPalindrome($value)) {
-        echo "<p style='color: green'>" . $value . " is a Palindrome</p>";
+    } else if(isPalindrome($value)){
+        echo "<p style='color: green'>".$value." is a Palindrome</p>";
     } else {
-        echo "<p style='color: red'>" . $value . " is NOT a Palindrome</p>";
+        echo "<p style='color: red'>".$value." is NOT a Palindrome</p>";
     }
 }
 ?>
 
-  TESTED:
-      12321      -> is a Palindrome      (the sheet's own example)
-      ABCCBA     -> is a Palindrome      (the sheet's own example)
-      AB161BA    -> is a Palindrome      (the sheet's own example)
-      12345      -> is NOT a Palindrome
-      abcba      -> is a Palindrome
-      race car   -> is a Palindrome      (the space is ignored)
-      Hello      -> is NOT a Palindrome
-      7          -> is a Palindrome      (one character always is)
-      (empty)    -> Please enter a text or a number.
-
-  WHY IT IS WRITTEN THIS WAY
-  * The reverse is built with a loop that COUNTS DOWN. That is the whole
-    question. PHP has a built-in strrev() that does it in one line, but the
-    chapter is about writing your own functions, so the loop is the answer
-    he is looking for. Mention strrev() if he asks for a shorter way.
-  * $text[$i] reads one character out of a string, exactly like an array.
-  * strtoupper makes the comparison ignore capital letters, so "Abcba" works.
-  * The function returns TRUE or FALSE, never a sentence. Deciding and
-    printing are two different jobs: the function decides, the page prints.
-    That way the same function can be reused anywhere.
-
 
 ===============================================================================
-  PROBLEM 6 - Valid password
+PROBLEM 6
 ===============================================================================
 
-  THE QUESTION
-  Write a function that decides whether a password is valid. A valid password
-  is at least 8 characters long and contains at least one uppercase letter,
-  at least one lowercase letter, and at least one number. Return the text
-  "your password is valid" and display the username and the password.
-  Otherwise return "Your password is not valid, please try again!"
-
-  -------------------------------------------------------------------------
-  FILE:   problem6.php
-  -------------------------------------------------------------------------
+----- File : problem6.php -----------------------------------------------------
 
 <?php
-/* Write pseudocode:
-inputs:
-step1: Read the username and the password from the user     (Parallelogram)
 
-Processing:
-step2: Set four flags to FALSE: LONG, UPPER, LOWER, DIGIT   (Rectangle)
-step3: If the length is 8 or more, LONG becomes TRUE        (Diamond)
-step4: Look at every character one at a time.               (Loop)
-       A to Z -> UPPER is TRUE
-       a to z -> LOWER is TRUE
-       0 to 9 -> DIGIT is TRUE
-step5: If all four flags are TRUE the password is valid     (Diamond)
+function checkPassword($password){
 
-Outputs:
-step6: Return "your password is valid" and show the username and password,
-       otherwise return the "not valid" message             (Parallelogram)
-*/
-
-/**
- * Check a password against the four rules.
- *
- * Valid means: 8 characters or more, and it contains at least one
- * uppercase letter, one lowercase letter and one number.
- *
- * @param  string $password The password to check.
- * @return string           The message to show the user.
- */
-function checkPassword($password) {
-
-    // One flag per rule. All start FALSE and are switched on when found.
-    $long  = false;
+    $long = false;
     $upper = false;
     $lower = false;
     $digit = false;
 
-    // Rule 1 - the length. Checked once, outside the loop.
-    if (strlen($password) >= 8) {
+    if(strlen($password) >= 8){
         $long = true;
     }
 
-    // Rules 2, 3 and 4 - look at every character in turn.
-    for ($i = 0; $i < strlen($password); $i++) {
-
+    for($i=0; $i<strlen($password); $i++){
         $ch = $password[$i];
-
-        if ($ch >= "A" && $ch <= "Z") { $upper = true; }
-        if ($ch >= "a" && $ch <= "z") { $lower = true; }
-        if ($ch >= "0" && $ch <= "9") { $digit = true; }
+        if($ch >= "A" && $ch <= "Z"){
+            $upper = true;
+        }
+        if($ch >= "a" && $ch <= "z"){
+            $lower = true;
+        }
+        if($ch >= "0" && $ch <= "9"){
+            $digit = true;
+        }
     }
 
-    // && means AND. All four must be TRUE, not just one of them.
-    if ($long && $upper && $lower && $digit) {
+    if($long && $upper && $lower && $digit){
         return "your password is valid";
     }
-
     return "Your password is not valid, please try again!";
 }
 ?>
 
 <form action="" method="POST">
-    <label>Username </label>
-    <input type="text" name="username"><br><br>
-    <label>Password </label>
-    <input type="text" name="password"><br><br>
-    <button type="submit" name="bt" value="CHECK">Check password</button>
+<label>Username </label>
+<input type="text" name="username"><br><br>
+<label>Password </label>
+<input type="text" name="password"><br><br>
+<button type="submit" name="bt" value="CHECK">Check password</button>
 </form>
 
 <?php
-if (isset($_POST["bt"])) {
+
+if(isset($_POST["bt"])){
 
     $username = $_POST["username"];
     $password = $_POST["password"];
-
     $result = checkPassword($password);
 
-    if ($result == "your password is valid") {
-        echo "<p style='color: green'>" . $result . "</p>";
-        // The question asks for the username and the password to be shown.
-        echo "<p>Username: " . $username . "</p>";
-        echo "<p>Password: " . $password . "</p>";
+    if($result == "your password is valid"){
+        echo "<p style='color: green'>".$result."</p>";
+        echo "<p>Username : ".$username."</p>";
+        echo "<p>Password : ".$password."</p>";
     } else {
-        echo "<p style='color: red'>" . $result . "</p>";
+        echo "<p style='color: red'>".$result."</p>";
     }
 }
 ?>
 
-  TESTED:
-      Fatima2026     -> valid, and shows Username: fatima  Password: Fatima2026
-      fatima2026     -> not valid   (no uppercase letter)
-      FATIMA2026     -> not valid   (no lowercase letter)
-      FatimaAlHelou  -> not valid   (no number)
-      Fat1ma         -> not valid   (only 6 characters)
-      Passw0rd       -> valid       (exactly 8 characters)
-      12345678       -> not valid   (no letters at all)
-      Ab1cdefg       -> valid
-
-  WHY IT IS WRITTEN THIS WAY
-  * Four separate flags, not one running answer. Each rule is checked on its
-    own and the password is only valid when all four are TRUE. This is the
-    cleanest way to say "it must satisfy ALL of these".
-  * The flags are set BEFORE the loop and tested AFTER it. Testing inside the
-    loop would decide on the first character, before the rest were read.
-  * The length check sits outside the loop because it is about the whole
-    password, not about one character.
-  * $ch >= "A" && $ch <= "Z" compares characters alphabetically - A, B, C ...
-    Z - so this says "is this letter somewhere between A and Z".
-  * The function returns the MESSAGE because the question says to return a
-    text. Showing the username and password is the page's job, not the
-    function's.
-
-  ONE NOTE TO SAY OUT LOUD, NOT TO WRITE IN THE ANSWER
-  Printing a password back onto the page is something a real site must never
-  do. This question asks for it, so do it - but know that it is an exercise
-  about strings, not a model of how a login should work.
-
 
 ===============================================================================
-  PROBLEM 7 - Palindrome / Odd-Even / Armstrong / Prime
+PROBLEM 7
 ===============================================================================
 
-  THE QUESTION
-  Ask the user for a number and let them check whether it is a Palindrome
-  number, an Odd or Even number, an Armstrong number, or a Prime number.
-
-  -------------------------------------------------------------------------
-  FILE:   problem7.php
-  -------------------------------------------------------------------------
+----- File : problem7.php -----------------------------------------------------
 
 <?php
-/* Write pseudocode:
-inputs:
-step1: Read one whole number N from the user              (Parallelogram)
-step2: Read which button was pressed                      (Parallelogram)
 
-Processing:
-step3: PALINDROME - peel the last digit off N with % 10, build the reverse
-       by REVERSE <-- REVERSE * 10 + DIGIT, until nothing is left. The number
-       is a palindrome when the reverse equals the original.       (Loop)
-step4: EVEN - N divided by 2 leaves no remainder                   (Diamond)
-step5: ARMSTRONG - add up the CUBE of every digit. The number is an
-       Armstrong number when that total equals N itself.           (Loop)
-step6: PRIME - try to divide N by every number from 2 up to N/2. If any one
-       of them divides exactly, N is not prime.                    (Loop)
-
-Outputs:
-step7: Print the answer for the button that was pressed   (Parallelogram)
-*/
-
-/**
- * A palindrome number reads the same with its digits reversed. 24142.
- *
- * @param  int  $n The number to test.
- * @return bool    TRUE when it is a palindrome.
- */
-function isPalindromeNumber($n) {
+function isPalindromeNumber($n){
 
     $reverse = 0;
-    $temp    = $n;          // work on a COPY, so $n survives for the compare
-
-    while ($temp > 0) {
-        $digit   = $temp % 10;                 // the last digit
-        $reverse = ($reverse * 10) + $digit;   // push it onto the reverse
-        $temp    = (int)($temp / 10);          // chop the last digit off
-    }
-
-    if ($reverse == $n) { return true; }
-    return false;
-}
-
-/**
- * Even numbers divide by 2 with nothing left over.
- */
-function isEven($n) {
-    if ($n % 2 == 0) { return true; }
-    return false;
-}
-
-/**
- * An Armstrong number equals the sum of the cubes of its digits. 153.
- */
-function isArmstrong($n) {
-
-    $sum  = 0;
     $temp = $n;
 
-    while ($temp > 0) {
+    while($temp > 0){
         $digit = $temp % 10;
-        $sum   = $sum + ($digit * $digit * $digit);   // the cube
-        $temp  = (int)($temp / 10);
+        $reverse = ($reverse * 10) + $digit;
+        $temp = (int)($temp / 10);
     }
 
-    if ($sum == $n) { return true; }
+    if($reverse == $n){
+        return true;
+    }
     return false;
 }
 
-/**
- * A prime number divides only by 1 and by itself.
- * 0 and 1 are not prime. 2 is the only even prime.
- */
-function isPrime($n) {
+function isEven($n){
+    if($n % 2 == 0){
+        return true;
+    }
+    return false;
+}
 
-    if ($n < 2) { return false; }     // 0 and 1 are not prime
+function isArmstrong($n){
 
-    // Nothing above half of N can divide it, so stop there.
-    for ($i = 2; $i <= $n / 2; $i++) {
-        if ($n % $i == 0) {
-            return false;             // found a divisor - stop at once
+    $sum = 0;
+    $temp = $n;
+
+    while($temp > 0){
+        $digit = $temp % 10;
+        $sum = $sum + ($digit * $digit * $digit);
+        $temp = (int)($temp / 10);
+    }
+
+    if($sum == $n){
+        return true;
+    }
+    return false;
+}
+
+function isPrime($n){
+
+    if($n < 2){
+        return false;
+    }
+
+    for($i=2; $i<=$n/2; $i++){
+        if($n % $i == 0){
+            return false;
         }
     }
     return true;
@@ -536,112 +296,51 @@ function isPrime($n) {
 ?>
 
 <form action="" method="POST">
-    <label>Enter a number </label>
-    <input type="number" name="num"><br><br>
-    <button type="submit" name="bt" value="PAL">Palindrome</button>
-    <button type="submit" name="bt" value="ODD">Odd / Even</button>
-    <button type="submit" name="bt" value="ARM">Armstrong</button>
-    <button type="submit" name="bt" value="PRI">Prime</button>
+<label>Enter a number </label>
+<input type="number" name="num"><br><br>
+<button type="submit" name="bt" value="PAL">Palindrome</button>
+<button type="submit" name="bt" value="ODD">Odd / Even</button>
+<button type="submit" name="bt" value="ARM">Armstrong</button>
+<button type="submit" name="bt" value="PRI">Prime</button>
 </form>
 
 <?php
-if (isset($_POST["bt"])) {
+
+if(isset($_POST["bt"])){
 
     $num = $_POST["num"];
+    $bt = $_POST["bt"];
 
-    if (!is_numeric($num)) {
-
+    if(!is_numeric($num)){
         echo "<p style='color: red'>Please enter a number.</p>";
-
-    } else {
-
-        $bt = $_POST["bt"];
-
-        if ($bt == "PAL") {
-            if (isPalindromeNumber($num)) {
-                echo "<p>" . $num . " is a Palindrome number</p>";
-            } else {
-                echo "<p>" . $num . " is NOT a Palindrome number</p>";
-            }
-
-        } elseif ($bt == "ODD") {
-            if (isEven($num)) {
-                echo "<p>" . $num . " is an Even number</p>";
-            } else {
-                echo "<p>" . $num . " is an Odd number</p>";
-            }
-
-        } elseif ($bt == "ARM") {
-            if (isArmstrong($num)) {
-                echo "<p>" . $num . " is an Armstrong number</p>";
-            } else {
-                echo "<p>" . $num . " is NOT an Armstrong number</p>";
-            }
-
-        } elseif ($bt == "PRI") {
-            if (isPrime($num)) {
-                echo "<p>" . $num . " is a Prime number</p>";
-            } else {
-                echo "<p>" . $num . " is NOT a Prime number</p>";
-            }
+    } else if($bt == "PAL"){
+        if(isPalindromeNumber($num)){
+            echo "<p>".$num." is a Palindrome number</p>";
+        } else {
+            echo "<p>".$num." is NOT a Palindrome number</p>";
+        }
+    } else if($bt == "ODD"){
+        if(isEven($num)){
+            echo "<p>".$num." is an Even number</p>";
+        } else {
+            echo "<p>".$num." is an Odd number</p>";
+        }
+    } else if($bt == "ARM"){
+        if(isArmstrong($num)){
+            echo "<p>".$num." is an Armstrong number</p>";
+        } else {
+            echo "<p>".$num." is NOT an Armstrong number</p>";
+        }
+    } else if($bt == "PRI"){
+        if(isPrime($num)){
+            echo "<p>".$num." is a Prime number</p>";
+        } else {
+            echo "<p>".$num." is NOT a Prime number</p>";
         }
     }
 }
 ?>
 
-  TESTED:
-      Palindrome  24142 -> YES   12321 -> YES   123 -> NO   7 -> YES   10 -> NO
-      Odd / Even  2 -> Even   7 -> Odd   10 -> Even   0 -> Even
-      Armstrong   every one from 0 to 500:   0, 1, 153, 370, 371, 407
-      Prime       every one from 0 to 30:    2, 3, 5, 7, 11, 13, 17, 19, 23, 29
-      Prime edges 0 -> NO   1 -> NO   2 -> YES   9 -> NO
-
-  ** A MISTAKE IN THE QUESTION SHEET - WORTH KNOWING **
-  The hint on the sheet lists the Armstrong numbers as
-      0, 1, 153, 371, 407, 471
-  471 is NOT an Armstrong number. Its digits cubed come to
-      4*4*4 + 7*7*7 + 1*1*1  =  64 + 343 + 1  =  408,  which is not 471.
-  The real list below 500 is  0, 1, 153, 370, 371, 407  - the sheet appears
-  to have 471 where it meant 370. The CODE above follows the DEFINITION he
-  gives in words ("the sum of the cubes of its digits"), which is correct.
-  If he asks, the definition is right and only the example list is wrong.
-
-  WHY IT IS WRITTEN THIS WAY
-  * Every one of the four is its OWN function that returns TRUE or FALSE.
-    That is what a chapter on functions is asking for. The page decides what
-    to print; the functions only decide what is true.
-  * % 10 gives the LAST digit. (int)($temp / 10) chops that digit off. Those
-    two lines together are how you walk through the digits of a number, and
-    both the palindrome and the Armstrong function use them.
-  * $temp is a COPY of $n. If the loop chewed up $n itself, there would be
-    nothing left to compare the answer against at the end.
-  * isPrime returns FALSE the moment it finds a divisor instead of carrying
-    on. Once one divisor is found the answer cannot change.
-  * The loop stops at $n / 2 because no number bigger than half of N can
-    divide into it.
-  * 0 and 1 are handled before the loop, because the loop would never run for
-    them and they would be wrongly reported as prime.
-
-
 ===============================================================================
-  THE FIVE THINGS THAT LOSE MARKS IN ALL FOUR
-===============================================================================
-
-  1. The $ sign on every variable. $num, never num.
-
-  2. Join with the DOT. "Total: " . $x  joins.  "Total: " + $x  tries to add.
-
-  3. In an if, == asks a question. A single = puts a value in and is ALWAYS
-     true, so the if always runs.
-
-  4. isset FIRST, read SECOND.
-         if (isset($_POST["bt"])) { $n = $_POST["n1"]; }      correct
-         $n = $_POST["n1"]; if (isset($_POST["bt"]))          warning on screen
-
-  5. Quotes around the button value.
-         if ($bt == "SUM")     correct
-         if ($bt == SUM)       Fatal error: Undefined constant "SUM"
-
-===============================================================================
-  END
+END
 ===============================================================================

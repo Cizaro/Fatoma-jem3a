@@ -1,0 +1,207 @@
+﻿===============================================================================
+NOTES - do NOT hand these in
+Lesson 04, Problems 4 to 7
+===============================================================================
+
+These are for explaining the answers, not for submitting. The answers file
+has nothing in it but code.
+
+
+===============================================================================
+HOW TO RUN THEM
+===============================================================================
+
+1. Save the files in   C:\xampp\htdocs\lesson04\
+   Problem 4 needs BOTH files in the same folder.
+2. Open XAMPP, press Start on Apache.
+3. Go to   localhost/lesson04/problem4.php   (or 5, 6, 7)
+
+
+===============================================================================
+TEST RESULTS - every answer was run on PHP 8.2
+===============================================================================
+
+PROBLEM 4, with 12, 4 and 2
+    SUM  The Sum = 18
+    DIF  The Difference = 6
+    PRO  The Product = 96
+    DIV  The Division = 1.5
+    MAX  The Maximum = 12
+    MIN  The Minimum = 2
+    AVG  The Average = 6
+  with 12, 0 and 2
+    DIV  The Division = Cannot divide by zero
+  with a letter typed in a box
+    Please enter three numbers.
+
+PROBLEM 5
+    12321      is a Palindrome          (the sheet's own example)
+    ABCCBA     is a Palindrome          (the sheet's own example)
+    AB161BA    is a Palindrome          (the sheet's own example)
+    12345      is NOT a Palindrome
+    abcba      is a Palindrome
+    Hello      is NOT a Palindrome
+    (empty)    Please enter a text or a number.
+
+PROBLEM 6
+    Fatima2026      valid, shows the username and the password
+    Passw0rd        valid, exactly 8 characters
+    fatima2026      not valid, no uppercase letter
+    FATIMA2026      not valid, no lowercase letter
+    FatimaAlHelou   not valid, no number
+    Fat1ma          not valid, only 6 characters
+    12345678        not valid, no letters
+
+PROBLEM 7
+    Palindrome   24142 yes, 12321 yes, 123 no, 7 yes, 10 no
+    Odd / Even   2 Even, 7 Odd, 10 Even, 0 Even
+    Armstrong    checked every number 0 to 500: 0, 1, 153, 370, 371, 407
+    Prime        checked every number 0 to 30: 2, 3, 5, 7, 11, 13, 17, 19, 23, 29
+    Prime edges  0 no, 1 no, 2 yes, 9 no
+
+
+===============================================================================
+A MISTAKE IN THE QUESTION SHEET
+===============================================================================
+
+Problem 7's hint lists the Armstrong numbers as
+
+    0, 1, 153, 371, 407, 471
+
+471 is NOT an Armstrong number. Cube its digits:
+
+    4*4*4 + 7*7*7 + 1*1*1  =  64 + 343 + 1  =  408
+
+408 is not 471. The real list below 500 is
+
+    0, 1, 153, 370, 371, 407
+
+so the sheet appears to have 471 where it meant 370. The code follows the
+DEFINITION he writes in words - "the sum of the cubes of its digits" - which
+is correct. Only his example list is wrong. Worth knowing before she is told
+her answer is broken.
+
+
+===============================================================================
+WHY EACH ONE IS WRITTEN THAT WAY
+===============================================================================
+
+PROBLEM 4
+
+* The question asks for TWO files and the include function. process4.php
+  holds nothing but functions. problem4.php holds the form and the output.
+  That split is the mark.
+
+* include goes at the very top, before anything else. A function cannot be
+  called before PHP has read it.
+
+* Maximum and Minimum use SEPARATE if statements:
+
+      $Largest = $a;
+      if($b > $Largest){ $Largest = $b; }
+      if($c > $Largest){ $Largest = $c; }
+
+  Assume the first one wins, then let each other one challenge it. An
+  else-if ladder here would be WRONG - it stops at the first match, so with
+  1, 2, 3 it would answer 2. This is the same trap as the price filter.
+
+* The button check DOES use an else-if ladder, and that is correct, because
+  the buttons are alternatives: exactly one can have been pressed.
+  Alternatives -> ladder. Repeated challenges -> separate ifs.
+
+* min() and max() are not used. The question for the price filter banned
+  them and the same habit applies here.
+
+* step=0.1 on the inputs is what lets decimals be typed.
+
+
+PROBLEM 5
+
+* The reverse is built with a loop that COUNTS DOWN:
+
+      for($i=strlen($clean)-1; $i>=0; $i--)
+
+  $i-- is what makes it run backwards. That loop is the whole question.
+  PHP has strrev() which does it in one line, but the chapter is about
+  writing your own functions, so the loop is the answer he wants. Mention
+  strrev() only if he asks for a shorter way.
+
+* $text[$i] reads one character out of a string, the same way an array works.
+
+* strtoupper makes the comparison ignore capital letters, and skipping the
+  spaces makes "race car" work.
+
+* The function returns true or false, never a sentence. The function decides,
+  the page prints. That way the same function can be reused anywhere.
+
+
+PROBLEM 6
+
+* Four separate flags, not one running answer. Each rule is checked on its
+  own and the password is valid only when all four are true. && means AND.
+
+* The flags are set BEFORE the loop and tested AFTER it. Testing inside the
+  loop would decide on the first character, before the rest had been read.
+
+* The length check sits outside the loop, because it is about the whole
+  password and not about one character.
+
+* $ch >= "A" && $ch <= "Z" compares letters alphabetically, so it reads as
+  "is this character somewhere between A and Z".
+
+* The function returns the MESSAGE, because the question says to return a
+  text. Showing the username and password is the page's job, not the
+  function's.
+
+* Say out loud, do not write in the answer: printing a password back onto
+  the page is something a real site must never do. The question asks for it,
+  so do it, but know it is an exercise about strings and not a model login.
+
+
+PROBLEM 7
+
+* All four are separate functions that return true or false. That is what a
+  chapter on functions is asking for. The page decides what to print; the
+  functions only decide what is true.
+
+* % 10 gives the LAST digit. (int)($temp / 10) chops that digit off. Those
+  two lines together are how you walk through the digits of a number, and
+  both the palindrome and the Armstrong function use them.
+
+* $temp is a COPY of $n. If the loop chewed up $n itself there would be
+  nothing left to compare against at the end.
+
+* isPrime returns false the MOMENT it finds a divisor instead of carrying
+  on. Once one divisor is found the answer cannot change.
+
+* The prime loop stops at $n/2 because nothing bigger than half of N can
+  divide into it.
+
+* 0 and 1 are handled before the loop. The loop would never run for them,
+  so without that check they would be wrongly reported as prime.
+
+
+===============================================================================
+THE FIVE THINGS THAT LOSE MARKS IN ALL FOUR
+===============================================================================
+
+1. The $ sign on every variable. $num, never num.
+
+2. Join with the DOT.
+       "Total: " . $x     joins
+       "Total: " + $x     tries to add
+
+3. In an if, == asks a question. A single = puts a value in and is ALWAYS
+   true, so the if always runs.
+
+4. isset FIRST, read SECOND.
+       if(isset($_POST["bt"])){ $n = $_POST["n1"]; }     correct
+       $n = $_POST["n1"]; if(isset($_POST["bt"]))        warning on the page
+
+5. Quotes around the button value.
+       if($bt == "SUM")    correct
+       if($bt == SUM)      Fatal error: Undefined constant "SUM"
+
+===============================================================================
+END
+===============================================================================
