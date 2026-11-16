@@ -114,6 +114,11 @@ PROBLEM 4
 
 * step=0.1 on the inputs is what lets decimals be typed.
 
+* The echo prints a plain string with no <p> tags, and the form action names
+  the page itself - action="problem4.php". Both match the way he writes it
+  in Problem2_Ecommerce.php. An empty action="" posts back to the same page
+  and is technically neater, but it is not what he does, so it is not used.
+
 
 PROBLEM 5
 
