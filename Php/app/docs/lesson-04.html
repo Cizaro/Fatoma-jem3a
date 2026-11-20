@@ -1,0 +1,210 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lesson 04 — Create and use user-defined PHP functions</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Public+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../app.css?v=5">
+<body class="reader">
+<article class="prose">
+<h1>Lesson 04 — Create and use user-defined PHP functions</h1>
+<p>His six objectives for the chapter, in his order:</p>
+<ol><li>Why functions?</li><li>Built-in functions (String and Math)</li><li>Define and choose function names</li><li>Return values and arguments</li><li>Calling by value and reference</li><li>Variable scope</li></ol>
+<p>Every output on this page was produced by <strong>running</strong> the code on PHP 8.2, including each of his own slide examples.</p>
+<hr>
+<h2>1. Why functions?</h2>
+<p>His two lines:</p>
+<blockquote><p>PHP has lots of built-in functions that we use all the time. We write our own functions when our code reaches a certain level of complexity.</p></blockquote>
+<p>And his four rules for deciding:</p>
+<ul><li><strong>Organise your code into &quot;paragraphs&quot;</strong> — capture a complete thought and <em>name it</em>.</li><li><strong>Don&#x27;t repeat yourself</strong> — make it work once and then reuse it.</li><li><strong>If something gets too long or complex</strong>, break it into logical chunks and put those chunks in functions.</li><li><strong>Make a library</strong> of the common things you do over and over.</li></ul>
+<h3>The use case — three students, one grade rule</h3>
+<p>This is the &quot;don&#x27;t repeat yourself&quot; rule with a number attached to it.</p>
+<p><strong>Without a function.</strong> The grade ladder is copied once per student:</p>
+<pre class="lang-php"><code>$rana = 17; $sara = 11; $lina = 11;
+
+if($rana &gt;= 18){ $g = &quot;A&quot;; } else if($rana &gt;= 16){ $g = &quot;B&quot;; }
+else if($rana &gt;= 14){ $g = &quot;C&quot;; } else if($rana &gt;= 10){ $g = &quot;D&quot;; } else { $g = &quot;F&quot;; }
+echo &quot;Rana : &quot;.$rana.&quot; grade &quot;.$g.&quot;\n&quot;;
+
+if($sara &gt;= 18){ $g = &quot;A&quot;; } else if($sara &gt;= 16){ $g = &quot;B&quot;; }
+else if($sara &gt;= 14){ $g = &quot;C&quot;; } else if($sara &gt;= 10){ $g = &quot;D&quot;; } else { $g = &quot;F&quot;; }
+echo &quot;Sara : &quot;.$sara.&quot; grade &quot;.$g.&quot;\n&quot;;
+
+if($lina &gt;= 18){ $g = &quot;A&quot;; } else if($lina &gt;= 16){ $g = &quot;B&quot;; }
+else if($lina &gt;= 14){ $g = &quot;C&quot;; } else if($lina &gt;= 10){ $g = &quot;D&quot;; } else { $g = &quot;F&quot;; }
+echo &quot;Lina : &quot;.$lina.&quot; grade &quot;.$g.&quot;\n&quot;;</code></pre>
+<p><strong>With a function.</strong> The ladder is written once:</p>
+<pre class="lang-php"><code>function letterGrade($mark){
+    if($mark &gt;= 18){ return &quot;A&quot;; }
+    if($mark &gt;= 16){ return &quot;B&quot;; }
+    if($mark &gt;= 14){ return &quot;C&quot;; }
+    if($mark &gt;= 10){ return &quot;D&quot;; }
+    return &quot;F&quot;;
+}
+
+$rana = 17; $sara = 11; $lina = 11;
+echo &quot;Rana : &quot;.$rana.&quot; grade &quot;.letterGrade($rana).&quot;\n&quot;;
+echo &quot;Sara : &quot;.$sara.&quot; grade &quot;.letterGrade($sara).&quot;\n&quot;;
+echo &quot;Lina : &quot;.$lina.&quot; grade &quot;.letterGrade($lina).&quot;\n&quot;;</code></pre>
+<p>Both print exactly the same thing:</p>
+<pre><code>Rana : 17 grade B
+Sara : 11 grade D
+Lina : 11 grade D</code></pre>
+<p>So far the function has bought nothing. <strong>The second version is even a line longer.</strong> Here is where it pays.</p>
+<h3>Now the university raises the pass mark from 10 to 12</h3>
+<p><strong>With the function</strong>, you change one character, on one line. Done.</p>
+<p><strong>Without it</strong>, you have to find all three copies and change each one. Change two and miss the third — which is exactly what happens at 1am — and this is what the page prints:</p>
+<pre><code>Rana : 17 grade B
+Sara : 11 grade F
+Lina : 11 grade D</code></pre>
+<p><strong>Sara and Lina both scored 11. Sara gets an F and Lina gets a D.</strong> The same mark, two different grades, on the same page, and nothing crashed to tell you.</p>
+<p>That is the real argument for functions. Not that they are shorter — with three students they are not. It is that <strong>a rule written once cannot disagree with itself.</strong></p>
+<blockquote><p>The more students, the more one-sided it gets. With five students the function version is shorter <em>and</em> safer. With one student it is neither, which is why he says &quot;when our code reaches a certain level of complexity&quot;.</p></blockquote>
+<hr>
+<h2>2. Built-in functions</h2>
+<blockquote><p>PHP programming language has more than <strong>1,000 built-in functions</strong>.</p></blockquote>
+<p>His reasons for looking for one before writing your own:</p>
+<ul><li>Using someone else&#x27;s <strong>tested</strong> code saves significant development time.</li><li>You can be confident it is <strong>significantly less prone to error</strong>.</li></ul>
+<p>They are all listed at <code>php.net/manual/en/indexes.functions.php</code>.</p>
+<h3>His own example, and what it really prints</h3>
+<pre class="lang-php"><code>echo strrev(&quot; .dlrow olleH&quot;);
+echo str_repeat(&quot;Hip &quot;, 2);
+echo strtoupper(&quot;hooray!&quot;);
+echo strlen(&quot;intro&quot;);
+echo &quot;\n&quot;;</code></pre>
+<p>The slide shows the four answers on separate lines:</p>
+<pre><code>Hello world.
+Hip Hip
+HOORAY!
+5</code></pre>
+<p>Run it exactly as written and you get them <strong>all on one line</strong>:</p>
+<pre><code>Hello world. Hip Hip HOORAY!5</code></pre>
+<p>because there is only one <code>&quot;\n&quot;</code> and it is at the end. The slide is showing you what each function returns, not the literal screen output. Worth knowing if he asks for the exact output.</p>
+<div class="tablewrap"><table><thead><tr><th>Function</th><th>What it does</th><th>Example</th><th>Result</th></tr></thead><tbody><tr><td><code>strrev()</code></td><td>reverses a string</td><td><code>strrev(&quot;abc&quot;)</code></td><td><code>cba</code></td></tr><tr><td><code>str_repeat()</code></td><td>repeats a string</td><td><code>str_repeat(&quot;Hip &quot;, 2)</code></td><td><code>Hip Hip </code></td></tr><tr><td><code>strtoupper()</code></td><td>to capitals</td><td><code>strtoupper(&quot;hooray!&quot;)</code></td><td><code>HOORAY!</code></td></tr><tr><td><code>strlen()</code></td><td>how many characters</td><td><code>strlen(&quot;intro&quot;)</code></td><td><code>5</code></td></tr></tbody></table></div>
+<blockquote><p>The String and Math function tables on his slides 13–18 are <strong>pictures</strong>, so their text could not be pulled out of the PDF. Ask him for the list, or read it off the slides — do not assume this page has them all.</p></blockquote>
+<hr>
+<h2>3. Defining your own, and naming them</h2>
+<blockquote><p>We use the <code>function</code> keyword to define a function, we name the function and take optional argument variables. The body of the function is in a block of code <code>{ }</code>.</p></blockquote>
+<pre class="lang-php"><code>function greet() {
+    print &quot;Hello\n&quot;;
+}
+greet();
+greet();</code></pre>
+<pre><code>Hello
+Hello</code></pre>
+<h3>Choosing function names — his four rules</h3>
+<ul><li>Much like variable names, <strong>but they do not start with a dollar sign</strong>.</li><li>Start with a <strong>letter or underscore</strong>, then letters, numbers and underscores.</li><li><strong>Avoid built-in function names.</strong></li><li><strong>Case does not matter</strong> — <em>but please do not take advantage of this.</em></li></ul>
+<p>That third rule is the one with teeth. <code>MixedCase()</code> and <code>mixedcase()</code> really do call the same function — I checked — but write the name the same way every time anyway.</p>
+<p><strong>Watch this difference:</strong> a <em>variable</em> is case <strong>sensitive</strong> (<code>$Name</code> and <code>$name</code> are two different variables), a <em>function</em> is case <strong>insensitive</strong>. That pair is exam material.</p>
+<hr>
+<h2>4. Return values and arguments</h2>
+<h3>Return</h3>
+<blockquote><p>Often a function will take its arguments, do some computation, and return a value to be used as the value of the function call in the calling expression. The <code>return</code> keyword is used for this.</p></blockquote>
+<pre class="lang-php"><code>function greeting() {
+    return &quot;Hello&quot;;
+}
+print greeting() . &quot; Glenn\n&quot;;
+print greeting() . &quot; Sally\n&quot;;</code></pre>
+<pre><code>Hello Glenn
+Hello Sally</code></pre>
+<p><strong><code>print</code> and <code>return</code> are not the same thing.</strong> <code>print</code> puts it on the screen; <code>return</code> hands it back to whoever called the function, and they decide what to do with it. <code>greet()</code> above printed. <code>greeting()</code> here returns — which is why the <code> . &quot; Glenn&quot;</code> can be joined onto it.</p>
+<h3>Arguments</h3>
+<pre class="lang-php"><code>function howdy($lang) {
+    if ( $lang == &#x27;es&#x27; ) return &quot;Hola&quot;;
+    if ( $lang == &#x27;fr&#x27; ) return &quot;Bonjour&quot;;
+    return &quot;Hello&quot;;
+}
+print howdy(&#x27;es&#x27;) . &quot; Glenn\n&quot;;
+print howdy(&#x27;fr&#x27;) . &quot; Sally\n&quot;;</code></pre>
+<pre><code>Hola Glenn
+Bonjour Sally</code></pre>
+<p>Note there is no <code>else</code> anywhere. <strong><code>return</code> leaves the function immediately</strong>, so once one of them fires nothing below it can run. The last <code>return &quot;Hello&quot;</code> is the default.</p>
+<h3>Optional arguments</h3>
+<blockquote><p>Arguments can have defaults, and so can be omitted.</p></blockquote>
+<pre class="lang-php"><code>function howdy($lang=&#x27;es&#x27;) {
+    if ( $lang == &#x27;es&#x27; ) return &quot;Hola&quot;;
+    if ( $lang == &#x27;fr&#x27; ) return &quot;Bonjour&quot;;
+    return &quot;Hello&quot;;
+}
+print howdy() . &quot; Glenn\n&quot;;
+print howdy(&#x27;fr&#x27;) . &quot; Sally\n&quot;;</code></pre>
+<pre><code>Hola Glenn
+Bonjour Sally</code></pre>
+<p><code>howdy()</code> with nothing in the brackets used the default <code>&#x27;es&#x27;</code>.</p>
+<hr>
+<h2>5. Call by value and call by reference</h2>
+<p>This is the pair he is most likely to ask you to trace.</p>
+<h3>Call by value — the default</h3>
+<blockquote><p>The argument variable within the function is an &quot;alias&quot; to the actual variable. But even further, the alias is to a <strong>copy</strong> of the actual variable in the function call.</p></blockquote>
+<pre class="lang-php"><code>function double($alias) {
+    $alias = $alias * 2;
+    return $alias;
+}
+$val = 10;
+$dval = double($val);
+echo &quot;Value = $val Doubled = $dval\n&quot;;</code></pre>
+<pre><code>Value = 10 Doubled = 20</code></pre>
+<p><strong><code>$val</code> is still 10.</strong> The function doubled its own copy. The only way the answer got out was through <code>return</code>.</p>
+<h3>Call by reference — with <code>&amp;</code></h3>
+<blockquote><p>Sometimes we want a function to change one of its arguments, so we indicate that an argument is &quot;by reference&quot; using <code>( &amp; )</code>.</p></blockquote>
+<pre class="lang-php"><code>function triple(&amp;$realthing) {
+    $realthing = $realthing * 3;
+}
+$val = 10;
+triple($val);
+echo &quot;Triple = $val\n&quot;;</code></pre>
+<pre><code>Triple = 30</code></pre>
+<p><strong><code>$val</code> really changed</strong>, and there is no <code>return</code> anywhere. The <code>&amp;</code> in <code>&amp;$realthing</code> is the whole difference.</p>
+<div class="tablewrap"><table><thead><tr><th></th><th>by value</th><th>by reference</th></tr></thead><tbody><tr><td>written</td><td><code>function f($x)</code></td><td><code>function f(&amp;$x)</code></td></tr><tr><td>the function gets</td><td>a <strong>copy</strong></td><td>the <strong>real variable</strong></td></tr><tr><td>the original</td><td>unchanged</td><td><strong>changed</strong></td></tr><tr><td>gets the answer out by</td><td><code>return</code></td><td>changing the variable itself</td></tr></tbody></table></div>
+<hr>
+<h2>6. Variable scope</h2>
+<blockquote><p>In general, variable names used inside of function code <strong>do not mix</strong> with the variables outside of the function, to avoid unexpected side effects if two programmers use the same variable name in different parts of the code. We call this <strong>&quot;name spacing&quot;</strong> the variables.</p></blockquote>
+<h3>Normal scope — isolated</h3>
+<pre class="lang-php"><code>function tryzap() {
+    $val = 100;
+}
+$val = 10;
+tryzap();
+echo &quot;TryZap = $val\n&quot;;</code></pre>
+<pre><code>TryZap = 10</code></pre>
+<p>The <code>$val</code> inside the function and the <code>$val</code> outside it are <strong>two different variables that happen to share a name</strong>. The outer one was never touched.</p>
+<h3>Global scope — shared</h3>
+<pre class="lang-php"><code>function dozap() {
+    global $val;
+    $val = 100;
+}
+$val = 10;
+dozap();
+echo &quot;DoZap = $val\n&quot;;</code></pre>
+<pre><code>DoZap = 100</code></pre>
+<p>The word <code>global</code> says &quot;the <code>$val</code> in here is the same <code>$val</code> as out there&quot;.</p>
+<blockquote><p>His note on the slide: <em>&quot;Use this wisely, young Jedi...&quot;</em></p></blockquote>
+<h3>Global variables — use rarely</h3>
+<p>He lists three better ways to get a value in or out:</p>
+<ul><li>Passing the variable in as a <strong>parameter</strong></li><li>Passing the value back as a <strong>return value</strong></li><li>Passing the variable in <strong>by reference</strong></li></ul>
+<p>And if you must use a global, give it a long name with a unique prefix:</p>
+<pre class="lang-php"><code>global $LastOAuthBodyBaseString;
+global $LAST_OAUTH_BODY_BASE_STRING;</code></pre>
+<h3>The one exception — superglobals</h3>
+<p>His slide says &quot;Except for <code>$_GET</code>&quot;. The superglobals — <code>$_GET</code>, <code>$_POST</code>, <code>$_SERVER</code> and the rest — are visible <strong>inside</strong> a function without writing <code>global</code>. I checked: reading <code>$_GET</code> inside a function works with no declaration at all.</p>
+<hr>
+<h2>7. Including files</h2>
+<blockquote><ul><li><code>include &quot;header.php&quot;;</code> — pull the file in here</li><li><code>include_once &quot;header.php&quot;;</code> — pull it in unless it has already been</li></ul>
+<p>pulled in before</p>
+<ul><li><code>require &quot;header.php&quot;;</code> — pull in the file here **and die if it is</li></ul>
+<p>missing**</p>
+<ul><li><code>require_once &quot;header.php&quot;;</code> — you can guess what this means...</li></ul>
+<p>These can look like functions — <code>require_once(&quot;header.php&quot;);</code></p></blockquote>
+<p><strong>The difference that matters:</strong> <code>include</code> carries on with a warning if the file is missing; <strong><code>require</code> stops the script dead</strong>. Use <code>require</code> for anything the page cannot work without.</p>
+<p><strong>Problem 4 of the problem sheet asks for exactly this</strong> — two files, with <code>include</code> for the processing stage.</p>
+<hr>
+<h2>His summary slide</h2>
+<ul><li>Built-in functions</li><li>Making new functions</li><li>Arguments — pass by value and pass by reference</li><li>Including and requiring files</li><li>Checking to see if functions are present</li></ul>
+<hr>
+<h2>What to be able to do before the next class</h2>
+<ol><li>Write a function from blank that <strong>takes an argument and returns</strong> a value.</li><li>Say the difference between <code>print</code> and <code>return</code> in one sentence.</li><li>Trace <code>double()</code> and <code>triple()</code> and get <code>10 / 20</code> and <code>30</code>.</li><li>Say why <code>tryzap()</code> prints 10 and <code>dozap()</code> prints 100.</li><li>Split one page into two files and wire them together with <code>include</code>.</li></ol>
+</article>
+<nav class="lessonnav">
+
+</nav>
+<script src="../embed.js?v=5"></script>

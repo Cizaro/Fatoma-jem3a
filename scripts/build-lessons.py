@@ -385,6 +385,8 @@ DOCS = [
     ("doctor-style/HOW-HE-SOLVES.md", "doctor-style"),
     ("doctor-style/PRACTICE.md",      "doctor-practice"),
     ("doctor-style/CASE-price-filter.md", "case-price-filter"),
+    ("lesson-04-functions/lesson.md",        "lesson-04"),
+    ("lesson-04-functions/problems.md",      "lesson-04-problems"),
     ("resources/exams/her-own-questions.md",  "her-own-questions"),
     ("resources/exams/tonight-plan.md",       "tonight-plan"),
     ("resources/exams/revision.md",           "revision"),

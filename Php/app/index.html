@@ -33,6 +33,9 @@
     <div class="navsec">Lessons</div>
     <nav class="nav" id="navLessons"></nav>
 
+    <div class="navsec">Lesson 04 &middot; Functions</div>
+    <nav class="nav" id="navL04"></nav>
+
     <div class="navsec">Practise</div>
     <nav class="nav" id="navPractice"></nav>
 
@@ -94,6 +97,9 @@ const ROUTES = [
   ["lesson",   "mysql",      "9",  "MySQL",                      "lessons/mysql.html", "lessons/mysql.html"],
   ["lesson",   "dynamic",    "10", "Dynamic pages",              "lessons/dynamic.html", "lessons/dynamic.html"],
 
+  ["l04",      "l04",        "4",  "Functions - the lesson",   "docs/lesson-04.html", "docs/lesson-04.html"],
+  ["l04",      "l04q",       "?",  "Functions - 7 problems",   "docs/lesson-04-problems.html", "docs/lesson-04-problems.html"],
+
   ["practice", "hw1",        "✓", "Assignment 1",  "../assignment-01.html", "assignment-01.html"],
   ["practice", "problems",   "✱", "Problem sets",  "../php-problems.html", "php-problems.html"],
   ["practice", "answers",    "☑", "Answers",       "../php-answers.html", "php-answers.html"],
@@ -121,7 +127,7 @@ const byId = Object.fromEntries(ROUTES.map(r => [r[1], r]));
 /* ---------- navigation ---------- */
 function paintNav(){
   const groups = { top:$("navTop"), exam:$("navExam"), teach:$("navTeach"),
-                   lesson:$("navLessons"), practice:$("navPractice") };
+                   lesson:$("navLessons"), l04:$("navL04"), practice:$("navPractice") };
   Object.values(groups).forEach(g => g.innerHTML = "");
   ROUTES.forEach(([group, id, icon, title, file]) => {
     const a = document.createElement("a");
