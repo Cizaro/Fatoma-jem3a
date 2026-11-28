@@ -1,0 +1,1248 @@
+<title>Functions and Arrays</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&family=Public+Sans:wght@400;500;600&display=swap">
+
+<style>
+/* Layout: a fixed left rail of the two lessons, one panel shown at a time.
+   Two accents on purpose - teal is Lesson 04, clay is Lesson 05 - so the
+   colour itself tells you which lesson a block belongs to. */
+:root{
+  --paper:#FBFAF7; --surface:#FFFFFF; --surface-2:#F2F1EC;
+  --ink:#16201D; --ink-2:#4C5956; --ink-3:#7C8885;
+  --line:#E2E1DA;
+  --fn:#0E7C66; --fn-soft:#E3F2EE;
+  --arr:#A8530F; --arr-soft:#FBEDE0;
+  --warn:#9A3412; --warn-soft:#FDEBE4;
+  --display:"Familjen Grotesk",system-ui,sans-serif;
+  --body:"Public Sans",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --r:14px; --r-sm:8px;
+  --shadow:0 1px 2px rgba(22,32,29,.05),0 8px 24px -14px rgba(22,32,29,.22);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#111513; --surface:#181D1B; --surface-2:#212725;
+    --ink:#ECF0EE; --ink-2:#A9B4B0; --ink-3:#7C8885;
+    --line:#2B3230;
+    --fn:#5FD6BB; --fn-soft:#13302A;
+    --arr:#E8A05C; --arr-soft:#33230F;
+    --warn:#F0A58A; --warn-soft:#3A1E14;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -14px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111513; --surface:#181D1B; --surface-2:#212725;
+  --ink:#ECF0EE; --ink-2:#A9B4B0; --ink-3:#7C8885;
+  --line:#2B3230;
+  --fn:#5FD6BB; --fn-soft:#13302A;
+  --arr:#E8A05C; --arr-soft:#33230F;
+  --warn:#F0A58A; --warn-soft:#3A1E14;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--body);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased}
+.shell{display:grid;grid-template-columns:248px minmax(0,1fr);gap:0;min-height:100%}
+
+/* ---- rail ---- */
+.rail{border-right:1px solid var(--line);background:var(--surface);
+  padding-block:22px 40px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:16px;
+  position:sticky;top:env(safe-area-inset-top,0px);align-self:start;max-height:100vh;overflow-y:auto}
+.brand{font-family:var(--display);font-weight:700;font-size:19px;letter-spacing:-.02em;margin:0 0 2px}
+.brand small{display:block;font-family:var(--mono);font-size:10.5px;font-weight:400;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-top:5px}
+.railsec{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink-3);margin:24px 0 7px}
+.rail a{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--ink-2);
+  font-size:14.5px;padding:8px 11px;border-radius:var(--r-sm);line-height:1.35}
+.rail a:hover{background:var(--surface-2);color:var(--ink)}
+.rail a.on{background:var(--fn-soft);color:var(--fn);font-weight:600}
+.rail a.on.arr{background:var(--arr-soft);color:var(--arr)}
+.rail a .d{width:7px;height:7px;border-radius:50%;flex:none;background:var(--line)}
+.rail a.fn .d{background:var(--fn)} .rail a.arr .d{background:var(--arr)}
+.themebtn{margin-top:26px;font-family:var(--mono);font-size:10.5px;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;background:none;border:1px solid var(--line);
+  color:var(--ink-3);border-radius:999px;padding:6px 13px;cursor:pointer;font-family:var(--mono)}
+.themebtn:hover{color:var(--ink);border-color:var(--ink-3)}
+
+/* ---- main ---- */
+main{padding-block:34px 90px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  max-width:860px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,5vw,40px);
+  letter-spacing:-.025em;line-height:1.08;margin:0 0 6px;text-wrap:balance}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(20px,3vw,25px);
+  letter-spacing:-.015em;margin:40px 0 10px;text-wrap:balance;scroll-margin-top:20px}
+h3{font-family:var(--display);font-weight:600;font-size:17.5px;margin:26px 0 8px;text-wrap:balance}
+p{margin:0 0 14px;max-width:66ch}
+ul,ol{margin:0 0 14px;padding-left:22px;max-width:64ch}
+li{margin-bottom:6px}
+.lede{font-size:17.5px;color:var(--ink-2);max-width:60ch;margin-bottom:22px}
+code{font-family:var(--mono);font-size:.88em;background:var(--surface-2);
+  padding:1.5px 5px;border-radius:5px}
+pre{font-family:var(--mono);font-size:13.5px;line-height:1.6;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r-sm);padding:14px 16px;
+  overflow-x:auto;margin:0 0 16px}
+pre code{background:none;padding:0;font-size:inherit}
+.out{background:var(--surface-2);border:0;border-left:3px solid var(--ink-3);
+  border-radius:0 var(--r-sm) var(--r-sm) 0;color:var(--ink-2)}
+.tag{display:inline-block;font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:.11em;text-transform:uppercase;padding:3px 9px;border-radius:999px;margin-bottom:9px}
+.tag.fn{background:var(--fn-soft);color:var(--fn)}
+.tag.arr{background:var(--arr-soft);color:var(--arr)}
+.tag.out{background:var(--surface-2);color:var(--ink-3);border-left:0;border-radius:999px}
+
+.kid{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--fn);
+  border-radius:0 var(--r) var(--r) 0;padding:18px 20px;margin:0 0 20px;box-shadow:var(--shadow)}
+.kid.arr{border-left-color:var(--arr)}
+.kid h3{margin-top:0;font-size:16px}
+.kid p:last-child{margin-bottom:0}
+.warn{background:var(--warn-soft);border-radius:var(--r);padding:16px 19px;margin:0 0 20px}
+.warn b{color:var(--warn)}
+.warn p:last-child{margin-bottom:0}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 18px;box-shadow:var(--shadow);min-width:0}
+.card h3{margin:0 0 7px;font-size:15.5px}
+.card p:last-child,.card pre:last-child{margin-bottom:0}
+.card pre{font-size:12.5px}
+
+.tablewrap{overflow-x:auto;margin:0 0 18px;border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:380px}
+th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600;background:var(--surface-2)}
+tr:last-child td{border-bottom:0}
+td code{font-size:.86em}
+
+.q{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px 20px;margin:0 0 16px;box-shadow:var(--shadow)}
+.q .n{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:5px}
+.q h3{margin:0 0 8px}
+.q p:last-child,.q pre:last-child{margin-bottom:0}
+details{border-top:1px solid var(--line);margin-top:14px;padding-top:12px}
+details summary{cursor:pointer;font-family:var(--mono);font-size:11.5px;font-weight:600;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--fn);list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"▸ ";display:inline-block;transition:transform .15s}
+details[open] summary::before{content:"▾ "}
+details.arr summary{color:var(--arr)}
+details > *:not(summary){margin-top:12px}
+.hint{font-size:13.5px;color:var(--ink-3)}
+footer{margin-top:50px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:13px;color:var(--ink-3)}
+.panel[hidden]{display:none}
+
+@media (max-width:780px){
+  .shell{grid-template-columns:1fr}
+  .rail{position:static;max-height:none;border-right:0;border-bottom:1px solid var(--line);
+    padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .rail nav{display:flex;flex-wrap:wrap;gap:5px}
+  .rail a{padding:7px 12px;border:1px solid var(--line);font-size:13.5px}
+  .railsec{margin:16px 0 6px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="shell">
+<aside class="rail">
+  <p class="brand">Functions &amp; Arrays<small>MIT320 · Lessons 4 and 5</small></p>
+
+  <div class="railsec">Start</div>
+  <nav>
+    <a href="#start" data-v="start"><span class="d"></span>What this is</a>
+  </nav>
+
+  <div class="railsec">Lesson 4 · Functions</div>
+  <nav>
+    <a href="#why-functions" class="fn" data-v="why-functions"><span class="d"></span>Why functions?</a>
+    <a href="#functions" class="fn" data-v="functions"><span class="d"></span>The lesson</a>
+  </nav>
+
+  <div class="railsec">Lesson 5 · Arrays</div>
+  <nav>
+    <a href="#why-arrays" class="arr" data-v="why-arrays"><span class="d"></span>Why arrays?</a>
+    <a href="#arrays" class="arr" data-v="arrays"><span class="d"></span>The lesson</a>
+  </nav>
+
+  <div class="railsec">Questions</div>
+  <nav>
+    <a href="#solved" data-v="solved"><span class="d"></span>Solved, with reasons</a>
+    <a href="#practice" data-v="practice"><span class="d"></span>Practice</a>
+  </nav>
+
+  <button class="themebtn" id="themebtn" type="button">theme</button>
+</aside>
+
+<main>
+
+<!-- ============ START ============ -->
+<section class="panel" id="v-start">
+  <h1>Functions and Arrays</h1>
+  <p class="lede">Two lessons, explained from the beginning. Every piece of code
+    on this site was run on PHP 8.2 before it was written down — the outputs you
+    see are real, not typed from memory.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <span class="tag fn">Lesson 4</span>
+      <h3>Functions</h3>
+      <p>A way to write a piece of work <b>once</b>, give it a name, and use it
+        as many times as you like.</p>
+      <p class="hint">Why we need them · built-in functions · writing your own ·
+        arguments · return · by value and by reference · scope · include</p>
+    </div>
+    <div class="card">
+      <span class="tag arr">Lesson 5</span>
+      <h3>Arrays</h3>
+      <p>A way to keep <b>many values under one name</b>, and walk along all of
+        them with a loop.</p>
+      <p class="hint">Indexed · associative · multidimensional · adding and
+        removing · <code>foreach</code> · sorting · the array functions</p>
+    </div>
+  </div>
+
+  <h2>The one-line version</h2>
+  <p><b>A function saves you repeating the same work.</b>
+     <b>An array saves you repeating the same variable.</b>
+     They solve the same disease in two different places, and they are taught
+     next to each other for that reason.</p>
+
+  <h2>How to use this</h2>
+  <ol>
+    <li>Read <b>Why functions?</b> and <b>Why arrays?</b> first. They are short,
+      and nothing else makes sense without them.</li>
+    <li>Then the two lesson pages, which follow the lecturer's own slides.</li>
+    <li>Then <b>Solved, with reasons</b> — the answer and why it is written
+      that way.</li>
+    <li>Then <b>Practice</b>, with nothing in front of you.</li>
+  </ol>
+</section>
+
+<!-- ============ WHY FUNCTIONS ============ -->
+<section class="panel" id="v-why-functions">
+  <span class="tag fn">Lesson 4</span>
+  <h1>Why functions?</h1>
+  <p class="lede">The lecturer's version: <i>"We write our own functions when our
+    code reaches a certain level of complexity."</i> Here is what that means
+    with a real cost attached.</p>
+
+  <div class="kid">
+    <h3>Explained the simple way — a recipe card</h3>
+    <p>Imagine you teach somebody to make tea. The first time, you explain all of
+      it: boil the water, put the bag in, wait, add sugar.</p>
+    <p>Now you write those steps on a <b>card</b> and put the card on the wall.
+      From then on you never explain again. You just say <b>"make tea"</b>.</p>
+    <p>That card is a function. <code>makeTea()</code> is you saying its name.</p>
+    <p>And here is the part that matters: if the sugar changes from two spoons to
+      one, <b>you change the card</b>. Everybody who makes tea from that moment
+      on uses the new way, and you did not have to find every person you ever
+      taught.</p>
+  </div>
+
+  <h2>The real use case — three students, one grade rule</h2>
+  <p>Three students. One rule for turning a mark into a letter.</p>
+
+  <h3>Without a function</h3>
+  <p>The rule is copied once per student:</p>
+<pre><code>$rana = 17; $sara = 11; $lina = 11;
+
+if($rana &gt;= 18){ $g = "A"; } else if($rana &gt;= 16){ $g = "B"; }
+else if($rana &gt;= 14){ $g = "C"; } else if($rana &gt;= 10){ $g = "D"; } else { $g = "F"; }
+echo "Rana : ".$rana." grade ".$g."\n";
+
+if($sara &gt;= 18){ $g = "A"; } else if($sara &gt;= 16){ $g = "B"; }
+else if($sara &gt;= 14){ $g = "C"; } else if($sara &gt;= 10){ $g = "D"; } else { $g = "F"; }
+echo "Sara : ".$sara." grade ".$g."\n";
+
+if($lina &gt;= 18){ $g = "A"; } else if($lina &gt;= 16){ $g = "B"; }
+else if($lina &gt;= 14){ $g = "C"; } else if($lina &gt;= 10){ $g = "D"; } else { $g = "F"; }
+echo "Lina : ".$lina." grade ".$g."\n";</code></pre>
+
+  <h3>With a function</h3>
+  <p>The rule is written once:</p>
+<pre><code>function letterGrade($mark){
+    if($mark &gt;= 18){ return "A"; }
+    if($mark &gt;= 16){ return "B"; }
+    if($mark &gt;= 14){ return "C"; }
+    if($mark &gt;= 10){ return "D"; }
+    return "F";
+}
+
+$rana = 17; $sara = 11; $lina = 11;
+echo "Rana : ".$rana." grade ".letterGrade($rana)."\n";
+echo "Sara : ".$sara." grade ".letterGrade($sara)."\n";
+echo "Lina : ".$lina." grade ".letterGrade($lina)."\n";</code></pre>
+
+  <span class="tag out">Both print</span>
+<pre class="out"><code>Rana : 17 grade B
+Sara : 11 grade D
+Lina : 11 grade D</code></pre>
+
+  <p><b>So far the function has bought nothing.</b> It is even a line longer.
+    Be honest about that — it is why the lecturer says <i>"a certain level of
+    complexity"</i> and not "always".</p>
+
+  <h2>Now the university raises the pass mark from 10 to 12</h2>
+  <p><b>With the function</b> you change one character on one line. Done.</p>
+  <p><b>Without it</b> you must find all three copies. Change two and miss the
+    third — which is what happens at one in the morning — and the page prints
+    this:</p>
+<pre class="out"><code>Rana : 17 grade B
+Sara : 11 grade F
+Lina : 11 grade D</code></pre>
+
+  <div class="warn">
+    <p><b>Sara and Lina both scored 11.</b> Sara gets an F and Lina gets a D.
+      The same mark, two different grades, on the same page — and nothing
+      crashed to tell you.</p>
+    <p>That is the argument. Not that functions are shorter, because with three
+      students they are not. It is that <b>a rule written once cannot disagree
+      with itself.</b></p>
+  </div>
+
+  <h2>The lecturer's four rules</h2>
+  <ul>
+    <li><b>Organise your code into "paragraphs"</b> — capture a complete thought
+      and <i>name it</i>.</li>
+    <li><b>Don't repeat yourself</b> — make it work once and then reuse it.</li>
+    <li><b>If something gets too long or complex</b>, break it into chunks and
+      put those chunks in functions.</li>
+    <li><b>Make a library</b> of the common things you do over and over.</li>
+  </ul>
+</section>
+
+<!-- ============ WHY ARRAYS ============ -->
+<section class="panel" id="v-why-arrays">
+  <span class="tag arr">Lesson 5</span>
+  <h1>Why arrays?</h1>
+  <p class="lede">His slide asks it directly: <i>"What problems do arrays solve
+    in programming?"</i> This is his own example, with what goes wrong spelled
+    out.</p>
+
+  <div class="kid arr">
+    <h3>Explained the simple way — an egg box</h3>
+    <p>You buy six eggs. They do not come as six separate things you have to name
+      — <i>egg one, egg two, egg three…</i> They come in <b>one box with six
+      numbered cups</b>.</p>
+    <p>The box has one name. Each cup has a number. <code>$eggs[0]</code> is the
+      first cup, <code>$eggs[5]</code> is the last.</p>
+    <p>And because the cups are in a row, you can <b>walk along them</b> — check
+      every cup without knowing in advance what is in any of them. That walk is
+      the loop, and it is the thing six separate variables can never give you.</p>
+    <p><b>An associative array is a school bag instead of an egg box.</b> The
+      pockets are not numbered, they are <i>labelled</i>: "pencils", "lunch",
+      "keys". You ask for what you want by name, not by position.</p>
+  </div>
+
+  <h2>His own example</h2>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Without an array</h3>
+<pre><code>$days1 = "Monday";
+$days2 = "Tuesday";
+$days3 = "Wednesday";
+echo $days1;
+echo "&lt;br&gt;".$days2;
+echo "&lt;br&gt;".$days3;</code></pre>
+    </div>
+    <div class="card">
+      <h3>With an array</h3>
+<pre><code>$days = array("Monday","Tuesday","Wednesday");
+echo $days[0];
+echo $days[1];
+echo $days[2];</code></pre>
+    </div>
+  </div>
+
+  <p>Both print the same three days, and on three days it is close to a draw.
+    <b>The difference shows the moment the number stops being three.</b></p>
+
+  <h2>Three things separate variables cannot do</h2>
+
+  <h3>1. You cannot loop over them</h3>
+  <p>This is the real one. With an array, printing three days and printing three
+    hundred is the same four lines:</p>
+<pre><code>for($i=0; $i &lt; count($days); $i++){
+    echo $days[$i]."&lt;br&gt;";
+}</code></pre>
+  <p>With <code>$days1</code>, <code>$days2</code>, <code>$days3</code> there is
+    no way to write that loop at all. <code>$days.$i</code> is not a thing. You
+    would have to type one <code>echo</code> per day, for ever.</p>
+
+  <h3>2. You cannot count them</h3>
+  <p><code>count($days)</code> answers "how many?" even when the answer changes
+    while the program is running. Three separate variables cannot be counted —
+    only you know there are three, and only until you add a fourth and forget.</p>
+
+  <h3>3. You cannot grow or shrink them</h3>
+  <p>An array is <b>dynamic</b>, which is his word for it. You can add to it
+    while the program runs:</p>
+<pre><code>$days[] = "Thursday";   // add on the end
+$days[5] = "Saturday";  // add at a key you choose
+unset($days[1]);        // remove one</code></pre>
+  <p>You cannot invent a new variable while the program is running. The number
+    of variables is fixed when you type the file.</p>
+
+  <h2>A use case where separate variables simply fail</h2>
+  <p>Count how many times each letter appears in a word. You do not know in
+    advance which letters will turn up, so you cannot name the variables.</p>
+<pre><code>$word = "MISSISSIPPI";
+$counts = array();
+
+for($i=0; $i &lt; strlen($word); $i++){
+    $ch = $word[$i];
+    if(isset($counts[$ch])){ $counts[$ch] = $counts[$ch] + 1; }
+    else { $counts[$ch] = 1; }
+}
+
+foreach($counts as $letter =&gt; $howMany){
+    echo $letter." appears ".$howMany." times\n";
+}</code></pre>
+  <span class="tag out">Prints</span>
+<pre class="out"><code>M appears 1 times
+I appears 4 times
+S appears 4 times
+P appears 2 times</code></pre>
+  <p>The keys were <b>invented while the program ran</b>, from the letters it
+    found. There is no version of this with separate variables, at any length.</p>
+
+  <h2>His definition, worth memorising</h2>
+  <p><i>"In PHP an array is actually an <b>ordered map</b>, which associates each
+    value in the array with a <b>key</b>."</i></p>
+  <p>Every array is keys and values. In an indexed array the keys happen to be
+    0, 1, 2 and PHP writes them for you. In an associative array you write them
+    yourself. <b>It is the same structure either way</b> — that is why
+    <code>foreach ($a as $k =&gt; $v)</code> works on both.</p>
+</section>
+
+<!-- ============ FUNCTIONS LESSON ============ -->
+<section class="panel" id="v-functions">
+  <span class="tag fn">Lesson 4</span>
+  <h1>Functions — the lesson</h1>
+  <p class="lede">His six objectives, in his order. Every example here is his,
+    re-run rather than copied off the slide.</p>
+
+  <h2>1. Built-in functions</h2>
+  <p>PHP has <b>more than 1,000</b> built-in functions. His reasons for looking
+    for one before writing your own: someone else's <b>tested</b> code saves you
+    time, and it is <b>significantly less prone to error</b>.</p>
+<pre><code>echo strrev(" .dlrow olleH");
+echo str_repeat("Hip ", 2);
+echo strtoupper("hooray!");
+echo strlen("intro");
+echo "\n";</code></pre>
+
+  <div class="warn">
+    <p><b>Careful with this one.</b> His slide shows the four answers on separate
+      lines. Run exactly as written there is only <b>one</b> <code>"\n"</code>,
+      at the very end, so it all comes out on one line:</p>
+<pre class="out"><code>Hello world. Hip Hip HOORAY!5</code></pre>
+    <p>The slide is showing what each function <i>returns</i>, not what the
+      screen shows. If he asks for the exact output, that is the difference.</p>
+  </div>
+
+  <div class="tablewrap"><table>
+    <tr><th>Function</th><th>Does</th><th>Example</th><th>Result</th></tr>
+    <tr><td><code>strrev()</code></td><td>reverses a string</td><td><code>strrev("abc")</code></td><td><code>cba</code></td></tr>
+    <tr><td><code>str_repeat()</code></td><td>repeats a string</td><td><code>str_repeat("Hip ",2)</code></td><td><code>Hip Hip </code></td></tr>
+    <tr><td><code>strtoupper()</code></td><td>to capitals</td><td><code>strtoupper("hooray!")</code></td><td><code>HOORAY!</code></td></tr>
+    <tr><td><code>strlen()</code></td><td>how many characters</td><td><code>strlen("intro")</code></td><td><code>5</code></td></tr>
+  </table></div>
+  <p class="hint">His String and Math tables on slides 13–18 are pictures, so
+    their text cannot be copied out. Read those off the slides — do not assume
+    this page has them all.</p>
+
+  <h2>2. Writing your own</h2>
+<pre><code>function greet() {
+    print "Hello\n";
+}
+greet();
+greet();</code></pre>
+  <span class="tag out">Prints</span>
+<pre class="out"><code>Hello
+Hello</code></pre>
+
+  <h3>Naming them — his four rules</h3>
+  <ul>
+    <li>Like variable names, <b>but with no dollar sign</b>.</li>
+    <li>Start with a <b>letter or underscore</b>, then letters, numbers, underscores.</li>
+    <li><b>Avoid built-in function names.</b></li>
+    <li><b>Case does not matter</b> — <i>but please do not take advantage of this.</i></li>
+  </ul>
+  <div class="warn">
+    <p><b>This pair is exam material.</b> A <b>variable</b> is case
+      <b>sensitive</b> — <code>$Name</code> and <code>$name</code> are two
+      different variables. A <b>function</b> is case <b>insensitive</b> —
+      <code>MixedCase()</code> and <code>mixedcase()</code> really do call the
+      same function. I checked both.</p>
+  </div>
+
+  <h2>3. Return, and arguments</h2>
+<pre><code>function greeting() {
+    return "Hello";
+}
+print greeting() . " Glenn\n";
+print greeting() . " Sally\n";</code></pre>
+  <span class="tag out">Prints</span>
+<pre class="out"><code>Hello Glenn
+Hello Sally</code></pre>
+  <p><b><code>print</code> and <code>return</code> are not the same thing.</b>
+    <code>print</code> puts it on the screen. <code>return</code> hands it back
+    to whoever called the function, who then decides what to do with it — which
+    is why <code>. " Glenn"</code> can be joined onto this one and could not be
+    joined onto <code>greet()</code>.</p>
+
+<pre><code>function howdy($lang) {
+    if ( $lang == 'es' ) return "Hola";
+    if ( $lang == 'fr' ) return "Bonjour";
+    return "Hello";
+}
+print howdy('es') . " Glenn\n";
+print howdy('fr') . " Sally\n";</code></pre>
+  <span class="tag out">Prints</span>
+<pre class="out"><code>Hola Glenn
+Bonjour Sally</code></pre>
+  <p>There is no <code>else</code> anywhere. <b><code>return</code> leaves the
+    function immediately</b>, so once one fires nothing below it runs. The last
+    line is the default.</p>
+
+  <h3>Optional arguments</h3>
+<pre><code>function howdy($lang='es') { ... }
+print howdy() . " Glenn\n";      // uses 'es'
+print howdy('fr') . " Sally\n";</code></pre>
+
+  <h2>4. By value and by reference</h2>
+  <p>The pair he is most likely to make you trace.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>By value — the default</h3>
+<pre><code>function double($alias) {
+    $alias = $alias * 2;
+    return $alias;
+}
+$val = 10;
+$dval = double($val);
+echo "Value = $val Doubled = $dval\n";</code></pre>
+<pre class="out"><code>Value = 10 Doubled = 20</code></pre>
+      <p><b>$val is still 10.</b> The function doubled its own copy. The answer
+        only got out through <code>return</code>.</p>
+    </div>
+    <div class="card">
+      <h3>By reference — with <code>&amp;</code></h3>
+<pre><code>function triple(&amp;$realthing) {
+    $realthing = $realthing * 3;
+}
+$val = 10;
+triple($val);
+echo "Triple = $val\n";</code></pre>
+<pre class="out"><code>Triple = 30</code></pre>
+      <p><b>$val really changed</b>, and there is no <code>return</code>
+        anywhere. The <code>&amp;</code> is the whole difference.</p>
+    </div>
+  </div>
+
+  <div class="tablewrap"><table>
+    <tr><th></th><th>By value</th><th>By reference</th></tr>
+    <tr><td>Written</td><td><code>function f($x)</code></td><td><code>function f(&amp;$x)</code></td></tr>
+    <tr><td>Function gets</td><td>a <b>copy</b></td><td>the <b>real variable</b></td></tr>
+    <tr><td>The original</td><td>unchanged</td><td><b>changed</b></td></tr>
+    <tr><td>Answer gets out by</td><td><code>return</code></td><td>changing the variable itself</td></tr>
+  </table></div>
+
+  <h2>5. Variable scope</h2>
+  <p><i>"Variable names used inside of function code do not mix with the
+    variables outside of the function."</i> He calls it <b>name spacing</b>.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Normal — isolated</h3>
+<pre><code>function tryzap() {
+    $val = 100;
+}
+$val = 10;
+tryzap();
+echo "TryZap = $val\n";</code></pre>
+<pre class="out"><code>TryZap = 10</code></pre>
+      <p>Two different variables that happen to share a name.</p>
+    </div>
+    <div class="card">
+      <h3>Global — shared</h3>
+<pre><code>function dozap() {
+    global $val;
+    $val = 100;
+}
+$val = 10;
+dozap();
+echo "DoZap = $val\n";</code></pre>
+<pre class="out"><code>DoZap = 100</code></pre>
+      <p><code>global</code> says "the one in here is the one out there".</p>
+    </div>
+  </div>
+
+  <p>He says use <code>global</code> rarely — <i>"use this wisely, young
+    Jedi"</i> — and lists three better ways: pass it <b>in as a parameter</b>,
+    pass it back as a <b>return value</b>, or pass it <b>by reference</b>.</p>
+  <p><b>The exception is the superglobals.</b> <code>$_GET</code>,
+    <code>$_POST</code> and the rest are visible inside a function with no
+    <code>global</code> at all. I checked this.</p>
+
+  <h2>6. Including files</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Written</th><th>What it does</th></tr>
+    <tr><td><code>include "header.php";</code></td><td>pull the file in here</td></tr>
+    <tr><td><code>include_once "header.php";</code></td><td>pull it in unless it already was</td></tr>
+    <tr><td><code>require "header.php";</code></td><td>pull it in <b>and die if it is missing</b></td></tr>
+    <tr><td><code>require_once "header.php";</code></td><td>both of the above</td></tr>
+  </table></div>
+  <p><b>The difference that matters:</b> <code>include</code> carries on with a
+    warning if the file is missing. <b><code>require</code> stops the script
+    dead.</b> Use <code>require</code> for anything the page cannot work without.</p>
+  <p>Problem 4 on his sheet asks for exactly this — two files, wired together
+    with <code>include</code>.</p>
+</section>
+
+<!-- ============ ARRAYS LESSON ============ -->
+<section class="panel" id="v-arrays">
+  <span class="tag arr">Lesson 5</span>
+  <h1>Arrays — the lesson</h1>
+  <p class="lede">His four objectives: declaring an array, indexed, associative,
+    and multidimensional. Every output below was produced by running it.</p>
+
+  <h2>The three types</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Type</th><th>Keys are</th><th>Example</th></tr>
+    <tr><td><b>Indexed</b></td><td>numbers, written for you</td><td><code>array("Mon","Tue")</code></td></tr>
+    <tr><td><b>Associative</b></td><td>names, written by you</td><td><code>array("name" =&gt; "Rabih")</code></td></tr>
+    <tr><td><b>Multidimensional</b></td><td>either — the values are arrays</td><td><code>array(array("Mon","Tue"))</code></td></tr>
+  </table></div>
+
+  <h2>Making one</h2>
+<pre><code>$days = array();                                  // empty
+$days = array("Mon","Tue","Wed","Thu","Fri");     // with values
+$days = ["Mon","Tue","Wed","Thu","Fri"];          // the short way</code></pre>
+
+  <div class="warn">
+    <p><b>A trap on his slide 18.</b> <code>$days = array(5);</code> does
+      <b>not</b> make an array with five empty slots. It makes an array with
+      <b>one</b> element, whose value is the number 5:</p>
+<pre class="out"><code>Array ( [0] =&gt; 5 )      count = 1</code></pre>
+    <p>PHP arrays do not need a size. They grow as you put things in them.</p>
+  </div>
+
+  <h2>Reading, adding, removing</h2>
+<pre><code>echo $days[1];           // Tue  - square brackets, key inside
+$days[5] = "Sat";        // add at a key you choose
+$days[] = "Sun";         // add on the end, next free key
+unset($days[1]);         // remove that one
+</code></pre>
+
+  <h3>Keys do not have to be in order</h3>
+  <p>His example — note it jumps from 4 to 7:</p>
+<pre><code>$days = array("Mon","Tue","Wed","Thu","Fri");
+$days[7] = "Sat";
+print_r($days);</code></pre>
+  <span class="tag out">Prints</span>
+<pre class="out"><code>Array ( [0] =&gt; Mon [1] =&gt; Tue [2] =&gt; Wed [3] =&gt; Thu [4] =&gt; Fri [7] =&gt; Sat )</code></pre>
+  <p>There is <b>no key 5 or 6</b>. Asking for <code>$days[6]</code> gives
+    <code>NULL</code>. This is why <code>isset()</code> matters, and why a
+    <code>for</code> loop counting 0,1,2… is the wrong tool for an array whose
+    keys have gaps.</p>
+
+  <h2>Walking through an array</h2>
+
+  <div class="grid2">
+    <div class="card">
+      <h3>Counted loop — indexed only</h3>
+<pre><code>$stuff = array("Tarraf","PHP");
+for($i=0; $i &lt; count($stuff); $i++) {
+    echo "I=",$i," Val=",$stuff[$i],"\n";
+}</code></pre>
+<pre class="out"><code>I=0 Val=Tarraf
+I=1 Val=PHP</code></pre>
+    </div>
+    <div class="card">
+      <h3><code>foreach</code> — works on both</h3>
+<pre><code>$stuff = array("name" =&gt; "Tarraf",
+               "course" =&gt; "PHP");
+foreach($stuff as $k =&gt; $v ) {
+    echo "Key=",$k," Val=",$v,"\n";
+}</code></pre>
+<pre class="out"><code>Key=name Val=Tarraf
+Key=course Val=PHP</code></pre>
+    </div>
+  </div>
+
+  <p>His point: with non-sequential or named keys you <b>cannot</b> write a
+    simple <code>$i++</code> loop. <code>foreach</code> is the tool that does not
+    care what the keys are. Run it on an indexed array and the keys just come out
+    as 0, 1, 2 — I checked.</p>
+
+  <h2>Associative arrays</h2>
+<pre><code>$stuff = array( "name" =&gt; "Rabih",
+                "course" =&gt; "MIT320");
+echo $stuff["course"];      // MIT320
+
+$za = array();              // or build it up one at a time
+$za["name"] = "Tarraf";
+$za["course"] = "PHP";</code></pre>
+
+  <h3>Looking inside one</h3>
+  <div class="grid2">
+    <div class="card">
+      <h3><code>print_r()</code> — for reading</h3>
+<pre class="out"><code>Array(
+    [name] =&gt; Rabih
+    [course] =&gt; MIT320
+)</code></pre>
+    </div>
+    <div class="card">
+      <h3><code>var_dump()</code> — adds types</h3>
+<pre class="out"><code>array(2) {
+  ["name"]=&gt; string(5) "Rabih"
+  ["course"]=&gt; string(6) "MIT320"
+}</code></pre>
+    </div>
+  </div>
+  <p>His slide 21 shows why you sometimes need <code>var_dump</code>:
+    <code>print_r(FALSE)</code> prints <b>nothing at all</b> — you cannot tell it
+    from an empty string. <code>var_dump(FALSE)</code> prints
+    <code>bool(false)</code>. Verified both.</p>
+
+  <h2>Multidimensional — arrays inside arrays</h2>
+<pre><code>$month = array(
+    array("Mon","Tue","Wed","Thu","Fri"),
+    array("Mon","Tue","Wed","Thu","Fri")
+);
+echo $month[0][3];     // Thu  - first row, fourth day</code></pre>
+  <p>Two sets of brackets: the first picks the row, the second picks inside it.
+    Think of a classroom — the room is a list of rows, each row is a list of
+    seats.</p>
+<pre><code>$products = array(
+    'pens' =&gt; array('ball' =&gt; "Ball Point", 'marker' =&gt; "Markers")
+);
+echo $products["pens"]["marker"];      // Markers</code></pre>
+
+  <h2>The array functions he lists</h2>
+  <div class="tablewrap"><table>
+    <tr><th>Function</th><th>What it does</th></tr>
+    <tr><td><code>count($ar)</code></td><td>how many elements</td></tr>
+    <tr><td><code>isset($ar['k'])</code></td><td>TRUE if that key has a value</td></tr>
+    <tr><td><code>array_key_exists($k,$ar)</code></td><td>TRUE if the key is set</td></tr>
+    <tr><td><code>is_array($ar)</code></td><td>TRUE if it really is an array</td></tr>
+    <tr><td><code>unset($ar[1])</code></td><td>remove the element at that key</td></tr>
+    <tr><td><code>array_push($ar,"Fri")</code></td><td>add to the <b>end</b></td></tr>
+    <tr><td><code>array_pop($ar)</code></td><td>remove the <b>last</b></td></tr>
+    <tr><td><code>array_unshift($ar,"Fri")</code></td><td>add to the <b>beginning</b></td></tr>
+    <tr><td><code>array_shift($ar)</code></td><td>remove the <b>first</b></td></tr>
+    <tr><td><code>array_values($ar)</code></td><td>renumber the keys 0,1,2…</td></tr>
+    <tr><td><code>explode(' ',$text)</code></td><td>cut a string into an array</td></tr>
+    <tr><td><code>sort($ar)</code></td><td>sort the values — <b>keys are lost</b></td></tr>
+    <tr><td><code>asort($ar)</code></td><td>sort by value, <b>keys kept with them</b></td></tr>
+    <tr><td><code>ksort($ar)</code></td><td>sort by key</td></tr>
+    <tr><td><code>shuffle($ar)</code></td><td>random order</td></tr>
+  </table></div>
+
+  <h3>Sorting, the part people lose marks on</h3>
+<pre><code>$za = array("name" =&gt; "Tarraf", "course" =&gt; "MIT320", "topic" =&gt; "PHP");</code></pre>
+  <div class="grid2">
+    <div class="card">
+      <h3><code>sort($za)</code></h3>
+<pre class="out"><code>Array(
+    [0] =&gt; MIT320
+    [1] =&gt; PHP
+    [2] =&gt; Tarraf
+)</code></pre>
+      <p>Values in order — and <b>the names are gone</b>, replaced by 0, 1, 2.</p>
+    </div>
+    <div class="card">
+      <h3><code>asort($za)</code></h3>
+<pre class="out"><code>Array(
+    [course] =&gt; MIT320
+    [topic] =&gt; PHP
+    [name] =&gt; Tarraf
+)</code></pre>
+      <p>Same order, but <b>each name stayed with its value</b>.</p>
+    </div>
+  </div>
+  <p><code>ksort($za)</code> sorts by the key instead, giving
+    <code>course</code>, <code>name</code>, <code>topic</code>.</p>
+
+  <div class="warn">
+    <p><b>Two of his slides have the sort results wrong.</b> Slides 49 and 50
+      show <code>sort()</code> giving <code>Tarraf, PHP, MIT320</code> and
+      <code>asort()</code> giving <code>name, topic, course</code>. Both are
+      <b>backwards</b>.</p>
+    <p>PHP sorts strings A→Z, and <code>M</code> comes before <code>P</code>
+      comes before <code>T</code>, so the real answers are the ones in the two
+      cards above. I ran both to be sure. His <code>ksort</code> slide is
+      correct. <b>If this comes up, answer A→Z</b> — but know the slide
+      disagrees, so you can say why if he asks.</p>
+  </div>
+</section>
+
+<!-- ============ SOLVED ============ -->
+<section class="panel" id="v-solved">
+  <h1>Solved, with reasons</h1>
+  <p class="lede">Seven questions worked through. Open the answer only after you
+    have tried. Every output shown was produced by running the code.</p>
+
+  <div class="q">
+    <span class="n">Functions · 1 — from his problem sheet</span>
+    <h3>The quadratic equation</h3>
+    <p>Ask the user for two coefficients and a constant, then say whether the
+      equation has one solution, two solutions, or none.</p>
+    <details>
+      <summary>Show the answer</summary>
+<pre><code>function solveQuadratic($a,$b,$c){
+    if($a == 0){
+        return "Not a quadratic equation (a must not be 0)";
+    }
+    $d = ($b*$b) - (4*$a*$c);
+    if($d &gt; 0){
+        $x1 = (-$b + sqrt($d)) / (2*$a);
+        $x2 = (-$b - sqrt($d)) / (2*$a);
+        return "Two solutions : x1 = ".$x1." and x2 = ".$x2;
+    }
+    if($d == 0){
+        $x = -$b / (2*$a);
+        return "One solution : x = ".$x;
+    }
+    return "No real solution";
+}</code></pre>
+<pre class="out"><code>a=1 b=-5 c=6   -&gt; Two solutions : x1 = 3 and x2 = 2
+a=1 b=-4 c=4   -&gt; One solution : x = 2
+a=1 b=2  c=5   -&gt; No real solution
+a=0 b=2  c=4   -&gt; Not a quadratic equation (a must not be 0)</code></pre>
+      <p><b>Why this way.</b> The whole question is the discriminant
+        <code>b² − 4ac</code>. Work it out once into <code>$d</code> and the
+        three cases fall straight out of it.</p>
+      <p><b>The <code>$a == 0</code> check comes first</b>, before anything else.
+        If <code>a</code> is zero the formula divides by <code>2*$a</code>, which
+        is division by zero. The question does not ask for this check and most
+        answers leave it out — which is exactly why putting it in is worth a mark.</p>
+    </details>
+  </div>
+
+  <div class="q">
+    <span class="n">Functions · 2 — from his problem sheet</span>
+    <h3><code>integerPower(base, exponent)</code></h3>
+    <p>Return base<sup>exponent</sup>. <code>integerPower(3,4)</code> is
+      3×3×3×3. It must use a <code>for</code> or <code>while</code> to control
+      the calculation.</p>
+    <details>
+      <summary>Show the answer</summary>
+<pre><code>function integerPower($base,$exponent){
+    $result = 1;
+    for($i=1; $i &lt;= $exponent; $i++){
+        $result = $result * $base;
+    }
+    return $result;
+}</code></pre>
+<pre class="out"><code>integerPower(3, 4)  = 81
+integerPower(2, 10) = 1024
+integerPower(5, 0)  = 1
+integerPower(7, 1)  = 7</code></pre>
+      <p><b>Why <code>$result</code> starts at 1 and not 0.</b> Starting at 0
+        would make every answer 0, because anything times zero is zero. 1 is the
+        number that does nothing when you multiply — the same reason a running
+        <i>total</i> starts at 0, which is the number that does nothing when you
+        add.</p>
+      <p><b>It handles exponent 0 for free.</b> The loop never runs, so
+        <code>$result</code> is still 1 — which is the right answer. No special
+        case needed, and that is worth noticing rather than writing an
+        <code>if</code> for it.</p>
+    </details>
+  </div>
+
+  <div class="q">
+    <span class="n">Functions · 3 — from his problem sheet</span>
+    <h3>Celsius and Fahrenheit</h3>
+    <p>Two functions, two buttons — one each way.</p>
+    <details>
+      <summary>Show the answer</summary>
+<pre><code>function Celsius($f){
+    return 5.0 / 9.0 * ($f - 32);
+}
+
+function Fahrenheit($c){
+    return 9.0 / 5.0 * $c + 32;
+}</code></pre>
+<pre class="out"><code>F 212   -&gt; C 100
+F 98.6  -&gt; C 37
+F 32    -&gt; C 0
+C 100   -&gt; F 212
+C -40   -&gt; F -40</code></pre>
+      <p><b>Why the brackets round <code>($f - 32)</code> are not optional.</b>
+        Without them PHP does the multiply and divide first, so you would get
+        <code>5/9*$f</code> and then subtract 32 — a different answer. The
+        brackets force the subtraction to happen first, exactly as his formula
+        is written.</p>
+      <p><b>Why <code>5.0</code> and not <code>5</code>.</b> It is a habit worth
+        keeping from his slide. In PHP division makes a float anyway, so it does
+        not change the answer here — but in many languages <code>5/9</code> with
+        whole numbers gives 0, and the whole thing collapses.</p>
+      <p><b>−40 is the one to test with.</b> It is the single temperature where
+        both scales read the same, so if your two functions disagree there,
+        something is wrong with both.</p>
+    </details>
+  </div>
+
+  <div class="q">
+    <span class="n">Arrays · 4</span>
+    <h3>Five marks in an indexed array</h3>
+    <p>Put five marks in an array. Print each one with its student number, then
+      the total, the average, and the highest — <b>without</b>
+      <code>max()</code>.</p>
+    <details class="arr">
+      <summary>Show the answer</summary>
+<pre><code>$marks = array(14, 9, 18, 11, 20);
+$total = 0;
+$highest = $marks[0];
+
+for($i=0; $i &lt; count($marks); $i++){
+    echo "Student ".($i+1)." scored ".$marks[$i]."\n";
+    $total = $total + $marks[$i];
+    if($marks[$i] &gt; $highest){ $highest = $marks[$i]; }
+}
+
+echo "Total = ".$total."\n";
+echo "Average = ".($total / count($marks))."\n";
+echo "Highest = ".$highest."\n";</code></pre>
+<pre class="out"><code>Student 1 scored 14
+Student 2 scored 9
+Student 3 scored 18
+Student 4 scored 11
+Student 5 scored 20
+Total = 72
+Average = 14.4
+Highest = 20</code></pre>
+      <p><b><code>count($marks)</code> instead of 5.</b> Add a sixth mark and
+        nothing else has to change. Typing <code>5</code> works today and breaks
+        the day the array grows.</p>
+      <p><b><code>$highest</code> starts at <code>$marks[0]</code>, not 0.</b>
+        Starting at 0 happens to work here, but it is wrong the moment the marks
+        can be negative — nothing would ever beat 0. Assume the first one wins,
+        then let the others challenge it.</p>
+      <p><b><code>($i+1)</code> for the student number.</b> The array counts from
+        0, people count from 1. That <code>+1</code> is the join between the two.</p>
+      <p><b>Total and highest are updated inside the loop; the average is worked
+        out after it.</b> Dividing inside the loop would give you the average of
+        however much you had read so far.</p>
+    </details>
+  </div>
+
+  <div class="q">
+    <span class="n">Arrays · 5</span>
+    <h3>Prices in an associative array</h3>
+    <p>Items and their prices. Print each, then the total, the number of items,
+      and the name of the most expensive one.</p>
+    <details class="arr">
+      <summary>Show the answer</summary>
+<pre><code>$prices = array("Pen" =&gt; 3, "Book" =&gt; 12, "Bag" =&gt; 25, "Ruler" =&gt; 2);
+$total = 0;
+$dearest = "";
+$dearestPrice = 0;
+
+foreach($prices as $item =&gt; $price){
+    echo $item." costs ".$price."\n";
+    $total = $total + $price;
+    if($price &gt; $dearestPrice){
+        $dearestPrice = $price;
+        $dearest = $item;
+    }
+}
+
+echo "Total = ".$total."\n";
+echo "Most expensive = ".$dearest." at ".$dearestPrice."\n";
+echo "How many items = ".count($prices)."\n";</code></pre>
+<pre class="out"><code>Pen costs 3
+Book costs 12
+Bag costs 25
+Ruler costs 2
+Total = 42
+Most expensive = Bag at 25
+How many items = 4</code></pre>
+      <p><b>Why <code>foreach</code> and not <code>for</code>.</b> The keys here
+        are "Pen", "Book", "Bag" — there is no <code>$prices[0]</code> to count
+        towards. A <code>for</code> loop has nothing to count. This is his exact
+        point about needing an iterator.</p>
+      <p><b>Two variables for the dearest, not one.</b> You need the price to
+        compare against <i>and</i> the name to print, so you keep both and
+        update both together. Update one without the other and you get the right
+        price next to the wrong name.</p>
+      <p><b>The <code>if</code> is inside the loop, the printing is after.</b>
+        You cannot name the most expensive item until you have seen the last one.</p>
+    </details>
+  </div>
+
+  <div class="q">
+    <span class="n">Arrays · 6</span>
+    <h3>A shopping cart — an array of arrays</h3>
+    <p>Each line has a title, a price and a quantity. Print each line with its
+      line total, then the grand total.</p>
+    <details class="arr">
+      <summary>Show the answer</summary>
+<pre><code>$cart = array();
+$cart[] = array("title" =&gt; "Notebook", "price" =&gt; 4,  "qty" =&gt; 3);
+$cart[] = array("title" =&gt; "Pencil",   "price" =&gt; 1,  "qty" =&gt; 10);
+$cart[] = array("title" =&gt; "Backpack", "price" =&gt; 25, "qty" =&gt; 1);
+
+$grand = 0;
+foreach($cart as $line){
+    $lineTotal = $line["price"] * $line["qty"];
+    echo $line["title"]." : ".$line["qty"]." x ".$line["price"]." = ".$lineTotal."\n";
+    $grand = $grand + $lineTotal;
+}
+echo "Grand total = ".$grand."\n";</code></pre>
+<pre class="out"><code>Notebook : 3 x 4 = 12
+Pencil : 10 x 1 = 10
+Backpack : 1 x 25 = 25
+Grand total = 47</code></pre>
+      <p><b>Two levels, so two kinds of key.</b> The outer array is indexed —
+        <code>$cart[0]</code>, <code>$cart[1]</code> — because the lines have no
+        natural names. Each inner array is associative, because
+        <code>"price"</code> says far more than <code>[1]</code> ever would.
+        Picking the right one at each level is the skill this question tests.</p>
+      <p><b><code>foreach($cart as $line)</code> with no <code>=&gt; $k</code>.</b>
+        When you do not need the key, leave it out. Here the line number is not
+        used, so asking for it would be noise.</p>
+      <p><b><code>$lineTotal</code> is worked out once</b> and then used twice —
+        printed, and added to the grand total. Writing
+        <code>$line["price"] * $line["qty"]</code> twice would work and is the
+        kind of small repetition that becomes a wrong answer when one of the two
+        gets edited.</p>
+    </details>
+  </div>
+
+  <div class="q">
+    <span class="n">Arrays · 7</span>
+    <h3>Count the letters in a word</h3>
+    <p>Read a word and say how many times each letter appears. You do not know in
+      advance which letters there will be.</p>
+    <details class="arr">
+      <summary>Show the answer</summary>
+<pre><code>$word = "MISSISSIPPI";
+$counts = array();
+
+for($i=0; $i &lt; strlen($word); $i++){
+    $ch = $word[$i];
+    if(isset($counts[$ch])){
+        $counts[$ch] = $counts[$ch] + 1;
+    } else {
+        $counts[$ch] = 1;
+    }
+}
+
+foreach($counts as $letter =&gt; $howMany){
+    echo $letter." appears ".$howMany." times\n";
+}</code></pre>
+<pre class="out"><code>M appears 1 times
+I appears 4 times
+S appears 4 times
+P appears 2 times</code></pre>
+      <p><b>This is the question that proves why arrays exist.</b> The keys are
+        invented while the program runs, out of whatever letters it finds. There
+        is no way to write this with separate variables at all — you would have
+        to know the letters before you started.</p>
+      <p><b>The <code>isset</code> is the whole trick.</b> First time a letter
+        turns up there is no counter for it yet, so you create it at 1. Every
+        time after, you add one to what is there. Without the
+        <code>isset</code> you would be adding 1 to a key that does not exist,
+        which is a warning on the page.</p>
+      <p><b>Two loops, and they are different kinds.</b> The first walks the
+        <i>word</i> by position, so it is a <code>for</code>. The second walks
+        the <i>array</i>, whose keys are letters, so it has to be a
+        <code>foreach</code>.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============ PRACTICE ============ -->
+<section class="panel" id="v-practice">
+  <h1>Practice</h1>
+  <p class="lede">No answers here on purpose. Work on paper or in VS Code, then
+    run it under XAMPP and see whether it does what you expected.</p>
+
+  <h2>Functions</h2>
+
+  <div class="q">
+    <span class="n">P1 · warm-up</span>
+    <h3>A function that says hello to somebody</h3>
+    <p>Write <code>greetPerson($name)</code> that <b>returns</b>
+      <code>"Hello Fatima"</code> when you pass it <code>"Fatima"</code>. Call it
+      three times with three different names.</p>
+    <p class="hint">Then change it so that calling <code>greetPerson()</code>
+      with nothing says <code>"Hello guest"</code>.</p>
+  </div>
+
+  <div class="q">
+    <span class="n">P2</span>
+    <h3>Biggest of three, as a function</h3>
+    <p>Write <code>biggestOfThree($a,$b,$c)</code> that returns the largest.
+      No <code>max()</code>. Then write <code>smallestOfThree</code> beside it.</p>
+    <p class="hint">Test it with the biggest number <b>first</b>, then
+      <b>last</b>, then with all three the same.</p>
+  </div>
+
+  <div class="q">
+    <span class="n">P3</span>
+    <h3>By value or by reference?</h3>
+    <p>Say what each prints, <b>before</b> you run it. Then run it.</p>
+<pre><code>function addTen($n){ $n = $n + 10; return $n; }
+function addTwenty(&amp;$n){ $n = $n + 20; }
+
+$score = 5;
+$other = addTen($score);
+echo "A: ".$score." ".$other."\n";
+
+addTwenty($score);
+echo "B: ".$score."\n";</code></pre>
+  </div>
+
+  <div class="q">
+    <span class="n">P4</span>
+    <h3>Two files and <code>include</code></h3>
+    <p>Put <code>biggestOfThree</code> and <code>smallestOfThree</code> in a file
+      called <code>maths.php</code> with nothing else in it. Make
+      <code>page.php</code> with a form of three boxes and two buttons, and
+      <code>include "maths.php";</code> at the top.</p>
+    <p class="hint">Then rename <code>maths.php</code> and reload. Note what the
+      error says. Change <code>include</code> to <code>require</code> and reload
+      again — the difference is the point of the exercise.</p>
+  </div>
+
+  <h2>Arrays</h2>
+
+  <div class="q">
+    <span class="n">P5 · warm-up</span>
+    <h3>Seven days</h3>
+    <p>Put the seven days in an indexed array. Print them with a
+      <code>for</code> loop, numbered 1 to 7. Then print just
+      <code>$days[3]</code> and check it is the day you expected.</p>
+    <p class="hint">If it isn't, you have found the thing arrays catch everybody
+      with once.</p>
+  </div>
+
+  <div class="q">
+    <span class="n">P6</span>
+    <h3>A phone book</h3>
+    <p>Make an associative array of five names and phone numbers. Print them all
+      with <code>foreach</code>. Then ask for one name and print just that
+      number, or <code>"Not found"</code> if it is not in there.</p>
+    <p class="hint"><code>isset()</code> is what decides between the two.</p>
+  </div>
+
+  <div class="q">
+    <span class="n">P7</span>
+    <h3>Pass and fail, counted</h3>
+    <p>An array of eight marks out of 20. Print each one with
+      <code>PASS</code> or <code>FAIL</code> beside it — the pass mark is 10 —
+      then how many passed and how many failed.</p>
+    <p class="hint">Two counters, both set to 0 <b>before</b> the loop. If you
+      set them inside it, they reset every time round.</p>
+  </div>
+
+  <div class="q">
+    <span class="n">P8</span>
+    <h3>A class register — array of arrays</h3>
+    <p>Five students, each with a name, a mark and a city. Print a table with one
+      row per student, then the average mark, then the name of the student with
+      the highest mark.</p>
+    <p class="hint">Outer array indexed, inner arrays associative. The heading
+      row of the table goes <b>outside</b> the loop — inside, you get five of them.</p>
+  </div>
+
+  <div class="q">
+    <span class="n">P9</span>
+    <h3>Counting words</h3>
+    <p>Take a sentence. Use <code>explode(' ', $sentence)</code> to cut it into
+      an array. Print how many words there are, then the longest word.</p>
+    <p class="hint">Longest means <code>strlen()</code> — and the same "assume
+      the first one wins" pattern as the biggest number.</p>
+  </div>
+
+  <div class="q">
+    <span class="n">P10 · the two lessons together</span>
+    <h3>A marks report, properly split</h3>
+    <p>Write <code>letterGrade($mark)</code> and <code>average($marks)</code> —
+      note the second one takes <b>the whole array</b> as its argument. Put both
+      in <code>grades.php</code>.</p>
+    <p>Then a page that holds an array of six marks, includes
+      <code>grades.php</code>, and prints a table of mark and letter grade, with
+      the class average underneath.</p>
+    <p class="hint">This is the shape of almost any question he can set from
+      these two lessons: an array holding the data, a function holding the rule,
+      a loop joining them.</p>
+  </div>
+
+  <h2>Trace these — no computer</h2>
+
+  <div class="q">
+    <span class="n">P11</span>
+    <h3>What does each one print?</h3>
+<pre><code>$a = array("x","y","z");
+$a[5] = "w";
+echo count($a);</code></pre>
+<pre><code>$b = array("p" =&gt; 1, "q" =&gt; 2);
+foreach($b as $k =&gt; $v){ echo $k.$v; }</code></pre>
+<pre><code>function f($x){ $x[] = 99; return count($x); }
+$c = array(1,2,3);
+echo f($c)." ".count($c);</code></pre>
+    <p class="hint">The third one is by value and by reference wearing a
+      disguise. Arrays follow the same rule as numbers.</p>
+  </div>
+</section>
+
+<footer>
+  Built from the MIT320 Lesson 4 and Lesson 5 slides. Every code example was run
+  on PHP 8.2 before being written down. Where a slide and the interpreter
+  disagree, both are shown and the disagreement is flagged.
+</footer>
+
+</main>
+</div>
+
+<script>
+(function(){
+  var VIEWS = ["start","why-functions","functions","why-arrays","arrays","solved","practice"];
+  var links = Array.prototype.slice.call(document.querySelectorAll(".rail a[data-v]"));
+
+  function show(name){
+    if (VIEWS.indexOf(name) === -1) name = "start";
+    VIEWS.forEach(function(v){
+      var el = document.getElementById("v-" + v);
+      if (el) el.hidden = (v !== name);
+    });
+    links.forEach(function(a){ a.classList.toggle("on", a.dataset.v === name); });
+    window.scrollTo(0, 0);
+  }
+  function fromHash(){
+    show((location.hash || "").replace(/^#/, ""));
+  }
+  window.addEventListener("hashchange", fromHash);
+  fromHash();
+
+  /* theme toggle - remembered per viewer where storage allows it */
+  var KEY = "fa_theme";
+  try { var t = localStorage.getItem(KEY); if (t) document.documentElement.setAttribute("data-theme", t); } catch(e) {}
+  document.getElementById("themebtn").addEventListener("click", function(){
+    var now = document.documentElement.getAttribute("data-theme")
+      || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    var next = now === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem(KEY, next); } catch(e) {}
+  });
+})();
+</script>
