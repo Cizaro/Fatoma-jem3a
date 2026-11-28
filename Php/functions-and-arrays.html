@@ -1067,6 +1067,154 @@ P appears 2 times</code></pre>
         <code>foreach</code>.</p>
     </details>
   </div>
+
+  <div class="q">
+    <span class="n">Both lessons · 8</span>
+    <h3>The GPA calculator</h3>
+    <p>A student takes <b>three subjects</b> — PHP, Data Science and English —
+      and sits <b>three tests</b> in each. Nine boxes on a form.</p>
+    <p>Work out the <b>average of the three tests</b> for each subject, give
+      each subject a letter grade, then the <b>GPA</b>, which is the average of
+      the three subject averages. Use a function.</p>
+    <details>
+      <summary>Show the answer</summary>
+<pre><code>&lt;?php
+
+function average3($t1,$t2,$t3){
+    return ($t1+$t2+$t3)/3;
+}
+
+function letterGrade($mark){
+    if($mark &gt;= 90){ return "A"; }
+    else if($mark &gt;= 80){ return "B"; }
+    else if($mark &gt;= 70){ return "C"; }
+    else if($mark &gt;= 60){ return "D"; }
+    return "F";
+}
+
+?&gt;
+
+&lt;form action="gpa.php" method="POST"&gt;
+
+&lt;h3&gt;PHP&lt;/h3&gt;
+&lt;input type="number" step=0.1 name="php1" placeholder="Test 1"&gt;
+&lt;input type="number" step=0.1 name="php2" placeholder="Test 2"&gt;
+&lt;input type="number" step=0.1 name="php3" placeholder="Test 3"&gt;
+
+&lt;h3&gt;Data Science&lt;/h3&gt;
+&lt;input type="number" step=0.1 name="ds1" placeholder="Test 1"&gt;
+&lt;input type="number" step=0.1 name="ds2" placeholder="Test 2"&gt;
+&lt;input type="number" step=0.1 name="ds3" placeholder="Test 3"&gt;
+
+&lt;h3&gt;English&lt;/h3&gt;
+&lt;input type="number" step=0.1 name="en1" placeholder="Test 1"&gt;
+&lt;input type="number" step=0.1 name="en2" placeholder="Test 2"&gt;
+&lt;input type="number" step=0.1 name="en3" placeholder="Test 3"&gt;
+
+&lt;br&gt;&lt;br&gt;
+&lt;button type="submit" name="bt" value="CALC"&gt;Calculate&lt;/button&gt;
+
+&lt;/form&gt;
+
+&lt;?php
+
+if(isset($_POST["bt"])){
+
+    $php1 = $_POST["php1"];
+    $php2 = $_POST["php2"];
+    $php3 = $_POST["php3"];
+    $ds1 = $_POST["ds1"];
+    $ds2 = $_POST["ds2"];
+    $ds3 = $_POST["ds3"];
+    $en1 = $_POST["en1"];
+    $en2 = $_POST["en2"];
+    $en3 = $_POST["en3"];
+
+    if(!is_numeric($php1) || !is_numeric($php2) || !is_numeric($php3) ||
+       !is_numeric($ds1) || !is_numeric($ds2) || !is_numeric($ds3) ||
+       !is_numeric($en1) || !is_numeric($en2) || !is_numeric($en3)){
+
+        echo "Please enter a number in all nine boxes.";
+
+    } else if($php1 &lt; 0 || $php1 &gt; 100 || $php2 &lt; 0 || $php2 &gt; 100 || $php3 &lt; 0 || $php3 &gt; 100 ||
+              $ds1 &lt; 0 || $ds1 &gt; 100 || $ds2 &lt; 0 || $ds2 &gt; 100 || $ds3 &lt; 0 || $ds3 &gt; 100 ||
+              $en1 &lt; 0 || $en1 &gt; 100 || $en2 &lt; 0 || $en2 &gt; 100 || $en3 &lt; 0 || $en3 &gt; 100){
+
+        echo "Every mark must be from 0 to 100.";
+
+    } else {
+
+        $phpAvg = average3($php1,$php2,$php3);
+        $dsAvg = average3($ds1,$ds2,$ds3);
+        $enAvg = average3($en1,$en2,$en3);
+        $gpa = average3($phpAvg,$dsAvg,$enAvg);
+
+        echo "&lt;table border='1'&gt;";
+        echo "&lt;tr&gt;&lt;th&gt;Subject&lt;/th&gt;&lt;th&gt;Test 1&lt;/th&gt;&lt;th&gt;Test 2&lt;/th&gt;&lt;th&gt;Test 3&lt;/th&gt;&lt;th&gt;Average&lt;/th&gt;&lt;th&gt;Grade&lt;/th&gt;&lt;/tr&gt;";
+        echo "&lt;tr&gt;&lt;td&gt;PHP&lt;/td&gt;&lt;td&gt;".$php1."&lt;/td&gt;&lt;td&gt;".$php2."&lt;/td&gt;&lt;td&gt;".$php3."&lt;/td&gt;&lt;td&gt;".number_format($phpAvg,2)."&lt;/td&gt;&lt;td&gt;".letterGrade($phpAvg)."&lt;/td&gt;&lt;/tr&gt;";
+        echo "&lt;tr&gt;&lt;td&gt;Data Science&lt;/td&gt;&lt;td&gt;".$ds1."&lt;/td&gt;&lt;td&gt;".$ds2."&lt;/td&gt;&lt;td&gt;".$ds3."&lt;/td&gt;&lt;td&gt;".number_format($dsAvg,2)."&lt;/td&gt;&lt;td&gt;".letterGrade($dsAvg)."&lt;/td&gt;&lt;/tr&gt;";
+        echo "&lt;tr&gt;&lt;td&gt;English&lt;/td&gt;&lt;td&gt;".$en1."&lt;/td&gt;&lt;td&gt;".$en2."&lt;/td&gt;&lt;td&gt;".$en3."&lt;/td&gt;&lt;td&gt;".number_format($enAvg,2)."&lt;/td&gt;&lt;td&gt;".letterGrade($enAvg)."&lt;/td&gt;&lt;/tr&gt;";
+        echo "&lt;/table&gt;";
+
+        echo "&lt;br&gt;GPA = ".number_format($gpa,2);
+        echo "&lt;br&gt;Overall grade = ".letterGrade($gpa);
+    }
+}
+
+?&gt;</code></pre>
+
+      <span class="tag out">With 88, 92, 79 · 65, 71, 58 · 95, 100, 90</span>
+<pre class="out"><code>Subject       Test 1  Test 2  Test 3  Average  Grade
+PHP           88      92      79      86.33    B
+Data Science  65      71      58      64.67    D
+English       95      100     90      95.00    A
+
+GPA = 82.00
+Overall grade = B</code></pre>
+
+      <p><b>One function, called four times.</b> That is the whole reason this
+        question exists. <code>average3()</code> does not know or care whether
+        it is averaging three <i>tests</i> or three <i>subject averages</i> —
+        it averages three numbers. So the GPA line is the same function again:</p>
+<pre><code>$gpa = average3($phpAvg,$dsAvg,$enAvg);</code></pre>
+      <p>Written without a function you would type the same
+        <code>(a+b+c)/3</code> four times, and the pass mark problem from
+        <a href="#why-functions">Why functions?</a> is waiting for you.</p>
+
+      <p><b><code>letterGrade()</code> is called four times too</b> — once per
+        subject and once for the GPA. A function that takes <i>a mark</i>
+        rather than <i>a subject</i> is what makes that possible. Had it been
+        written as <code>phpGrade()</code> it would have been useless for the
+        other three.</p>
+
+      <p><b>Why the two checks are separate.</b> <code>is_numeric</code> first,
+        then the 0–100 range, as two branches with two different messages. One
+        combined check would be able to say only "something is wrong".</p>
+
+      <p><b><code>number_format($x, 2)</code> for the display only.</b> The
+        rounding happens when the number is printed, never before. Round
+        <code>$phpAvg</code> itself and that rounding error goes into the GPA.</p>
+
+      <div class="warn">
+        <p><b>A thing worth knowing about averaging averages.</b> Here the GPA
+          comes out the same whether you average the three subject averages or
+          all nine tests at once — I checked, both give exactly 82.00.</p>
+        <p>That is <b>only</b> true because every subject has the same number of
+          tests. With 2 tests in one subject and 4 in another, averaging the
+          averages gives 50 where averaging all six marks gives 33.33. Different
+          answers to different questions. This question says "the average of the
+          three subject averages", so that is what the code does.</p>
+      </div>
+
+      <p><b>Where arrays would come in.</b> Nine variables named
+        <code>$php1</code> … <code>$en3</code> is exactly the smell from
+        <a href="#why-arrays">Why arrays?</a>. With an array of subjects, each
+        holding an array of three marks, the nine reads and the nine checks
+        become two small loops, and adding a fourth subject becomes one line
+        instead of a rewrite. Try it that way once you have this version
+        working — it is practice question P12.</p>
+    </details>
+  </div>
 </section>
 
 <!-- ============ PRACTICE ============ -->
@@ -1185,6 +1333,24 @@ echo "B: ".$score."\n";</code></pre>
     <p class="hint">This is the shape of almost any question he can set from
       these two lessons: an array holding the data, a function holding the rule,
       a loop joining them.</p>
+  </div>
+
+  <div class="q">
+    <span class="n">P12 · the GPA calculator, rebuilt</span>
+    <h3>Nine variables become two loops</h3>
+    <p>Take solved question 8 and write it again with arrays. Hold the subjects
+      in one array, each with its three marks:</p>
+<pre><code>$subjects = array(
+    "PHP"          =&gt; array(88, 92, 79),
+    "Data Science" =&gt; array(65, 71, 58),
+    "English"      =&gt; array(95, 100, 90)
+);</code></pre>
+    <p>Print the same table and the same GPA. Then add a fourth subject and
+      count how many lines you had to change.</p>
+    <p class="hint">Write <code>averageOf($marks)</code> taking the whole array
+      instead of three separate numbers, and it will work for a subject with
+      four tests too. A <code>foreach</code> over the subjects, a running total
+      for the GPA.</p>
   </div>
 
   <h2>Trace these — no computer</h2>
